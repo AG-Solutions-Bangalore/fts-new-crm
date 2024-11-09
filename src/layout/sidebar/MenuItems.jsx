@@ -110,19 +110,19 @@ import {
           id: uniqueId(),
           title: "Members",
           icon: IconUsers,
-          href: "/table-one",
+          href: "/member-list",
         },
         {
           id: uniqueId(),
           title: "Viewers",
           icon: IconCardboards,
-          href: "/table-one",
+          href: "/viewer-list",
         },
         {
           id: uniqueId(),
           title: "Duplicate",
           icon: IconCash,
-          href: "/table-one",
+          href: "/duplicate-list",
         },
         
       ],

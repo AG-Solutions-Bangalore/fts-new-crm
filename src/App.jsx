@@ -13,6 +13,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DonorEdit from "./pages/donor/fullList/DonorEdit";
 import CreateReceipt from "./pages/donor/fullList/CreateReceipt";
+import ViewerList from "./pages/donor/viewer/ViewerList";
+import EditViewer from "./pages/donor/viewer/EditViewer";
+import MemberList from "./pages/donor/member/MemberList";
+import DuplicateList from "./pages/donor/duplicate/DuplicateList";
 const App = () => {
   return (
     <>
@@ -27,6 +31,10 @@ const App = () => {
         <Route path="/donor-list" element={<DonorList />} />
         <Route path="/donor-edit/:id" element={<DonorEdit />} />
         <Route path="/create-receipts/:id" element={<CreateReceipt />} />
+        <Route path="/viewer-list" element={<ViewerList />} />
+        <Route path="/edit-viewer/:id" element={<EditViewer />} />
+        <Route path="/member-list" element={<MemberList />} />
+        <Route path="/duplicate-list" element={<DuplicateList />} />
         
 
         {/* school  */}

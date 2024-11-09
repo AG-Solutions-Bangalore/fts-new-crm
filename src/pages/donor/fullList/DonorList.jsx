@@ -1,20 +1,16 @@
-import React, {  useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Layout from "../../../layout/Layout";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
-import {
-  IconEdit,
-  IconEye,
-  IconReceipt,
-} from "@tabler/icons-react";
+import { IconEdit, IconEye, IconReceipt } from "@tabler/icons-react";
 
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-
 
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import AddIndivisual from "./AddIndivisual";
 import AddCompany from "./AddCompany";
+import CreateReceipt from "./CreateReceipt";
 
 const DonorList = () => {
   const [donorData, setDonorData] = useState(null);
@@ -27,10 +23,10 @@ const DonorList = () => {
     indicomp_fts_id: false,
   });
 
-
   const [individualDrawer, setIndividualDrawer] = useState(false);
   const [companyDrawer, setCompanyDrawer] = useState(false);
   const [receiptDrawer, setReceiptDrawer] = useState(false);
+  const [selectedDonorId, setSelectedDonorId] = useState(null);
 
   const toggleIndividualDrawer = (open) => (event) => {
     if (
@@ -53,16 +49,19 @@ const DonorList = () => {
     }
     setCompanyDrawer(open);
   };
-  const toggleReceiptDrawer = (open) => (event) => {
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setReceiptDrawer(open);
-  };
+  const toggleReceiptDrawer =
+    (open, id = null) =>
+    (event) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        (event.key === "Tab" || event.key === "Shift")
+      ) {
+        return;
+      }
+      setReceiptDrawer(open);
+      if (id) setSelectedDonorId(id);
+    };
 
   const fetchDonorData = async () => {
     try {
@@ -83,9 +82,7 @@ const DonorList = () => {
   };
 
   useEffect(() => {
-   
     fetchDonorData();
-    
   }, []);
 
   const columns = useMemo(
@@ -100,7 +97,7 @@ const DonorList = () => {
         header: "Full Name",
       },
       {
-        accessorKey: "indicomp_type", 
+        accessorKey: "indicomp_type",
         header: "Type",
       },
       {
@@ -172,14 +169,13 @@ const DonorList = () => {
               </div>
               {userType == "1" ? (
                 <div
-                  onClick={() => navigate(`/create-receipts/${id}`)}
+                  onClick={toggleReceiptDrawer(true, id)}
                   className="flex items-center space-x-2"
                 >
                   <IconReceipt
                     title="Reciept"
                     className="h-5 w-5 cursor-pointer"
                   />
-             
                 </div>
               ) : (
                 ""
@@ -211,7 +207,7 @@ const DonorList = () => {
               Donor List
             </h1>
             <div className="flex gap-2">
-               <button
+              <button
                 className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                 onClick={toggleIndividualDrawer(true)}
               >
@@ -223,33 +219,48 @@ const DonorList = () => {
                 onClose={toggleIndividualDrawer(false)}
                 onOpen={toggleIndividualDrawer(true)}
               >
-                <AddIndivisual onClose={toggleIndividualDrawer(false)} fetchDonorData={fetchDonorData} />
+                <AddIndivisual
+                  onClose={toggleIndividualDrawer(false)}
+                  fetchDonorData={fetchDonorData}
+                />
               </SwipeableDrawer>
               <div>
-              <button
-                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                onClick={toggleCompanyDrawer(true)}
-              >
-                + Company
-              </button>
-                    <SwipeableDrawer
-                anchor="right"
-                open={companyDrawer}
-                onClose={toggleCompanyDrawer(false)}
-                onOpen={toggleCompanyDrawer(true)}
-              >
-                <AddCompany onClose={toggleCompanyDrawer(false)} fetchDonorData={fetchDonorData} />
-              </SwipeableDrawer>
+                <button
+                  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                  onClick={toggleCompanyDrawer(true)}
+                >
+                  + Company
+                </button>
+                <SwipeableDrawer
+                  anchor="right"
+                  open={companyDrawer}
+                  onClose={toggleCompanyDrawer(false)}
+                  onOpen={toggleCompanyDrawer(true)}
+                >
+                  <AddCompany
+                    onClose={toggleCompanyDrawer(false)}
+                    fetchDonorData={fetchDonorData}
+                  />
+                </SwipeableDrawer>
               </div>
-              
-
-             
             </div>
           </div>
           <div className=" shadow-md">
             <MantineReactTable table={table} />
           </div>
         </div>
+        <SwipeableDrawer
+          anchor="right"
+          open={receiptDrawer}
+          onClose={toggleReceiptDrawer(false)}
+          onOpen={toggleReceiptDrawer(true)}
+        >
+         
+          <CreateReceipt
+            donorId={selectedDonorId}
+            onClose={toggleReceiptDrawer(false)}
+          />
+        </SwipeableDrawer>
       </Layout>
     </>
   );

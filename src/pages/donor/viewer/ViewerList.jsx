@@ -1,0 +1,167 @@
+import React, { useEffect, useMemo, useState } from 'react'
+import Layout from '../../../layout/Layout';
+import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
+import { IconEdit } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import BASE_URL from '../../../base/BaseUrl';
+import AddViewer from './AddViewer';
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+
+const ViewerList = () => {
+    const [viewerData, setViewerData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const [viewerDrawer, setViewerDrawer] = useState(false);
+  
+
+    const toggleViewerDrawer = (open) => (event) => {
+        if (
+          event &&
+          event.type === "keydown" &&
+          (event.key === "Tab" || event.key === "Shift")
+        ) {
+          return;
+        }
+        setViewerDrawer(open);
+      };
+   
+      const fetchViewerData = async () => {
+        try {
+        
+          setLoading(true);
+          const token = localStorage.getItem("token");
+          const response = await axios.get(`${BASE_URL}/api/superadmin-get-all-viewers`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          setViewerData(response.data?.viewerUsers);
+        } catch (error) {
+          console.error("Error fetching Factory data", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      useEffect(() => {
+      fetchViewerData();
+     
+    }, []);
+  
+  
+    
+  
+   
+   
+
+
+    const columns = useMemo(
+        () => [
+          {
+            accessorKey: "name",
+            header: "Username",
+           
+          },
+          {
+            accessorKey: "first_name",
+            header: "Full Name",
+          },
+          {
+            accessorKey: "user_position",
+            header: "Position",
+          },
+          {
+            accessorKey: "email",
+            header: "Email",
+           
+          },
+          {
+            accessorKey: "phone",
+            header: "Phone",
+          
+          },
+         
+          {
+            accessorKey: "viewer_chapter_ids",
+            header: "Chapter Ids",
+          },
+          {
+            accessorKey: "viewer_start_date",
+            header: "Start Date",
+          },
+          {
+            accessorKey: "viewer_end_date",
+            header: "End Date",
+          },
+          
+          {
+            id: "id",
+            header: "Action",
+            Cell: ({ row }) => {
+              const id = row.original.id;
+    
+              return (
+                <div className="flex gap-2">
+                  <div
+                    onClick={() => navigate(`/edit-viewer/${id}`)}
+                    className="flex items-center space-x-2"
+                  >
+                    <IconEdit title="Edit" className="h-5 w-5 cursor-pointer" />
+                  </div>
+    
+                 
+                </div>
+              );
+            },
+          },
+        ],
+        []
+      );
+
+    const table = useMantineReactTable({
+        columns,
+        data: viewerData || [],
+        enableFullScreenToggle: false,
+        enableDensityToggle: false,
+        enableColumnActions: false,
+      
+      });
+  return (
+    <Layout>
+        <div className="max-w-screen">
+       <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
+            <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
+              Viewer List
+            </h1>
+            <div className="flex gap-2">
+              <button
+                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                onClick={toggleViewerDrawer(true)}
+              >
+                + Viewer
+              </button>
+              <SwipeableDrawer
+                anchor="right"
+                open={viewerDrawer}
+                onClose={toggleViewerDrawer(false)}
+                onOpen={toggleViewerDrawer(true)}
+              >
+                <AddViewer
+                  onClose={toggleViewerDrawer(false)}
+                  fetchViewerData={fetchViewerData}
+                />
+              </SwipeableDrawer>
+         
+            </div>
+          </div>
+      <div className=" shadow-md">
+            <MantineReactTable table={table} />
+          </div>
+          </div>
+    </Layout>
+  )
+}
+
+export default ViewerList

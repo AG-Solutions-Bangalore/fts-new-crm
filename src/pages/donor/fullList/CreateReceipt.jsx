@@ -126,8 +126,8 @@ const school_year = [
     label: "2025-26",
   },
 ];
-const CreateReceipt = () => {
-  const {id} = useParams()
+const CreateReceipt = ({donorId,onClose}) => {
+  // const {id} = useParams()
   const today = new Date();
   const navigate = useNavigate()
   const dd = String(today.getDate()).padStart(2, "0");
@@ -223,7 +223,7 @@ const CreateReceipt = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-donor-by-id/${id}`, {
+      .get(`${BASE_URL}/api/fetch-donor-by-id/${donorId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -232,7 +232,7 @@ const CreateReceipt = () => {
         setUserdata(res.data.individualCompany);
         setLoader(false);
       });
-  }, [id]);
+  }, [donorId]);
 
   const [datasource, setDatasource] = useState([]);
   useEffect(() => {
@@ -294,7 +294,7 @@ const CreateReceipt = () => {
 
       if (response.status == "200") {
         toast.success("Receipt Created Successfully");
-        navigate("/donor-list");
+        onClose();
       } else {
         if (response.status == "401") {
           toast.error("Receipt Duplicate Entry");
@@ -312,7 +312,8 @@ const CreateReceipt = () => {
     }
   };
   return (
-  <Layout>
+ 
+    
       <div className="  bg-[#FFFFFF] p-2  rounded-lg   ">
       <div className="flex mb-4 mt-6">
           <h1 className="text-2xl text-[#464D69] font-semibold ml-2 content-center">
@@ -541,7 +542,7 @@ const CreateReceipt = () => {
           </form> */}
         </div>
       </div>
-  </Layout>
+ 
   )
 }
 
