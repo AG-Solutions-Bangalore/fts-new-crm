@@ -11,6 +11,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import AddIndivisual from "./AddIndivisual";
 import AddCompany from "./AddCompany";
 import CreateReceipt from "./CreateReceipt";
+import DonorView from "./DonorView";
 
 const DonorList = () => {
   const [donorData, setDonorData] = useState(null);
@@ -27,6 +28,8 @@ const DonorList = () => {
   const [companyDrawer, setCompanyDrawer] = useState(false);
   const [receiptDrawer, setReceiptDrawer] = useState(false);
   const [selectedDonorId, setSelectedDonorId] = useState(null);
+  const [viewerDrawer, setViewerDrawer] = useState(false);
+  const [selectedViewerId, setSelectedViewerId] = useState(null);
 
   const toggleIndividualDrawer = (open) => (event) => {
     if (
@@ -61,6 +64,19 @@ const DonorList = () => {
       }
       setReceiptDrawer(open);
       if (id) setSelectedDonorId(id);
+    };
+  const toggleViewerDrawer =
+    (open, id = null) =>
+    (event) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        (event.key === "Tab" || event.key === "Shift")
+      ) {
+        return;
+      }
+      setViewerDrawer(open);
+      if (id) setSelectedViewerId(id);
     };
 
   const fetchDonorData = async () => {
@@ -162,14 +178,15 @@ const DonorList = () => {
               </div>
 
               <div
-                onClick={() => navigate(`/donor-view/${id}`)}
+                // onClick={() => navigate(`/donor-view/${id}`)}
+                onClick={toggleViewerDrawer(true, id)}
                 className="flex items-center space-x-2"
               >
                 <IconEye title="View" className="h-5 w-5 cursor-pointer" />
               </div>
               {userType == "1" ? (
                 <div
-                  onClick={toggleReceiptDrawer(true, id)}
+                  // onClick={toggleReceiptDrawer(true, id)}
                   className="flex items-center space-x-2"
                 >
                   <IconReceipt
@@ -249,6 +266,7 @@ const DonorList = () => {
             <MantineReactTable table={table} />
           </div>
         </div>
+        {/* for receipt  */}
         <SwipeableDrawer
           anchor="right"
           open={receiptDrawer}
@@ -259,6 +277,19 @@ const DonorList = () => {
           <CreateReceipt
             donorId={selectedDonorId}
             onClose={toggleReceiptDrawer(false)}
+          />
+        </SwipeableDrawer>
+        {/* for donor view  */}
+        <SwipeableDrawer
+          anchor="right"
+          open={viewerDrawer}
+          onClose={toggleViewerDrawer(false)}
+          onOpen={toggleViewerDrawer(true)}
+        >
+         
+          <DonorView
+            viewerId={selectedViewerId}
+            onClose={toggleViewerDrawer(false)}
           />
         </SwipeableDrawer>
       </Layout>

@@ -311,10 +311,21 @@ const CreateReceipt = ({donorId,onClose}) => {
       setIsButtonDisabled(false);
     }
   };
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
+  const inputClassSelect =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
  
     
-      <div className="  bg-[#FFFFFF] p-2  rounded-lg   ">
+      <div className="  bg-[#FFFFFF] p-2 w-[48rem]  rounded-lg   ">
       <div className="flex mb-4 mt-6">
           <h1 className="text-2xl text-[#464D69] font-semibold ml-2 content-center">
             Receipt
@@ -360,11 +371,11 @@ const CreateReceipt = ({donorId,onClose}) => {
               )}
             </div>
           </div>
-          {/* <form onSubmit={onSubmit} autoComplete="off">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-              <div className="form-group ">
+          <form onSubmit={onSubmit} autoComplete="off"  className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 ">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div >
              
-                <Fields
+                {/* <Fields
                   type="newwhatsappDropdown"
                   title="Category"
                   name="receipt_exemption_type"
@@ -372,9 +383,18 @@ const CreateReceipt = ({donorId,onClose}) => {
                   onChange={(e) => onInputChange(e)}
                   required={true}
                   options={exemption}
-                />
+                /> */}
+                 <FormLabel required>Category</FormLabel>
+              <input
+                type="text"
+                name="receipt_exemption_type"
+                value={donor.receipt_exemption_type}
+                onChange={(e) => onInputChange(e)}
+                className={inputClass}
+                required
+              />
               </div>
-              <div className="form-group mt-6">
+              {/* <div className="form-group mt-6">
                 <Input
                   required
                   type="text"
@@ -418,9 +438,9 @@ const CreateReceipt = ({donorId,onClose}) => {
                   value={donor.receipt_donation_type}
                   onChange={(e) => onInputChange(e)}
                 />
-              </div>
+              </div> */}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
               <div className="form-group ">
                 <Input
                   type="date"
@@ -538,8 +558,8 @@ const CreateReceipt = ({donorId,onClose}) => {
                   Back
                 </button>
               </Link>
-            </div>
-          </form> */}
+            </div> */}
+          </form>
         </div>
       </div>
  

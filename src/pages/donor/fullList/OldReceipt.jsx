@@ -1,0 +1,129 @@
+import { IconArrowBack, IconEye, IconInfoCircle } from '@tabler/icons-react';
+import axios from 'axios';
+import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
+import React, { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import BASE_URL from '../../../base/BaseUrl';
+
+const OldReceipt = ({viewerId,onClose}) => {
+    const [receiptData, setReceiptData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      const fetchReceiptData = async () => {
+        try {
+        
+          setLoading(true);
+          const token = localStorage.getItem("token");
+          const response = await axios.get(`${BASE_URL}/api/fetch-receipts-by-old-id/${viewerId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          setReceiptData(response.data?.receipts);
+        } catch (error) {
+          console.error("Error fetching receipt list data", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchReceiptData();
+      setLoading(false);
+    }, [viewerId]);
+
+    const columns = useMemo(
+        () => [
+          {
+            accessorKey: "receipt_no",
+            header: "Receipt No",
+          
+          },
+          {
+            accessorKey: "individual_company",
+            header: "Full Name",
+            Cell:({row})=>{
+                const fullName = row.original.indicomp_full_name
+                return fullName || "N/A";
+            }
+          },
+          {
+            accessorKey: "receipt_date",
+            header: "Date",
+          },
+          {
+            accessorKey: "receipt_exemption_type",
+            header: "Exemption Type",
+
+          },
+          {
+            accessorKey: "receipt_donation_type",
+            header: "Donation Type",
+           
+          },
+          {
+            accessorKey: "receipt_total_amount",
+            header: "Amount",
+          },
+       
+          
+          {
+            id: "id",
+            header: "Action",
+            Cell: ({ row }) => {
+              const id = row.original.id;
+    
+              return (
+                <div className="flex gap-2">
+                 
+                  <div
+                    // onClick={() => navigate(`/donor-view/${id}`)}
+                    // onClick={toggleViewerDrawer(true, id)}
+                    className="flex items-center space-x-2"
+                  >
+                    <IconEye title="View" className="h-5 w-5 cursor-pointer" />
+                  </div>
+                 
+                </div>
+              );
+            },
+          },
+        ],
+        []
+      );
+    
+      const table = useMantineReactTable({
+        columns,
+        data: receiptData || [],
+        enableFullScreenToggle: false,
+        enableDensityToggle: false,
+        enableColumnActions: false,
+     
+      });
+
+
+  return (
+    <div className=' bg-[#FFFFFF] p-2  w-[47rem]  overflow-y-auto custom-scroll-add'>
+        <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
+        <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
+          <div className="flex  items-center gap-2">
+            <IconInfoCircle className="w-4 h-4" />
+            <span>Old Receipt</span>
+          </div>
+          <IconArrowBack
+            onClick={() => onClose()}
+            className="cursor-pointer hover:text-red-600"
+          />
+        </h2>
+      </div>
+      <hr />
+    
+    <div className=" shadow-md">
+            <MantineReactTable table={table} />
+          </div>
+    </div>
+  )
+}
+
+export default OldReceipt
