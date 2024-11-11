@@ -52,31 +52,33 @@ const NopanView = (props) => {
 
       {!loader && !error && (
         <div className="invoice-wrapper">
-          <PageTitleBar
-            title="Receipt Document"
-            icon={FaArrowLeft}
-            match={props.match}
-            backLink="/report/otg"
-          />
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto grid sm:grid-cols-1 1fr">
-                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-end md:space-y-0 md:space-x-4">
-                  <Button
-                    variant="text"
-                    className="flex items-center space-x-2"
-                  >
-                    <LuDownload className="text-lg" />
-                    <span>PDF</span>
-                  </Button>
+                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4">
+                  <PageTitleBar
+                    title="Receipt Document"
+                    icon={FaArrowLeft}
+                    match={props.match}
+                    backLink="/report/otg"
+                  />{" "}
+                  <div className="flex">
+                    <Button
+                      variant="text"
+                      className="flex items-center space-x-2"
+                    >
+                      <LuDownload className="text-lg" />
+                      <span>PDF</span>
+                    </Button>
 
-                  <Button
-                    variant="text"
-                    className="flex items-center space-x-2"
-                  >
-                    <IoIosPrint className="text-lg" />
-                    <span>Print Letter</span>
-                  </Button>
+                    <Button
+                      variant="text"
+                      className="flex items-center space-x-2"
+                    >
+                      <IoIosPrint className="text-lg" />
+                      <span>Print Letter</span>
+                    </Button>
+                  </div>{" "}
                 </div>
                 <hr className="mb-6"></hr>
                 {/* Header */}

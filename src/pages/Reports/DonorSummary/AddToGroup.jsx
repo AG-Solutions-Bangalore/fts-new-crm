@@ -76,7 +76,9 @@ const AddToGroup = ({ populateDonorName, handleClose }) => {
     <div className="data-table-wrapper">
       {loader ? (
         <div className="flex justify-center items-center h-screen">
-          <Spinner color="purple" className="h-12 w-12" />
+          <div className="flex justify-center items-center h-screen">
+            <Spinner />
+          </div>{" "}
         </div>
       ) : (
         <div className="w-full">
