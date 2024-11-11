@@ -42,7 +42,7 @@ const Layout = ({ children }) => {
       {/* ------------------------------------------- */}
       {/* Main Wrapper */}
       {/* ------------------------------------------- */}
-      <PageWrapper className="page-wrapper">
+      <PageWrapper className="page-wrapper max-w-full">
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}
