@@ -56,8 +56,37 @@ const AppProvider = ({ children }) => {
           "/edit-viewer",
           "/duplicate-list",
           "/create-receipts",
-          "/pincode"
-         
+          "/pincode",
+
+          ///downloads
+          "/download/receipts",
+          "/download/donor",
+          "/download/school",
+          "/download/ots",
+          "/download/team",
+          "/download/allrecepit",
+
+          // REPORT
+
+          "/report/donorsummary",
+          "/report/recepit",
+          "/report/promoter",
+          "/report/donation",
+          "/report/school",
+          "/report/otg",
+          "/report/payment",
+          "/report/suspense",
+          //report view
+          "/d-summary-view",
+          "/report-donation-view",
+          "/recepit-summary-view",
+          "/recepit-otg-view",
+          "/recepit-nopan-view",
+          "/recepit-group-view",
+          "/report/payment-view",
+          "/report/donor-view",
+          "/report/donorgroup-view",
+          "/report/schoolview",
         ];
 
         const isAllowedPath = allowedPath.some((path) =>
