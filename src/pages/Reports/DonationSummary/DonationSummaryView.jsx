@@ -11,6 +11,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import CustomPivotTable from "./CustomPivotTable";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const DonationSummaryView = (props) => {
   const [donorsummary, setSummary] = useState([]);
@@ -76,11 +77,13 @@ const DonationSummaryView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid sm:grid-cols-1 1fr">
-                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4">
+                <div
+                  className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]"
+                >
                   <PageTitleBar
                     title="Donation Summary"
                     match={props.match}
-                    icon={FaArrowLeft}
+                    icon={IconArrowBack}
                     backLink="/report/donation"
                   />
                   <div className="flex">

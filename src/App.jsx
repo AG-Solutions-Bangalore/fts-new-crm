@@ -33,6 +33,10 @@ import RecepitDocument from "./pages/Reports/10DBDocument/RecepitDocument";
 import ReceiptAllView from "./pages/Reports/10DBDocument/10BDView/RecepitAllView";
 import NopanView from "./pages/Reports/10DBDocument/10BDView/NopanView";
 import GroupView from "./pages/Reports/10DBDocument/10BDView/GroupView";
+import FullList from "./pages/Students/FullList/FullList";
+import FullListView from "./pages/Students/FullList/FullListView";
+import SchoolToAllot from "./pages/Students/SchoolToAllot/SchoolToAllot";
+import DonorDetails from "./pages/Students/SchoolToAllot/DonorDetails";
 const App = () => {
   return (
     <>
@@ -81,22 +85,22 @@ const App = () => {
         <Route path="/recepit-otg-view" element={<ReceiptAllView />} />
         <Route path="/recepit-nopan-view" element={<NopanView />} />
         <Route path="/recepit-group-view" element={<GroupView />} />
+        {/* //SUDENTS */}
+        <Route path="/students-full-list" element={<FullList />} />
+        <Route path="/students-full-list-view/:id" element={<FullListView />} />
+        <Route path="/students-to-allot" element={<SchoolToAllot />} />
+        <Route path="/students-addschoolalot" element={<DonorDetails />} />
+
         {/*
-        <Route path="/report/suspense" element={<SuspenseSummary />} />
-        <Route path="/report/payment-view" element={<PaymentView />} />
-       
+        <Route path="/students-report-donor" element={<RepeatDonors />} />
 
-     
- 
-        <Route path="/recepit-donation-view" element={<DonationSummarys />} />
-
-        <Route path="/report/donation" element={<DonationSummary />} />
-     
-       
-        <Route path="/report/payment" element={<PaymentSummary />} /> */}
+        <Route path="/students-schoolallot" element={<SchoolAllot />} />
+        <Route path="/students-allotedit" element={<SchoolAllotEdit />} />
+        <Route path="/students-allotview" element={<SchoolAllotView />} />
+        <Route path="/students-allotletter" element={<SchoolAllotLetter />} /> */}
         {/* <Route
-          path="*"
-          element={<ProtectedRoute element={<Navigate to="/" />} />}
+          path="/students/report-donor-allotlist"
+          element={<AllotedList />}
         /> */}
       </Routes>
     </>

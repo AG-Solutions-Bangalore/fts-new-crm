@@ -12,6 +12,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { toast } from "react-toastify";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const DonorGroupView = (props) => {
   const componentRef = useRef();
@@ -107,7 +108,7 @@ const DonorGroupView = (props) => {
                   <PageTitle
                     title="Donor Group Summary"
                     match={props.match}
-                    icon={FaArrowLeft}
+                    icon={IconArrowBack}
                     backLink="/report/donorsummary"
                   />
                   <div className="flex">
