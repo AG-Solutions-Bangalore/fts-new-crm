@@ -31,6 +31,8 @@ import SchoolSummary from "./pages/Reports/SchoolSummary.jsx/SchoolSummary";
 import SchoolSumaryView from "./pages/Reports/SchoolSummary.jsx/SchoolSumaryView";
 import RecepitDocument from "./pages/Reports/10DBDocument/RecepitDocument";
 import ReceiptAllView from "./pages/Reports/10DBDocument/10BDView/RecepitAllView";
+import NopanView from "./pages/Reports/10DBDocument/10BDView/NopanView";
+import GroupView from "./pages/Reports/10DBDocument/10BDView/GroupView";
 const App = () => {
   return (
     <>
@@ -77,15 +79,17 @@ const App = () => {
         <Route path="/report/schoolview" element={<SchoolSumaryView />} />
         <Route path="/report/otg" element={<RecepitDocument />} />
         <Route path="/recepit-otg-view" element={<ReceiptAllView />} />
+        <Route path="/recepit-nopan-view" element={<NopanView />} />
+        <Route path="/recepit-group-view" element={<GroupView />} />
         {/*
         <Route path="/report/suspense" element={<SuspenseSummary />} />
         <Route path="/report/payment-view" element={<PaymentView />} />
        
 
      
-        <Route path="/recepit-nopan-view" element={<NopanView />} />
+ 
         <Route path="/recepit-donation-view" element={<DonationSummarys />} />
-        <Route path="/report/donorgroup-view" element={<DonorGroupView />} />
+
         <Route path="/report/donation" element={<DonationSummary />} />
      
        
