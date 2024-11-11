@@ -66,7 +66,7 @@ const SignIn = () => {
     setLoading(false);
   };
   const inputClass =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+    "w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
     <>
       <Toaster
@@ -135,7 +135,7 @@ const SignIn = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white"
+                  className="w-full text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse  text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                 >
                   {loading ? "Checking..." : "Sign In"}
                 </Button>
