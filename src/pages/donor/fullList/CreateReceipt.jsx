@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Layout from '../../../layout/Layout'
-import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios';
-import BASE_URL from '../../../base/BaseUrl';
+import React, { useEffect, useState } from "react";
+import Layout from "../../../layout/Layout";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import BASE_URL from "../../../base/BaseUrl";
 import moment from "moment";
+import { toast } from "react-toastify";
+import { Button } from "@material-tailwind/react";
+import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 const exemption = [
   {
     value: "80G",
@@ -126,10 +129,9 @@ const school_year = [
     label: "2025-26",
   },
 ];
-const CreateReceipt = ({donorId,onClose}) => {
-  // const {id} = useParams()
+const CreateReceipt = ({ donorId, onClose }) => {
   const today = new Date();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0");
   const yyyy = today.getFullYear();
@@ -249,7 +251,7 @@ const CreateReceipt = ({donorId,onClose}) => {
 
   const pan = userdata.indicomp_pan_no == "" ? "NA" : userdata.indicomp_pan_no;
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     if (!form.checkValidity()) {
@@ -323,247 +325,300 @@ const CreateReceipt = ({donorId,onClose}) => {
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
- 
-    
-      <div className="  bg-[#FFFFFF] p-2 w-[48rem]  rounded-lg   ">
-      <div className="flex mb-4 mt-6">
-          <h1 className="text-2xl text-[#464D69] font-semibold ml-2 content-center">
-            Receipt
-          </h1>
-        </div>
-        <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-3">
-            <div>
-              <label className="block text-gray-700 ">Name</label>
-              <span className="mt-1 text-black">
-                {userdata.indicomp_full_name}
-              </span>
+    <div className="bg-[#F8FAFC] p-4 w-[48rem] overflow-y-auto custom-scroll-add">
+     
+
+
+      <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-2">
+        <div className="bg-[#E1F5FA] p-4 rounded-t-xl border-b-2 border-green-500">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <IconInfoCircle className="w-5 h-5 text-green-600" />
+              <h2 className="text-sm font-semibold text-black">Create Receipt</h2>
             </div>
-            <div>
-              <label className="block text-gray-700 ">FTS Id</label>
-              <span className="mt-1 text-black">
-                {userdata.indicomp_fts_id}
-              </span>
-            </div>
-            <div>
-              <label className="block text-gray-700 ">Pan No</label>
-              <span className="mt-1 text-black">{pan}</span>
-            </div>
-            <div>
-              <label className="block text-gray-700 ">Receipt Date</label>
-              <span className="mt-1 text-black">
-                {moment(donor.receipt_date).format("DD-MM-YYYY")}
-              </span>
-            </div>
-            <div>
-              <label className="block text-gray-700 ">Year</label>
-              <span className="mt-1 text-black">{currentYear}</span>
-            </div>
-            <div>
-              {donor.receipt_total_amount > 2000 &&
-              donor.receipt_exemption_type == "80G" &&
-              pan == "NA" ? (
-                <span className="amounterror">
-                  Max amount allowedwithout Pan card is 2000
-                </span>
-              ) : (
-                ""
-              )}
-            </div>
+            <IconArrowBack
+              onClick={onClose}
+              className="cursor-pointer hover:text-red-600 transition-colors"
+            />
           </div>
-          <form onSubmit={onSubmit} autoComplete="off"  className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 ">
-            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div >
-             
-                {/* <Fields
-                  type="newwhatsappDropdown"
-                  title="Category"
-                  name="receipt_exemption_type"
-                  value={donor.receipt_exemption_type}
-                  onChange={(e) => onInputChange(e)}
-                  required={true}
-                  options={exemption}
-                /> */}
-                 <FormLabel required>Category</FormLabel>
-              <input
-                type="text"
+        </div>
+
+        <div className="p-4 bg-white rounded-b-xl">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <h3 className="text-lg font-semibold text-black">
+              {userdata.indicomp_full_name}
+            </h3>
+            <p className="text-xs text-gray-600">
+              FTS Id: {userdata.indicomp_fts_id}
+            </p>
+          </div>
+          <div className="space-y-1 relative">
+            <div className="flex items-center">
+              <h3 className="text-lg font-semibold text-black">
+                {moment(donor.receipt_date).format("DD-MM-YYYY")}
+              </h3>
+              <p className=" absolute -mt-8 text-xs text-gray-600">
+                {finalyear}
+              </p>
+            </div>
+            <p className="text-xs text-green-600">Pan : {pan}</p>
+          </div>
+          {donor.receipt_total_amount > 2000 &&
+          donor.receipt_exemption_type == "80G" &&
+          pan == "NA" ? (
+            <span className="amounterror">
+              Max amount allowedwithout Pan card is 2000
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
+      </div>
+
+     
+     
+      <form
+        onSubmit={handleSubmit}
+        id="addIndiv"
+        className="w-full max-w-7xl bg-white rounded-lg mx-auto p-6 space-y-8 "
+      >
+        <div>
+          <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
+            <IconInfoCircle className="w-4 h-4" />
+            <span>Receipt Details</span>
+          </h2>
+          <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div>
+              <FormLabel required>Category</FormLabel>
+              <select
                 name="receipt_exemption_type"
                 value={donor.receipt_exemption_type}
+                onChange={(e) => onInputChange(e)}
+                required
+                className={inputClassSelect}
+              >
+                <option value="">Select Category</option>
+                {exemption.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+              </select>
+               <p className="text-gray-600 text-xs px-2 pt-1">
+               Please select your Exemption Type
+              </p>
+            </div>
+            <div>
+              <FormLabel required>Total Amount</FormLabel>
+              <input
+                type="text"
+                maxLength={8}
+                name="receipt_total_amount"
+                value={donor.receipt_total_amount}
                 onChange={(e) => onInputChange(e)}
                 className={inputClass}
                 required
               />
-              </div>
-              {/* <div className="form-group mt-6">
-                <Input
-                  required
-                  type="text"
-                  maxLength={8}
-                  label="Total Amount"
-                  autoComplete="Name"
-                  name="receipt_total_amount"
-                  value={donor.receipt_total_amount}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </div>
-              <div className="form-group ">
-               
-                <Fields
-                  type="transactionDropdown"
-                  title="Transaction Type"
-                  required={true}
-                  options={
-                    donor.receipt_exemption_type == "80G" &&
-                    donor.receipt_total_amount > 2000
-                      ? pay_mode_2
-                      : pay_mode
-                  }
-                  name="receipt_tran_pay_mode"
-                  value={donor.receipt_tran_pay_mode}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </div>
-              <div className="form-group col-span-2 md:ml-12">
-              
-                <Fields
-                  type="transactionDropdown"
-                  title="Purpose"
-                  required={true}
-                  options={
-                    donor.receipt_exemption_type == "80G"
-                      ? donation_type_2
-                      : donation_type
-                  }
-                  name="receipt_donation_type"
-                  value={donor.receipt_donation_type}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </div> */}
             </div>
-            {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-              <div className="form-group ">
-                <Input
-                  type="date"
-                  max={today}
-                  label="Realization Date"
-                  autoComplete="Name"
-                  name="receipt_realization_date"
-                  value={donor.receipt_realization_date}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </div>
-              {donor.receipt_donation_type == "One Teacher School" ? (
-                <div className="form-group ">
-                  <Input
-                    required
-                    type="tel"
-                    maxLength={3}
-                    label="No of Schools"
-                    autoComplete="Name"
-                    name="receipt_no_of_ots"
-                    value={donor.receipt_no_of_ots}
-                    onChange={(e) => onInputChange(e)}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-              {donor.receipt_donation_type == "Membership" ? (
-                <div className="form-group ">
-                  <Fields
-                    required={true}
-                    type="whatsappDropdown"
-                    title="Membership End Date"
-                    autoComplete="Name"
-                    name="m_ship_vailidity"
-                    value={donor.m_ship_vailidity}
-                    onChange={(e) => onInputChange(e)}
-                    options={member_date}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-              {donor.receipt_donation_type == "General" ? (
-                <div className="form-group ">
-                  <Fields
-                    required={true}
-                    type="sourceDropdown"
-                    title="Source"
-                    autoComplete="Name"
-                    name="donor_source"
-                    value={donor.donor_source}
-                    onChange={(e) => onInputChange(e)}
-                    options={datasource}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-              <div className="form-group col-span-2">
-                <Fields
-                  // required={true}
-                  type="textField"
-                  title="Transaction Pay Details"
-                  autoComplete="Name"
-                  name="receipt_tran_pay_details"
-                  value={donor.receipt_tran_pay_details}
-                  onChange={(e) => onInputChange(e)}
-                />
-                <div>
-                  <span className="text-gray-500 text-sm">
-                    Cheque No / Bank Name / UTR / Any Other Details
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-              {donor.receipt_donation_type == "One Teacher School" ? (
-                <div className="form-group ">
-                  <Fields
-                    required={true}
-                    type="whatsappDropdown"
-                    title="School Allottment Year"
-                    autoComplete="Name"
-                    name="schoolalot_year"
-                    value={donor.schoolalot_year}
-                    onChange={(e) => onInputChange(e)}
-                    options={school_year}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-              <div className="form-group col-span-2">
-                <Fields
-                  type="textField"
-                  title="Remarks"
-                  autoComplete="Name"
-                  name="receipt_remarks"
-                  value={donor.receipt_remarks}
-                  onChange={(e) => onInputChange(e)}
-                />
-              </div>
-            </div>
-            <div className="mt-4 ">
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-                disabled={isButtonDisabled}
-              >
-                {isButtonDisabled ? "Submiting..." : "Submit"}
-              </button>
-              <Link to="/donor-list">
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md">
-                  Back
-                </button>
-              </Link>
-            </div> */}
-          </form>
-        </div>
-      </div>
- 
-  )
-}
 
-export default CreateReceipt
+            <div>
+              <FormLabel required>Transaction Type</FormLabel>
+              <select
+                name="receipt_tran_pay_mode"
+                value={donor.receipt_tran_pay_mode}
+                onChange={(e) => onInputChange(e)}
+                required
+                className={inputClassSelect}
+              >
+                <option value="">Select Transaction Type</option>
+                {donor.receipt_exemption_type == "80G" &&
+                donor.receipt_total_amount > 2000
+                  ? pay_mode_2.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))
+                  : pay_mode.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+              </select>
+              <p className="text-gray-600 text-xs px-2 pt-1">
+                Please select your Transaction Type
+              </p>
+            </div>
+            <div>
+              <FormLabel required>Purpose</FormLabel>
+              <select
+                name="receipt_donation_type"
+                value={donor.receipt_donation_type}
+                onChange={(e) => onInputChange(e)}
+                required
+                className={inputClassSelect}
+              >
+                <option value="">Select Transaction Type</option>
+                {donor.receipt_exemption_type == "80G"
+                  ? donation_type_2.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))
+                  : donation_type.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+              </select>
+              <p className="text-gray-600 text-xs px-2 pt-1">
+                Please select your Donation Type
+              </p>
+            </div>
+
+            <div>
+              <FormLabel>Realization Date</FormLabel>
+              <input
+                type="date"
+                name="receipt_realization_date"
+                value={donor.receipt_realization_date}
+                onChange={(e) => onInputChange(e)}
+                className={inputClass}
+              />
+              
+            </div>
+
+            {donor.receipt_donation_type == "Membership" ? (
+              <div>
+                <FormLabel>Membership End Date</FormLabel>
+                <select
+                  name="m_ship_vailidity"
+                  value={donor.m_ship_vailidity}
+                  onChange={(e) => onInputChange(e)}
+                  className={inputClassSelect}
+                >
+                  <option value="">Select Membership End Date</option>
+                  {member_date.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-gray-600 text-xs px-2 pt-1">
+                  Membership End Date
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
+            {donor.receipt_donation_type == "General" ? (
+              <div>
+                <FormLabel>Source</FormLabel>
+                <select
+                  name="donor_source"
+                  value={donor.donor_source}
+                  onChange={(e) => onInputChange(e)}
+                  className={inputClassSelect}
+                >
+                  <option value="">Select Source</option>
+                  {datasource.map((source) => (
+                    <option key={source.id} value={source.data_source_type}>
+                      {source.data_source_type}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-gray-600 text-xs px-2 pt-1">Source</p>
+              </div>
+            ) : (
+              ""
+            )}
+            {donor.receipt_donation_type == "One Teacher School" ? (
+              <div>
+                <FormLabel>No of Schools</FormLabel>
+                <input
+                  type="text"
+                  maxLength={3}
+                  name="receipt_no_of_ots"
+                  value={donor.receipt_no_of_ots}
+                  onChange={(e) => onInputChange(e)}
+                  className={inputClass}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+            {donor.receipt_donation_type == "One Teacher School" ? (
+              <div>
+                <FormLabel>School Allottment Year</FormLabel>
+                <select
+                  name="schoolalot_year"
+                  value={donor.schoolalot_year}
+                  onChange={(e) => onInputChange(e)}
+                  className={inputClassSelect}
+                >
+                  <option value="">Select Allotment year</option>
+                  {school_year.map((source) => (
+                    <option key={source.value} value={source.value}>
+                      {source.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-gray-600 text-xs px-2 pt-1">
+                  School Allottment Year
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
+
+            <div>
+              <FormLabel>Transaction Pay Details</FormLabel>
+              <textarea
+                type="text"
+                name="receipt_tran_pay_details"
+                value={donor.receipt_tran_pay_details}
+                onChange={(e) => onInputChange(e)}
+                className={inputClass}
+              />
+              <p className="text-gray-600 text-xs px-2 pt-1">
+                Cheque No / Bank Name / UTR / Any Other Details
+              </p>
+            </div>
+
+            <div>
+              <FormLabel>Remarks</FormLabel>
+              <textarea
+                type="text"
+                name="receipt_remarks"
+                value={donor.receipt_remarks}
+                onChange={(e) => onInputChange(e)}
+                className={inputClass}
+              />
+            </div>
+            
+          </div>
+        </div>
+        {/* Form Actions */}
+        <div className="flex gap-4 justify-start">
+          <Button
+            type="submit"
+            className="bg-[#269fbd] hover:bg-green-700"
+            disabled={isButtonDisabled}
+          >
+            {isButtonDisabled ? "Submitting..." : "Submit"}
+          </Button>
+          {/* <Button
+        onClick={() => onClose()}
+        type="button"
+        className="bg-blue-500 hover:bg-green-700"
+      >
+        Back
+      </Button> */}
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default CreateReceipt;

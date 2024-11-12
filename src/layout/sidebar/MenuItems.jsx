@@ -132,7 +132,7 @@ const Menuitems = [
     id: uniqueId(),
     title: "Receipts",
     icon: IconReceipt,
-    href: "/formview",
+    href: "/receipt-list",
   },
   {
     id: uniqueId(),

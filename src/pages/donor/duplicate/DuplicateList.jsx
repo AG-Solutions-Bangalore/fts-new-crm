@@ -132,6 +132,7 @@ const DuplicateList = () => {
         enableFullScreenToggle: false,
         enableDensityToggle: false,
         enableColumnActions: false,
+        enableHiding:false,
       
       });
   return (

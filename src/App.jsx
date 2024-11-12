@@ -43,10 +43,16 @@ import ViewerList from "./pages/donor/viewer/ViewerList";
 import EditViewer from "./pages/donor/viewer/EditViewer";
 import MemberList from "./pages/donor/member/MemberList";
 import DuplicateList from "./pages/donor/duplicate/DuplicateList";
+<<<<<<< HEAD
 import ChaptersList from "./pages/master/chapters/ChaptersList";
 import EditChapter from "./pages/master/chapters/EditChapter";
 import EditDataSource from "./pages/master/chapters/EditDataSource";
 import StatesList from "./pages/master/states/StatesList";
+=======
+import ReceiptList from "./pages/receipts/ReceiptList";
+import ReceiptEdit from "./pages/receipts/ReceiptEdit";
+import ReceiptViewIndex from "./pages/receipts/receiptView/ReceiptViewIndex";
+>>>>>>> 434e9e5840905e518aa281b4cb8b28d5fb14e08b
 const App = () => {
   return (
     <>
@@ -66,6 +72,13 @@ const App = () => {
         <Route path="/edit-viewer/:id" element={<EditViewer />} />
         <Route path="/member-list" element={<MemberList />} />
         <Route path="/duplicate-list" element={<DuplicateList />} />
+
+        {/* receipt  */}
+
+
+        <Route path="/receipt-list" element={<ReceiptList />} />
+        <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />
+        <Route path="/view-receipts/:id" element={<ReceiptViewIndex />} />
 
         {/* school  */}
         <Route path="/profile" element={<Profile />} />

@@ -107,28 +107,36 @@ const DonorList = () => {
         accessorKey: "indicomp_fts_id",
         header: "Fts Id",
         isVisible: columnVisibility.indicomp_fts_id,
+        enableHiding: false,
+       
       },
       {
         accessorKey: "indicomp_full_name",
         header: "Full Name",
+        size: 150,
       },
       {
         accessorKey: "indicomp_type",
         header: "Type",
+        size: 50,
+        
       },
       {
         accessorKey: "indicomp_spouse_name",
         header: "Spouse",
         isVisible: columnVisibility.indicomp_spouse_name,
+        enableHiding: false,
       },
       {
         accessorKey: "indicomp_com_contact_name",
         header: "Contact",
         isVisible: columnVisibility.indicomp_com_contact_name,
+        enableHiding: false,
       },
       {
         accessorKey: "spouse_contact",
         header: "Spouse/Contact",
+        size: 150,
         Cell: ({ value, row }) => {
           const indicompType = row.original.indicomp_type;
           const spouseRow = row.original?.indicomp_spouse_name;
@@ -143,19 +151,19 @@ const DonorList = () => {
       {
         accessorKey: "indicomp_mobile_phone",
         header: "Mobile",
+        size: 50,
       },
       {
         accessorKey: "indicomp_email",
         header: "Email",
+        size: 150,
         Cell: ({ value, row }) => {
           console.log("Row Data:", row.original?.indicomp_email);
           const valueData = row.original?.indicomp_email;
           console.log("value", value);
           return (
             <div
-              className={` ${
-                valueData ? "bg-green-500" : ""
-              } rounded-lg text-white p-[1px] px-2 `}
+              
             >
               {valueData}
             </div>
@@ -165,6 +173,8 @@ const DonorList = () => {
       {
         id: "id",
         header: "Action",
+        size: 20,
+        enableHiding: false,
         Cell: ({ row }) => {
           const id = row.original.id;
 
@@ -178,7 +188,7 @@ const DonorList = () => {
               </div>
 
               <div
-                // onClick={() => navigate(`/donor-view/${id}`)}
+             
                 onClick={toggleViewerDrawer(true, id)}
                 className="flex items-center space-x-2"
               >
@@ -186,7 +196,7 @@ const DonorList = () => {
               </div>
               {userType == "1" ? (
                 <div
-                  // onClick={toggleReceiptDrawer(true, id)}
+                  onClick={toggleReceiptDrawer(true, id)}
                   className="flex items-center space-x-2"
                 >
                   <IconReceipt
@@ -211,8 +221,14 @@ const DonorList = () => {
     enableFullScreenToggle: false,
     enableDensityToggle: false,
     enableColumnActions: false,
+    enableHiding:false,
     state: { columnVisibility },
+    enableStickyHeader:true,
+    enableStickyFooter:true,
+    mantineTableContainerProps: { sx: { maxHeight: '400px' } },
     onColumnVisibilityChange: setColumnVisibility,
+    initialState:{ columnVisibility: { address: false } },
+    
   });
 
   return (

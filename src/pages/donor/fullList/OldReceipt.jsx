@@ -1,4 +1,4 @@
-import { IconArrowBack, IconEye, IconInfoCircle } from '@tabler/icons-react';
+import { IconArrowBack, IconEdit, IconEye, IconInfoCircle } from '@tabler/icons-react';
 import axios from 'axios';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import React, { useEffect, useMemo, useState } from 'react'
@@ -38,39 +38,48 @@ const OldReceipt = ({viewerId,onClose}) => {
           {
             accessorKey: "receipt_no",
             header: "Receipt No",
+            size:50,
           
           },
           {
-            accessorKey: "individual_company",
+            accessorKey: "individual_company.indicomp_full_name",
             header: "Full Name",
+            size:100,
             Cell:({row})=>{
-                const fullName = row.original.indicomp_full_name
-                return fullName || "N/A";
+                const fullName = row.original.individual_company.indicomp_full_name
+                return (
+                  fullName || "N/A"
+                )
             }
           },
           {
             accessorKey: "receipt_date",
             header: "Date",
+            size:50,
           },
           {
             accessorKey: "receipt_exemption_type",
             header: "Exemption Type",
+            size:50,
 
           },
           {
             accessorKey: "receipt_donation_type",
             header: "Donation Type",
+            size:50,
            
           },
           {
             accessorKey: "receipt_total_amount",
             header: "Amount",
+            size:50,
           },
        
           
           {
             id: "id",
             header: "Action",
+            size:50,
             Cell: ({ row }) => {
               const id = row.original.id;
     
@@ -78,11 +87,18 @@ const OldReceipt = ({viewerId,onClose}) => {
                 <div className="flex gap-2">
                  
                   <div
-                    // onClick={() => navigate(`/donor-view/${id}`)}
-                    // onClick={toggleViewerDrawer(true, id)}
+                     title='Receipt View'
+                    onClick={()=>navigate(`/view-receipts/${id}`)}
                     className="flex items-center space-x-2"
                   >
                     <IconEye title="View" className="h-5 w-5 cursor-pointer" />
+                  </div>
+                  <div
+                  title='Receipt Edit'
+                  onClick={()=>navigate(`/receipt-edit/${id}`)}
+                    className="flex items-center space-x-2"
+                  >
+                    <IconEdit  className="h-5 w-5 cursor-pointer" />
                   </div>
                  
                 </div>
@@ -99,6 +115,7 @@ const OldReceipt = ({viewerId,onClose}) => {
         enableFullScreenToggle: false,
         enableDensityToggle: false,
         enableColumnActions: false,
+        enableHiding:false,
      
       });
 

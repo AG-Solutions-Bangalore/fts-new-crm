@@ -41,7 +41,7 @@ const AppProvider = ({ children }) => {
           "/form",
           "/profile",
           "/change-password",
-
+          // donor
           "/donor-list",
           "/add-indivisual",
           "/add-company",
@@ -57,11 +57,18 @@ const AppProvider = ({ children }) => {
           "/duplicate-list",
           "/create-receipts",
           "/pincode",
+<<<<<<< HEAD
           //master
           "/master/chapters",
           "/edit-chapter",
           "/edit-datasource",
           "/master/states",
+=======
+          // receipt 
+          '/receipt-list',
+          "/receipt-edit",
+          "/view-receipts",
+>>>>>>> 434e9e5840905e518aa281b4cb8b28d5fb14e08b
           ///downloads
           "/download/receipts",
           "/download/donor",
@@ -69,9 +76,7 @@ const AppProvider = ({ children }) => {
           "/download/ots",
           "/download/team",
           "/download/allrecepit",
-
           // REPORT
-
           "/report/donorsummary",
           "/report/recepit",
           "/report/promoter",
@@ -94,7 +99,6 @@ const AppProvider = ({ children }) => {
           //students
           "/students-full-list",
           "/students-to-allot",
-
           "/students-report-donor",
           "/students-full-list-view",
           "/students-addschoolalot",
@@ -110,7 +114,7 @@ const AppProvider = ({ children }) => {
         );
         if (isAllowedPath) {
           navigate(currentPath + location.search);
-          console.log(currentPath + location.search);
+          console.log(currentPath);
         } else {
           navigate("/home");
         }
