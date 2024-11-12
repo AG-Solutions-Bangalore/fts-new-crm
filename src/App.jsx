@@ -37,6 +37,12 @@ import FullList from "./pages/Students/FullList/FullList";
 import FullListView from "./pages/Students/FullList/FullListView";
 import SchoolToAllot from "./pages/Students/SchoolToAllot/SchoolToAllot";
 import DonorDetails from "./pages/Students/SchoolToAllot/DonorDetails";
+import DonorEdit from "./pages/donor/fullList/DonorEdit";
+import CreateReceipt from "./pages/donor/fullList/CreateReceipt";
+import ViewerList from "./pages/donor/viewer/ViewerList";
+import EditViewer from "./pages/donor/viewer/EditViewer";
+import MemberList from "./pages/donor/member/MemberList";
+import DuplicateList from "./pages/donor/duplicate/DuplicateList";
 const App = () => {
   return (
     <>
@@ -50,7 +56,12 @@ const App = () => {
         {/* donor  */}
         <Route path="/donor-list" element={<DonorList />} />
         <Route path="/add-indivisual" element={<AddIndivisual />} />
-        <Route path="/pincode" element={<PincodeChecker />} />
+        <Route path="/donor-edit/:id" element={<DonorEdit />} />
+        <Route path="/create-receipts/:id" element={<CreateReceipt />} />
+        <Route path="/viewer-list" element={<ViewerList />} />
+        <Route path="/edit-viewer/:id" element={<EditViewer />} />
+        <Route path="/member-list" element={<MemberList />} />
+        <Route path="/duplicate-list" element={<DuplicateList />} />
 
         {/* school  */}
         <Route path="/profile" element={<Profile />} />

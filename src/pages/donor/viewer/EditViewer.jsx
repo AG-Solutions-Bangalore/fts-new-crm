@@ -10,6 +10,7 @@ import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 const EditViewer = () => {
     const { id } = useParams();
+    
     const navigate = useNavigate();
     const [viewerId, setID] = useState(0);
     const [firstName, setFirstName] = useState("");

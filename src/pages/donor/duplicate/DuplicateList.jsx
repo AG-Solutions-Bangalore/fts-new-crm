@@ -13,6 +13,7 @@ const DuplicateList = () => {
     const userType = parseInt(localStorage.getItem("user_type_id"), 10);
   
   
+    
     useEffect(() => {
       const fetchDuplicateData = async () => {
         try {
