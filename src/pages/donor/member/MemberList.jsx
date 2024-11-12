@@ -130,6 +130,7 @@ const MemberList = () => {
     data: memberData || [],
     enableFullScreenToggle: false,
     enableDensityToggle: false,
+    enableHiding:false,
     enableColumnActions: false,
     state: { columnVisibility },
     onColumnVisibilityChange: setColumnVisibility,

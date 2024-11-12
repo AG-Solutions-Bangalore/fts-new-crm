@@ -41,7 +41,7 @@ const AppProvider = ({ children }) => {
           "/form",
           "/profile",
           "/change-password",
-
+          // donor
           "/donor-list",
           "/add-indivisual",
           "/add-company",
@@ -57,7 +57,10 @@ const AppProvider = ({ children }) => {
           "/duplicate-list",
           "/create-receipts",
           "/pincode",
-
+          // receipt 
+          '/receipt-list',
+          "/receipt-edit",
+          "/view-receipts",
           ///downloads
           "/download/receipts",
           "/download/donor",
@@ -65,9 +68,7 @@ const AppProvider = ({ children }) => {
           "/download/ots",
           "/download/team",
           "/download/allrecepit",
-
           // REPORT
-
           "/report/donorsummary",
           "/report/recepit",
           "/report/promoter",
@@ -90,7 +91,6 @@ const AppProvider = ({ children }) => {
           //students
           "/students-full-list",
           "/students-to-allot",
-
           "/students-report-donor",
           "/students-full-list-view",
           "/students-addschoolalot",
@@ -106,7 +106,7 @@ const AppProvider = ({ children }) => {
         );
         if (isAllowedPath) {
           navigate(currentPath + location.search);
-          console.log(currentPath + location.search);
+          console.log(currentPath);
         } else {
           navigate("/home");
         }

@@ -180,11 +180,11 @@ const ReceiptDetails = ({ viewerId, onClose }) => {
           </div>
         )}
       </div>
-      <div className="p-4">
+      <div className="p-3 flex flex-col gap-2 bg-white">
          {/* Family Details Section */}
          <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <Typography variant="h5">Family Details</Typography>
+              <Typography variant="h5" color="blue-gray">Family Details</Typography>
               {/* {localStorage.getItem("user_type_id") != 2 &&
                localStorage.getItem("user_type_id") != 3 &&
                localStorage.getItem("user_type_id") != 4 && (
@@ -225,9 +225,9 @@ const ReceiptDetails = ({ viewerId, onClose }) => {
           </Card>
 
           {/* Company Details Section */}
-          <Card className="p-6">
+          <Card className="p-6 bg-white">
             <div className="flex justify-between items-center mb-6">
-              <Typography variant="h5">Company Details</Typography>
+              <Typography variant="h5" color="blue-gray">Company Details</Typography>
               {/* {localStorage.getItem("user_type_id") != 2 &&
                localStorage.getItem("user_type_id") != 3 &&
                localStorage.getItem("user_type_id") != 4 && (
