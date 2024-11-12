@@ -43,9 +43,16 @@ import ViewerList from "./pages/donor/viewer/ViewerList";
 import EditViewer from "./pages/donor/viewer/EditViewer";
 import MemberList from "./pages/donor/member/MemberList";
 import DuplicateList from "./pages/donor/duplicate/DuplicateList";
+<<<<<<< HEAD
+import ChaptersList from "./pages/master/chapters/ChaptersList";
+import EditChapter from "./pages/master/chapters/EditChapter";
+import EditDataSource from "./pages/master/chapters/EditDataSource";
+import StatesList from "./pages/master/states/StatesList";
+=======
 import ReceiptList from "./pages/receipts/ReceiptList";
 import ReceiptEdit from "./pages/receipts/ReceiptEdit";
 import ReceiptViewIndex from "./pages/receipts/receiptView/ReceiptViewIndex";
+>>>>>>> 434e9e5840905e518aa281b4cb8b28d5fb14e08b
 const App = () => {
   return (
     <>
@@ -75,6 +82,12 @@ const App = () => {
 
         {/* school  */}
         <Route path="/profile" element={<Profile />} />
+        {/* //Master */}
+        <Route path="/master/chapters" element={<ChaptersList />} />
+        <Route path="/edit-chapter/:id" element={<EditChapter />} />
+
+        <Route path="/edit-datasource/:id" element={<EditDataSource />} />
+        <Route path="/master/states" element={<StatesList />} />
 
         {/* //DOWNLOAD */}
 
