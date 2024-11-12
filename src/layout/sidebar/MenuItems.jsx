@@ -67,13 +67,13 @@ const Menuitems = [
         id: uniqueId(),
         title: "Chapters",
         icon: IconHierarchy,
-        href: "/table",
+        href: "/master/chapters",
       },
       {
         id: uniqueId(),
         title: "States",
         icon: IconLanguage,
-        href: "/table-one",
+        href: "/master/states",
       },
       {
         id: uniqueId(),

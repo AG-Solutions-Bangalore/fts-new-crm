@@ -57,7 +57,11 @@ const AppProvider = ({ children }) => {
           "/duplicate-list",
           "/create-receipts",
           "/pincode",
-
+          //master
+          "/master/chapters",
+          "/edit-chapter",
+          "/edit-datasource",
+          "/master/states",
           ///downloads
           "/download/receipts",
           "/download/donor",

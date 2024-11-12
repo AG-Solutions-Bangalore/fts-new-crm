@@ -43,6 +43,10 @@ import ViewerList from "./pages/donor/viewer/ViewerList";
 import EditViewer from "./pages/donor/viewer/EditViewer";
 import MemberList from "./pages/donor/member/MemberList";
 import DuplicateList from "./pages/donor/duplicate/DuplicateList";
+import ChaptersList from "./pages/master/chapters/ChaptersList";
+import EditChapter from "./pages/master/chapters/EditChapter";
+import EditDataSource from "./pages/master/chapters/EditDataSource";
+import StatesList from "./pages/master/states/StatesList";
 const App = () => {
   return (
     <>
@@ -65,6 +69,12 @@ const App = () => {
 
         {/* school  */}
         <Route path="/profile" element={<Profile />} />
+        {/* //Master */}
+        <Route path="/master/chapters" element={<ChaptersList />} />
+        <Route path="/edit-chapter/:id" element={<EditChapter />} />
+
+        <Route path="/edit-datasource/:id" element={<EditDataSource />} />
+        <Route path="/master/states" element={<StatesList />} />
 
         {/* //DOWNLOAD */}
 
