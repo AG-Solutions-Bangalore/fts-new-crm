@@ -15,6 +15,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { LuDownload } from "react-icons/lu";
 import { toast } from "react-toastify";
 import PageTitle from "../../../components/common/PageTitle";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const DonorSummaryView = (props) => {
   const componentRef = useRef();
@@ -106,11 +107,11 @@ const DonorSummaryView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid md:grid-cols-1 1fr">
-                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4">
+                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
                   <PageTitle
                     title="Donor Summary"
                     match={props.match}
-                    icon={FaArrowLeft}
+                    icon={IconArrowBack}
                     backLink="/report/donorsummary"
                   />
                   <div className="flex">
@@ -169,7 +170,10 @@ const DonorSummaryView = (props) => {
                 </div>
 
                 {individual.map((individ, key) => (
-                  <div className="grid grid-cols-5 mt-6" key={key}>
+                  <div
+                    className="grid sm:md:grid-cols-3 lg:grid-cols-5 space-y-2 mt-6"
+                    key={key}
+                  >
                     <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
                       <b className="items-center text-center">Full Name :</b>
                       <span>

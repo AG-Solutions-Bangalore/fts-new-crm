@@ -145,13 +145,13 @@ const Menuitems = [
         id: uniqueId(),
         title: "Full List",
         icon: IconListDetails,
-        href: "/",
+        href: "/students-full-list",
       },
       {
         id: uniqueId(),
         title: "School To Allot",
         icon: IconComponents,
-        href: "/",
+        href: "/students-to-allot",
       },
       {
         id: uniqueId(),

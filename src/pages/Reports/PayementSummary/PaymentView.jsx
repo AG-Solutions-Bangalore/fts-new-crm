@@ -12,6 +12,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { NumericFormat } from "react-number-format";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const PaymentView = (props) => {
   const componentRef = useRef();
@@ -59,7 +60,7 @@ const PaymentView = (props) => {
           <PageTitleBar
             title="Payment Summary"
             match={props.match}
-            icon={FaArrowLeft}
+            icon={IconArrowBack}
             backLink="/report/payment"
           />
           <div className="flex flex-col items-center">

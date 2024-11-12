@@ -1,65 +1,131 @@
 import { Input, Button, Typography } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import BASE_URL from "../../base/BaseUrl";
+import { useState } from "react";
+import Logo2 from "../../assets/receipt/sigin.jpg";
+import Logo1 from "../../assets/receipt/fts_logo.png";
+import { FaInstagram, FaPinterest, FaTwitter } from "react-icons/fa";
+import { TiSocialLinkedin, TiSocialYoutubeCircular } from "react-icons/ti";
+import { CgFacebook } from "react-icons/cg";
+import { Link, useNavigate } from "react-router-dom";
+import { FormLabel } from "@mui/material";
 
 const ForgetPassword = () => {
-  return (
-    <section className="flex flex-col lg:flex-row min-h-screen">
-      <div className="flex-1 lg:w-3/5 m-4 lg:m-12 px-4 lg:px-8">
-        <div className="text-center">
-          <Typography variant="h2" className="font-bold mb-4">
-            Forget Password
-          </Typography>
-          <Typography
-            variant="paragraph"
-            color="blue-gray"
-            className="text-lg font-normal"
-          >
-            Enter your email to reset your password.
-          </Typography>
-        </div>
-        <form className="mt-8 mb-2 mx-auto w-full max-w-md lg:w-3/4">
-          <div className="mb-6 flex flex-col gap-6">
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="-mb-3 font-medium"
-            >
-              Your email
-            </Typography>
-            <Input
-              id="email"
-              name="email"
-              size="lg"
-              placeholder="name@mail.com"
-              className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-            />
-          </div>
-          <Button type="submit" className="mt-6" fullWidth>
-            Reset Password
-          </Button>
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
-          <Typography
-            variant="paragraph"
-            className="text-center text-blue-gray-500 font-medium mt-4"
-          >
-            Remembered your password?
-            <Link to="/" className="text-gray-900 ml-1">
-              Sign In
-            </Link>
-          </Typography>
-        </form>
+  const onResetPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/send-password?username=${username}&email=${email}`,
+        { method: "POST" }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("New Password Sent to your Email");
+      } else {
+        toast.error("Email not sent. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred.");
+    }
+  };
+
+  const inputClass =
+    "w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+
+  return (
+    <>
+      <Toaster
+        toastOptions={{
+          success: { style: { background: "green" } },
+          error: { style: { background: "red" } },
+        }}
+        position="top-right"
+        reverseOrder={false}
+      />
+      <div className="min-h-screen bg-blue-400 flex items-center justify-center">
+        <div className="max-w-7xl w-full bg-white shadow-lg rounded-2xl overflow-hidden m-4">
+          <div className="flex flex-col lg:flex-row max-h-[682px]">
+            {/* Left Side - Image */}
+            <div className="lg:w-1/2 hidden lg:block">
+              <img
+                src={Logo2}
+                alt="Reset Password"
+                className="object-cover h-full w-full"
+              />
+            </div>
+
+            {/* Right Side - Form */}
+            <div className="flex-1 p-4 sm:px-0 md:px-16 flex flex-col mt-8 max-h-[682px]">
+              <div className="flex items-center justify-center mb-8">
+                <img src={Logo1} alt="Company Logo" className="w-32 h-32" />
+              </div>
+              <Typography
+                variant="h4"
+                className="text-center font-bold mb-6 text-blue-gray-800"
+              >
+                Enter your email to reset your password.
+              </Typography>
+              <form onSubmit={onResetPassword} className="space-y-6">
+                <div>
+                  <FormLabel required>Username</FormLabel>
+                  <input
+                    type="text"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className={inputClass}
+                    required
+                  />
+                </div>
+                <div>
+                  <FormLabel required>Email</FormLabel>
+                  <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={inputClass}
+                    required
+                  />
+                </div>
+                <div className="flex justify-center ">
+                  <button
+                    className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                    type="submit"
+                  >
+                    {" "}
+                    Reset Password
+                  </button>
+                </div>
+              </form>
+              <div className="text-end mt-4" onClick={() => navigate("/")}>
+                <Link className="text-sm text-gray-700 hover:text-blue-600">
+                  Sign In
+                </Link>
+              </div>
+
+              <div>
+                <h6 className="flex justify-center text-gray-600">
+                  Follow with us
+                </h6>
+                <div className="grid grid-cols-6 text-black">
+                  <CgFacebook className="text-black hover:bg-blue-700 cursor-pointer hover:text-white transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
+                  <TiSocialYoutubeCircular className="text-black hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
+                  <FaTwitter className="text-black hover:bg-blue-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
+                  <TiSocialLinkedin className="text-black hover:bg-blue-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
+                  <FaInstagram className="text-black hover:bg-yellow-800 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
+                  <FaPinterest className="text-black hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="w-full lg:w-2/5 h-auto lg:h-full hidden  lg:block">
-        <img
-          src="/img/pattern.png"
-          className="h-full max-h-screen w-full object-cover rounded-none"
-          alt="Forget Password Background"
-        />
-      </div>
-    </section>
+    </>
   );
 };
 

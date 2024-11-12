@@ -87,6 +87,18 @@ const AppProvider = ({ children }) => {
           "/report/donor-view",
           "/report/donorgroup-view",
           "/report/schoolview",
+          //students
+          "/students-full-list",
+          "/students-to-allot",
+
+          "/students-report-donor",
+          "/students-full-list-view",
+          "/students-addschoolalot",
+          "/students-schoolallot",
+          "/students-allotedit",
+          "/students-allotview",
+          "/students-allotletter",
+          "/students/report-donor-allotlist",
         ];
 
         const isAllowedPath = allowedPath.some((path) =>

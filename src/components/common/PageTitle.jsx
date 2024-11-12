@@ -14,16 +14,13 @@ const PageTitle = ({ title, icon: Icon, backLink }) => {
   };
 
   return (
-    <div
-      className="flex items-center space-x-2 text-gray-900 text-2xl mt-4 mb-6"
-      onClick={handleBackClick}
-    >
+    <div className="flex items-center space-x-2 text-gray-900 text-xl mt-4 mb-6">
       {Icon && (
-        <div className="cursor-pointer">
+        <div className="cursor-pointer" onClick={handleBackClick}>
           <Icon className="text-gray-700" />
         </div>
       )}
-      <div className="font-bold text-gray-700 text-2xl">{title}</div>
+      <div className="font-bold text-gray-700 ">{title}</div>
     </div>
   );
 };

@@ -88,7 +88,7 @@ const SignIn = () => {
         reverseOrder={false}
       />
       <div className="min-h-screen bg-blue-400 flex items-center justify-center">
-        <div className="max-w-7xl w-full bg-white shadow-lg rounded-2xl overflow-hidden  m-4">
+        <div className="max-w-7xl w-full bg-white shadow-lg rounded-2xl overflow-hidden  m-4 ">
           <div className="flex flex-col lg:flex-row max-h-[682px]">
             {/* Left Side - Image */}
             <div className="lg:w-1/2 hidden lg:block">
@@ -134,13 +134,16 @@ const SignIn = () => {
                   />
                 </div>
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                >
-                  {loading ? "Checking..." : "Sign In"}
-                </Button>
+                <div className="flex justify-center ">
+                  <button
+                    className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {" "}
+                    {loading ? "Checking..." : "Sign In"}
+                  </button>
+                </div>
               </form>
               <div
                 className="text-end mt-4"
