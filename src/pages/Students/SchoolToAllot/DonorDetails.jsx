@@ -7,10 +7,12 @@ import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table"; // Import the MantineReactTable
 import schoolalotcurrentfromdate from "./Date/FromDate";
 import schoolalotcurrenttodate from "./Date/ToDate";
-import { Card, Spinner, Button } from "@material-tailwind/react";
+import { Card, Button } from "@material-tailwind/react";
 import PageTitle from "../../../components/common/PageTitle";
 import toast from "react-hot-toast";
 import { IoMdArrowBack } from "react-icons/io";
+import { IconBox, IconCheckbox } from "@tabler/icons-react";
+import { IconSquare } from "@tabler/icons-react";
 
 const DonorDetails = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
@@ -25,6 +27,9 @@ const DonorDetails = () => {
 
   const fromdate = schoolalotcurrentfromdate.toString();
   const todate = schoolalotcurrenttodate.toString();
+  const [rowSelection, setRowSelection] = useState({});
+
+  const [userdata, setUserdata] = useState("");
 
   const [schoolalot, setSchoolalot] = useState({
     indicomp_fts_id: "",
@@ -34,8 +39,6 @@ const DonorDetails = () => {
     schoolalot_school_id: "",
     rept_fin_year: fyear,
   });
-
-  const [userdata, setUserdata] = useState("");
 
   useEffect(() => {
     axios({
@@ -64,19 +67,19 @@ const DonorDetails = () => {
           );
           const res = response.data?.schools;
           setSchoolAllot(res);
-          if (Array.isArray(res)) {
-            const tempRows = res.map((item, index) => [
-              item["school_state"],
-              item["district"],
-              item["achal"],
-              item["cluster"],
-              item["sub_cluster"],
-              item["village"],
-              item["school_code"],
-              item["status_label"],
-            ]);
-            setSchoolToAllot(tempRows);
-          }
+          // if (Array.isArray(res)) {
+          //   const tempRows = res.map((item, index) => [
+          //     item["school_state"],
+          //     item["district"],
+          //     item["achal"],
+          //     item["cluster"],
+          //     item["sub_cluster"],
+          //     item["village"],
+          //     item["school_code"],
+          //     item["status_label"],
+          //   ]);
+          //   setSchoolToAllot(tempRows);
+          // }
         } catch (error) {
           console.error("Error fetching approved list request data", error);
         } finally {
@@ -90,7 +93,7 @@ const DonorDetails = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    var schoolIdsSelected = selectedRows.join(","); // Get the selected school IDs
+    var schoolIdsSelected = selectedRows.join(",")
 
     let data = {
       indicomp_fts_id: userdata.indicomp_fts_id,
@@ -113,41 +116,36 @@ const DonorDetails = () => {
   };
 
   const columns = [
-    { accessorKey: "state", header: "State" },
+    { accessorKey: "school_state", header: "State" },
     { accessorKey: "district", header: "District" },
     { accessorKey: "achal", header: "Achal" },
     { accessorKey: "cluster", header: "Cluster" },
     { accessorKey: "sub_cluster", header: "Sub Cluster" },
     { accessorKey: "village", header: "Village" },
     { accessorKey: "school_code", header: "School Code" },
-    { accessorKey: "status", header: "Status" },
+    { accessorKey: "status_label", header: "Status" },
   ];
-  const handleSelectionChange = (allRowsSelected) => {
-    console.log("allRowsSelected:", allRowsSelected);
 
-    // Check if allRowsSelected is an array and handle it accordingly
-    if (Array.isArray(allRowsSelected)) {
-      const selectedIds = allRowsSelected
-        .map((row) => schoolAllot[row.dataIndex]?.school_code)
-        .join(",");
-      console.log("Selected School IDs:", selectedIds);
-      setSelectedRows(selectedIds);
-    } else {
-      console.warn("Unexpected structure of allRowsSelected", allRowsSelected);
-    }
-  };
+
+
+
+  useEffect(() => {
+    console.info("row selected breo", { rowSelection });
+    const selectedKeys = Object.keys(rowSelection).filter(
+      (key) => rowSelection[key]
+    );
+    localStorage.setItem("schooltoallot", selectedKeys.join(","));
+    setSelectedRows(selectedKeys); 
+    
+  }, [rowSelection]);
 
   const table = useMantineReactTable({
     columns,
     data: schoolAllot,
-    getRowId: (row) => row.school_code, // Ensure `school_code` is unique for each row
     enableRowSelection: true,
-    onRowSelectionChange: handleSelectionChange, // Adjusted handler
-    state: { rowSelection: selectedRows }, // Use selectedRows for row selection state
-    isRowSelectable: (rowIndex) =>
-      schoolAllot[rowIndex]?.status_label !== "Allotted",
-    selectableRowsOnClick: true,
-    customToolbarSelect: () => null,
+    getRowId: (originalRow) => originalRow.school_code,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
   });
 
   const InfoField = ({ label, value, icon }) => (
@@ -182,15 +180,9 @@ const DonorDetails = () => {
           <InfoField label="To Date" value={schoolalot.schoolalot_to_date} />
         </div>
         <div className="mt-5">
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <Spinner />
-            </div>
-          ) : (
-            <>
-              <MantineReactTable table={table} />
-            </>
-          )}
+          <>
+            <MantineReactTable table={table} />
+          </>
         </div>
         <div className="mt-5 flex justify-end p-4">
           <Button onClick={onSubmit} color="purple">
