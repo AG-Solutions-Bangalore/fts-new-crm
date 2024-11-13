@@ -1,20 +1,17 @@
-import { CardBody, Card, Input } from "@material-tailwind/react";
-import { CardContent, Dialog, Tooltip, Typography } from "@mui/material";
-import moment from "moment";
+import { Dialog, FormLabel, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MdHighlightOff, MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Layout from "../../../layout/Layout";
-import Fields from "../../../common/TextField/TextField";
 import BASE_URL from "../../../base/BaseUrl";
+import { IconCircleX } from "@tabler/icons-react";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 const FAQList = () => {
   const navigate = useNavigate();
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [student, setStudent] = useState({});
 
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
@@ -38,6 +35,7 @@ const FAQList = () => {
   const handleClose = (e) => {
     e.preventDefault();
     setOpen(false);
+    setUser({ header: "", text: "" });
   };
 
   const handleClickOpen1 = () => {
@@ -47,9 +45,9 @@ const FAQList = () => {
   const handleClose1 = (e) => {
     e.preventDefault();
     setOpen1(false);
+    setUser1({ header1: "", text1: "" });
   };
-
-  useEffect(() => {
+  const fetchData = () => {
     axios
       .get(`${BASE_URL}/api/fetch-faqs`, {
         headers: {
@@ -58,23 +56,29 @@ const FAQList = () => {
       })
       .then((res) => {
         setUsers(res.data.faqs);
-        
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
+
   const onUserInputChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const onUserInputChange1 = (e) => {
-    setUser1({
-      ...user1,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
+  const onUserInputChange1 = (e) => {
+    const { name, value } = e.target;
+    setUser1((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
   const createUser = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -98,17 +102,16 @@ const FAQList = () => {
         }
       );
 
-      if (response.data.code == "200") {
-        setUsers(res.data.faqs);
+      if (response.status === 200) {
+        setUsers(response.data.faqs);
         toast.success("FAQ is Created Successfully");
+        setUser({ header1: "", text1: "" });
+
+        handleClose(e);
+
+        fetchData();
       } else {
-        if (response.data.code == "401") {
-          toast.error("FAQ Duplicate Entry");
-        } else if (response.data.code == "402") {
-          toast.error("FAQ Duplicate Entry");
-        } else {
-          toast.error("FAQ Duplicate Entry");
-        }
+        toast.error("FAQ Duplicate Entry");
       }
     } catch (error) {
       console.error("Error updating FAQ:", error);
@@ -142,17 +145,13 @@ const FAQList = () => {
         }
       );
 
-      if (response.data.code == "200") {
-        setUsers(res.data.faqs);
+      if (response.status === 200) {
+        setUsers(response.data.faqs);
         toast.success("FAQ is Updated Successfully");
+        handleClose1(e);
+        fetchData();
       } else {
-        if (response.data.code == "401") {
-          toast.error("FAQ Duplicate Entry");
-        } else if (response.data.code == "402") {
-          toast.error("FAQ Duplicate Entry");
-        } else {
-          toast.error("FAQ Duplicate Entry");
-        }
+        toast.error("FAQ Duplicate Entry");
       }
     } catch (error) {
       console.error("Error updating FAQ:", error);
@@ -162,119 +161,110 @@ const FAQList = () => {
     }
   };
 
+  const columns = [
+    {
+      accessorKey: "header",
+      header: "Heading",
+    },
+    {
+      accessorKey: "text",
+      header: "Message",
+    },
+    {
+      accessorKey: "edit",
+      header: "Edit",
+      Cell: ({ row }) => (
+        <button
+          onClick={() => {
+            setUser1({
+              ...user1,
+              header1: row.original.header,
+              text1: row.original.text,
+            });
+            setSelectedUserId(row.original.id);
+            handleClickOpen1();
+          }}
+          className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
+        >
+          Edit
+        </button>
+      ),
+    },
+  ];
+  const table = useMantineReactTable({
+    columns,
+    data: users,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableFullScreenToggle: false,
+  });
+  const autoResize = (e) => {
+    e.target.style.height = "auto";
+    e.target.style.height = e.target.scrollHeight + "px";
+  };
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 resize-none";
   return (
     <Layout>
       <div>
-        <div className="">
-          <div className="flex  mb-4 mt-6">
+        <div className="flex flex-col md:flex-row md:justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
+          <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-xl md:text-2xl sm:text-sm text-center md:text-left">
+            New FAQ
+          </h1>
+
+          <div className="flex flex-wrap gap-2 justify-center mt-2 md:mt-0">
             <button
               onClick={handleClickOpen}
-              className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Create A New FAQ
             </button>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4">
-          <div className="min-w-full p-2 bg-white border border-gray-200 shadow-md rounded-lg">
-            <div className="mt-3 p-2  mb-2">
-              <div className="flex justify-between mb-2">
-                <h1 className="text-xl font-bold">FAQ</h1>
-              </div>
-              <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-                <thead>
-                  <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                    <th class="py-3 text-center">Sl No</th>
-                    <th class="py-3 text-center">Heading</th>
-                    <th class="py-3 text-center">Message</th>
-                    <th class="py-3 text-center">Edit</th>
-                  </tr>
-                </thead>
-                {users?.map((dataSumm, key) => (
-                  <tbody class="text-gray-600 text-sm font-light">
-                    <tr class="border-b border-gray-500 hover:bg-gray-100">
-                      <td class="py-3 px-12 text-center">
-                        <span> {key + 1}</span>
-                      </td>
-                      <td class="py-3 px-12 text-center">
-                        <span> {dataSumm.header}</span>
-                      </td>
-                      <td class="py-3 px-12 text-center">
-                        <span> {dataSumm.text}</span>
-                      </td>
-                      <td class="py-3 px-12 text-center">
-                        <button
-                          onClick={() => {
-                            setUser1({
-                              ...user1,
-                              header1: dataSumm.header,
-                              text1: dataSumm.text,
-                            });
-                            setSelectedUserId(dataSumm.id);
-                            handleClickOpen1();
-                          }}
-                          // onClick={handleClickOpen1}
-                          className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
-                        >
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                ))}
-              </table>
-            </div>
-          </div>
+          <MantineReactTable table={table} />
           <Dialog
             open={open}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
           >
             <form onSubmit={createUser} autoComplete="off">
-              <Card className="p-6 space-y-1 w-[500px]">
-                <CardContent>
+              <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
+                <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
                       Create States
                     </h1>
                     <div className="flex">
                       <Tooltip title="Close">
-                        <button
-                          className="ml-3 pl-2 hover:bg-gray-200 rounded-full"
-                          onClick={handleClose}
-                        >
-                          <MdHighlightOff />
+                        <button className="ml-3 pl-2 " onClick={handleClose}>
+                          <IconCircleX />
                         </button>
                       </Tooltip>
                     </div>
                   </div>
 
                   <div className="mt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="text"
-                          title="Enter Heading"
-                          type="textField"
-                          autoComplete="Name"
+                    <div className="grid grid-cols-1  gap-6 mb-2">
+                      <div>
+                        <FormLabel required>Enter Heading</FormLabel>
+                        <input
                           name="header"
                           value={user.header}
                           onChange={(e) => onUserInputChange(e)}
+                          className={inputClass}
+                          required
                         />
                       </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="textarea"
-                          title="Enter Message"
-                          type="textField"
-                          autoComplete="Name"
+                      <div>
+                        <FormLabel required>Enter Message</FormLabel>
+                        <textarea
                           name="text"
                           value={user.text}
                           onChange={(e) => onUserInputChange(e)}
+                          className={inputClass}
+                          onInput={autoResize}
+                          required
                         />
                       </div>
                     </div>
@@ -282,14 +272,14 @@ const FAQList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Submiting..." : "Submit"}
                       </button>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </form>
           </Dialog>
 
@@ -300,8 +290,8 @@ const FAQList = () => {
             // className="m-3  rounded-lg shadow-xl"
           >
             <form onSubmit={updateUser} autoComplete="off">
-              <Card className="p-6 space-y-1 w-[500px]">
-                <CardContent>
+              <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-3xl shadow-md">
+                <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
                       Edit Data Source
@@ -312,38 +302,33 @@ const FAQList = () => {
                           className="ml-3 pl-2 hover:bg-gray-200 rounded-full"
                           onClick={handleClose1}
                         >
-                          <MdHighlightOff />
+                          <IconCircleX />
                         </button>
                       </Tooltip>
                     </div>
                   </div>
 
                   <div className="mt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="text"
-                          title="Enter Heading"
-                          type="textField"
-                          autoComplete="Name"
+                    <div className="grid grid-cols-1  gap-6 mb-2">
+                      <div>
+                        <FormLabel required>Enter Heading</FormLabel>
+                        <input
                           name="header"
                           value={user1.header1}
                           onChange={(e) => onUserInputChange1(e)}
+                          className={inputClass}
+                          required
                         />
                       </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="text"
-                          title="Enter Message"
-                          type="textField"
-                          autoComplete="Name"
+                      <div>
+                        <FormLabel required>Enter Message</FormLabel>
+                        <textarea
                           name="text"
                           value={user1.text1}
                           onChange={(e) => onUserInputChange1(e)}
+                          className={inputClass}
+                          onInput={autoResize}
+                          required
                         />
                       </div>
                     </div>
@@ -351,14 +336,14 @@ const FAQList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Updating..." : "Update"}
                       </button>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </form>
           </Dialog>
         </div>

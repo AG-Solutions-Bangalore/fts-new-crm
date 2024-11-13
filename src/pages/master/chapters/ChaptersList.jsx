@@ -64,7 +64,7 @@ const ChaptersList = () => {
       header: "Actions",
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
-          <Link to={`/edit-chapter/${row.original.id}`}>
+          <Link to={`/view-chapter/${row.original.id}`}>
             <IconEye
               title="View"
               className="h-5 w-5 cursor-pointer text-blue-500"

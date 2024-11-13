@@ -71,6 +71,7 @@ const AddToGroup = ({ populateDonorName, handleClose }) => {
     data: donorData || [],
     enableDensityToggle: false,
     enableColumnActions: false,
+    enableFullScreenToggle: false,
   });
   return (
     <div className="data-table-wrapper">
