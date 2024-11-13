@@ -41,6 +41,10 @@ const EditDataSource = () => {
 
   const handleClose1 = () => {
     setOpen1(false);
+    setUser({
+      data_source_type: "",
+      chapter_id: "",
+    });
   };
 
   const fetchDataSources = async () => {
@@ -254,8 +258,8 @@ const EditDataSource = () => {
             className="rounded-[18px]"
           >
             <form onSubmit={createUser} autoComplete="off">
-            <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
-            <div>
+              <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
+                <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
                       Create Data Source
@@ -310,8 +314,8 @@ const EditDataSource = () => {
             aria-describedby="alert-dialog-slide-description"
           >
             <form autoComplete="off" onSubmit={updateUser}>
-            <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
-            <div>
+              <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
+                <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
                       Edit Data Source

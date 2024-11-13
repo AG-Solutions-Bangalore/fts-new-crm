@@ -57,18 +57,15 @@ const AppProvider = ({ children }) => {
           "/duplicate-list",
           "/create-receipts",
           "/pincode",
-<<<<<<< HEAD
           //master
           "/master/chapters",
           "/edit-chapter",
           "/edit-datasource",
           "/master/states",
-=======
           // receipt 
           '/receipt-list',
           "/receipt-edit",
           "/view-receipts",
->>>>>>> 434e9e5840905e518aa281b4cb8b28d5fb14e08b
           ///downloads
           "/download/receipts",
           "/download/donor",
