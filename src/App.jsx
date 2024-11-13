@@ -50,6 +50,11 @@ import StatesList from "./pages/master/states/StatesList";
 import ReceiptList from "./pages/receipts/ReceiptList";
 import ReceiptEdit from "./pages/receipts/ReceiptEdit";
 import ReceiptViewIndex from "./pages/receipts/receiptView/ReceiptViewIndex";
+import DesignationList from "./pages/master/designation/DesignationList";
+import ExpensiveTypeList from "./pages/master/expensivetype/ExpensiveTypeList";
+import FAQList from "./pages/master/FAQ/FAQList";
+import ViewChapter from "./pages/master/chapters/ViewChapter";
+import AddSchool from "./pages/master/chapters/AddSchool";
 const App = () => {
   return (
     <>
@@ -72,7 +77,6 @@ const App = () => {
 
         {/* receipt  */}
 
-
         <Route path="/receipt-list" element={<ReceiptList />} />
         <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />
         <Route path="/view-receipts/:id" element={<ReceiptViewIndex />} />
@@ -81,11 +85,13 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         {/* //Master */}
         <Route path="/master/chapters" element={<ChaptersList />} />
-        <Route path="/edit-chapter/:id" element={<EditChapter />} />
-
+        <Route path="/view-chapter/:id" element={<ViewChapter />} />
+        <Route path="/view-school/:id" element={<AddSchool />} />
         <Route path="/edit-datasource/:id" element={<EditDataSource />} />
         <Route path="/master/states" element={<StatesList />} />
-
+        <Route path="/master/designation" element={<DesignationList />} />
+        <Route path="/master/expensive-type" element={<ExpensiveTypeList />} />
+        <Route path="/master/faqList" element={<FAQList />} />
         {/* //DOWNLOAD */}
 
         <Route path="/download/receipts" element={<DowloadRecpit />} />

@@ -12,6 +12,7 @@ import {
 import moment from "moment/moment";
 import { FormLabel } from "@mui/material";
 import AddToGroup from "./AddToGroup";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const DonorSummary = () => {
   const navigate = useNavigate();
@@ -148,10 +149,10 @@ const DonorSummary = () => {
                 <span>Choose Donors</span>
               </h2>
               <button
-                className="text-center text-sm font-medium cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                className="text-black cursor-pointer hover:text-red-600"
                 onClick={handleOpenDialog}
               >
-                Close
+                <IconArrowBack />
               </button>
             </div>
           </div>

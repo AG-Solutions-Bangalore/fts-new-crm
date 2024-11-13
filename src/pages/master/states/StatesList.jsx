@@ -52,6 +52,11 @@ const StatesList = () => {
   const handleClose1 = (e) => {
     e.preventDefault();
     setOpen1(false);
+    setUser({
+      state_name: "",
+      state_country: "",
+      state_zone: "",
+    });
   };
 
   const fetchStates = async () => {
@@ -112,16 +117,11 @@ const StatesList = () => {
         }
       );
 
-      if (response.data.code == "200") {
+      if (response.status === 200) {
         toast.success("Data Source is Created Successfully");
+        handleClose(e);
       } else {
-        if (response.data.code == "401") {
-          toast.error("Data Source Duplicate Entry");
-        } else if (response.data.code == "402") {
-          toast.error("Data Source Duplicate Entry");
-        } else {
-          toast.error("Data Source Duplicate Entry");
-        }
+        toast.error("Data Source Duplicate Entry");
       }
     } catch (error) {
       console.error("Error updating Data Source:", error);
@@ -156,17 +156,12 @@ const StatesList = () => {
         }
       );
 
-      if (response.data.code == "200") {
-        setUsers(res.data.states);
+      if (response.status === 200) {
+        setUsers(response.data.states);
         toast.success("Data Source is Updated Successfully");
+        handleClose1(e);
       } else {
-        if (response.data.code == "401") {
-          toast.error("Data Source Duplicate Entry");
-        } else if (response.data.code == "402") {
-          toast.error("Data Source Duplicate Entry");
-        } else {
-          toast.error("Data Source Duplicate Entry");
-        }
+        toast.error("Data Source Duplicate Entry");
       }
     } catch (error) {
       console.error("Error updating Data Source:", error);

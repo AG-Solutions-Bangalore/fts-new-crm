@@ -3,10 +3,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Input } from "@material-tailwind/react";
 import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
-import Fields from "../../../common/TextField/TextField";
+import { FormLabel } from "@mui/material";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const AddSchool = () => {
   const navigate = useNavigate();
@@ -150,17 +151,11 @@ const AddSchool = () => {
         }
       );
 
-      if (response.data.code == 200) {
+      if (response.status === 200) {
         toast.success("Data Updated Sucessfully");
-        navigate("/chapters");
+        navigate("/master/chapters");
       } else {
-        if (response.data.code == 401) {
-          toast.error("Data Duplicate Entry");
-        } else if (response.data.code == 402) {
-          toast.error("Data Duplicate Entry");
-        } else {
-          toast.error("An unknown error occurred");
-        }
+        toast.error("An unknown error occurred");
       }
     } catch (error) {
       console.error("Error updating Data:", error);
@@ -170,111 +165,101 @@ const AddSchool = () => {
     }
   };
 
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
     <Layout>
       <div>
-        {/* Title */}
-        <div className="flex mb-4 mt-6">
-          <Link to="/chapters">
-            <MdKeyboardBackspace className=" text-white bg-[#464D69] p-1 w-10 h-8 cursor-pointer rounded-2xl" />
-          </Link>
-          <h1 className="text-2xl text-[#464D69] font-semibold ml-2 content-center">
-            School
-          </h1>
-        </div>
-        <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
-          <form onSubmit={onSubmit} autoComplete="off">
+        <div>
+          <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] ">
+            <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
+              <div className="flex  items-center gap-2">
+                <IconInfoCircle className="w-4 h-4" />
+                <span> School</span>
+              </div>
+              <IconArrowBack
+                onClick={() => navigate("/master/chapters")}
+                className="cursor-pointer hover:text-red-600"
+              />
+            </h2>
+          </div>
+          <form
+            onSubmit={onSubmit}
+            autoComplete="off"
+            className="p-6  bg-white shadow-md rounded-lg"
+          >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="form-group ">
-                <Input
-                  required
-                  type="text"
-                  label="Full Name"
-                  autoComplete="Name"
+              <div>
+                <FormLabel required>Full Name</FormLabel>
+                <input
                   name="first_name"
                   value={firstName}
                   onChange={(e) => onFirstNameChange(e)}
                   disabled
-                  labelProps={{
-                    className: "!text-gray-500",
-                  }}
+                  className={inputClass}
+                  required
                 />
               </div>
-              <div className="form-group ">
-                <Input
-                  required
-                  type="text"
-                  label="Mobile"
-                  autoComplete="Name"
+              <div>
+                <FormLabel required>Mobile</FormLabel>
+                <input
                   name="mobile_number"
                   value={contact}
                   onChange={(e) => onContactChange(e)}
                   disabled
-                  labelProps={{
-                    className: "!text-gray-500",
-                  }}
+                  className={inputClass}
+                  required
                 />
               </div>
-              <div className="form-group ">
-                <Input
-                  required
-                  label="Email"
+
+              <div>
+                <FormLabel required>Email</FormLabel>
+                <input
                   type="email"
-                  autoComplete="Name"
                   name="email"
                   value={email}
                   onChange={(e) => onEmailChange(e)}
                   disabled
-                  labelProps={{
-                    className: "!text-gray-500",
-                  }}
+                  className={inputClass}
+                  required
                 />
               </div>
             </div>
-            <div className="flex">
+            <div className="flex flex-wrap justify-start items-center gap-4">
               {chapters.map((chapter, key) => (
-                <div style={{ flexDirection: "row", width: "20%" }}>
-                  {currentViewerChapterIds.includes(chapter.id + "") ==
-                    true && (
-                    <input
-                      type="checkbox"
-                      defaultChecked={true}
-                      onChange={handleClick}
-                      name={chapter.id}
-                      id={chapter.id}
-                    />
-                  )}
-
-                  {currentViewerChapterIds.includes(chapter.id + "") ==
-                    false && (
-                    <input
-                      type="checkbox"
-                      defaultChecked={false}
-                      onChange={handleClick}
-                      name={chapter.id}
-                      id={chapter.id}
-                    />
-                  )}
-
-                  <label for={chapter.id} style={{ marginLeft: 5 }}>
+                <div
+                  key={key}
+                  className="flex items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                >
+                  <input
+                    type="checkbox"
+                    defaultChecked={currentViewerChapterIds.includes(
+                      chapter.id + ""
+                    )}
+                    onChange={handleClick}
+                    name={chapter.id}
+                    id={chapter.id}
+                  />
+                  <label htmlFor={chapter.id} className="ml-2 text-sm">
                     {chapter.chapter_name}
                   </label>
                 </div>
               ))}
             </div>
-            <div className="mt-4 ">
+            <div className="flex justify-start py-4">
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                 disabled={isButtonDisabled}
               >
                 {isButtonDisabled ? "Submiting..." : "Submit"}
               </button>
-              <Link to="/chapters">
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md">
-                  Back
-                </button>
-              </Link>
+              <button
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                onClick={() => navigate("/master/chapters")}
+              >
+                Back
+              </button>
             </div>
           </form>
         </div>

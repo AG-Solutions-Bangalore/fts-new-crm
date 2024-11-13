@@ -1,22 +1,24 @@
-import { CardBody, Card, Input } from "@material-tailwind/react";
-import { CardContent, Dialog, Tooltip, Typography } from "@mui/material";
-import moment from "moment";
+import { Dialog, FormLabel, SwipeableDrawer, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MdHighlightOff, MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Layout from "../../../layout/Layout";
-import Fields from "../../../common/TextField/TextField";
 import BASE_URL from "../../../base/BaseUrl";
-
+import {
+  IconArrowBack,
+  IconCircleX,
+  IconInfoCircle,
+} from "@tabler/icons-react";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import SelectInput from "../../../components/common/SelectInput";
 const UserDrop = [
   {
-    value: "User",
+    value: "1",
     label: "User",
   },
   {
-    value: "Admin",
+    value: "4",
     label: "Admin",
   },
 ];
@@ -27,7 +29,10 @@ const ViewChapter = () => {
   const { id } = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [student, setStudent] = useState({});
-
+  const [individualDrawer, setIndividualDrawer] = useState(false);
+  const toggleIndividualDrawer = (open) => () => {
+    setIndividualDrawer(open);
+  };
   const [users, setUsers] = useState([]);
 
   const [user, setUser] = useState({
@@ -47,10 +52,13 @@ const ViewChapter = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+  const validateOnlyDigits = (value) => {
+    return /^\d+$/.test(value);
+  };
 
   const handleClose = (e) => {
-    e.preventDefault();
     setOpen(false);
+    setIndividualDrawer(false);
   };
 
   const handleClickOpen1 = (e) => {
@@ -58,10 +66,11 @@ const ViewChapter = () => {
   };
 
   const handleClose1 = (e) => {
+    e.preventDefault();
     setOpen1(false);
+    setIndividualDrawer(false);
   };
-
-  useEffect(() => {
+  const fetchData = () => {
     axios
       .get(`${BASE_URL}/api/fetch-chapter-by-id/${id}`, {
         headers: {
@@ -72,27 +81,19 @@ const ViewChapter = () => {
         setUser(res.data.chapter);
         setUsers(res.data.users);
       });
+  };
+  useEffect(() => {
+    fetchData();
   }, [id]);
 
   const onUserInputChange = (e) => {
-    if (e.target.name == "phone") {
-      if (validateOnlyDigits(e.target.value)) {
-        setUser({
-          ...user,
-          [e.target.name]: e.target.value,
-        });
-      }
-    } else {
-      setUser({
-        ...user,
-        [e.target.name]: e.target.value,
-      });
-    }
+    const { name, value } = e.target;
+
+    setUser({
+      ...user,
+      [name]: value,
+    });
   };
-
-
-
-
 
   const createUser = async (e) => {
     e.preventDefault();
@@ -103,17 +104,16 @@ const ViewChapter = () => {
     }
     setIsButtonDisabled(true);
     const formData = {
-        name: user.name,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        password: user.password,
-        phone: user.phone,
-        user_type: user.user_type_id,
-        chapter_id: user.chapter_code,
+      name: user.name,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      phone: user.phone,
+      user_type: user.user_type_id,
+      chapter_id: user.chapter_code,
     };
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         `${BASE_URL}/api/create-user`,
         formData,
         {
@@ -123,18 +123,12 @@ const ViewChapter = () => {
         }
       );
 
-      if (response.data.code == "200") {
-        setUsers(res.data.users);
+      if (response.status === 200) {
+        setUsers(response.data.users);
         handleClose();
         toast.success("User is Created Successfully");
       } else {
-        if (response.data.code == "401") {
-          toast.error("User Duplicate Entry");
-        } else if (response.data.code == "402") {
-          toast.error("User  Duplicate Entry");
-        } else {
-          toast.error("User Duplicate Entry");
-        }
+        toast.error("User Duplicate Entry");
       }
     } catch (error) {
       console.error("Error updating User:", error);
@@ -147,21 +141,26 @@ const ViewChapter = () => {
   const updateUser = async (e) => {
     e.preventDefault();
     const form = e.target;
+
+    // Check if form is valid
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
     setIsButtonDisabled(true);
+
     const formData = {
-        name: user.name,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        phone: user.phone,
-        user_type: user.user_type_id,
-        chapter_id: user.chapter_code,
+      name: user.name,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      phone: user.phone,
+      user_type: user.user_type_id,
+      chapter_id: user.chapter_code,
     };
+
     try {
+      // Send PUT request
       const response = await axios.put(
         `${BASE_URL}/api/update-user/${selected_user_id}`,
         formData,
@@ -172,401 +171,370 @@ const ViewChapter = () => {
         }
       );
 
-      if (response.data.code == "200") {
-        setUsers(res.data.users);
-        handleClose();
+      // Check for successful response
+      if (response.status === 200) {
+        console.log(response.data.users);
+        setUsers(response.data.users);
         toast.success("User is Updated Successfully");
+        handleClose1(e);
       } else {
-        if (response.data.code == "401") {
-          toast.error("User Duplicate Entry");
-        } else if (response.data.code == "402") {
-          toast.error("User  Duplicate Entry");
-        } else {
-          toast.error("User Duplicate Entry");
-        }
+        toast.error("User Duplicate Entry");
       }
     } catch (error) {
       console.error("Error updating User:", error);
       toast.error("Error updating User");
     } finally {
-      setIsButtonDisabled(false);
+      setIsButtonDisabled(false); // Re-enable the button after processing
     }
   };
 
+  const columns = [
+    {
+      accessorKey: "index",
+      header: "#",
+      Cell: ({ row }) => <span>{row.index + 1}</span>,
+    },
+    {
+      accessorKey: "first_name",
+      header: "Name",
+    },
+
+    { accessorKey: "email", header: "Email" },
+    { accessorKey: "phone", header: "Phone" },
+    {
+      accessorKey: "edit",
+      header: "Edit",
+      Cell: ({ row }) => (
+        <div className="flex items-center space-x-2">
+          <button
+            className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
+            onClick={() => {
+              setUser({
+                ...user,
+                name: row.original.name,
+                email: row.original.email,
+                phone: row.original.phone,
+                first_name: row.original.first_name,
+                last_name: row.original.last_name,
+                user_type_id: row.original.user_type_id,
+              });
+              setSelectedUserId(row.original.id);
+              handleClickOpen1();
+            }}
+          >
+            Edit
+          </button>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "school",
+      header: "School",
+      Cell: ({ row }) => (
+        <div className="flex items-center space-x-2">
+          <button
+            className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
+            onClick={() => navigate(`/view-school/${row.original.id}`)}
+          >
+            School
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  const table = useMantineReactTable({
+    columns,
+    data: users,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableFullScreenToggle: false,
+  });
+
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+
   return (
     <Layout>
-      <div>
-        <div className="">
-          <div className="flex  mb-4 mt-6">
-            <Link to="/">
-              <MdKeyboardBackspace className=" text-white bg-[#464D69] p-1 w-10 h-8 cursor-pointer rounded-2xl" />
-            </Link>
-
-            <h1 className="text-2xl text-[#464D69] font-semibold ml-2 content-center">
-            Chapter Details
-            </h1>
-          </div>
+      <div className=" bg-[#FFFFFF] p-2  rounded-lg  ">
+        <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] ">
+          <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
+            <div className="flex  items-center gap-2">
+              <IconInfoCircle className="w-4 h-4" />
+              <span>Chapter Details</span>
+            </div>
+            <IconArrowBack
+              onClick={() => navigate("/receipt-list")}
+              className="cursor-pointer hover:text-red-600"
+            />
+          </h2>
         </div>
-        <div className="grid grid-cols-1 gap-4">
-          <div>
-            <Card className="mt-4">
-              <CardBody>
-                <div className="grid grid-cols-1 md:grid-cols-3 md:h-[150px] h-full">
-                  {" "}
-                  <div className="space-y-2">
-                    <Typography className="text-black">
-                      <strong>Chapter Name : {user.chapter_name} </strong>
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>Address : {user.chapter_address}</strong>
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>State :{user.chapter_state}</strong>
-                    </Typography>
-                  </div>
-                  <div className="space-y-2">
-                    <Typography className="text-black">
-                      <strong>City : {user.chapter_city}</strong>
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>
-                        Mobile Device for Study : {user.mobile_device}{" "}
-                      </strong>
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>PIN : {user.chapter_pin}</strong>{" "}
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>
-                        Date Of Incorporation :{" "}
-                        {user.chapter_date_of_incorporation}
-                      </strong>{" "}
-                    </Typography>
-                  </div>
-                  <div className="space-y-2">
-                    <Typography className="text-black">
-                      <strong>Email : {user.chapter_email}</strong>
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>Phone : {user.chapter_phone}</strong>{" "}
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>What's App : {user.chapter_whatsapp}</strong>
-                    </Typography>
-                    <Typography className="text-black">
-                      <strong>Website : {student.chapter_website}</strong>
-                    </Typography>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
-          <div className="min-w-full p-2 bg-white border border-gray-200 shadow-md rounded-lg">
-            <div className="mt-3 p-2  mb-2">
-              <div className="flex justify-between mb-2">
-                <h1 className="text-xl font-bold">User Details</h1>
-                <button
-                  onClick={handleClickOpen}
-                  className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
-                >
-                  Create A New User
-                </button>
+        <div className="p-4 bg-red-50 rounded-b-xl">
+          <div className="flex flex-col sm:flex-row md:justify-between items-start space-y-4 sm:space-y-0">
+            <div className="space-y-1">
+              <h3 className="text-lg font-semibold text-black">
+                {user.chapter_name}
+              </h3>
+              <p className="text-xs text-gray-600">
+                State :{user.chapter_state}
+              </p>
+
+              <p className="text-xs text-green-600">
+                City : {user.chapter_city}
+              </p>
+              <p className="text-xs text-green-600">{user.mobile_device}</p>
+              <p className="text-xs text-green-600">PIN : {user.chapter_pin}</p>
+            </div>
+            <div className="space-y-1 relative">
+              <div className="flex items-center">
+                <p className="  text-xs text-gray-600">
+                  {user.chapter_date_of_incorporation}
+                </p>
               </div>
-              <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-                <thead>
-                  <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                    <th class="py-3  text-center">Name</th>
-                    <th class="py-3 text-center">Email</th>
-                    <th class="py-3 px-12 text-center">Phone</th>
-                    <th class="py-3 px-12 text-center">Edit</th>
-                    <th class="py-3 px-12 text-center">School</th>
-                  </tr>
-                </thead>
-                {users?.map((dataSumm, key) => (
-                  <tbody class="text-gray-600 text-sm font-light">
-                    <tr class="border-b border-gray-500 hover:bg-gray-100">
-                      <td class="py-3 px-12 text-center">
-                        <span>
-                          {" "}
-                          {dataSumm.first_name} {dataSumm.last_name}
-                        </span>
-                      </td>
-                      <td class="py-3 px-12 text-center">
-                        <span> {dataSumm.email}</span>
-                      </td>
-                      <td class="py-3 px-12 text-center">
-                        <span> {dataSumm.phone}</span>
-                      </td>
-                      <td class="py-3 px-12 text-center">
-                        <button
-                          // onClick={handleClickOpen1}
-                          onClick={() => {
-                            setUser({
-                              ...user,
-                              name: dataSumm.name,
-                              email: dataSumm.email,
-                              phone: dataSumm.phone,
-                              first_name: dataSumm.first_name,
-                              last_name: dataSumm.last_name,
-                              user_type_id: dataSumm.user_type_id,
-                            });
-                            setSelectedUserId(dataSumm.id);
-                            handleClickOpen1();
-                          }}
-                          className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
-                        >
-                          Edit
-                        </button>
-                      </td>
-                      <td class="py-3 px-12 text-center">
-                        <Link to={`/view-school/${dataSumm.id}`}>
-                          <button className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md">
-                            School
-                          </button>
-                        </Link>
-                      </td>
-                    </tr>
-                  </tbody>
-                ))}
-              </table>
+              <p className="text-xs text-green-600">
+                Phone : {user.chapter_phone}
+              </p>
+              <p className="text-xs text-green-600">
+                What's App : {user.chapter_whatsapp}{" "}
+              </p>
+              <p className="text-xs text-green-600">{user.chapter_email}</p>
+              <p className="text-xs text-green-600">
+                {student.chapter_website}
+              </p>
+              <p className="text-xs text-green-600">
+                Address : {user.chapter_address}
+              </p>
             </div>
           </div>
-          <Dialog
-            open={open}
-            keepMounted
-            aria-describedby="alert-dialog-slide-description"
-            // className="m-3  rounded-lg shadow-xl"
-          >
-            <form onSubmit={createUser} autoComplete="off">
-              <Card className="p-6 space-y-1 w-[500px]">
-                <CardContent>
-                  <div className="flex justify-between items-center mb-2">
-                    <h1 className="text-slate-800 text-xl font-semibold">
-                      Create A New User
-                    </h1>
-                    <div className="flex">
-                      <Tooltip title="Close">
-                        <button
-                          className="ml-3 pl-2 hover:bg-gray-200 rounded-full"
-                          onClick={handleClose}
-                        >
-                          <MdHighlightOff />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </div>
-
-                  <div className="mt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="text"
-                          title="Enter Username"
-                          type="textField"
-                          autoComplete="Name"
-                          name="name"
-                          value={user.name}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="email"
-                          title="Enter Email"
-                          type="textField"
-                          autoComplete="Name"
-                          name="email"
-                          value={user.email}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-3">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="text"
-                          title="Enter Full Name"
-                          type="textField"
-                          autoComplete="Name"
-                          name="first_name"
-                          value={user.first_name}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-3">
-                      <div className="form-group ">
-                        <Input
-                          required
-                          type="tel"
-                          label="Enter Phone Number"
-                          autoComplete="Name"
-                          name="phone"
-                          value={user.phone}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          title="Select User Type"
-                          type="whatsappDropdown"
-                          autoComplete="Name"
-                          name="user_type_id"
-                          onChange={(e) => onUserInputChange(e)}
-                          options={UserDrop}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                      <div className="form-group ">
-                        <Input
-                          required
-                          type="password"
-                          label="Enter Password"
-                          autoComplete="Name"
-                          name="password"
-                          value={user.password}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                      <div className="form-group ">
-                        <Input
-                          required
-                          type="password"
-                          label="Confirm Password"
-                          autoComplete="Name"
-                          name="confirm_password"
-                          value={user.confirm_password}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-5 flex justify-center">
-                      <button
-                        disabled={isButtonDisabled}
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-                      >
-                        {isButtonDisabled ? "Submiting..." : "Submit"}
-                      </button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </form>
-          </Dialog>
-
-          {/* Edit User  */}
-
-          <Dialog
-            open={open1}
-            keepMounted
-            aria-describedby="alert-dialog-slide-description"
-            // className="m-3  rounded-lg shadow-xl"
-          >
-            <form onSubmit={updateUser} autoComplete="off">
-              <Card className="p-6 space-y-1 w-[500px]">
-                <CardContent>
-                  <div className="flex justify-between items-center mb-2">
-                    <h1 className="text-slate-800 text-xl font-semibold">
-                      Edit a User
-                    </h1>
-                    <div className="flex">
-                      <Tooltip title="Close">
-                        <button
-                          className="ml-3 pl-2 hover:bg-gray-200 rounded-full"
-                          onClick={handleClose1}
-                        >
-                          <MdHighlightOff />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </div>
-
-                  <div className="mt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="text"
-                          title="Enter Username"
-                          type="textField"
-                          autoComplete="Name"
-                          name="name"
-                          value={user.name}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="email"
-                          title="Enter Email"
-                          type="textField"
-                          autoComplete="Name"
-                          name="email"
-                          value={user.email}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-3">
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          types="text"
-                          title="Enter Full Name"
-                          type="textField"
-                          autoComplete="Name"
-                          name="first_name"
-                          value={user.first_name}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-3">
-                      <div className="form-group ">
-                        <Input
-                          required
-                          type="tel"
-                          label="Enter Phone Number"
-                          autoComplete="Name"
-                          name="phone"
-                          value={user.phone}
-                          onChange={(e) => onUserInputChange(e)}
-                        />
-                      </div>
-                      <div className="form-group ">
-                        <Fields
-                          required={true}
-                          title="Select User Type"
-                          type="whatsappDropdown"
-                          autoComplete="Name"
-                          name="user_type_id"
-                          onChange={(e) => onUserInputChange(e)}
-                          options={UserDrop}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-5 flex justify-center">
-                      <button
-                        disabled={isButtonDisabled}
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-                      >
-                        {isButtonDisabled ? "Updating..." : "Update"}
-                      </button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </form>
-          </Dialog>
         </div>
+        <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] mt-2 ">
+          <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
+            <div className="flex  items-center gap-2">
+              <IconArrowBack className="cursor-pointer hover:text-red-600" />
+              <span>User Details</span>
+            </div>
+
+            <button
+              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+              onClick={toggleIndividualDrawer(true)}
+            >
+              Create New User
+            </button>
+          </h2>
+        </div>
+        <MantineReactTable table={table} />
+
+        <SwipeableDrawer
+          anchor="right"
+          open={individualDrawer}
+          onClose={toggleIndividualDrawer(false)}
+          onOpen={toggleIndividualDrawer(true)}
+        >
+          <form onSubmit={createUser} autoComplete="off">
+            <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] ">
+              <div>
+                <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] ">
+                  <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
+                    <div className="flex  items-center gap-2">
+                      <IconInfoCircle className="w-4 h-4" />
+                      <span>Create User</span>
+                    </div>
+                    <IconCircleX
+                      onClick={handleClose}
+                      className="cursor-pointer hover:text-red-600"
+                    />
+                  </h2>
+                </div>
+
+                <hr />
+
+                <div className="mt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
+                    <div>
+                      <FormLabel required>Enter Username</FormLabel>
+                      <input
+                        name="name"
+                        value={user.name}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Enter Email</FormLabel>
+                      <input
+                        type="email"
+                        name="email"
+                        value={user.email}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel required>Enter Full Name</FormLabel>
+                      <input
+                        name="first_name"
+                        value={user.first_name}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel required>Enter Phone Number</FormLabel>
+                      <input
+                        type="text"
+                        maxLength={10}
+                        name="phone"
+                        value={user.phone}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div className="form-group ">
+                      <SelectInput
+                        label="Select User Type"
+                        options={UserDrop}
+                        name="user_type_id"
+                        onChange={(e) => onUserInputChange(e)}
+                        placeholder="Select  User Type"
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Enter Password</FormLabel>
+                      <input
+                        name="password"
+                        value={user.password}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Confirm Password</FormLabel>
+                      <input
+                        name="confirm_password"
+                        value={user.confirm_password}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-5 flex justify-center">
+                    <button
+                      disabled={isButtonDisabled}
+                      type="submit"
+                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                    >
+                      {isButtonDisabled ? "SUbmiting..." : "Submit"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </SwipeableDrawer>
+
+        {/* Edit User  */}
+
+        <Dialog
+          open={open1}
+          keepMounted
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <form onSubmit={updateUser} autoComplete="off">
+            <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <h1 className="text-slate-800 text-xl font-semibold">
+                    Edit a User
+                  </h1>
+                  <div className="flex">
+                    <Tooltip title="Close">
+                      <button className="ml-3 pl-2 " onClick={handleClose1}>
+                        <IconCircleX />
+                      </button>
+                    </Tooltip>
+                  </div>
+                </div>
+
+                <div className="mt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
+                    <div>
+                      <FormLabel required>Enter Username</FormLabel>
+                      <input
+                        name="name"
+                        value={user.name} // Ensure the value is bound to user.name
+                        onChange={(e) => onUserInputChange(e)} // Handle change
+                        className={inputClass}
+                        required
+                        disabled
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Enter Email</FormLabel>
+                      <input
+                        type="email"
+                        name="email"
+                        value={user.email}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel required>Enter Full Name</FormLabel>
+                      <input
+                        name="first_name"
+                        value={user.first_name}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel required>Enter Phone Number</FormLabel>
+                      <input
+                        type="text"
+                        maxLength={10}
+                        name="phone"
+                        value={user.phone}
+                        onChange={(e) => onUserInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div className="form-group ">
+                      <SelectInput
+                        label="Select User Type"
+                        options={UserDrop}
+                        name="user_type_id"
+                        onChange={(e) => onUserInputChange(e)}
+                        placeholder="Select  User Type"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-5 flex justify-center">
+                    <button
+                      disabled={isButtonDisabled}
+                      type="submit"
+                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                    >
+                      {isButtonDisabled ? "Updating..." : "Update"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </Dialog>
       </div>
     </Layout>
   );

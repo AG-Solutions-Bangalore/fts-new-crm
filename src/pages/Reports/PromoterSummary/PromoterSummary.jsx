@@ -102,73 +102,82 @@ const PromterSummary = () => {
 
   return (
     <Layout>
-      <div className="mt-4 mb-6">
-        <PageTitle title={"Prompter Summary"} />
+      <div className="  bg-[#FFFFFF] p-2   rounded-lg">
+        <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
+          <h2 className=" px-5 text-[black] text-lg   flex flex-row gap-2 items-center  rounded-xl p-2 ">
+            {/* <IconInfoCircle className="w-4 h-4" /> */}
+            <span>Prompter Summary</span>
+          </h2>
+        </div>
+        <hr />
+
+        <div className="p-4">
+          <h3 className="text-red-500 mb-5">
+            Please fill all for View report.
+          </h3>
+          <form id="dowRecp" autoComplete="off">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <SelectField
+                label="Notice Title"
+                name="indicomp_promoter"
+                value={downloadDonor.indicomp_promoter}
+                options={promoter.map((item) => ({
+                  value: item.indicomp_promoter,
+                  label: item.indicomp_promoter,
+                }))}
+                onChange={onInputChange}
+                placeholder="Select Notice"
+                required
+              />
+
+              <div>
+                <FormLabel required>From Date</FormLabel>
+                <input
+                  type="date"
+                  name="receipt_from_date"
+                  value={downloadDonor.receipt_from_date}
+                  onChange={onInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+
+              <div>
+                <FormLabel required>To Date</FormLabel>
+                <input
+                  type="date"
+                  name="receipt_to_date"
+                  value={downloadDonor.receipt_to_date}
+                  onChange={onInputChange}
+                  className={inputClass}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-start py-4">
+              <button
+                className={`text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ${
+                  !isButtonEnabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={onReportView}
+                disabled={!isButtonEnabled}
+              >
+                View
+              </button>
+              <button
+                className={`text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4 ${
+                  !isButtonEnabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={onSubmit}
+                disabled={!isButtonEnabled}
+              >
+                Download
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-      <Card className="p-4">
-        <h3 className="text-red-500 mb-5">Please fill all for View report.</h3>
-        <form id="dowRecp" autoComplete="off">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <SelectField
-              label="Notice Title"
-              name="indicomp_promoter"
-              value={downloadDonor.indicomp_promoter}
-              options={promoter.map((item) => ({
-                value: item.indicomp_promoter,
-                label: item.indicomp_promoter,
-              }))}
-              onChange={onInputChange}
-              placeholder="Select Notice"
-              required
-            />
-
-            <div>
-              <FormLabel required>From Date</FormLabel>
-              <input
-                type="date"
-                name="receipt_from_date"
-                value={downloadDonor.receipt_from_date}
-                onChange={onInputChange}
-                className={inputClass}
-                required
-              />
-            </div>
-
-            <div>
-              <FormLabel required>To Date</FormLabel>
-              <input
-                type="date"
-                name="receipt_to_date"
-                value={downloadDonor.receipt_to_date}
-                onChange={onInputChange}
-                className={inputClass}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-start py-4">
-            <button
-              className={`text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ${
-                !isButtonEnabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={onReportView}
-              disabled={!isButtonEnabled}
-            >
-              View
-            </button>
-            <button
-              className={`text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4 ${
-                !isButtonEnabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={onSubmit}
-              disabled={!isButtonEnabled}
-            >
-              Download
-            </button>
-          </div>
-        </form>
-      </Card>
     </Layout>
   );
 };
