@@ -87,6 +87,7 @@ const App = () => {
         <Route path="/master/chapters" element={<ChaptersList />} />
         <Route path="/view-chapter/:id" element={<ViewChapter />} />
         <Route path="/view-school/:id" element={<AddSchool />} />
+        <Route path="/edit-chapter/:id" element={<EditChapter />} />
         <Route path="/edit-datasource/:id" element={<EditDataSource />} />
         <Route path="/master/states" element={<StatesList />} />
         <Route path="/master/designation" element={<DesignationList />} />

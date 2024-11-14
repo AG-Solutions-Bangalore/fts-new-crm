@@ -125,7 +125,7 @@ const SignIn = () => {
                 <div>
                   <FormLabel required>Password</FormLabel>
                   <input
-                    type="text"
+                    type="password"
                     name="email"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

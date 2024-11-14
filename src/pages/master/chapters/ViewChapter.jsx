@@ -209,11 +209,11 @@ const ViewChapter = () => {
   };
 
   const columns = [
-    {
-      accessorKey: "index",
-      header: "#",
-      Cell: ({ row }) => <span>{row.index + 1}</span>,
-    },
+    // {
+    //   accessorKey: "index",
+    //   header: "#",
+    //   Cell: ({ row }) => <span>{row.index + 1}</span>,
+    // },
     {
       accessorKey: "first_name",
       header: "Name",
@@ -269,6 +269,7 @@ const ViewChapter = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
 
   const inputClass =
@@ -284,7 +285,7 @@ const ViewChapter = () => {
               <span>Chapter Details</span>
             </div>
             <IconArrowBack
-              onClick={() => navigate("/receipt-list")}
+              onClick={() => navigate("/master/chapters")}
               className="cursor-pointer hover:text-red-600"
             />
           </h2>

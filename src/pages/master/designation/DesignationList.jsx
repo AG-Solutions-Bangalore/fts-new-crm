@@ -185,6 +185,7 @@ const DesignationList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
 
   const inputClass =

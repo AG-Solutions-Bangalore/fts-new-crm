@@ -183,11 +183,11 @@ const DataSource = () => {
   };
 
   const columns = [
-    {
-      accessorKey: "id",
-      header: "Sl No",
-      Cell: ({ row }) => row.index + 1,
-    },
+    // {
+    //   accessorKey: "id",
+    //   header: "Sl No",
+    //   Cell: ({ row }) => row.index + 1,
+    // },
     {
       accessorKey: "data_source_type",
       header: "Data Source",
@@ -220,6 +220,7 @@ const DataSource = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
 
   const inputClass =

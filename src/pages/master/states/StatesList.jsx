@@ -172,11 +172,11 @@ const StatesList = () => {
   };
 
   const columns = [
-    {
-      accessorKey: "sl_no",
-      header: "Sl No",
-      Cell: ({ row }) => row.index + 1,
-    },
+    // {
+    //   accessorKey: "sl_no",
+    //   header: "Sl No",
+    //   Cell: ({ row }) => row.index + 1,
+    // },
     {
       accessorKey: "state_name",
       header: "State",
@@ -218,6 +218,7 @@ const StatesList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
