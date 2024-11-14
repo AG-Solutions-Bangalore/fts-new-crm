@@ -58,13 +58,10 @@ import AddSchool from "./pages/master/chapters/AddSchool";
 import Chapter from "./pages/Chapter/Chapter";
 import AddSchoolAdmin from "./pages/Chapter/AddSchoolAdmin";
 import DataSource from "./pages/DataSource/DataSource";
-<<<<<<< HEAD
 import Faq from "./pages/others/Faq";
 import Team from "./pages/others/team/Team";
 import Notification from "./pages/others/notification/Notification";
-=======
 import ManualGuideBook from "./pages/ManualGuideBook/ManualGuideBook";
->>>>>>> 66a9c56102905883fb88ec89a7b658bf588c0252
 const App = () => {
   return (
     <>
