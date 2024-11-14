@@ -281,11 +281,11 @@ const Chapter = () => {
   };
 
   const columns = [
-    {
-      accessorKey: "index",
-      header: "#",
-      Cell: ({ row }) => <span>{row.index + 1}</span>,
-    },
+    // {
+    //   accessorKey: "index",
+    //   header: "#",
+    //   Cell: ({ row }) => <span>{row.index + 1}</span>,
+    // },
     {
       accessorKey: "first_name",
       header: "Name",
@@ -341,6 +341,7 @@ const Chapter = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
 
   const inputClass =

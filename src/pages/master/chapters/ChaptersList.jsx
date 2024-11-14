@@ -50,11 +50,11 @@ const ChaptersList = () => {
   }, []);
 
   const columns = [
-    {
-      accessorKey: "index",
-      header: "#",
-      Cell: ({ row }) => <span>{row.index + 1}</span>,
-    },
+    // {
+    //   accessorKey: "index",
+    //   header: "#",
+    //   Cell: ({ row }) => <span>{row.index + 1}</span>,
+    // },
     { accessorKey: "chapter_name", header: "Name" },
     { accessorKey: "chapter_email", header: "Email" },
     { accessorKey: "chapter_state", header: "Status" },
@@ -93,6 +93,7 @@ const ChaptersList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
 
   return (

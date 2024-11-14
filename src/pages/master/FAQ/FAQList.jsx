@@ -63,7 +63,6 @@ const FAQList = () => {
     fetchData();
   }, []);
 
-
   const onUserInputChange = (e) => {
     const { name, value } = e.target;
     setUser((prevState) => ({
@@ -197,6 +196,7 @@ const FAQList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
   const autoResize = (e) => {
     e.target.style.height = "auto";
