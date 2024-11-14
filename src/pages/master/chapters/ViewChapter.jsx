@@ -27,6 +27,7 @@ const ViewChapter = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  console.log(id, "viewparmsid");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [student, setStudent] = useState({});
   const [individualDrawer, setIndividualDrawer] = useState(false);
@@ -254,7 +255,11 @@ const ViewChapter = () => {
         <div className="flex items-center space-x-2">
           <button
             className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
-            onClick={() => navigate(`/view-school/${row.original.id}`)}
+            onClick={() => {
+              localStorage.setItem("schoolId", id);
+
+              navigate(`/view-school/${row.original.id}`);
+            }}
           >
             School
           </button>
@@ -331,7 +336,10 @@ const ViewChapter = () => {
         <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] mt-2 ">
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
             <div className="flex  items-center gap-2">
-              <IconArrowBack className="cursor-pointer hover:text-red-600" />
+              <IconArrowBack
+                className="cursor-pointer hover:text-red-600"
+                onClick={() => navigate("/master/chapters")}
+              />
               <span>User Details</span>
             </div>
 
@@ -350,6 +358,9 @@ const ViewChapter = () => {
           open={individualDrawer}
           onClose={toggleIndividualDrawer(false)}
           onOpen={toggleIndividualDrawer(true)}
+          style={{
+            backdropFilter: "blur(5px) sepia(5%)",
+          }}
         >
           <form onSubmit={createUser} autoComplete="off">
             <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] ">
@@ -469,6 +480,12 @@ const ViewChapter = () => {
           open={open1}
           keepMounted
           aria-describedby="alert-dialog-slide-description"
+          sx={{
+            backdropFilter: "blur(5px) sepia(5%)",
+            "& .MuiDialog-paper": {
+              borderRadius: "18px",
+            },
+          }}
         >
           <form onSubmit={updateUser} autoComplete="off">
             <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">

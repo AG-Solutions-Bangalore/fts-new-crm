@@ -162,6 +162,7 @@ const DesignationList = () => {
     {
       accessorKey: "edit",
       header: "Edit",
+      enableColumnFilter: false,
       Cell: ({ row }) => (
         <button
           onClick={() => {
@@ -203,7 +204,7 @@ const DesignationList = () => {
               onClick={handleClickOpen}
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
-              Create A New Designation
+              Create Designation
             </button>
           </div>
         </div>
@@ -214,6 +215,9 @@ const DesignationList = () => {
             open={open}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+            }}
           >
             <form onSubmit={createUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
@@ -263,14 +267,16 @@ const DesignationList = () => {
             open={open1}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
-            // className="m-3  rounded-lg shadow-xl"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+            }}
           >
             <form onSubmit={updateUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-3xl shadow-md">
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
-                      Edit Data Source
+                      Edit Designation
                     </h1>
                     <div className="flex">
                       <Tooltip title="Close">

@@ -51,6 +51,7 @@ const AddToGroup = ({ populateDonorName, handleClose }) => {
       {
         accessorKey: "indicomp_fts_id",
         header: "Actions",
+        enableColumnFilter: false,
         Cell: ({ cell }) => (
           <div className="flex justify-start ">
             <button
@@ -72,6 +73,8 @@ const AddToGroup = ({ populateDonorName, handleClose }) => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
+
   });
   return (
     <div className="data-table-wrapper">

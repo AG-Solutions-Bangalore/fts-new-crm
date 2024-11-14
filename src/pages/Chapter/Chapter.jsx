@@ -296,6 +296,7 @@ const Chapter = () => {
     {
       accessorKey: "edit",
       header: "Edit",
+      enableColumnFilter: false,
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
@@ -322,6 +323,7 @@ const Chapter = () => {
     {
       accessorKey: "school",
       header: "School",
+      enableColumnFilter: false,
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
@@ -408,20 +410,22 @@ const Chapter = () => {
           </h2>
         </div>
         <div>
-          {chapter.chapter_name != "" && (
-            <div>
-              <h1>
-                {chapter.chapter_name}{" "}
-                {"( " +
-                  chapter.chapter_city +
-                  "," +
-                  chapter.chapter_state +
-                  "- " +
-                  chapter.chapter_pin +
-                  " )"}
-              </h1>
-            </div>
-          )}
+          <div className="flex justify-center p-4 font-semibold ">
+            {chapter.chapter_name != "" && (
+              <div>
+                <h1>
+                  {chapter.chapter_name}{" "}
+                  {"( " +
+                    chapter.chapter_city +
+                    "," +
+                    chapter.chapter_state +
+                    "- " +
+                    chapter.chapter_pin +
+                    " )"}
+                </h1>
+              </div>
+            )}
+          </div>
           <form onSubmit={(e) => onSubmit(e)} autoComplete="off">
             <div className="p-6 space-y-1 ">
               <div>
@@ -527,6 +531,9 @@ const Chapter = () => {
           open={individualDrawer}
           onClose={toggleIndividualDrawer(false)}
           onOpen={toggleIndividualDrawer(true)}
+          style={{
+            backdropFilter: "blur(5px) sepia(5%)",
+          }}
         >
           <form onSubmit={createUser} autoComplete="off">
             <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] ">
@@ -639,104 +646,111 @@ const Chapter = () => {
         </SwipeableDrawer>
 
         {/* Edit User  */}
+        <div className="bg-red rounded-full">
+          <Dialog
+            open={open1}
+            keepMounted
+            aria-describedby="alert-dialog-slide-description"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+              "& .MuiDialog-paper": {
+                borderRadius: "18px", 
+              },
+            }}
+          >
+            <form onSubmit={updateUser} autoComplete="off">
+              <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white  shadow-md">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <h1 className="text-slate-800 text-xl font-semibold">
+                      Edit a User
+                    </h1>
+                    <div className="flex">
+                      <Tooltip title="Close">
+                        <button className="ml-3 pl-2 " onClick={handleClose1}>
+                          <IconCircleX />
+                        </button>
+                      </Tooltip>
+                    </div>
+                  </div>
 
-        <Dialog
-          open={open1}
-          keepMounted
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <form onSubmit={updateUser} autoComplete="off">
-            <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <h1 className="text-slate-800 text-xl font-semibold">
-                    Edit a User
-                  </h1>
-                  <div className="flex">
-                    <Tooltip title="Close">
-                      <button className="ml-3 pl-2 " onClick={handleClose1}>
-                        <IconCircleX />
+                  <div className="mt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
+                      <div>
+                        <FormLabel required>Enter Username</FormLabel>
+                        <input
+                          name="name"
+                          value={user.name} // Ensure the value is bound to user.name
+                          onChange={(e) => onUserInputChange(e)} // Handle change
+                          className={inputClass}
+                          required
+                          disabled
+                        />
+                      </div>
+                      <div>
+                        <FormLabel required>Enter Email</FormLabel>
+                        <input
+                          type="email"
+                          name="email"
+                          value={user.email}
+                          onChange={(e) => onUserInputChange(e)}
+                          className={inputClass}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <FormLabel required>Enter Full Name</FormLabel>
+                        <input
+                          name="first_name"
+                          value={user.first_name}
+                          onChange={(e) => onUserInputChange(e)}
+                          className={inputClass}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <FormLabel required>Enter Phone Number</FormLabel>
+                        <input
+                          type="text"
+                          maxLength={10}
+                          name="phone"
+                          value={user.phone}
+                          onChange={(e) => onUserInputChange(e)}
+                          className={inputClass}
+                          required
+                        />
+                      </div>
+                      <div className="form-group ">
+                        <SelectInput
+                          label="Select User Type"
+                          options={UserDrop.map((item) => ({
+                            value: item.value,
+                            label: item.label,
+                          }))}
+                          value={user.user_type_id}
+                          name="user_type_id"
+                          onChange={(e) => onUserInputChange(e)}
+                          placeholder="Select  User Type"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-5 flex justify-center">
+                      <button
+                        disabled={isButtonDisabled1}
+                        type="submit"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                      >
+                        {isButtonDisabled1 ? "Updating..." : "Update"}
                       </button>
-                    </Tooltip>
-                  </div>
-                </div>
-
-                <div className="mt-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-2">
-                    <div>
-                      <FormLabel required>Enter Username</FormLabel>
-                      <input
-                        name="name"
-                        value={user.name} // Ensure the value is bound to user.name
-                        onChange={(e) => onUserInputChange(e)} // Handle change
-                        className={inputClass}
-                        required
-                        disabled
-                      />
                     </div>
-                    <div>
-                      <FormLabel required>Enter Email</FormLabel>
-                      <input
-                        type="email"
-                        name="email"
-                        value={user.email}
-                        onChange={(e) => onUserInputChange(e)}
-                        className={inputClass}
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <FormLabel required>Enter Full Name</FormLabel>
-                      <input
-                        name="first_name"
-                        value={user.first_name}
-                        onChange={(e) => onUserInputChange(e)}
-                        className={inputClass}
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <FormLabel required>Enter Phone Number</FormLabel>
-                      <input
-                        type="text"
-                        maxLength={10}
-                        name="phone"
-                        value={user.phone}
-                        onChange={(e) => onUserInputChange(e)}
-                        className={inputClass}
-                        required
-                      />
-                    </div>
-                    <div className="form-group ">
-                      <SelectInput
-                        label="Select User Type"
-                        options={UserDrop.map((item) => ({
-                          value: item.value,
-                          label: item.label,
-                        }))}
-                        value={user.user_type_id}
-                        name="user_type_id"
-                        onChange={(e) => onUserInputChange(e)}
-                        placeholder="Select  User Type"
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-5 flex justify-center">
-                    <button
-                      disabled={isButtonDisabled1}
-                      type="submit"
-                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
-                    >
-                      {isButtonDisabled1 ? "Updating..." : "Update"}
-                    </button>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
-        </Dialog>
+            </form>
+          </Dialog>
+        </div>
       </div>
     </Layout>
   );

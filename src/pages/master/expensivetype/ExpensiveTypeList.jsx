@@ -159,6 +159,8 @@ const ExpensiveTypeList = () => {
     {
       accessorKey: "edit",
       header: "Edit",
+      enableColumnFilter: false,
+
       Cell: ({ row }) => (
         <button
           onClick={() => {
@@ -191,7 +193,7 @@ const ExpensiveTypeList = () => {
       <div>
         <div className="flex flex-col md:flex-row md:justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
           <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-xl md:text-2xl sm:text-sm text-center md:text-left">
-            Expensive Type
+            OTS Expensive Type
           </h1>
 
           <div className="flex flex-wrap gap-2 justify-center mt-2 md:mt-0">
@@ -199,7 +201,7 @@ const ExpensiveTypeList = () => {
               onClick={handleClickOpen}
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
-              Create A New Expensive Type
+              Create OTS Expensive
             </button>
           </div>
         </div>
@@ -210,13 +212,19 @@ const ExpensiveTypeList = () => {
             open={open}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+              "& .MuiDialog-paper": {
+                borderRadius: "18px",
+              },
+            }}
           >
             <form onSubmit={createUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
-                      Create States
+                      CreateOTS Expensive
                     </h1>
                     <div className="flex">
                       <Tooltip title="Close">
@@ -259,14 +267,19 @@ const ExpensiveTypeList = () => {
             open={open1}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
-            // className="m-3  rounded-lg shadow-xl"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+              "& .MuiDialog-paper": {
+                borderRadius: "18px",
+              },
+            }}
           >
             <form onSubmit={updateUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-3xl shadow-md">
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
-                      Edit Data Source
+                      Edit OTS Expensive
                     </h1>
                     <div className="flex">
                       <Tooltip title="Close">
@@ -280,7 +293,7 @@ const ExpensiveTypeList = () => {
                   <div className="mt-2">
                     <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
                       <div>
-                        <FormLabel required>Enter Expensive Type</FormLabel>
+                        <FormLabel required>Enter OTS Expensive </FormLabel>
                         <input
                           name="ots_exp_type1"
                           value={user1.ots_exp_type1}

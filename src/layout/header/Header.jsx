@@ -8,6 +8,7 @@ import {
   IconButton,
   Badge,
   Button,
+  Tooltip,
 } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -20,6 +21,7 @@ import {
   IconMenuDeep,
 } from "@tabler/icons-react";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 // interface ItemType {
 //   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -43,9 +45,9 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
     width: "100%",
     color: theme.palette.text.secondary,
   }));
-
+  const navigate = useNavigate();
   return (
-    <AppBarStyled position="sticky" color="default" >
+    <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
         <IconButton
           color="inherit"
@@ -74,7 +76,7 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           <IconMenuDeep width="20" height="20" />
         </IconButton>
 
-        <IconButton
+        {/* <IconButton
           size="large"
           aria-label="show 11 new notifications"
           color="inherit"
@@ -84,13 +86,25 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           <Badge variant="dot" color="primary">
             <IconBellRinging size="21" stroke="1.5" />
           </Badge>
-        </IconButton>
+        </IconButton> */}
         <Box flexGrow={1} />
-        <Stack spacing={1} direction="row" alignItems="center">
-          <IconButton color="inherit" aria-label="menu">
-            <IconInfoOctagon height={20} width={20} />
-          </IconButton>
-          <Profile />
+        <Stack
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          onClick={() => {
+            navigate("/manualguide-book");
+          }}
+        >
+          <Tooltip title="Help" arrow>
+            <IconButton color="inherit" aria-label="menu">
+              <IconInfoOctagon height={20} width={20} />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Profile" arrow>
+            <Profile />
+          </Tooltip>
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>

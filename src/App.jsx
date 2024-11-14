@@ -58,6 +58,7 @@ import AddSchool from "./pages/master/chapters/AddSchool";
 import Chapter from "./pages/Chapter/Chapter";
 import AddSchoolAdmin from "./pages/Chapter/AddSchoolAdmin";
 import DataSource from "./pages/DataSource/DataSource";
+import ManualGuideBook from "./pages/ManualGuideBook/ManualGuideBook";
 const App = () => {
   return (
     <>
@@ -96,6 +97,9 @@ const App = () => {
         {/* //chapter */}
         <Route path="/chapter" element={<Chapter />} />
         <Route path="/chapter/view-shool/:id" element={<AddSchoolAdmin />} />
+        {/* //manualguide book */}
+        <Route path="/manualguide-book" element={<ManualGuideBook />} />
+
         {/* //DataSource */}
         <Route path="/datasource" element={<DataSource />} />
 
