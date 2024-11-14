@@ -192,6 +192,7 @@ const StatesList = () => {
     {
       accessorKey: "edit",
       header: "Edit",
+      enableColumnFilter: false,
       Cell: ({ row }) => (
         <button
           onClick={() => {
@@ -235,7 +236,7 @@ const StatesList = () => {
               onClick={handleClickOpen}
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
-              Create A New Data Source
+              Create States
             </button>
           </div>
         </div>
@@ -246,6 +247,12 @@ const StatesList = () => {
             open={open}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+              "& .MuiDialog-paper": {
+                borderRadius: "18px",
+              },
+            }}
           >
             <form onSubmit={createUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
@@ -322,13 +329,19 @@ const StatesList = () => {
             open={open1}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+              "& .MuiDialog-paper": {
+                borderRadius: "18px",
+              },
+            }}
           >
             <form onSubmit={updateUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-3xl shadow-md">
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
-                      Edit Data Source
+                      Edit States
                     </h1>
                     <div className="flex">
                       <Tooltip title="Close">

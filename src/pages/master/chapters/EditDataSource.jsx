@@ -222,6 +222,7 @@ const EditDataSource = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableFullScreenToggle: false,
+    enableHiding: false,
   });
 
   const inputClass =
@@ -255,7 +256,9 @@ const EditDataSource = () => {
             open={open}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
-            className="rounded-[18px]"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+            }}
           >
             <form onSubmit={createUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
@@ -312,6 +315,9 @@ const EditDataSource = () => {
             open={open1}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+            }}
           >
             <form autoComplete="off" onSubmit={updateUser}>
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">

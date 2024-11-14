@@ -11,6 +11,8 @@ const AppProvider = ({ children }) => {
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const userTypeId = localStorage.getItem("user_type_id");
+  console.log(userTypeId, "id");
 
   const checkPanelStatus = async () => {
     try {
@@ -41,6 +43,8 @@ const AppProvider = ({ children }) => {
           "/form",
           "/profile",
           "/change-password",
+          //guidebook
+          "/manualguide-book",
           // donor
           "/donor-list",
           "/add-indivisual",
@@ -147,7 +151,7 @@ const AppProvider = ({ children }) => {
   }, []);
 
   return (
-    <ContextPanel.Provider value={{ isPanelUp, setIsPanelUp }}>
+    <ContextPanel.Provider value={{ isPanelUp, setIsPanelUp, userTypeId }}>
       {children}
     </ContextPanel.Provider>
   );
