@@ -27,7 +27,7 @@ import {
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
-
+const userTypeId = localStorage.getItem("user_type_id");
 const Menuitems = [
   {
     navlabel: true,
@@ -40,61 +40,75 @@ const Menuitems = [
     icon: IconLayoutDashboard,
     href: "/home",
   },
-  {
-    id: uniqueId(),
-    title: "Chapters",
-    icon: IconHierarchy,
-    href: "/chapter",
-  },
-  {
-    id: uniqueId(),
-    title: "Data Sources",
-    icon: IconChartDots2,
-    href: "/datasource",
-  },
+
+  ...(userTypeId == 2
+    ? [
+        {
+          id: uniqueId(),
+          title: "Chapters",
+          icon: IconHierarchy,
+          href: "/chapter",
+        },
+      ]
+    : ""),
+  ...(userTypeId == 2
+    ? [
+        {
+          id: uniqueId(),
+          title: "Data Sources",
+          icon: IconChartDots2,
+          href: "/datasource",
+        },
+      ]
+    : ""),
+
   {
     navlabel: true,
     subheader: "Operation",
   },
-  {
-    id: uniqueId(),
-    title: "Master",
-    icon: IconUser,
-    // href: "/table",
-    subItems: [
-      // for nested sum menu item
-      {
-        id: uniqueId(),
-        title: "Chapters",
-        icon: IconHierarchy,
-        href: "/master/chapters",
-      },
-      {
-        id: uniqueId(),
-        title: "States",
-        icon: IconLanguage,
-        href: "/master/states",
-      },
-      {
-        id: uniqueId(),
-        title: "Designation",
-        icon: IconBriefcase,
-        href: "/master/designation",
-      },
-      {
-        id: uniqueId(),
-        title: "OTS Expensive Type",
-        icon: IconCopy,
-        href: "/master/expensive-type",
-      },
-      {
-        id: uniqueId(),
-        title: "FAQ",
-        icon: IconMessages,
-        href: "/master/faqList",
-      },
-    ],
-  },
+  ...(userTypeId == 3
+    ? [
+        {
+          id: uniqueId(),
+          title: "Master",
+          icon: IconUser,
+          // href: "/table",
+          subItems: [
+            // for nested sum menu item
+            {
+              id: uniqueId(),
+              title: "Chapters",
+              icon: IconHierarchy,
+              href: "/master/chapters",
+            },
+            {
+              id: uniqueId(),
+              title: "States",
+              icon: IconLanguage,
+              href: "/master/states",
+            },
+            {
+              id: uniqueId(),
+              title: "Designation",
+              icon: IconBriefcase,
+              href: "/master/designation",
+            },
+            {
+              id: uniqueId(),
+              title: "OTS Expensive Type",
+              icon: IconCopy,
+              href: "/master/expensive-type",
+            },
+            {
+              id: uniqueId(),
+              title: "FAQ",
+              icon: IconMessages,
+              href: "/master/faqList",
+            },
+          ],
+        },
+      ]
+    : ""),
   {
     id: uniqueId(),
     title: "Donor",
@@ -114,12 +128,16 @@ const Menuitems = [
         icon: IconUsers,
         href: "/member-list",
       },
-      {
-        id: uniqueId(),
-        title: "Viewers",
-        icon: IconCardboards,
-        href: "/viewer-list",
-      },
+      ...(userTypeId == 3
+        ? [
+            {
+              id: uniqueId(),
+              title: "Viewers",
+              icon: IconCardboards,
+              href: "/viewer-list",
+            },
+          ]
+        : ""),
       {
         id: uniqueId(),
         title: "Duplicate",

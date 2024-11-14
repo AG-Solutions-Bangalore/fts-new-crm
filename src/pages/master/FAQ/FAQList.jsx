@@ -172,6 +172,7 @@ const FAQList = () => {
     {
       accessorKey: "edit",
       header: "Edit",
+      enableColumnFilter: false,
       Cell: ({ row }) => (
         <button
           onClick={() => {
@@ -199,6 +200,7 @@ const FAQList = () => {
     enableHiding: false,
   });
   const autoResize = (e) => {
+    e.target.style.height = "100px";
     e.target.style.height = "auto";
     e.target.style.height = e.target.scrollHeight + "px";
   };
@@ -217,7 +219,7 @@ const FAQList = () => {
               onClick={handleClickOpen}
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
-              Create A New FAQ
+              Create FAQ
             </button>
           </div>
         </div>
@@ -227,13 +229,19 @@ const FAQList = () => {
             open={open}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+              "& .MuiDialog-paper": {
+                borderRadius: "18px",
+              },
+            }}
           >
             <form onSubmit={createUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
-                      Create States
+                      Create FAQ
                     </h1>
                     <div className="flex">
                       <Tooltip title="Close">
@@ -264,6 +272,7 @@ const FAQList = () => {
                           onChange={(e) => onUserInputChange(e)}
                           className={inputClass}
                           onInput={autoResize}
+                          style={{ height: "100px" }}
                           required
                         />
                       </div>
@@ -287,21 +296,23 @@ const FAQList = () => {
             open={open1}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
-            // className="m-3  rounded-lg shadow-xl"
+            sx={{
+              backdropFilter: "blur(5px) sepia(5%)",
+              "& .MuiDialog-paper": {
+                borderRadius: "18px",
+              },
+            }}
           >
             <form onSubmit={updateUser} autoComplete="off">
               <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-3xl shadow-md">
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <h1 className="text-slate-800 text-xl font-semibold">
-                      Edit Data Source
+                      Edit FAQ
                     </h1>
                     <div className="flex">
                       <Tooltip title="Close">
-                        <button
-                          className="ml-3 pl-2 hover:bg-gray-200 rounded-full"
-                          onClick={handleClose1}
-                        >
+                        <button className="ml-3 pl-2 " onClick={handleClose1}>
                           <IconCircleX />
                         </button>
                       </Tooltip>
@@ -328,6 +339,7 @@ const FAQList = () => {
                           onChange={(e) => onUserInputChange1(e)}
                           className={inputClass}
                           onInput={autoResize}
+                          style={{ height: "100px" }}
                           required
                         />
                       </div>

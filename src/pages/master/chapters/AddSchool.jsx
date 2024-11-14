@@ -167,6 +167,8 @@ const AddSchool = () => {
 
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+  const schoolId = localStorage.getItem("schoolId");
+  const backlink = () => navigate(`/view-chapter/${schoolId}`);
   return (
     <Layout>
       <div>
@@ -178,7 +180,7 @@ const AddSchool = () => {
                 <span> School</span>
               </div>
               <IconArrowBack
-                onClick={() => navigate("/master/chapters")}
+                onClick={backlink}
                 className="cursor-pointer hover:text-red-600"
               />
             </h2>
@@ -256,7 +258,7 @@ const AddSchool = () => {
               </button>
               <button
                 className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
-                onClick={() => navigate("/master/chapters")}
+                onClick={backlink}
               >
                 Back
               </button>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { SwipeableDrawer, Button } from "@mui/material";
+import { SwipeableDrawer, Button, Tooltip } from "@mui/material";
 import { Spinner } from "@material-tailwind/react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit, IconEye, IconReceipt } from "@tabler/icons-react";
@@ -62,26 +62,27 @@ const ChaptersList = () => {
     {
       accessorKey: "actions",
       header: "Actions",
+      enableColumnFilter: false,
+
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
-          <Link to={`/view-chapter/${row.original.id}`}>
-            <IconEye
-              title="View"
-              className="h-5 w-5 cursor-pointer text-blue-500"
-            />
-          </Link>
-          <Link to={`/edit-chapter/${row.original.id}`}>
-            <IconEdit
-              title="Edit"
-              className="h-5 w-5 cursor-pointer text-blue-500"
-            />
-          </Link>
-          <Link to={`/edit-datasource/${row.original.id}`}>
-            <IconReceipt
-              title="Datasource"
-              className="h-5 w-5 cursor-pointer text-blue-500"
-            />
-          </Link>
+          <Tooltip title="View" arrow>
+            <Link to={`/view-chapter/${row.original.id}`}>
+              <IconEye className="h-5 w-5 cursor-pointer text-blue-500" />
+            </Link>
+          </Tooltip>
+
+          <Tooltip title="Edit" arrow>
+            <Link to={`/edit-chapter/${row.original.id}`}>
+              <IconEdit className="h-5 w-5 cursor-pointer text-blue-500" />
+            </Link>
+          </Tooltip>
+
+          <Tooltip title="Datasource" arrow>
+            <Link to={`/edit-datasource/${row.original.id}`}>
+              <IconReceipt className="h-5 w-5 cursor-pointer text-blue-500" />
+            </Link>
+          </Tooltip>
         </div>
       ),
     },
