@@ -3,15 +3,29 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Layout from "../../../layout/Layout";
-import BASE_URL from "../../../base/BaseUrl";
+import Layout from "../../layout/Layout";
+import BASE_URL from "../../base/BaseUrl";
 import {
   IconArrowBack,
   IconCircleX,
   IconInfoCircle,
 } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import SelectInput from "../../../components/common/SelectInput";
+import SelectInput from "../../components/common/SelectInput";
+const committee_type = [
+  {
+    value: "President",
+    label: "President",
+  },
+  {
+    value: "Secretary",
+    label: "Secretary",
+  },
+  {
+    value: "Treasurer",
+    label: "Treasurer",
+  },
+];
 const UserDrop = [
   {
     value: "1",
@@ -22,18 +36,34 @@ const UserDrop = [
     label: "Admin",
   },
 ];
-
-const ViewChapter = () => {
+const Chapter = () => {
   const navigate = useNavigate();
+  const id = localStorage.getItem("chapter_id");
 
-  const { id } = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [student, setStudent] = useState({});
+  const [isButtonDisabled1, setIsButtonDisabled1] = useState(false);
+  const [isButtonDisabled2, setIsButtonDisabled2] = useState(false);
+
   const [individualDrawer, setIndividualDrawer] = useState(false);
   const toggleIndividualDrawer = (open) => () => {
     setIndividualDrawer(open);
   };
   const [users, setUsers] = useState([]);
+  const [chapter, setChapter] = useState({
+    chapter_name: "",
+    chapter_code: "",
+    chapter_address: "",
+    chapter_city: "",
+    chapter_pin: "",
+    chapter_state: "",
+    chapter_phone: "",
+    chapter_whatsapp: "",
+    chapter_email: "",
+    chapter_website: "",
+    chapter_date_of_incorporation: "",
+    chapter_region_code: "",
+    auth_sign: "",
+  });
 
   const [user, setUser] = useState({
     name: "",
@@ -45,6 +75,7 @@ const ViewChapter = () => {
     confirm_password: "",
     user_type_id: "",
   });
+
   const [selected_user_id, setSelectedUserId] = useState("");
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -55,7 +86,37 @@ const ViewChapter = () => {
   const validateOnlyDigits = (value) => {
     return /^\d+$/.test(value);
   };
+  const onInputChange = (e) => {
+    if (e.target.name == "chapter_phone") {
+      if (validateOnlyDigits(e.target.value)) {
+        setChapter({
+          ...chapter,
+          [e.target.name]: e.target.value,
+        });
+      }
+    } else if (e.target.name == "chapter_whatsapp") {
+      if (validateOnlyDigits(e.target.value)) {
+        setChapter({
+          ...chapter,
+          [e.target.name]: e.target.value,
+        });
+      }
+    } else {
+      setChapter({
+        ...chapter,
+        [e.target.name]: e.target.value,
+      });
+    }
+  };
 
+  const onInputChange1 = (e) => {
+    console.log(e.target.value);
+    const { name, value } = e.target;
+    setChapter({
+      ...chapter,
+      [name]: value,
+    });
+  };
   const handleClose = (e) => {
     setOpen(false);
     setIndividualDrawer(false);
@@ -98,7 +159,7 @@ const ViewChapter = () => {
         },
       })
       .then((res) => {
-        setUser(res.data.chapter);
+        setChapter(res.data.chapter);
         setUsers(res.data.users);
       });
   };
@@ -122,7 +183,7 @@ const ViewChapter = () => {
       form.reportValidity();
       return;
     }
-    setIsButtonDisabled(true);
+    setIsButtonDisabled2(true);
     const formData = {
       name: user.name,
       first_name: user.first_name,
@@ -147,6 +208,16 @@ const ViewChapter = () => {
         setUsers(response.data.users);
         handleClose();
         toast.success("User is Created Successfully");
+        setUser({
+          name: "",
+          email: "",
+          first_name: "",
+          last_name: "",
+          phone: "",
+          password: "",
+          confirm_password: "",
+          user_type_id: "",
+        });
       } else {
         toast.error("User Duplicate Entry");
       }
@@ -154,7 +225,7 @@ const ViewChapter = () => {
       console.error("Error updating User:", error);
       toast.error("Error updating User");
     } finally {
-      setIsButtonDisabled(false);
+      setIsButtonDisabled2(false);
     }
   };
 
@@ -167,7 +238,7 @@ const ViewChapter = () => {
       form.reportValidity();
       return;
     }
-    setIsButtonDisabled(true);
+    setIsButtonDisabled1(true);
 
     const formData = {
       name: user.name,
@@ -193,10 +264,11 @@ const ViewChapter = () => {
 
       // Check for successful response
       if (response.status === 200) {
-        console.log(response.data.users);
-        setUsers(response.data.users);
+        // console.log(response.data.users);
+        // setUsers(response.data.users);
         toast.success("User is Updated Successfully");
         handleClose1(e);
+        fetchData();
       } else {
         toast.error("User Duplicate Entry");
       }
@@ -204,7 +276,7 @@ const ViewChapter = () => {
       console.error("Error updating User:", error);
       toast.error("Error updating User");
     } finally {
-      setIsButtonDisabled(false); // Re-enable the button after processing
+      setIsButtonDisabled1(false); // Re-enable the button after processing
     }
   };
 
@@ -254,7 +326,7 @@ const ViewChapter = () => {
         <div className="flex items-center space-x-2">
           <button
             className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
-            onClick={() => navigate(`/view-school/${row.original.id}`)}
+            onClick={() => navigate(`/chapter/view-shool/${row.original.id}`)}
           >
             School
           </button>
@@ -273,65 +345,57 @@ const ViewChapter = () => {
 
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+  const onSubmit = (e) => {
+    e.preventDefault();
 
+    let data = {
+      chapter_name: chapter.chapter_name,
+      chapter_code: chapter.chapter_code,
+      chapter_address: chapter.chapter_address,
+      chapter_city: chapter.chapter_city,
+      chapter_pin: chapter.chapter_pin,
+      chapter_state: chapter.chapter_state,
+      chapter_phone: chapter.chapter_phone,
+      chapter_whatsapp: chapter.chapter_whatsapp,
+      chapter_email: chapter.chapter_email,
+      chapter_website: chapter.chapter_website,
+      chapter_date_of_incorporation: chapter.chapter_date_of_incorporation,
+      chapter_region_code: chapter.chapter_region_code,
+      auth_sign: chapter.auth_sign,
+    };
+
+    e.preventDefault();
+
+    setIsButtonDisabled(true);
+    axios({
+      url:
+        BASE_URL + "/api/update-chapter/" + localStorage.getItem("chapter_id"),
+      method: "PUT",
+      data,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => {
+        toast.success("User is Updated Successfully");
+        fetchData();
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error);
+        toast.error("Failed to update user");
+      })
+      .finally(() => {
+        setIsButtonDisabled(false);
+      });
+  };
   return (
     <Layout>
       <div className=" bg-[#FFFFFF] p-2  rounded-lg  ">
-        <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] ">
-          <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
-            <div className="flex  items-center gap-2">
-              <IconInfoCircle className="w-4 h-4" />
-              <span>Chapter Details</span>
-            </div>
-            <IconArrowBack
-              onClick={() => navigate("/receipt-list")}
-              className="cursor-pointer hover:text-red-600"
-            />
-          </h2>
-        </div>
-        <div className="p-4 bg-red-50 rounded-b-xl">
-          <div className="flex flex-col sm:flex-row md:justify-between items-start space-y-4 sm:space-y-0">
-            <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-black">
-                {user.chapter_name}
-              </h3>
-              <p className="text-xs text-gray-600">
-                State :{user.chapter_state}
-              </p>
-
-              <p className="text-xs text-green-600">
-                City : {user.chapter_city}
-              </p>
-              <p className="text-xs text-green-600">{user.mobile_device}</p>
-              <p className="text-xs text-green-600">PIN : {user.chapter_pin}</p>
-            </div>
-            <div className="space-y-1 relative">
-              <div className="flex items-center">
-                <p className="  text-xs text-gray-600">
-                  {user.chapter_date_of_incorporation}
-                </p>
-              </div>
-              <p className="text-xs text-green-600">
-                Phone : {user.chapter_phone}
-              </p>
-              <p className="text-xs text-green-600">
-                What's App : {user.chapter_whatsapp}{" "}
-              </p>
-              <p className="text-xs text-green-600">{user.chapter_email}</p>
-              <p className="text-xs text-green-600">
-                {student.chapter_website}
-              </p>
-              <p className="text-xs text-green-600">
-                Address : {user.chapter_address}
-              </p>
-            </div>
-          </div>
-        </div>
         <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] mt-2 ">
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
             <div className="flex  items-center gap-2">
-              <IconArrowBack className="cursor-pointer hover:text-red-600" />
-              <span>User Details</span>
+              <IconInfoCircle className="cursor-pointer hover:text-red-600" />
+              <span>Chapters</span>
             </div>
 
             <button
@@ -341,6 +405,119 @@ const ViewChapter = () => {
               Create New User
             </button>
           </h2>
+        </div>
+        <div>
+          {chapter.chapter_name != "" && (
+            <div>
+              <h1>
+                {chapter.chapter_name}{" "}
+                {"( " +
+                  chapter.chapter_city +
+                  "," +
+                  chapter.chapter_state +
+                  "- " +
+                  chapter.chapter_pin +
+                  " )"}
+              </h1>
+            </div>
+          )}
+          <form onSubmit={(e) => onSubmit(e)} autoComplete="off">
+            <div className="p-6 space-y-1 ">
+              <div>
+                <div className="mt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-2">
+                    <div>
+                      <FormLabel required>Address</FormLabel>
+                      <input
+                        name="chapter_address"
+                        value={chapter.chapter_address}
+                        onChange={(e) => onInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel required>Phone</FormLabel>
+                      <input
+                        type="text"
+                        maxLength={10}
+                        name="chapter_phone"
+                        value={chapter.chapter_phone}
+                        onChange={(e) => onInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <FormLabel required>Whatsapp</FormLabel>
+                      <input
+                        type="text"
+                        maxLength={10}
+                        name="chapter_whatsapp"
+                        value={chapter.chapter_whatsapp}
+                        onChange={(e) => onInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Email</FormLabel>
+                      <input
+                        type="email"
+                        name="chapter_email"
+                        value={chapter.chapter_email}
+                        onChange={onInputChange1}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Website</FormLabel>
+                      <input
+                        name="chapter_website"
+                        value={chapter.chapter_website}
+                        onChange={(e) => onInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div className="form-group ">
+                      <SelectInput
+                        label="Committee Member for Sign"
+                        name="auth_sign"
+                        value={chapter.auth_sign}
+                        options={committee_type}
+                        onChange={(e) => onInputChange(e)}
+                        placeholder="Select  User Type"
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Date Of Incorporation</FormLabel>
+                      <input
+                        type="date"
+                        name="chapter_date_of_incorporation"
+                        value={chapter.chapter_date_of_incorporation}
+                        onChange={(e) => onInputChange(e)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-5 flex justify-center">
+                    <button
+                      disabled={isButtonDisabled}
+                      type="submit"
+                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                    >
+                      {isButtonDisabled ? "Updating..." : "Update"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
         <MantineReactTable table={table} />
 
@@ -420,12 +597,10 @@ const ViewChapter = () => {
                         label="Select User Type"
                         options={UserDrop}
                         name="user_type_id"
-                        value={user.user_type_id}
                         onChange={(e) => onUserInputChange(e)}
                         placeholder="Select  User Type"
                       />
                     </div>
-
                     <div>
                       <FormLabel required>Enter Password</FormLabel>
                       <input
@@ -449,11 +624,11 @@ const ViewChapter = () => {
                   </div>
                   <div className="mt-5 flex justify-center">
                     <button
-                      disabled={isButtonDisabled}
+                      disabled={isButtonDisabled2}
                       type="submit"
                       className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                     >
-                      {isButtonDisabled ? "SUbmiting..." : "Submit"}
+                      {isButtonDisabled2 ? "SUbmiting..." : "Submit"}
                     </button>
                   </div>
                 </div>
@@ -536,9 +711,12 @@ const ViewChapter = () => {
                     <div className="form-group ">
                       <SelectInput
                         label="Select User Type"
-                        options={UserDrop}
-                        name="user_type_id"
+                        options={UserDrop.map((item) => ({
+                          value: item.value,
+                          label: item.label,
+                        }))}
                         value={user.user_type_id}
+                        name="user_type_id"
                         onChange={(e) => onUserInputChange(e)}
                         placeholder="Select  User Type"
                       />
@@ -546,11 +724,11 @@ const ViewChapter = () => {
                   </div>
                   <div className="mt-5 flex justify-center">
                     <button
-                      disabled={isButtonDisabled}
+                      disabled={isButtonDisabled1}
                       type="submit"
                       className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                     >
-                      {isButtonDisabled ? "Updating..." : "Update"}
+                      {isButtonDisabled1 ? "Updating..." : "Update"}
                     </button>
                   </div>
                 </div>
@@ -563,4 +741,4 @@ const ViewChapter = () => {
   );
 };
 
-export default ViewChapter;
+export default Chapter;
