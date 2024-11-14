@@ -33,7 +33,7 @@ const Menuitems = [
     navlabel: true,
     subheader: "Home",
   },
-
+  
   {
     id: uniqueId(),
     title: "Dashboard",
@@ -288,19 +288,19 @@ const Menuitems = [
         id: uniqueId(),
         title: "FAQ",
         icon: IconTypography,
-        href: "/table",
+        href: "/faq",
       },
       {
         id: uniqueId(),
         title: "Team",
         icon: IconCopy,
-        href: "/table-one",
+        href: "/team",
       },
       {
         id: uniqueId(),
         title: "Notification",
         icon: IconCopy,
-        href: "/table-one",
+        href: "/notification",
       },
     ],
   },

@@ -114,6 +114,11 @@ const AppProvider = ({ children }) => {
           "/students-allotview",
           "/students-allotletter",
           "/students/report-donor-allotlist",
+
+          // other 
+          "/faq",
+          "/team",
+          "/notification"
         ];
 
         const isAllowedPath = allowedPath.some((path) =>

@@ -58,6 +58,9 @@ import AddSchool from "./pages/master/chapters/AddSchool";
 import Chapter from "./pages/Chapter/Chapter";
 import AddSchoolAdmin from "./pages/Chapter/AddSchoolAdmin";
 import DataSource from "./pages/DataSource/DataSource";
+import Faq from "./pages/others/Faq";
+import Team from "./pages/others/team/Team";
+import Notification from "./pages/others/notification/Notification";
 const App = () => {
   return (
     <>
@@ -132,6 +135,12 @@ const App = () => {
         <Route path="/students-full-list-view/:id" element={<FullListView />} />
         <Route path="/students-to-allot" element={<SchoolToAllot />} />
         <Route path="/students-addschoolalot" element={<DonorDetails />} />
+      
+
+        {/* others  */}
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/notification" element={<Notification />} />
         {/*
         <Route path="/students-report-donor" element={<RepeatDonors />} />
 
