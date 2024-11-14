@@ -67,6 +67,11 @@ const AppProvider = ({ children }) => {
           "/master/faqList",
           "/view-chapter",
           "/view-school",
+          //chapters
+          "/chapter",
+          "/chapter/view-shool",
+          //datasoucre
+          "/datasource",
           // receipt
           "/receipt-list",
           "/receipt-edit",

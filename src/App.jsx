@@ -55,6 +55,9 @@ import ExpensiveTypeList from "./pages/master/expensivetype/ExpensiveTypeList";
 import FAQList from "./pages/master/FAQ/FAQList";
 import ViewChapter from "./pages/master/chapters/ViewChapter";
 import AddSchool from "./pages/master/chapters/AddSchool";
+import Chapter from "./pages/Chapter/Chapter";
+import AddSchoolAdmin from "./pages/Chapter/AddSchoolAdmin";
+import DataSource from "./pages/DataSource/DataSource";
 const App = () => {
   return (
     <>
@@ -74,13 +77,10 @@ const App = () => {
         <Route path="/edit-viewer/:id" element={<EditViewer />} />
         <Route path="/member-list" element={<MemberList />} />
         <Route path="/duplicate-list" element={<DuplicateList />} />
-
         {/* receipt  */}
-
         <Route path="/receipt-list" element={<ReceiptList />} />
         <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />
         <Route path="/view-receipts/:id" element={<ReceiptViewIndex />} />
-
         {/* school  */}
         <Route path="/profile" element={<Profile />} />
         {/* //Master */}
@@ -92,15 +92,19 @@ const App = () => {
         <Route path="/master/designation" element={<DesignationList />} />
         <Route path="/master/expensive-type" element={<ExpensiveTypeList />} />
         <Route path="/master/faqList" element={<FAQList />} />
-        {/* //DOWNLOAD */}
+        {/* //chapter */}
+        <Route path="/chapter" element={<Chapter />} />
+        <Route path="/chapter/view-shool/:id" element={<AddSchoolAdmin />} />
+        {/* //DataSource */}
+        <Route path="/datasource" element={<DataSource />} />
 
+        {/* //DOWNLOAD */}
         <Route path="/download/receipts" element={<DowloadRecpit />} />
         <Route path="/download/donor" element={<Donor />} />
         <Route path="/download/school" element={<DownloadSchool />} />
         <Route path="/download/ots" element={<Downloadots />} />
         <Route path="/download/team" element={<DownloadTeam />} />
         <Route path="/download/allrecepit" element={<DowloadAllRecepit />} />
-
         {/* ///END DOWNLOAD */}
         <Route
           path="/change-password"
@@ -127,7 +131,6 @@ const App = () => {
         <Route path="/students-full-list-view/:id" element={<FullListView />} />
         <Route path="/students-to-allot" element={<SchoolToAllot />} />
         <Route path="/students-addschoolalot" element={<DonorDetails />} />
-
         {/*
         <Route path="/students-report-donor" element={<RepeatDonors />} />
 

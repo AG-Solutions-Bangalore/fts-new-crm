@@ -44,13 +44,13 @@ const Menuitems = [
     id: uniqueId(),
     title: "Chapters",
     icon: IconHierarchy,
-    href: "/form",
+    href: "/chapter",
   },
   {
     id: uniqueId(),
     title: "Data Sources",
     icon: IconChartDots2,
-    href: "/form",
+    href: "/datasource",
   },
   {
     navlabel: true,
