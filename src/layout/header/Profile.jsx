@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Avatar,
   Box,
@@ -11,12 +11,12 @@ import {
 } from "@mui/material";
 
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
-import { Link, useNavigate } from "react-router-dom";
+
 import Logout from "../../components/Logout";
 
 const Profile = () => {
-  const [anchorEl2, setAnchorEl2] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
+  const [anchorEl2, setAnchorEl2] = React.useState(null);
+  const [openModal, setOpenModal] = React.useState(false);
   const handleOpenLogout = () => setOpenModal(!openModal);
   const handleClick2 = (event) => {
     setAnchorEl2(event.currentTarget);
@@ -24,8 +24,6 @@ const Profile = () => {
   const handleClose2 = () => {
     setAnchorEl2(null);
   };
-
-  const navigate = useNavigate()
 
  
 
@@ -88,7 +86,7 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText>My Tasks</ListItemText>
         </MenuItem> */}
-        <MenuItem 
+        {/* <MenuItem 
             onClick={() => {
             navigate("/manualguide-book");
           }}
@@ -97,7 +95,7 @@ const Profile = () => {
             <IconListCheck width={20} />
           </ListItemIcon>
           <ListItemText>Help</ListItemText>
-        </MenuItem>
+        </MenuItem> */}
         <Box mt={1} py={1} px={2}>
           <Button
            onClick={handleOpenLogout}

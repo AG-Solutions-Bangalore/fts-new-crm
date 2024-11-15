@@ -17,9 +17,8 @@ const FamilyDetails = ({viewerId}) => {
           .then((res) => {
            
             setDonorFam(res.data.family_details);
-            setCompany(res.data.company_details);
-           
-            console.log(res.data);
+         
+        
           });
       }, [viewerId]);
       const columns = useMemo(
@@ -42,7 +41,7 @@ const FamilyDetails = ({viewerId}) => {
     
             Cell: ({ row }) => {
               const date = row.original.indicomp_dob_annualday;
-              console.log(date)
+       
               return (
                 <>
                  {date ? 

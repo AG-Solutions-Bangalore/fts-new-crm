@@ -52,7 +52,6 @@ const CommitteeList = () => {
       },
     })
       .then((res) => {
-        console.log("Response:", res.data);
         toast.success("Data deleted successfully");
         fetchCommitteeData();
       })

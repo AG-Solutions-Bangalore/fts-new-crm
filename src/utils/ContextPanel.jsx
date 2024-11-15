@@ -7,12 +7,11 @@ export const ContextPanel = createContext();
 
 const AppProvider = ({ children }) => {
   const [isPanelUp, setIsPanelUp] = useState(true);
-
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const userTypeId = localStorage.getItem("user_type_id");
-  console.log(userTypeId, "id");
+  
 
   const checkPanelStatus = async () => {
     try {
@@ -60,7 +59,6 @@ const AppProvider = ({ children }) => {
           "/edit-viewer",
           "/duplicate-list",
           "/create-receipts",
-          "/pincode",
           //master
           "/master/chapters",
           "/edit-chapter",
@@ -130,7 +128,7 @@ const AppProvider = ({ children }) => {
         );
         if (isAllowedPath) {
           navigate(currentPath + location.search);
-          console.log(currentPath);
+          
         } else {
           navigate("/home");
         }

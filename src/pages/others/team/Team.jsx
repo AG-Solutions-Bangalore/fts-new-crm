@@ -41,7 +41,7 @@ const Team = () => {
   ];
 
   const onInputChange = (name, value) => {
-    console.log(value);
+   
     setCommittee((prev) => ({
       ...prev,
       [name]: value,
@@ -50,7 +50,7 @@ const Team = () => {
   const onInputChange1 = (e) => {
     const { name, value } = e.target;
 
-    console.log(value);
+ 
     setCommittee((prev) => ({
       ...prev,
       [name]: value,

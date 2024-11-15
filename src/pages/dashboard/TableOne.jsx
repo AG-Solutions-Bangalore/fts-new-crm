@@ -25,7 +25,6 @@ const TableOne = () => {
           });
   
           setDonorData(response.data?.individualCompanies);
-          console.log(response.data?.individualCompanies);
         } catch (error) {
           console.error("Error fetching Factory data", error);
         } finally {
@@ -59,9 +58,9 @@ const TableOne = () => {
         accessorKey: 'indicomp_email',
         header: 'Email',
         Cell: ({ value ,row}) => {
-            console.log('Row Data:', row.original?.indicomp_email); 
+          
             const valueData = row.original?.indicomp_email
-            console.log("value",value)
+      
             return <div className={` ${valueData ? "bg-green-500" : ""} rounded-lg text-white p-[1px] px-2 `}>{valueData}</div>;
           },
       },

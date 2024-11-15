@@ -158,9 +158,8 @@ const DonorList = () => {
         header: "Email",
         size: 150,
         Cell: ({ value, row }) => {
-          console.log("Row Data:", row.original?.indicomp_email);
           const valueData = row.original?.indicomp_email;
-          console.log("value", value);
+       
           return (
             <div
               

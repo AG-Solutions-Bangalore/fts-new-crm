@@ -19,7 +19,7 @@ const MembershipDetails = ({ viewerId }) => {
         setMembership(res.data.membership_details);
 
         setLoader(false);
-        console.log(res.data);
+     
       });
   }, [viewerId]);
 

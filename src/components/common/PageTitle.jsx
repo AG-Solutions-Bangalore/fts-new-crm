@@ -5,7 +5,6 @@ const PageTitle = ({ title, icon: Icon, backLink }) => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    console.log("Back link clicked:", backLink);
     if (backLink === "-1") {
       navigate(-1);
     } else {

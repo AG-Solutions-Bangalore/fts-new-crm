@@ -18,8 +18,7 @@ const CompanyDetailsList = ({viewerId}) => {
            
             
             setCompany(res.data.company_details);
-           
-            console.log(res.data);
+   
           });
       }, [viewerId]);
       const columns = useMemo(
@@ -42,7 +41,7 @@ const CompanyDetailsList = ({viewerId}) => {
     
             Cell: ({ row }) => {
               const date = row.original.indicomp_dob_annualday;
-              console.log(date)
+     
               return (
                 <>
                  {date ? 

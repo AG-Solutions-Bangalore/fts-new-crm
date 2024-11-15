@@ -17,10 +17,10 @@ const DonoationDetailsList = ({viewerId}) => {
           })
           .then((res) => {
             setDonation(res.data.donor_receipts);
-            setMembership(res.data.membership_details);
+          
           
             setLoader(false);
-            console.log(res.data);
+         
           });
       }, [viewerId]);
 

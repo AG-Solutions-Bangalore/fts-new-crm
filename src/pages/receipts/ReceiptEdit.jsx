@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Layout from "../../layout/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -6,7 +6,9 @@ import BASE_URL from "../../base/BaseUrl";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@material-tailwind/react";
 import moment from "moment";
+import CryptoJS from "crypto-js";
 import { toast } from "react-toastify";
+import { decryptId } from "../../utils/encyrption/Encyrption";
 
 const pay_mode = [
   {
@@ -118,8 +120,15 @@ const school_year = [
 
 const ReceiptEdit = () => {
   const { id } = useParams();
-  console.log("edut id");
   const navigate = useNavigate();
+  const decryptedId = useMemo(() => decryptId(id), [id]);
+  useEffect(() => {
+    if (!decryptedId) {
+      toast.error("Invalid receipt ID");
+      navigate("/receipt-list");
+    }
+  }, [decryptedId, navigate]);
+
   const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loader, setLoader] = useState(true);
@@ -174,7 +183,7 @@ const ReceiptEdit = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-donor-by-id/${id}`, {
+      .get(`${BASE_URL}/api/fetch-donor-by-id/${decryptedId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -186,7 +195,7 @@ const ReceiptEdit = () => {
   }, []);
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-receipt-by-id/${id}`, {
+      .get(`${BASE_URL}/api/fetch-receipt-by-id/${decryptedId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -237,7 +246,7 @@ const ReceiptEdit = () => {
     };
     try {
       const response = await axios.put(
-        `${BASE_URL}/api/update-receipt/${id}`,
+        `${BASE_URL}/api/update-receipt/${decryptedId}`,
         formData,
         {
           headers: {
@@ -302,7 +311,7 @@ const ReceiptEdit = () => {
                 FTS Id: {donor.individual_company.indicomp_fts_id}
               </p>
 
-              <p className="text-xs text-green-600">
+              <p className="text-xs text-black">
                 Receipt Ref : {donor.receipt_ref_no}
               </p>
             </div>
@@ -316,7 +325,7 @@ const ReceiptEdit = () => {
                 </p>
               </div>
               <p className="text-xs text-green-600">Pan : {pan}</p>
-              <p className="text-xs text-green-600">
+              <p className="text-xs text-black">
                 Exemption Type : {donor.receipt_exemption_type}
               </p>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Chip from "@mui/material/Chip";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -8,6 +8,9 @@ import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+
+
+
 
 export default function NavItem({
   item,
@@ -19,16 +22,27 @@ export default function NavItem({
   const Icon = item.icon;
   const theme = useTheme();
   const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
- 
-  //State for submenu item
-  const [isExpanded, setIsExpanded] = useState(false);
+
+
+  const [isExpanded, setIsExpanded] = React.useState(() => {
+    if (item?.subItems) {
+      const savedState = localStorage.getItem(`menu-${item.id}`);
+      const isCurrentPathInSubItems = item.subItems.some(
+        subItem => subItem.href === pathDirect
+      );
+      return savedState ? savedState === 'true' : isCurrentPathInSubItems;
+    }
+    return false;
+  });
+  React.useEffect(() => {
+    if (item?.subItems) {
+      localStorage.setItem(`menu-${item.id}`, isExpanded);
+    }
+  }, [isExpanded, item?.id]);
+
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
-  //
-
-  //
-  
 
   const ListItemStyled = styled(ListItemButton)(() => ({
     whiteSpace: "nowrap",
@@ -90,6 +104,65 @@ export default function NavItem({
       "&:hover": {
         // backgroundColor: theme.palette.primary.light,
         color: theme.palette.text.primary,
+      },
+    },
+  }));
+
+
+   const SubItemStyled = styled(ListItemButton)(() => ({
+    whiteSpace: "nowrap",
+    marginBottom: "2px",
+    padding: "5px 10px 5px 0",
+    borderRadius: `30px`,
+    backgroundColor: "transparent !important",
+    color: pathDirect === item?.href
+      ? `${theme.palette.primary.main}!important`
+      : theme.palette.text.secondary,
+    fontWeight: pathDirect === item?.href ? "600 !important" : "400",
+    paddingLeft: "20px",
+    "&:before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: "-20px",
+      height: "100%",
+      zIndex: "-1",
+      borderRadius: " 0 24px 24px 0",
+      transition: "all .3s ease-in-out",
+      width: "0",
+    },
+    "&:hover::before": {
+      width: "calc(100% + 20px)",
+      backgroundColor: theme.palette.primary.light,
+    },
+    "& > .MuiListItemIcon-root": {
+      width: 45,
+      height: 40,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "8px",
+      marginRight: "8px",
+      transition: "all .3s ease-in-out",
+    },
+    "&:hover": {
+      backgroundColor: "transparent !important",
+    },
+    "&.Mui-selected": {
+      backgroundColor: "transparent !important",
+      ".MuiListItemIcon-root": {
+        color: theme.palette.primary.main,
+      },
+      "&:before": {
+        backgroundColor: theme.palette.primary.light,
+        width: "calc(100% + 16px)",
+      },
+      "&:hover": {
+        color: theme.palette.primary.main,
+        ".MuiListItemIcon-root": {
+          color: theme.palette.primary.main,
+        },
       },
     },
   }));
@@ -190,44 +263,69 @@ export default function NavItem({
               {isExpanded ? <IconChevronUp /> : <IconChevronDown />}
             </ListItemIcon>
           )}
+
+          
         </ListItemStyled>
       </Link>
       {/* Sub-Menu Items (Collapsible) */}
       {item?.subItems && (
         <List component="div" disablePadding>
-          {isExpanded &&
+           {isExpanded &&
             item.subItems.map((subItem) => (
-     
-              <>
-                
-                <ListItemButton
-                  key={subItem.id}
-                  component={Link}
-                  to={subItem.href}
-                  sx={{
-                    pl: 4, // Indentation for sub-items
-                    py: 1,
-                  }}
+              <Link
+                key={subItem.id}
+                to={subItem.href}
+                style={{ textDecoration: "none" }}
+              >
+                <SubItemStyled
                   selected={pathDirect === subItem.href}
+                  sx={{
+                    "&:hover": {
+                      ".MuiListItemIcon-root": {
+                        color: subItem.bgcolor + ".main",
+                      },
+                    },
+                    "&:hover::before": {
+                      backgroundColor: subItem.bgcolor + ".light",
+                    },
+                    "&.Mui-selected": {
+                      color: "primary.main",
+                      "& .MuiTypography-root": {
+                        fontWeight: "600 !important",
+                      },
+                      ".MuiListItemIcon-root": {
+                        color: "primary.main",
+                      },
+                      "&:before": {
+                        backgroundColor: "primary.light",
+                      },
+                      "&:hover": {
+                        color: "primary.main",
+                        ".MuiListItemIcon-root": {
+                          color: "primary.main",
+                        },
+                      },
+                    },
+                  }}
                 >
                   <ListItemIcon
                     sx={{
                       minWidth: "36px",
                       p: "3px 0",
-                      color:
-                        level > 1 && pathDirect === subItem?.href
-                          ? `${theme.palette.primary.main}!important`
-                          : "inherit",
+                      color: pathDirect === subItem?.href
+                        ? `${theme.palette.primary.main}!important`
+                        : "inherit",
                     }}
                   >
-                     <subItem.icon stroke={1.5} size="1.1rem" />
+                    <subItem.icon stroke={1.5} size="1.1rem" />
                   </ListItemIcon>
                   <ListItemText primary={subItem.title} />
-                </ListItemButton>
-              </>
+                </SubItemStyled>
+              </Link>
             ))}
         </List>
       )}
+      
     </List>
   );
 }

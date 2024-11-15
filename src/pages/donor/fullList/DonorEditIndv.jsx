@@ -325,7 +325,6 @@ const DonorEditIndv = ({id}) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }).then((res) => {
-          console.log("edit1", res.data);
           setDonor(res.data.individualCompany);
           toast.success("Data Update Sucessfully");
           navigate("/donor-list");

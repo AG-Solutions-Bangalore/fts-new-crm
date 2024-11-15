@@ -137,7 +137,6 @@ const EditViewer = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }).then((res) => {
-        console.log("editdon", res.data);
         setTheViewer(res.data.users);
         setLoader(false);
       });

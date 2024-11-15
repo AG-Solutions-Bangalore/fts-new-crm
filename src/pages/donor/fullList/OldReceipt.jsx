@@ -4,6 +4,7 @@ import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import BASE_URL from '../../../base/BaseUrl';
+import moment from 'moment';
 
 const OldReceipt = ({viewerId,onClose}) => {
     const [receiptData, setReceiptData] = useState(null);
@@ -56,6 +57,19 @@ const OldReceipt = ({viewerId,onClose}) => {
             accessorKey: "receipt_date",
             header: "Date",
             size:50,
+            Cell: ({ row }) => {
+              const date = row.original.receipt_date;
+             
+              return (
+                <>
+                 {date ? 
+                    moment.utc(date).format("DD-MM-YYYY") : 
+                    'N/A'
+                  }
+                </>
+              )
+             
+            },
           },
           {
             accessorKey: "receipt_exemption_type",
@@ -91,14 +105,14 @@ const OldReceipt = ({viewerId,onClose}) => {
                     onClick={()=>navigate(`/view-receipts/${id}`)}
                     className="flex items-center space-x-2"
                   >
-                    <IconEye title="View" className="h-5 w-5 cursor-pointer" />
+                    <IconEye title="View" className="h-5 w-5  text-blue-500 cursor-pointer" />
                   </div>
                   <div
                   title='Receipt Edit'
                   onClick={()=>navigate(`/receipt-edit/${id}`)}
                     className="flex items-center space-x-2"
                   >
-                    <IconEdit  className="h-5 w-5 cursor-pointer" />
+                    <IconEdit  className="h-5 w-5 text-blue-500 cursor-pointer" />
                   </div>
                  
                 </div>

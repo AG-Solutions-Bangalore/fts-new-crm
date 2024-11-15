@@ -2,7 +2,6 @@ import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 import { Upgrade } from "./Upgrade";
 import Logo from "../shared/logo/Logo";
-import { useState } from "react";
 
 
 

@@ -156,7 +156,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
         });
 
         setCurrentYear(response.data.year.current_year);
-        console.log(response.data.year.current_year);
+  
       } catch (error) {
         console.error("Error fetching year data:", error);
       }
@@ -224,16 +224,23 @@ const CreateReceipt = ({ donorId, onClose }) => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/fetch-donor-by-id/${donorId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setUserdata(res.data.individualCompany);
+    const fetchDonorData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/fetch-donor-by-id/${donorId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setUserdata(response.data.individualCompany);
         setLoader(false);
-      });
+      } catch (error) {
+        console.error("Error fetching donor data:", error);
+      }
+    };
+  
+      if (donorId) {
+        fetchDonorData();
+      }
   }, [donorId]);
 
   const [datasource, setDatasource] = useState([]);

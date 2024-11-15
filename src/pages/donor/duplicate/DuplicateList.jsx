@@ -48,7 +48,6 @@ const DuplicateList = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }).then((res) => {
-          console.log("receipt", res.data);
           toast.success("Data Updated Sucessfully");
           
           navigate('/donor-list')

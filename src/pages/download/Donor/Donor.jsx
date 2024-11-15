@@ -63,7 +63,7 @@ function Donor() {
   });
   //ONCHANGE
   const onInputChange = (e) => {
-    console.log(e.target.value);
+   
     const { name, value } = e.target;
     setDonorDownload({
       ...downloadDonor,
@@ -80,7 +80,6 @@ function Donor() {
     var v = document.getElementById("dowRecp").checkValidity();
     var v = document.getElementById("dowRecp").reportValidity();
     e.preventDefault();
-    console.log("Data : ", data);
     if (v) {
       setIsButtonDisabled(true);
 

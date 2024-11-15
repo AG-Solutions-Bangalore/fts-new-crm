@@ -9,7 +9,6 @@ import Profile from "./pages/profile/Profile";
 import ChangePassword from "./pages/profile/ChangePassword";
 import DonorList from "./pages/donor/fullList/DonorList";
 import AddIndivisual from "./pages/donor/fullList/AddIndivisual";
-import PincodeChecker from "./pages/pincode/PincodeChecker";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DowloadRecpit from "./pages/download/DownloadReceipts/DownloadReceipts";

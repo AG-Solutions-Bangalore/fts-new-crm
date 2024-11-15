@@ -56,7 +56,9 @@ const DonorView = ({ viewerId, onClose }) => {
   // Fetch data useEffect would go here
   useEffect(() => {
     // Add your data fetching logic here
-    axios
+    const fetchViewerData = async () => {
+      try {
+        axios
       .get(`${BASE_URL}/api/fetch-donor-by-id/${viewerId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -68,8 +70,15 @@ const DonorView = ({ viewerId, onClose }) => {
         setCompany(res.data.company_details);
         setFamGroup(res.data.related_group);
         setLoader(false);
-        console.log(res.data);
       });
+      } catch (error) {
+        console.error("Error fetching donor data:", error);
+      }
+    };
+    
+      if (viewerId) {
+        fetchViewerData();
+      }
   }, [viewerId]);
 
   const relId = donor?.indicomp_related_id;

@@ -16,7 +16,7 @@ const SidebarItems = ({ toggleMobileSidebar, isCollapsed }) => {
         {Menuitems.map((item) => {
           // {/********SubHeader**********/}
           if (item.subheader) {
-            return <NavGroup item={item} key={item.subheader} isCollapsed={isCollapsed} />;
+            return <NavGroup item={item} key={item.subheader} isCollapsed={isCollapsed} />
 
             // {/********If Sub Menu**********/}
             /* eslint no-else-return: "off" */

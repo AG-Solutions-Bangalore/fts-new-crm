@@ -17,7 +17,6 @@ const AddSchoolAdmin = () => {
   const [firstName, setFirstName] = useState("");
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
-  console.log(contact, email);
   const [viewerChapterIds, setViewerChapterIds] = useState([]);
   const [schoolIds, setSchoolIds] = useState("");
   const [chapters, setChapters] = useState([]);

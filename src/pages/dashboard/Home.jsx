@@ -36,7 +36,9 @@ import {
   Minimize2,
   X,
   ChevronRight,
-  LayoutDashboard
+  LayoutDashboard,
+  User,
+  IndianRupee
 } from "lucide-react";
 
 Chart.register(ArcElement, ...registerables);
@@ -149,7 +151,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchResult();
+    if(currentYear){
+      fetchResult();
+    }
+   
     fetchNotices();
   }, [currentYear]);
 
@@ -208,8 +213,8 @@ const Home = () => {
     {
       title: "Individual Donors",
       value: result.individual_company_count,
-      icon: UserCircle,
-      color: "bg-emerald-600"
+      icon: User,
+      color: "bg-green-600"
     },
     {
       title: "Companies/Trusts",
@@ -220,7 +225,7 @@ const Home = () => {
     {
       title: "Total Donation",
       value: result.total_donation,
-      icon: DollarSign,
+      icon: IndianRupee,
       color: "bg-amber-600"
     }
   ];
@@ -235,7 +240,7 @@ const Home = () => {
             <LayoutDashboard className="text-blue-600 w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Dashboard Overview</h2>
+            <h2 className="text-xl font-bold text-gray-900 ">Dashboard Overview</h2>
             <p className="text-sm text-gray-600">Welcome back! Here's your donation analytics</p>
           </div>
         </div>
@@ -385,7 +390,7 @@ const Home = () => {
                   title="OTS"
                   amount={result.total_ots_donation}
                   count={result.ots_receipts_count}
-                  color="bg-blue-50"
+                  color="bg-green-50"
                   textColor="text-blue-600"
                 />
                 <DonationTypeRow
@@ -399,7 +404,7 @@ const Home = () => {
                   title="General"
                   amount={result.total_general_donation}
                   count={result.gen_receipts_count}
-                  color="bg-emerald-50"
+                  color="bg-blue-50"
                   textColor="text-emerald-600"
                 />
               </div>
@@ -428,7 +433,7 @@ const DonationTypeRow = ({ title, amount, count, color, textColor }) => (
   <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50">
     <div className="flex items-center gap-3">
       <div className={`w-10 h-10 rounded-full ${color} flex items-center justify-center`}>
-        <DollarSign className={`w-5 h-5 ${textColor}`} />
+        <IndianRupee className={`w-5 h-5 ${textColor}`} />
       </div>
       <div>
         <p className="font-medium text-gray-900">{title}</p>

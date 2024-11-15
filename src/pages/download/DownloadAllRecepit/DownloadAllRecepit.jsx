@@ -200,7 +200,6 @@ function DowloadAllRecepit() {
   });
 
   const onInputChange = (e) => {
-    console.log(e.target.value);
     const { name, value } = e.target;
     setAllReceiptDownload({
       ...receiptsdwn,

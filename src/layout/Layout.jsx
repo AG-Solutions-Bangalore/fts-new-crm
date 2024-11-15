@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { styled, Container, Box } from "@mui/material";
 import Sidebar from "./sidebar/Sidebar";
 import Header from "./header/Header";
+import React from "react";
 
 
 const MainWrapper = styled("div")(() => ({
@@ -21,9 +21,9 @@ const PageWrapper = styled("div")(() => ({
 }));
 
 const Layout = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = React.useState(true);
+  const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed); // Toggle sidebar collapsed state

@@ -110,7 +110,6 @@ const Chapter = () => {
   };
 
   const onInputChange1 = (e) => {
-    console.log(e.target.value);
     const { name, value } = e.target;
     setChapter({
       ...chapter,
@@ -264,8 +263,6 @@ const Chapter = () => {
 
       // Check for successful response
       if (response.status === 200) {
-        // console.log(response.data.users);
-        // setUsers(response.data.users);
         toast.success("User is Updated Successfully");
         handleClose1(e);
         fetchData();
