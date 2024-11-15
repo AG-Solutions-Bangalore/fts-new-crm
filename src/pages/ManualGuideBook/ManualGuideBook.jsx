@@ -58,6 +58,7 @@ import Clear from "../../assets/help/clear.png";
 import PageTitle from "../../components/common/PageTitle";
 import { FaArrowLeft } from "react-icons/fa";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 function ManualGuideBook() {
   const handleClick = (id) => {
@@ -66,7 +67,7 @@ function ManualGuideBook() {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-
+  const navigate = useNavigate();
   return (
     <>
       <Layout>
@@ -78,7 +79,7 @@ function ManualGuideBook() {
               <span>Manual Guide Book</span>
             </div>
             <IconArrowBack
-              onClick={() => navigate("home")}
+              onClick={() => navigate("/home")}
               className="cursor-pointer hover:text-red-600"
             />
           </h2>
