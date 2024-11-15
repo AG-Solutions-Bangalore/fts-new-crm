@@ -111,8 +111,8 @@ const Menuitems = [
     : ""),
   {
     id: uniqueId(),
-    title: "Donor",
-    icon: IconRotate2,
+    title: "Donors",
+    icon: IconUsers,
     // href: "/table-one",
     subItems: [
       // for nested sum menu item

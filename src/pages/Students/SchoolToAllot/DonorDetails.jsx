@@ -125,7 +125,7 @@ const DonorDetails = () => {
   const table = useMantineReactTable({
     columns,
     data: schoolAllot,
-    enableRowSelection: (row) => row.original.status_label !== "Allotted", // Disable selection for "Allotted" rows
+    // enableRowSelection: (row) => row.original.status_label !== "Allotted", // Disable selection for "Allotted" rows
     getRowId: (originalRow) => originalRow.school_code,
     onRowSelectionChange: setRowSelection,
     enableDensityToggle: false,

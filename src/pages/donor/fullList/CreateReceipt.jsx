@@ -156,7 +156,6 @@ const CreateReceipt = ({ donorId, onClose }) => {
         });
 
         setCurrentYear(response.data.year.current_year);
-  
       } catch (error) {
         console.error("Error fetching year data:", error);
       }
@@ -226,21 +225,24 @@ const CreateReceipt = ({ donorId, onClose }) => {
   useEffect(() => {
     const fetchDonorData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/fetch-donor-by-id/${donorId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `${BASE_URL}/api/fetch-donor-by-id/${donorId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         setUserdata(response.data.individualCompany);
         setLoader(false);
       } catch (error) {
         console.error("Error fetching donor data:", error);
       }
     };
-  
-      if (donorId) {
-        fetchDonorData();
-      }
+
+    if (donorId) {
+      fetchDonorData();
+    }
   }, [donorId]);
 
   const [datasource, setDatasource] = useState([]);
@@ -333,15 +335,14 @@ const CreateReceipt = ({ donorId, onClose }) => {
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
     <div className="bg-[#F8FAFC] p-4 w-[48rem] overflow-y-auto custom-scroll-add">
-     
-
-
       <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-2">
         <div className="bg-[#E1F5FA] p-4 rounded-t-xl border-b-2 border-green-500">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <IconInfoCircle className="w-5 h-5 text-green-600" />
-              <h2 className="text-sm font-semibold text-black">Create Receipt</h2>
+              <h2 className="text-sm font-semibold text-black">
+                Create Receipt
+              </h2>
             </div>
             <IconArrowBack
               onClick={onClose}
@@ -351,41 +352,39 @@ const CreateReceipt = ({ donorId, onClose }) => {
         </div>
 
         <div className="p-4 bg-white rounded-b-xl">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <h3 className="text-lg font-semibold text-black">
-              {userdata.indicomp_full_name}
-            </h3>
-            <p className="text-xs text-gray-600">
-              FTS Id: {userdata.indicomp_fts_id}
-            </p>
-          </div>
-          <div className="space-y-1 relative">
-            <div className="flex items-center">
+          <div className="flex justify-between items-start">
+            <div className="space-y-1">
               <h3 className="text-lg font-semibold text-black">
-                {moment(donor.receipt_date).format("DD-MM-YYYY")}
+                {userdata.indicomp_full_name}
               </h3>
-              <p className=" absolute -mt-8 text-xs text-gray-600">
-                {finalyear}
+              <p className="text-xs font-semibold text-black">
+                FTS Id: {userdata.indicomp_fts_id}
               </p>
             </div>
-            <p className="text-xs text-green-600">Pan : {pan}</p>
+            <div className="space-y-1 relative">
+              <div className="flex items-center">
+                <h3 className="text-md font-semibold text-black">
+                  {moment(donor.receipt_date).format("DD-MM-YYYY")}
+                </h3>
+                <p className=" absolute -mt-9 text-xs font-semibold text-black">
+                  Year: {currentYear}
+                </p>
+              </div>
+              <p className="text-xs font-semibold text-black">Pan : {pan}</p>
+            </div>
+            {donor.receipt_total_amount > 2000 &&
+            donor.receipt_exemption_type == "80G" &&
+            pan == "NA" ? (
+              <span className="amounterror">
+                Max amount allowedwithout Pan card is 2000
+              </span>
+            ) : (
+              ""
+            )}
           </div>
-          {donor.receipt_total_amount > 2000 &&
-          donor.receipt_exemption_type == "80G" &&
-          pan == "NA" ? (
-            <span className="amounterror">
-              Max amount allowedwithout Pan card is 2000
-            </span>
-          ) : (
-            ""
-          )}
         </div>
       </div>
-      </div>
 
-     
-     
       <form
         onSubmit={handleSubmit}
         id="addIndiv"
@@ -408,13 +407,13 @@ const CreateReceipt = ({ donorId, onClose }) => {
               >
                 <option value="">Select Category</option>
                 {exemption.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
-               <p className="text-gray-600 text-xs px-2 pt-1">
-               Please select your Exemption Type
+              <p className="text-gray-600 text-xs px-2 pt-1">
+                Please select your Exemption Type
               </p>
             </div>
             <div>
@@ -493,7 +492,6 @@ const CreateReceipt = ({ donorId, onClose }) => {
                 onChange={(e) => onInputChange(e)}
                 className={inputClass}
               />
-              
             </div>
 
             {donor.receipt_donation_type == "Membership" ? (
@@ -603,18 +601,17 @@ const CreateReceipt = ({ donorId, onClose }) => {
                 className={inputClass}
               />
             </div>
-            
           </div>
         </div>
         {/* Form Actions */}
         <div className="flex gap-4 justify-start">
-          <Button
+          <button
             type="submit"
-            className="bg-[#269fbd] hover:bg-green-700"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >
             {isButtonDisabled ? "Submitting..." : "Submit"}
-          </Button>
+          </button>
           {/* <Button
         onClick={() => onClose()}
         type="button"

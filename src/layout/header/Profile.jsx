@@ -12,14 +12,14 @@ import {
   Dialog,
   FormLabel,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-import {  IconMail, IconUser, IconCircleX,
-  
-  } from "@tabler/icons-react";
+import { IconMail, IconUser, IconCircleX } from "@tabler/icons-react";
 import Logout from "../../components/Logout";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 import { toast } from "react-toastify";
+import { IconInfoOctagon } from "@tabler/icons-react";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = React.useState(null);
@@ -34,6 +34,7 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   const getData = async () => {
     try {
@@ -145,7 +146,6 @@ const Profile = () => {
     setAnchorEl2(null);
   };
 
-  
   const FormLabel = ({ children, required }) => (
     <label className="block text-sm font-semibold text-black mb-1 ">
       {children}
@@ -153,10 +153,8 @@ const Profile = () => {
     </label>
   );
 
-  
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
- 
 
   return (
     <Box>
@@ -211,13 +209,17 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText>Change Password</ListItemText>
         </MenuItem>
-        {/* <MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/manualguide-book");
+          }}
+        >
           <ListItemIcon>
-            <IconListCheck width={20} />
+            <IconInfoOctagon width={20} />
           </ListItemIcon>
-          <ListItemText>My Tasks</ListItemText>
-        </MenuItem> */}
-      
+          <ListItemText>Help</ListItemText>
+        </MenuItem>
+
         <Box mt={1} py={1} px={2}>
           <Button
             onClick={handleOpenLogout}
@@ -272,7 +274,7 @@ const Profile = () => {
                           setFirstName(e.target.value);
                         }
                       }}
-                    className={inputClass}
+                      className={inputClass}
                     />
                   </div>
                   <div>

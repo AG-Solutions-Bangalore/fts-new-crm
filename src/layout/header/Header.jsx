@@ -6,8 +6,6 @@ import {
   styled,
   Stack,
   IconButton,
-  Badge,
-  Button,
   Tooltip,
 } from "@mui/material";
 import PropTypes from "prop-types";
@@ -15,13 +13,9 @@ import PropTypes from "prop-types";
 // components
 import Profile from "./Profile";
 import {
-  IconBellRinging,
-  IconInfoOctagon,
   IconMenu,
   IconMenuDeep,
 } from "@tabler/icons-react";
-import { IconInfoSquareRounded } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
 
 // interface ItemType {
 //   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -45,7 +39,6 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
     width: "100%",
     color: theme.palette.text.secondary,
   }));
-  const navigate = useNavigate();
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
@@ -94,15 +87,13 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           alignItems="center"
       
         >
-          <Tooltip title="Help" arrow>
+          {/* <Tooltip title="Help" arrow>
             <IconButton
-             onClick={() => {
-              navigate("/manualguide-book");
-            }}
+          
             color="inherit" aria-label="menu">
               <IconInfoOctagon height={20} width={20} />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           <Tooltip title="Profile" arrow>
             <Profile />
