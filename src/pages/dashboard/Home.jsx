@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Card,
@@ -25,8 +25,56 @@ import {
 
 import { CheckCircleIcon, ClockIcon } from "@heroicons/react/24/solid";
 import Layout from "../../layout/Layout";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import BASE_URL from "../../base/BaseUrl";
 
 const Home = () => {
+  const [results, setResults] = useState([]);
+  const [stock, setStock] = useState([]);
+  const [currentYear, setCurrentYear] = useState("");
+  const navigate = useNavigate();
+
+  const fetchYearData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      setCurrentYear(response.data.year.current_year);
+      console.log(response.data.year.current_year);
+    } catch (error) {
+      console.error("Error fetching year data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchYearData();
+    fetchData();
+  }, [currentYear, navigate]);
+
+  const fetchData = async () => {
+    if (currentYear) {
+      try {
+        const res = await axios({
+          url: `${BASE_URL}/api/fetch-dashboard-data-by/${currentYear}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        setResults(res.data);
+        setStock(res.data.stock);
+        console.log(res.data.total_ots_donation);
+        console.log(res.data, "stock");
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      }
+    }
+  };
+
   return (
     <Layout>
       <div className="">

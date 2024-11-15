@@ -8,7 +8,6 @@ import { FormLabel } from "@mui/material";
 
 function DownloadTeam() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [isButtonDisableds, setIsButtonDisableds] = useState(false);
 
   // Get the first and last date
   const todayback = Moment().format("YYYY-MM-DD");

@@ -88,16 +88,15 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           </Badge>
         </IconButton> */}
         <Box flexGrow={1} />
-        <Stack
-          spacing={1}
-          direction="row"
-          alignItems="center"
-          onClick={() => {
-            navigate("/manualguide-book");
-          }}
-        >
+        <Stack spacing={1} direction="row" alignItems="center">
           <Tooltip title="Help" arrow>
-            <IconButton color="inherit" aria-label="menu">
+            <IconButton
+              color="inherit"
+              aria-label="menu"
+              onClick={() => {
+                navigate("/manualguide-book");
+              }}
+            >
               <IconInfoOctagon height={20} width={20} />
             </IconButton>
           </Tooltip>

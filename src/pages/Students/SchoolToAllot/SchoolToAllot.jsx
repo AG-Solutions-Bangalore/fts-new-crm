@@ -6,7 +6,6 @@ import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { MdConfirmationNumber } from "react-icons/md";
 import { Spinner } from "@material-tailwind/react";
-import PageTitle from "../../../components/common/PageTitle";
 import { MantineReactTable } from "mantine-react-table";
 
 const SchoolToAllot = () => {
@@ -57,10 +56,10 @@ const SchoolToAllot = () => {
   }, [isPanelUp, navigate]);
 
   const columns = [
-    {
-      header: "#",
-      Cell: ({ row }) => <span>{row.index + 1}</span>, // Show the row index here
-    },
+    // {
+    //   header: "#",
+    //   Cell: ({ row }) => <span>{row.index + 1}</span>,
+    // },
     { accessorKey: "donorName", header: "Donor Name" },
     { accessorKey: "type", header: "Type" },
     { accessorKey: "mobile", header: "Mobile" },
@@ -70,6 +69,8 @@ const SchoolToAllot = () => {
     ...(localStorage.getItem("id") == 1
       ? [
           {
+            enableColumnFilter: false,
+
             accessorKey: "allotmentAction",
             header: "Allotment",
             Cell: ({ row }) => {
@@ -89,7 +90,12 @@ const SchoolToAllot = () => {
                   {value.startsWith("1") && (
                     <div className="flex items-center space-x-2">
                       <Link
-                        to={`/students-addschoolalot?id=${newValue}&year=${newYear}&fyear=${fYear}`}
+                        to="/students-addschoolalot"
+                        onClick={() => {
+                          localStorage.setItem("idstl", newValue);
+                          localStorage.setItem("yearstl", newYear);
+                          localStorage.setItem("fyearstl", fYear);
+                        }}
                       >
                         <MdConfirmationNumber
                           title="Allotment"
@@ -137,6 +143,7 @@ const SchoolToAllot = () => {
               enableDensityToggle={false}
               enableColumnActions={false}
               enableFullScreenToggle={false}
+              enableHiding={false}
               initialState={{
                 columnVisibility: { index: false },
               }}
