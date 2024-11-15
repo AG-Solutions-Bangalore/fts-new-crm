@@ -7,6 +7,7 @@ import axios from 'axios';
 import BASE_URL from '../../../base/BaseUrl';
 import AddViewer from './AddViewer';
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import moment from 'moment';
 
 const ViewerList = () => {
     const [viewerData, setViewerData] = useState(null);
@@ -62,44 +63,79 @@ const ViewerList = () => {
           {
             accessorKey: "name",
             header: "Username",
+            size:50
            
           },
           {
             accessorKey: "first_name",
             header: "Full Name",
+            size:50
           },
           {
             accessorKey: "user_position",
             header: "Position",
+            size:50
           },
           {
             accessorKey: "email",
             header: "Email",
+            size:50
            
           },
           {
             accessorKey: "phone",
             header: "Phone",
+            size:50
           
           },
          
           {
             accessorKey: "viewer_chapter_ids",
             header: "Chapter Ids",
+            size:50
           },
           {
             accessorKey: "viewer_start_date",
             header: "Start Date",
+            size:50,
+            Cell: ({ row }) => {
+              const date = row.original.viewer_start_date;
+             
+              return (
+                <>
+                 {date ? 
+                    moment.utc(date).format("DD-MM-YYYY") : 
+                    'N/A'
+                  }
+                </>
+              )
+             
+            },
           },
           {
             accessorKey: "viewer_end_date",
             header: "End Date",
+            size:50,
+            Cell: ({ row }) => {
+              const date = row.original.viewer_end_date;
+         
+              return (
+                <>
+                 {date ? 
+                    moment.utc(date).format("DD-MM-YYYY") : 
+                    'N/A'
+                  }
+                </>
+              )
+             
+            },
           },
           
           
           {
             id: "id",
             header: "Action",
+            size:50,
             Cell: ({ row }) => {
               const id = row.original.id;
     

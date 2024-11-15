@@ -23,6 +23,7 @@ import Logout from "../../components/Logout";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -150,6 +151,7 @@ const Profile = () => {
 
   const validateOnlyText = (inputtxt) =>
     /^[A-Za-z ]+$/.test(inputtxt) || inputtxt === "";
+  const navigate = useNavigate();
 
   const validateOnlyDigits = (inputtxt) =>
     /^\d+$/.test(inputtxt) || inputtxt.length === 0;
@@ -208,11 +210,21 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText>Change Password</ListItemText>
         </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
           <ListItemIcon>
             <IconListCheck width={20} />
           </ListItemIcon>
           <ListItemText>My Tasks</ListItemText>
+        </MenuItem> */}
+        <MenuItem
+          onClick={() => {
+            navigate("/manualguide-book");
+          }}
+        >
+          <ListItemIcon>
+            <IconListCheck width={20} />
+          </ListItemIcon>
+          <ListItemText>Help</ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
           <Button

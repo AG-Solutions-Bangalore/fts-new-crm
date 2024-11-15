@@ -71,7 +71,8 @@ function ManualGuideBook() {
   return (
     <>
       <Layout>
-        <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] ">
+       <div className="bg-white p-2 rounded-lg">
+       <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] ">
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
             <div className="flex  items-center gap-2">
               <IconInfoCircle className="w-4 h-4" />
@@ -1822,6 +1823,7 @@ function ManualGuideBook() {
             </div>
           </div>
         </form>
+       </div>
       </Layout>
     </>
   );

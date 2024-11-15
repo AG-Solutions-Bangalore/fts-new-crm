@@ -183,25 +183,28 @@ const DonorList = () => {
               <div
                 onClick={() => navigate(`/donor-edit/${id}`)}
                 className="flex items-center space-x-2"
+                title="Edit"
               >
-                <IconEdit title="Edit" className="h-5 w-5 cursor-pointer" />
+                <IconEdit  className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
 
               <div
              
                 onClick={toggleViewerDrawer(true, id)}
                 className="flex items-center space-x-2"
+                title="View"
               >
-                <IconEye title="View" className="h-5 w-5 cursor-pointer" />
+                <IconEye  className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
               {userType == "1" ? (
                 <div
                   onClick={toggleReceiptDrawer(true, id)}
                   className="flex items-center space-x-2"
+                   title="Create Reciept"
                 >
                   <IconReceipt
-                    title="Reciept"
-                    className="h-5 w-5 cursor-pointer"
+                   
+                    className="h-5 w-5 text-blue-500 cursor-pointer"
                   />
                 </div>
               ) : (

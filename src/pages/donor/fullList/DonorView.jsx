@@ -151,7 +151,7 @@ const DonorView = ({ viewerId, onClose }) => {
                     // onClick={() => navigate(`/receipt-details/${donor?.viewerId}`)}
                     className="px-4 py-2 text-xs bg-gradient-to-r from-blue-500 to-red-600 text-white rounded-lg hover:from-green-600 hover:to-red-700 transition-all shadow-sm"
                   >
-                    Receipts Details
+                    Receipts & Family Details
                   </Button>
                   <SwipeableDrawer
                     anchor="right"
@@ -176,7 +176,7 @@ const DonorView = ({ viewerId, onClose }) => {
           {/* Main Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Personal Information Card */}
-            <Card className="p-4  rounded-xl shadow-sm hover:shadow-md  hover:bg-gradient-to-r from-[#e9b7ce] to-[#d3f3f1] transition-shadow">
+            <Card className="p-4 border-l-4 border-green-500  rounded-xl shadow-sm hover:shadow-md  hover:bg-gradient-to-r from-green-50 to-green-300 transition-shadow">
               <div className="flex items-center gap-2 mb-4">
                 <MdPerson className="text-green-600 w-5 h-5" />
                 <h5 className="text-sm font-semibold text-black">
@@ -227,7 +227,7 @@ const DonorView = ({ viewerId, onClose }) => {
             </Card>
 
             {/* Communication Card */}
-            <Card className="p-4 hover:bg-gradient-to-r from-[#e9b7ce] to-[#d3f3f1]  rounded-xl shadow-sm hover:shadow-md transition-shadow">
+            <Card className="p-4 border-l-4 border-red-500  hover:bg-gradient-to-r from-red-50 to-red-300  rounded-xl shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center gap-2 mb-4">
                 <MdPhone className="text-green-600 w-5 h-5" />
                 <h5 className="text-sm font-semibold text-black">
@@ -256,7 +256,7 @@ const DonorView = ({ viewerId, onClose }) => {
           </div>
 
           {/* Additional Information Card */}
-          <Card className="p-4 hover:bg-gradient-to-r from-[#e9b7ce] to-[#d3f3f1]  rounded-xl shadow-sm hover:shadow-md transition-shadow">
+          <Card className="p-4 border-l-4 border-blue-500  hover:bg-gradient-to-r from-blue-50 to-blue-300  rounded-xl shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center gap-2 mb-4">
               <IconInfoCircle className="text-green-600 w-5 h-5" />
               <h5 className="text-sm font-semibold text-black">
@@ -282,7 +282,7 @@ const DonorView = ({ viewerId, onClose }) => {
 
           {/* Address Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="p-4 hover:bg-gradient-to-r from-[#e9b7ce] to-[#d3f3f1]  rounded-xl shadow-sm hover:shadow-md transition-shadow">
+            <Card className="p-4 border-l-4 border-yellow-500  hover:bg-gradient-to-r from-yellow-50 to-yellow-300  rounded-xl shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center gap-2 mb-4">
                 <MdLocationOn className="text-green-600 w-5 h-5" />
                 <h5 className="text-sm font-semibold text-black">
@@ -305,7 +305,7 @@ const DonorView = ({ viewerId, onClose }) => {
               />
             </Card>
 
-            <Card className="p-4 hover:bg-gradient-to-r from-[#e9b7ce] to-[#d3f3f1]  rounded-xl shadow-sm hover:shadow-md transition-shadow">
+            <Card className="p-4 border-l-4 border-yellow-500  hover:bg-gradient-to-r from-yellow-50 to-yellow-300    rounded-xl shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center gap-2 mb-4">
                 <MdBusiness className="text-green-600 w-5 h-5" />
                 <h5 className="text-sm font-semibold text-black">
