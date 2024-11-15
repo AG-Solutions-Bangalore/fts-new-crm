@@ -7,7 +7,7 @@ import { MdCancel } from 'react-icons/md';
 import BASE_URL from "../../../base/BaseUrl"
 import moment from 'moment';
 import { toast } from 'react-toastify';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { IconInfoCircle, IconPrinter } from '@tabler/icons-react';
 import NotificationDialog from './NotificationDialog';
 import {
     Button,
@@ -18,10 +18,12 @@ import {
     DialogFooter,
 
   } from "@material-tailwind/react";
+import ReactToPrint from 'react-to-print';
 
 const Notification = () => {
     const [datanotification, setNotification] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
@@ -103,6 +105,7 @@ const Notification = () => {
                   onClick={handleMinimizeToggle}
                   className="text-2xl cursor-pointer"
                 />
+             
                 <TfiReload
                   onClick={handleReload}
                   className="text-xl cursor-pointer"
