@@ -12,6 +12,7 @@ import BASE_URL from "../../../../base/BaseUrl";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
+import ReactToPrint from "react-to-print";
 const GroupView = (props) => {
   const componentRef = useRef();
   const [donorSummary, setDonorSummary] = useState([]);
@@ -74,17 +75,26 @@ const GroupView = (props) => {
                       <span>PDF</span>
                     </Button>
 
-                    <Button
+                   
+                    <ReactToPrint
+                      trigger={() => (
+                        <Button
                       variant="text"
                       className="flex items-center space-x-2"
                     >
                       <IoIosPrint className="text-lg" />
                       <span>Print Letter</span>
                     </Button>
+                      )}
+                      content={() => componentRef.current}
+                    />
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
                 {/* Header */}
+                <div  ref={componentRef}>
+
+            
                 <div className="flex justify-between items-center mb-4">
                   <div className="invoice-logo">
                     <img src={image1} alt="logo" width="80" height="80" />
@@ -101,7 +111,7 @@ const GroupView = (props) => {
                 </div>
 
                 {/* Table */}
-                <div ref={componentRef} className="my-5">
+                <div className="my-5">
                   <table className="min-w-full border-collapse border border-black">
                     <thead>
                       <tr className="bg-gray-200">
@@ -223,6 +233,7 @@ const GroupView = (props) => {
                       ))}
                     </tbody>
                   </table>
+                </div>
                 </div>
               </div>
             </div>

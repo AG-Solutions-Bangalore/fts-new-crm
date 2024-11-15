@@ -16,6 +16,7 @@ import { LuDownload } from "react-icons/lu";
 import { toast } from "react-toastify";
 import PageTitle from "../../../components/common/PageTitle";
 import { IconArrowBack } from "@tabler/icons-react";
+import ReactToPrint from "react-to-print";
 
 const DonorSummaryView = (props) => {
   const componentRef = useRef();
@@ -131,17 +132,26 @@ const DonorSummaryView = (props) => {
                       <LuDownload className="text-lg" />
                       <span>Download</span>
                     </Button>
-                    <Button
-                      variant="text"
-                      className="flex items-center space-x-2"
-                    >
-                      <IoIosPrint className="text-lg" />
-                      <span>Print Letter</span>
-                    </Button>
+                    
+                    <ReactToPrint
+                      trigger={() => (
+                        <Button
+                        variant="text"
+                        className="flex items-center space-x-2"
+                      >
+                        <IoIosPrint className="text-lg" />
+                        <span>Print Letter</span>
+                      </Button>
+                      )}
+                      content={() => componentRef.current}
+                    />
                   </div>
                 </div>
 
                 <hr className="mb-6"></hr>
+                <div ref={componentRef}>
+
+             
                 <div className="flex justify-between items-center mb-4 ">
                   <div className="invoice-logo">
                     <img
@@ -223,7 +233,7 @@ const DonorSummaryView = (props) => {
                   </div>
                 ))}
 
-                <div ref={componentRef} className="my-5">
+                <div  className="my-5">
                   <table className="min-w-full border-collapse border border-black">
                     <thead>
                       <tr className="bg-gray-200">
@@ -328,7 +338,7 @@ const DonorSummaryView = (props) => {
                   <b className="text-lg text-gray-600">TOTAL</b>
                 </div>
 
-                <div ref={componentRef} className="my-5 ">
+                <div  className="my-5 ">
                   <table className="min-w-full border-collapse border border-black">
                     <thead>
                       <tr className="bg-gray-200">
@@ -355,6 +365,7 @@ const DonorSummaryView = (props) => {
                       ))}
                     </tbody>
                   </table>
+                </div>
                 </div>
               </div>
             </div>

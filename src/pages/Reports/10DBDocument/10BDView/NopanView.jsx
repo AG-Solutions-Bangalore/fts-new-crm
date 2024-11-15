@@ -12,6 +12,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
+import ReactToPrint from "react-to-print";
 
 const NopanView = (props) => {
   const componentRef = useRef();
@@ -75,17 +76,26 @@ const NopanView = (props) => {
                       <span>PDF</span>
                     </Button>
 
+                    <ReactToPrint
+                      trigger={() => (
+                      
                     <Button
-                      variant="text"
-                      className="flex items-center space-x-2"
-                    >
-                      <IoIosPrint className="text-lg" />
-                      <span>Print Letter</span>
-                    </Button>
+                    variant="text"
+                    className="flex items-center space-x-2"
+                  >
+                    <IoIosPrint className="text-lg" />
+                    <span>Print Letter</span>
+                  </Button>
+                      )}
+                      content={() => componentRef.current}
+                    />
                   </div>{" "}
                 </div>
                 <hr className="mb-6"></hr>
                 {/* Header */}
+                <div ref={componentRef}>
+
+             
                 <div className="flex justify-between items-center mb-4">
                   <div className="invoice-logo">
                     <img src={image1} alt="logo" width="80" height="80" />
@@ -102,7 +112,7 @@ const NopanView = (props) => {
                 </div>
 
                 {/* Table */}
-                <div ref={componentRef} className="my-5">
+                <div  className="my-5">
                   <table className="min-w-full border-collapse border border-black">
                     <thead>
                       <tr className="bg-gray-200">
@@ -224,6 +234,7 @@ const NopanView = (props) => {
                       ))}
                     </tbody>
                   </table>
+                </div>
                 </div>
               </div>
             </div>

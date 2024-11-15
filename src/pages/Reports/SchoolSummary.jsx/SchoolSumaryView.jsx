@@ -12,6 +12,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
+import ReactToPrint from "react-to-print";
 
 const SchoolSumaryView = (props) => {
   const componentRef = useRef();
@@ -88,17 +89,25 @@ const SchoolSumaryView = (props) => {
                       <LuDownload className="text-lg" />
                       <span>PDF</span>
                     </Button>
-
-                    <Button
-                      variant="text"
-                      className="flex items-center space-x-2"
-                    >
-                      <IoIosPrint className="text-lg" />
-                      <span>Print Letter</span>
-                    </Button>
+                    <ReactToPrint
+                      trigger={() => (
+                        <Button
+                        variant="text"
+                        className="flex items-center space-x-2"
+                      >
+                        <IoIosPrint className="text-lg" />
+                        <span>Print Letter</span>
+                      </Button>
+                      )}
+                      content={() => componentRef.current}
+                    />
+                    
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
+                <div ref={componentRef} >
+
+             
                 <div className="flex justify-between items-center mb-4 ">
                   <div className="invoice-logo">
                     <img
@@ -225,6 +234,7 @@ const SchoolSumaryView = (props) => {
                         ))}
                     </tbody>
                   </table>
+                </div>
                 </div>
               </div>
             </div>

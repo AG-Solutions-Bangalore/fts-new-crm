@@ -13,9 +13,11 @@ import CustomPivotTable from "./CustomPivotTable";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
+import ReactToPrint from "react-to-print";
 
 const PromoterSummaryView = (props) => {
   const [donorsummary, setSummary] = useState([]);
+  const componentRef = useRef();
   const [receiptsummary, setReceiptSummary] = useState({});
   const [receiptsummaryfooterOTS, setReceiptSummaryFooterOTS] = useState([]);
   const [receiptsummaryfootertotal, setReceiptSummaryFooterTotal] = useState(
@@ -23,7 +25,7 @@ const PromoterSummaryView = (props) => {
   );
   const [loader, setLoader] = useState(true);
   const [error, setError] = useState(null);
-  const printRef = useRef();
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,21 +66,14 @@ const PromoterSummaryView = (props) => {
       {!loader && error && (
         <div className="text-red-600 text-center">{error}</div>
       )}
-      {/* <div>
-        <ReactToPrint
-          trigger={() => (
-            <Button className="flex items-center border  border-blue-500 hover:border-green-500 hover:animate-pulse p-2 rounded-lg">
-              Print
-            </Button>
-          )}
-          content={() => componentRef.current}
-        />
-      </div> */}
+      <div>
+       
+      </div>
       {!loader && !error && (
         <div className="invoice-wrapper">
           {/* <Button onClick={handleExportWithFunction}>PDF</Button> */}
 
-          <div ref={printRef} className="flex flex-col items-center">
+          <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid sm:grid-cols-1 1fr ">
                 <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
@@ -98,17 +93,26 @@ const PromoterSummaryView = (props) => {
                       <span>PDF</span>
                     </Button>
 
-                    <Button
-                      variant="text"
-                      className="flex items-center space-x-2"
-                    >
-                      <IoIosPrint className="text-lg" />
-                      <span>Print Letter</span>
-                    </Button>
+                  
+                    <ReactToPrint
+                      trigger={() => (
+                        <Button
+                        variant="text"
+                        className="flex items-center space-x-2"
+                      >
+                        <IoIosPrint className="text-lg" />
+                        <span>Print Letter</span>
+                      </Button>
+                      )}
+                      content={() => componentRef.current}
+                    />
                   </div>
                 </div>
 
                 <hr className="mb-6"></hr>
+                <div ref={componentRef}>
+
+             
                 <div className="flex justify-between items-center mb-4 ">
                   <div className="invoice-logo">
                     <img
@@ -227,6 +231,7 @@ const PromoterSummaryView = (props) => {
                     <b className="text-lg text-gray-600 ">TOTAL</b>{" "}
                   </div>
                   <CustomPivotTable data={donorsummary} />
+                </div>
                 </div>
               </div>
             </div>
