@@ -3,7 +3,6 @@ import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import {  Button } from "@material-tailwind/react";
 import InputMask from "react-input-mask";
 import donor_type from "../../../utils/DonorType";
 import belongs_to from "../../../utils/BelongTo";
@@ -246,8 +245,7 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res) => {
-    
-      toast.success("Data Inserted Sucessfully");
+      toast.success("DonorCreated Sucessfully");
       fetchDonorData();
       onClose();
       setDonor({
@@ -285,7 +283,7 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
         indicomp_off_branch_state: "",
         indicomp_off_branch_pin_code: "",
         indicomp_corr_preffer: "Residence",
-      })
+      });
     });
   };
 
@@ -306,10 +304,13 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
       <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
         <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
           <div className="flex  items-center gap-2">
-          <IconInfoCircle className="w-4 h-4" />
-          <span>Add Individual</span>
+            <IconInfoCircle className="w-4 h-4" />
+            <span>Add Individual</span>
           </div>
-          <IconArrowBack   onClick={() => onClose()} className="cursor-pointer hover:text-red-600"/>
+          <IconArrowBack
+            onClick={() => onClose()}
+            className="cursor-pointer hover:text-red-600"
+          />
         </h2>
       </div>
       <hr />
@@ -356,7 +357,7 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              <FormLabel>Father's Name</FormLabel>
+              <FormLabel>Father Name</FormLabel>
               <input
                 type="text"
                 name="indicomp_father_name"
@@ -367,7 +368,7 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              <FormLabel>Mother's Name</FormLabel>
+              <FormLabel>Mother Name</FormLabel>
               <input
                 type="text"
                 name="indicomp_mother_name"
@@ -453,10 +454,11 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
               <FormLabel>Upload Image</FormLabel>
               <input
                 type="file"
+                disabled
                 name="indicomp_image_logo"
                 value={donor.indicomp_image_logo}
                 onChange={(e) => onInputChange(e)}
-                className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs  file:bg-[#E1F5FA] file:text-black hover:file:bg-green-500  "
+                className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs  file:bg-[#E1F5FA] file:text-black hover:file:bg-green-500 cursor-not-allowed  "
               />
             </div>
 
@@ -492,7 +494,7 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
               </select>
             </div>
             {donor.indicomp_promoter === "Other" && (
-              <>
+              <div>
                 <FormLabel>Promoter</FormLabel>
                 <input
                   type="text"
@@ -501,7 +503,7 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
                   onChange={(e) => onInputChange(e)}
                   className={inputClass}
                 />
-              </>
+              </div>
             )}
 
             <div>
@@ -812,13 +814,13 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
 
         {/* Form Actions */}
         <div className="flex gap-4 justify-start">
-          <Button
+          <button
             type="submit"
-            className="bg-[#269fbd] hover:bg-green-700"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >
             {isButtonDisabled ? "Submitting..." : "Submit"}
-          </Button>
+          </button>
           {/* <Button
             onClick={() => onClose()}
             type="button"

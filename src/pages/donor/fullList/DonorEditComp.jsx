@@ -64,7 +64,7 @@ const corrpreffer = [
   },
 ];
 
-const DonorEditComp = ({id}) => {
+const DonorEditComp = ({ id }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
@@ -349,7 +349,6 @@ const DonorEditComp = ({id}) => {
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
-
     <div className="  bg-[#FFFFFF] p-2    rounded-lg  ">
       <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
         <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
@@ -358,15 +357,20 @@ const DonorEditComp = ({id}) => {
             <span>Edit Company</span>
           </div>
           <IconArrowBack
-            onClick={() => navigate('/donor-list')}
+            onClick={() => navigate("/donor-list")}
             className="cursor-pointer hover:text-red-600"
           />
         </h2>
       </div>
       <hr />
-    <form onSubmit={handleUpdate} id="addIndiv"  className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 " autoComplete="off">
-      {/* Personal Details Section */}
-      <div>
+      <form
+        onSubmit={handleUpdate}
+        id="addIndiv"
+        className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
+        autoComplete="off"
+      >
+        {/* Personal Details Section */}
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Personal Details</span>
@@ -374,7 +378,6 @@ const DonorEditComp = ({id}) => {
 
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-             
               <FormLabel required>Company Name</FormLabel>
               <input
                 type="text"
@@ -390,7 +393,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>Type</FormLabel>
               <select
                 name="indicomp_type"
@@ -409,7 +411,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>Title</FormLabel>
               <select
                 name="title"
@@ -428,7 +429,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>Contact Name</FormLabel>
               <input
                 type="text"
@@ -441,7 +441,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel>Designation</FormLabel>
               <input
                 type="text"
@@ -453,7 +452,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>Gender</FormLabel>
               <select
                 name="indicomp_gender"
@@ -472,7 +470,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>Annual Day</FormLabel>
               <input
                 type="date"
@@ -509,7 +506,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>Upload Logo</FormLabel>
               <input
                 type="file"
@@ -523,7 +519,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel>Remarks</FormLabel>
               <input
                 type="text"
@@ -535,7 +530,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel required>Promoter</FormLabel>
               <select
                 name="indicomp_promoter"
@@ -568,12 +562,10 @@ const DonorEditComp = ({id}) => {
                     className={inputClass}
                   />
                 </>
-               
               </div>
             )}
 
             <div>
-              
               <FormLabel>Belong To</FormLabel>
               <select
                 name="indicomp_belongs_to"
@@ -591,7 +583,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel>Source</FormLabel>
               <select
                 name="indicomp_source"
@@ -609,7 +600,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>Donor Type</FormLabel>
               <select
                 name="indicomp_donor_type"
@@ -627,7 +617,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>CSR</FormLabel>
               <select
                 name="indicomp_csr"
@@ -645,8 +634,8 @@ const DonorEditComp = ({id}) => {
             </div>
           </div>
         </div>
- {/* Communication Details Section */}
- <div>
+        {/* Communication Details Section */}
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Communication Details</span>
@@ -654,7 +643,6 @@ const DonorEditComp = ({id}) => {
 
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div>
-              
               <FormLabel required>Mobile Phone</FormLabel>
               <input
                 type="tel"
@@ -668,7 +656,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>WhatsApp</FormLabel>
               <input
                 type="tel"
@@ -681,7 +668,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel>Email</FormLabel>
               <input
                 type="email"
@@ -693,7 +679,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>Website</FormLabel>
               <input
                 type="text"
@@ -705,15 +690,14 @@ const DonorEditComp = ({id}) => {
             </div>
           </div>
         </div>
-         {/* Residence Address Section */}
-         <div>
+        {/* Residence Address Section */}
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Registered Address</span>
           </h2>
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-             
               <FormLabel>House & Street Number</FormLabel>
               <input
                 type="text"
@@ -725,7 +709,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>Area</FormLabel>
               <input
                 type="text"
@@ -737,7 +720,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>Landmark</FormLabel>
               <input
                 type="text"
@@ -749,7 +731,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>City</FormLabel>
               <input
                 type="text"
@@ -762,7 +743,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>State</FormLabel>
               <select
                 name="indicomp_res_reg_state"
@@ -781,7 +761,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>Pincode</FormLabel>
               <input
                 type="text"
@@ -795,15 +774,14 @@ const DonorEditComp = ({id}) => {
             </div>
           </div>
         </div>
-         {/* Branch Office Address Section */}
-         <div>
+        {/* Branch Office Address Section */}
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Branch Office Address</span>
           </h2>
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-             
               <FormLabel>Office & Street Number</FormLabel>
               <input
                 type="text"
@@ -815,7 +793,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel>Area</FormLabel>
               <input
                 type="text"
@@ -827,7 +804,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel>Landmark</FormLabel>
               <input
                 type="text"
@@ -839,7 +815,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-              
               <FormLabel>City</FormLabel>
               <input
                 type="text"
@@ -851,7 +826,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>State</FormLabel>
               <select
                 name="indicomp_off_branch_state"
@@ -869,7 +843,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel>Pincode</FormLabel>
               <input
                 type="text"
@@ -882,7 +855,6 @@ const DonorEditComp = ({id}) => {
             </div>
 
             <div>
-             
               <FormLabel required>Correspondence Preference</FormLabel>
               <select
                 name="indicomp_corr_preffer"
@@ -901,68 +873,70 @@ const DonorEditComp = ({id}) => {
             </div>
           </div>
         </div>
-   
-      <div className="flex gap-4 justify-start">
-          <Button
+
+        <div className="flex gap-4 justify-start">
+          <button
             type="submit"
             color="blue"
             disabled={isButtonDisabled}
-            className="px-6 py-2"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md px-6 py-2"
           >
             {isButtonDisabled ? "Updating..." : "Update"}
-          </Button>
+          </button>
 
           {donor.indicomp_related_id == donor.indicomp_fts_id ? (
-            <Button
+            <button
               onClick={() => openmodal()}
-             className="bg-red-500 hover:bg-green-700"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Attach to Group
-            </Button>
+            </button>
           ) : (
-            <Button
+            <button
               disabled
               onClick={() => openmodal()}
-              className="bg-red-500 hover:bg-green-700"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Attach to Group
-            </Button>
+            </button>
           )}
 
           {donor.indicomp_related_id == donor.indicomp_fts_id ? (
-            <Button disabled className="bg-blue-500 hover:bg-green-700">
+            <button
+              disabled
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            >
               Leave Group
-            </Button>
+            </button>
           ) : (
-            <Button
-              className="bg-blue-500 hover:bg-green-700"
+            <button
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
               color="info"
               onClick={() => familyGroupStatus("leave_family_group")}
             >
               Leave Group
-            </Button>
+            </button>
           )}
         </div>
-    </form>
-    <Dialog open={showmodal} toggle={() => closegroupModal()}>
-      <DialogHeader> Add to Group</DialogHeader>
-      <DialogBody>
-        <AddToGroup id={donor.id} />
-      </DialogBody>
-      <DialogFooter>
-        <Button
-          variant="text"
-          color="red"
-          onClick={() => closegroupModal()}
-          className="mr-1"
-        >
-          <span>Cancel</span>
-        </Button>
-      </DialogFooter>
-    </Dialog>
-  </div>
+      </form>
+      <Dialog open={showmodal} toggle={() => closegroupModal()}>
+        <DialogHeader> Add to Group</DialogHeader>
+        <DialogBody>
+          <AddToGroup id={donor.id} />
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => closegroupModal()}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+    </div>
+  );
+};
 
-  )
-}
-
-export default DonorEditComp
+export default DonorEditComp;

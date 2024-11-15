@@ -12,392 +12,368 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import {
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    TextField,
-  } from "@mui/material";
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 
- 
-  import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import AddToGroup from "./AddToGroup";
 import BASE_URL from "../../../base/BaseUrl";
 import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
 import donor_type from "../../../utils/DonorType";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
-  
-  
-  const gender = [
-    {
-      value: "Male",
-      label: "Male",
-    },
-    {
-      value: "Female",
-      label: "Female",
-    },
-  ];
-  
-  const corrpreffer = [
-    {
-      value: "Residence",
-      label: "Residence",
-    },
-    {
-      value: "Office",
-      label: "Office",
-    },
-    {
-      value: "Digital",
-      label: "Digital",
-    },
-  ];
 
-const DonorEditIndv = ({id}) => {
-    const [donor, setDonor] = useState({
-        indicomp_full_name: "",
-        title: "",
-        indicomp_father_name: "",
-        indicomp_mother_name: "",
-        indicomp_gender: "",
-        indicomp_spouse_name: "",
-        indicomp_dob_annualday: "",
-        indicomp_doa: "",
-        indicomp_pan_no: "",
-        indicomp_image_logo: "",
-        indicomp_remarks: "",
-        indicomp_promoter: "",
-        indicomp_newpromoter: "",
-        indicomp_belongs_to: "",
-        indicomp_source: "",
-        indicomp_donor_type: "",
-        indicomp_type: "",
-        indicomp_mobile_phone: "",
-        indicomp_mobile_whatsapp: "",
-        indicomp_email: "",
-        indicomp_website: "",
-        indicomp_res_reg_address: "",
-        indicomp_res_reg_area: "",
-        indicomp_res_reg_ladmark: "",
-        indicomp_res_reg_city: "",
-        indicomp_res_reg_state: "",
-        indicomp_res_reg_pin_code: "",
-        indicomp_off_branch_address: "",
-        indicomp_off_branch_area: "",
-        indicomp_off_branch_ladmark: "",
-        indicomp_off_branch_city: "",
-        indicomp_off_branch_state: "",
-        indicomp_off_branch_pin_code: "",
-        indicomp_corr_preffer: "",
+const gender = [
+  {
+    value: "Male",
+    label: "Male",
+  },
+  {
+    value: "Female",
+    label: "Female",
+  },
+];
+
+const corrpreffer = [
+  {
+    value: "Residence",
+    label: "Residence",
+  },
+  {
+    value: "Office",
+    label: "Office",
+  },
+  {
+    value: "Digital",
+    label: "Digital",
+  },
+];
+
+const DonorEditIndv = ({ id }) => {
+  const [donor, setDonor] = useState({
+    indicomp_full_name: "",
+    title: "",
+    indicomp_father_name: "",
+    indicomp_mother_name: "",
+    indicomp_gender: "",
+    indicomp_spouse_name: "",
+    indicomp_dob_annualday: "",
+    indicomp_doa: "",
+    indicomp_pan_no: "",
+    indicomp_image_logo: "",
+    indicomp_remarks: "",
+    indicomp_promoter: "",
+    indicomp_newpromoter: "",
+    indicomp_belongs_to: "",
+    indicomp_source: "",
+    indicomp_donor_type: "",
+    indicomp_type: "",
+    indicomp_mobile_phone: "",
+    indicomp_mobile_whatsapp: "",
+    indicomp_email: "",
+    indicomp_website: "",
+    indicomp_res_reg_address: "",
+    indicomp_res_reg_area: "",
+    indicomp_res_reg_ladmark: "",
+    indicomp_res_reg_city: "",
+    indicomp_res_reg_state: "",
+    indicomp_res_reg_pin_code: "",
+    indicomp_off_branch_address: "",
+    indicomp_off_branch_area: "",
+    indicomp_off_branch_ladmark: "",
+    indicomp_off_branch_city: "",
+    indicomp_off_branch_state: "",
+    indicomp_off_branch_pin_code: "",
+    indicomp_corr_preffer: "",
+  });
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(true);
+  const [family_related_id, setFamilyRelatedId] = useState("");
+  const navigate = useNavigate();
+
+  const validateOnlyDigits = (inputtxt) => {
+    var phoneno = /^\d+$/;
+    if (inputtxt.match(phoneno) || inputtxt.length == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const onInputChange = (e) => {
+    if (e.target.name == "indicomp_mobile_phone") {
+      if (validateOnlyDigits(e.target.value)) {
+        setDonor({
+          ...donor,
+          [e.target.name]: e.target.value,
+        });
+      }
+    } else if (e.target.name == "indicomp_mobile_whatsapp") {
+      if (validateOnlyDigits(e.target.value)) {
+        setDonor({
+          ...donor,
+          [e.target.name]: e.target.value,
+        });
+      }
+    } else if (e.target.name == "indicomp_res_reg_pin_code") {
+      if (validateOnlyDigits(e.target.value)) {
+        setDonor({
+          ...donor,
+          [e.target.name]: e.target.value,
+        });
+      }
+    } else if (e.target.name == "indicomp_off_branch_pin_code") {
+      if (validateOnlyDigits(e.target.value)) {
+        setDonor({
+          ...donor,
+          [e.target.name]: e.target.value,
+        });
+      }
+    } else {
+      setDonor({
+        ...donor,
+        [e.target.name]: e.target.value,
       });
-    
-      const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-      const [loading, setLoading] = useState(false);
-      const [loader, setLoader] = useState(true);
-      const [family_related_id, setFamilyRelatedId] = useState("");
-      const navigate = useNavigate();
-    
-      const validateOnlyDigits = (inputtxt) => {
-        var phoneno = /^\d+$/;
-        if (inputtxt.match(phoneno) || inputtxt.length == 0) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-    
-      const onInputChange = (e) => {
-        if (e.target.name == "indicomp_mobile_phone") {
-          if (validateOnlyDigits(e.target.value)) {
-            setDonor({
-              ...donor,
-              [e.target.name]: e.target.value,
-            });
-          }
-        } else if (e.target.name == "indicomp_mobile_whatsapp") {
-          if (validateOnlyDigits(e.target.value)) {
-            setDonor({
-              ...donor,
-              [e.target.name]: e.target.value,
-            });
-          }
-        } else if (e.target.name == "indicomp_res_reg_pin_code") {
-          if (validateOnlyDigits(e.target.value)) {
-            setDonor({
-              ...donor,
-              [e.target.name]: e.target.value,
-            });
-          }
-        } else if (e.target.name == "indicomp_off_branch_pin_code") {
-          if (validateOnlyDigits(e.target.value)) {
-            setDonor({
-              ...donor,
-              [e.target.name]: e.target.value,
-            });
-          }
-        } else {
-          setDonor({
-            ...donor,
-            [e.target.name]: e.target.value,
-          });
-        }
-      };
-    
-      const onChangePanNumber = (e) => {
-        setDonor({ ...donor, indicomp_pan_no: e.target.value });
-      };
-    
-      //   for modal
-    
-      const [showmodal, setShowmodal] = useState(false);
-      const closegroupModal = () => {
-        setShowmodal(false);
-      };
-      const openmodal = () => {
-        setShowmodal(true);
-      };
-    
-      const fetchDonorByEdit = async () => {
-        try {
-          setLoading(true);
-          const token = localStorage.getItem("token");
-          const response = await axios.get(
-            `${BASE_URL}/api/fetch-donor-for-edit/${id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-    
-          setDonor(response.data?.individualCompany);
-        } catch (error) {
-          console.error("Error fetching Life Time data", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-    
-      const [states, setStates] = useState([]);
-      const fetchStateData = async () => {
-        try {
-          setLoading(true);
-          const token = localStorage.getItem("token");
-          const response = await axios.get(`${BASE_URL}/api/fetch-states`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
-          setStates(response.data?.states);
-        } catch (error) {
-          console.error("Error fetching Life Time data", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      const [datasource, setDatasource] = useState([]);
-      const fetchDataSource = async () => {
-        try {
-          setLoading(true);
-          const token = localStorage.getItem("token");
-          const response = await axios.get(`${BASE_URL}/api/fetch-datasource`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
-          setDatasource(response.data?.datasource);
-        } catch (error) {
-          console.error("Error fetching Life Time data", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      const [promoter, setPromoters] = useState([]);
-      const fetchPromoter = async () => {
-        try {
-          setLoading(true);
-          const token = localStorage.getItem("token");
-          const response = await axios.get(`${BASE_URL}/api/fetch-promoter`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-    
-          setPromoters(response.data?.promoter);
-        } catch (error) {
-          console.error("Error fetching Life Time data", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-    
-      const familyGroupStatus = (status) => {
-        let data = {};
-    
-        if (status == "add_to_family_group") {
-          data = {
-            indicomp_related_id: family_related_id,
-          };
-        } else {
-          data = {
-            leave_family_group: true,
-          };
-        }
-    
-        axios({
-          url: BASE_URL + "/api/update-donor/" + id,
-          method: "PUT",
-          data,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }).then((res) => {
-          toast.success("Data Sucessfully Removed From the Group");
-          setDonor(res.data.individualCompany);
-    
-          setShowmodal(false);
-          navigate("/donor-list");
-        });
-      };
-    
-      useEffect(() => {
-        fetchStateData();
-        fetchDataSource();
-        fetchPromoter();
-        fetchDonorByEdit();
-      }, []);
-    
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        const data = {
-          indicomp_full_name: donor.indicomp_full_name,
-          title: donor.title,
-          indicomp_type: donor.indicomp_type,
-          indicomp_father_name: donor.indicomp_father_name,
-          indicomp_mother_name: donor.indicomp_mother_name,
-          indicomp_gender: donor.indicomp_gender,
-          indicomp_spouse_name: donor.indicomp_spouse_name,
-          indicomp_dob_annualday: donor.indicomp_dob_annualday,
-          indicomp_doa: donor.indicomp_doa,
-          indicomp_pan_no: donor.indicomp_pan_no,
-          indicomp_image_logo: donor.indicomp_image_logo,
-          indicomp_remarks: donor.indicomp_remarks,
-          indicomp_promoter: donor.indicomp_promoter,
-          indicomp_newpromoter: donor.indicomp_newpromoter,
-          indicomp_source: donor.indicomp_source,
-          indicomp_mobile_phone: donor.indicomp_mobile_phone,
-          indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
-          indicomp_email: donor.indicomp_email,
-          indicomp_website: donor.indicomp_website,
-          indicomp_res_reg_address: donor.indicomp_res_reg_address,
-          indicomp_res_reg_area: donor.indicomp_res_reg_area,
-          indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
-          indicomp_res_reg_city: donor.indicomp_res_reg_city,
-          indicomp_res_reg_state: donor.indicomp_res_reg_state,
-          indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
-          indicomp_off_branch_address: donor.indicomp_off_branch_address,
-          indicomp_off_branch_area: donor.indicomp_off_branch_area,
-          indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
-          indicomp_off_branch_city: donor.indicomp_off_branch_city,
-          indicomp_off_branch_state: donor.indicomp_off_branch_state,
-          indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
-          indicomp_corr_preffer: donor.indicomp_corr_preffer,
-          indicomp_belongs_to: donor.indicomp_belongs_to,
-          indicomp_donor_type: donor.indicomp_donor_type,
-        };
-    
-        const form = document.getElementById("addIndiv");
-        if (!form.checkValidity()) {
-          toast.error("Fill all required");
-          return;
-        }
-    
-        setIsButtonDisabled(true);
-        axios({
-          url: BASE_URL + `/api/update-donor/${id}`,
-          method: "PUT",
-          data,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }).then((res) => {
-          setDonor(res.data.individualCompany);
-          toast.success("Data Update Sucessfully");
-          navigate("/donor-list");
-        });
-      };
+    }
+  };
 
-      const FormLabel = ({ children, required }) => (
-        <label className="block text-sm font-semibold text-black mb-1 ">
-          {children}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
+  const onChangePanNumber = (e) => {
+    setDonor({ ...donor, indicomp_pan_no: e.target.value });
+  };
+
+  //   for modal
+
+  const [showmodal, setShowmodal] = useState(false);
+  const closegroupModal = () => {
+    setShowmodal(false);
+  };
+  const openmodal = () => {
+    setShowmodal(true);
+  };
+
+  const fetchDonorByEdit = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/fetch-donor-for-edit/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
-      const inputClassSelect =
-      "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
-    const inputClass =
-      "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
-  return (
+      setDonor(response.data?.individualCompany);
+    } catch (error) {
+      console.error("Error fetching Life Time data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const [states, setStates] = useState([]);
+  const fetchStateData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/api/fetch-states`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setStates(response.data?.states);
+    } catch (error) {
+      console.error("Error fetching Life Time data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const [datasource, setDatasource] = useState([]);
+  const fetchDataSource = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/api/fetch-datasource`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setDatasource(response.data?.datasource);
+    } catch (error) {
+      console.error("Error fetching Life Time data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const [promoter, setPromoters] = useState([]);
+  const fetchPromoter = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/api/fetch-promoter`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setPromoters(response.data?.promoter);
+    } catch (error) {
+      console.error("Error fetching Life Time data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const familyGroupStatus = (status) => {
+    let data = {};
+
+    if (status == "add_to_family_group") {
+      data = {
+        indicomp_related_id: family_related_id,
+      };
+    } else {
+      data = {
+        leave_family_group: true,
+      };
+    }
+
+    axios({
+      url: BASE_URL + "/api/update-donor/" + id,
+      method: "PUT",
+      data,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }).then((res) => {
+      toast.success("Data Sucessfully Removed From the Group");
+      setDonor(res.data.individualCompany);
+
+      setShowmodal(false);
+      navigate("/donor-list");
+    });
+  };
+
+  useEffect(() => {
+    fetchStateData();
+    fetchDataSource();
+    fetchPromoter();
+    fetchDonorByEdit();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = {
+      indicomp_full_name: donor.indicomp_full_name,
+      title: donor.title,
+      indicomp_type: donor.indicomp_type,
+      indicomp_father_name: donor.indicomp_father_name,
+      indicomp_mother_name: donor.indicomp_mother_name,
+      indicomp_gender: donor.indicomp_gender,
+      indicomp_spouse_name: donor.indicomp_spouse_name,
+      indicomp_dob_annualday: donor.indicomp_dob_annualday,
+      indicomp_doa: donor.indicomp_doa,
+      indicomp_pan_no: donor.indicomp_pan_no,
+      indicomp_image_logo: donor.indicomp_image_logo,
+      indicomp_remarks: donor.indicomp_remarks,
+      indicomp_promoter: donor.indicomp_promoter,
+      indicomp_newpromoter: donor.indicomp_newpromoter,
+      indicomp_source: donor.indicomp_source,
+      indicomp_mobile_phone: donor.indicomp_mobile_phone,
+      indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
+      indicomp_email: donor.indicomp_email,
+      indicomp_website: donor.indicomp_website,
+      indicomp_res_reg_address: donor.indicomp_res_reg_address,
+      indicomp_res_reg_area: donor.indicomp_res_reg_area,
+      indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
+      indicomp_res_reg_city: donor.indicomp_res_reg_city,
+      indicomp_res_reg_state: donor.indicomp_res_reg_state,
+      indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
+      indicomp_off_branch_address: donor.indicomp_off_branch_address,
+      indicomp_off_branch_area: donor.indicomp_off_branch_area,
+      indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
+      indicomp_off_branch_city: donor.indicomp_off_branch_city,
+      indicomp_off_branch_state: donor.indicomp_off_branch_state,
+      indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
+      indicomp_corr_preffer: donor.indicomp_corr_preffer,
+      indicomp_belongs_to: donor.indicomp_belongs_to,
+      indicomp_donor_type: donor.indicomp_donor_type,
+    };
+
+    const form = document.getElementById("addIndiv");
+    if (!form.checkValidity()) {
+      toast.error("Fill all required");
+      return;
+    }
+
+    setIsButtonDisabled(true);
+    axios({
+      url: BASE_URL + `/api/update-donor/${id}`,
+      method: "PUT",
+      data,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }).then((res) => {
+      setDonor(res.data.individualCompany);
+      toast.success("Data Update Sucessfully");
+      navigate("/donor-list");
+    });
+  };
+
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
+  const inputClassSelect =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+  return (
     <div className=" bg-[#FFFFFF] p-2  rounded-lg  ">
-         <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
+      <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
         <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
           <div className="flex  items-center gap-2">
-          <IconInfoCircle className="w-4 h-4" />
-          <span>Edit Indivisual</span>
+            <IconInfoCircle className="w-4 h-4" />
+            <span>Edit Individual </span>
           </div>
-          <IconArrowBack onClick={()=>navigate('/donor-list')}   className="cursor-pointer hover:text-red-600"/>
+          <IconArrowBack
+            onClick={() => navigate("/donor-list")}
+            className="cursor-pointer hover:text-red-600"
+          />
         </h2>
       </div>
       <hr />
-    <form
-      onSubmit={handleSubmit}
-      id="addIndiv"
-      className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
-    >
-      {/* Personal Details Section */}
-      <div>
-      <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
+      <form
+        onSubmit={handleSubmit}
+        id="addIndiv"
+        className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
+      >
+        {/* Personal Details Section */}
+        <div>
+          <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Personal Details</span>
           </h2>
-        <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* <FormControl fullWidth>
-            <InputLabel id="service-select-label">
-              <span className="text-sm relative bottom-[6px]">
-                Title <span className="text-red-700">*</span>
-              </span>
-            </InputLabel>
-            <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
-              labelId="service-select-label"
-              id="service-select"
-              label="Title"
-              name="title"
-              value={donor.title}
-              onChange={(e) => onInputChange(e)}
-              required
-            >
-              {honorific.map((title) => (
-                <MenuItem key={title} value={title}>
-                  {title}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl> */}
-          <div>
-          <FormLabel required>Title</FormLabel>
+          <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div>
+              <FormLabel required>Title</FormLabel>
               <select
                 name="title"
                 value={donor.title}
                 onChange={(e) => onInputChange(e)}
                 required
-              
                 className={inputClassSelect}
               >
                 <option value="">Select Title</option>
@@ -407,9 +383,9 @@ const DonorEditIndv = ({id}) => {
                   </option>
                 ))}
               </select>
-          </div>
-          <div>
-          <FormLabel required>Full Name</FormLabel>
+            </div>
+            <div>
+              <FormLabel required>Full Name</FormLabel>
               <input
                 type="text"
                 name="indicomp_full_name"
@@ -418,223 +394,9 @@ const DonorEditIndv = ({id}) => {
                 className={inputClass}
                 required
               />
-          </div>
-          {/* <Input
-            type="text"
-            label="Full Name"
-            name="indicomp_full_name"
-            value={donor.indicomp_full_name}
-            onChange={(e) => onInputChange(e)}
-            required
-          /> */}
-          {/* <Input
-            type="text"
-            label="Father's Name"
-            name="indicomp_father_name"
-            value={donor.indicomp_father_name}
-            onChange={(e) => onInputChange(e)}
-          />
-          <Input
-            type="text"
-            label="Mother's Name"
-            name="indicomp_mother_name"
-            value={donor.indicomp_mother_name}
-            onChange={(e) => onInputChange(e)}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="service-select-label">
-              <span className="text-sm relative bottom-[6px]">
-                Gender <span className="text-red-700">*</span>
-              </span>
-            </InputLabel>
-            <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
-              labelId="service-select-label"
-              id="service-select"
-              label="Gender"
-              name="indicomp_gender"
-              value={donor.indicomp_gender}
-              onChange={(e) => onInputChange(e)}
-              required
-            >
-              {gender.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <Input
-            type="text"
-            label="Spouse Name"
-            name="indicomp_spouse_name"
-            value={donor.indicomp_spouse_name}
-            onChange={(e) => onInputChange(e)}
-          />
-          <div className="relative">
-            <Input
-              type="date"
-              label="Date of Birth"
-              name="indicomp_dob_annualday"
-              value={donor.indicomp_dob_annualday}
-              onChange={(e) => onInputChange(e)}
-            />
-          </div>
-          <div className="relative">
-            <Input
-              type="date"
-              label="Date of Anniversary"
-              name="indicomp_doa"
-              value={donor.indicomp_doa}
-              onChange={(e) => onInputChange(e)}
-            />
-          </div>
-          <div>
-            <InputMask
-              mask="aaaaa 9999 a"
-              value={donor.indicomp_pan_no}
-              onChange={(e) => onChangePanNumber(e)}
-              formatChars={{
-                9: "[0-9]",
-                a: "[A-Z]",
-              }}
-            >
-              {() => (
-                <Input type="text" label="PAN Number" name="panNumber" />
-              )}
-            </InputMask>
-          </div>
-          <div className="relative">
-            <Input
-              type="file"
-              label="Upload Image"
-              name="indicomp_image_logo"
-              value={donor.indicomp_image_logo}
-              onChange={(e) => onInputChange(e)}
-              disabled
-            />
-          </div>
-          <Input
-            type="text"
-            label="Remarks"
-            name="indicomp_remarks"
-            value={donor.indicomp_remarks}
-            onChange={(e) => onInputChange(e)}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="service-select-label">
-              <span className="text-sm relative bottom-[6px]">
-                Promoter <span className="text-red-700">*</span>
-              </span>
-            </InputLabel>
-            <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
-              labelId="service-select-label"
-              id="service-select"
-              label="Promoter"
-              name="indicomp_promoter"
-              value={donor.indicomp_promoter}
-              onChange={(e) => onInputChange(e)}
-              required
-            >
-              {promoter.map((option) => (
-                <MenuItem
-                  key={option.indicomp_promoter}
-                  value={option.indicomp_promoter}
-                >
-                  {option.indicomp_promoter}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {donor.indicomp_promoter === "Other" && (
-            <Input
-              type="text"
-              label="Promoter"
-              name="indicomp_newpromoter"
-              value={donor.indicomp_newpromoter}
-              onChange={(e) => onInputChange(e)}
-            />
-          )}
-          <FormControl fullWidth>
-            <InputLabel id="service-select-label">
-              <span className="text-sm relative bottom-[6px]">
-                Belong To <span className="text-red-700"></span>
-              </span>
-            </InputLabel>
-            <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
-              labelId="service-select-label"
-              id="service-select"
-              label="Belong To"
-              name="indicomp_belongs_to"
-              value={donor.indicomp_belongs_to}
-              onChange={(e) => onInputChange(e)}
-            >
-              {belongs_to.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel id="service-select-label">
-              <span className="text-sm relative bottom-[6px]">
-                Source <span className="text-red-700"></span>
-              </span>
-            </InputLabel>
-            <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
-              labelId="service-select-label"
-              id="service-select"
-              label="Source"
-              name="indicomp_source"
-              value={donor.indicomp_source}
-              onChange={(e) => onInputChange(e)}
-            >
-              {datasource.map((option) => (
-                <MenuItem key={option.id} value={option.data_source_type}>
-                  {option.data_source_type}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="service-select-label">
-              <span className="text-sm relative bottom-[6px]">
-                Donor Type <span className="text-red-700"></span>
-              </span>
-            </InputLabel>
-            <Select
-              sx={{ height: "40px", borderRadius: "5px" }}
-              labelId="service-select-label"
-              id="service-select"
-              label="Donor Type"
-              name="indicomp_donor_type"
-              value={donor.indicomp_donor_type}
-              onChange={(e) => onInputChange(e)}
-            >
-              {donor_type.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <Input
-            type="text"
-            label="Type"
-            name="indicomp_type"
-            disabled
-            value={donor.indicomp_type}
-            onChange={(e) => onInputChange(e)}
-          /> */}
-          <div>
-              <FormLabel>Father's Name</FormLabel>
+            </div>
+            <div>
+              <FormLabel>Father Name</FormLabel>
               <input
                 type="text"
                 name="indicomp_father_name"
@@ -645,7 +407,7 @@ const DonorEditIndv = ({id}) => {
             </div>
 
             <div>
-              <FormLabel>Mother's Name</FormLabel>
+              <FormLabel>Mother Name</FormLabel>
               <input
                 type="text"
                 name="indicomp_mother_name"
@@ -845,11 +607,11 @@ const DonorEditIndv = ({id}) => {
                 className={inputClass}
               />
             </div>
+          </div>
         </div>
-      </div>
 
-      {/* Communication Details Section */}
-      <div>
+        {/* Communication Details Section */}
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Communication Details</span>
@@ -904,8 +666,8 @@ const DonorEditIndv = ({id}) => {
           </div>
         </div>
 
-      {/* Residence Address Section */}
-      <div>
+        {/* Residence Address Section */}
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Residence Address</span>
@@ -989,8 +751,8 @@ const DonorEditIndv = ({id}) => {
           </div>
         </div>
 
-      {/* Office Address Section */}
-      <div>
+        {/* Office Address Section */}
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Office Address</span>
@@ -1089,67 +851,66 @@ const DonorEditIndv = ({id}) => {
           </div>
         </div>
 
-      {/* Form Actions */}
-      <div className="flex gap-4 justify-start">
-        <Button
-          type="submit"
-          className="bg-[#269fbd] hover:bg-green-700"
-          disabled={isButtonDisabled}
-        >
-          {isButtonDisabled ? "Updating..." : "Update"}
-        </Button>
-        {donor.indicomp_related_id == donor.indicomp_fts_id ? (
-          <Button
-            onClick={() => openmodal()}
-            className="bg-red-500 hover:bg-green-700"
+        {/* Form Actions */}
+        <div className="flex gap-4 justify-start">
+          <button
+            type="submit"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            disabled={isButtonDisabled}
           >
-            Attach to Group
-          </Button>
-        ) : (
-          <Button
-            disabled
-            onClick={() => openmodal()}
-            className="bg-red-500 hover:bg-green-700"
-          >
-            Attach to Group
-          </Button>
-        )}
-        {donor.indicomp_related_id == donor.indicomp_fts_id ? (
-          <Button disabled className="bg-blue-500 hover:bg-green-700">
-            Leave Group
-          </Button>
-        ) : (
-          <Button
-            className="bg-blue-500 hover:bg-green-700"
-            color="info"
-            onClick={() => familyGroupStatus("leave_family_group")}
-          >
-            Leave Group
-          </Button>
-        )}
-      </div>
-    </form>
+            {isButtonDisabled ? "Updating..." : "Update"}
+          </button>
+          {donor.indicomp_related_id == donor.indicomp_fts_id ? (
+            <button
+              onClick={() => openmodal()}
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            >
+              Attach to Group
+            </button>
+          ) : (
+            <button
+              disabled
+              onClick={() => openmodal()}
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            >
+              Attach to Group
+            </button>
+          )}
+          {donor.indicomp_related_id == donor.indicomp_fts_id ? (
+            <Button disabled className="bg-blue-500 hover:bg-green-700">
+              Leave Group
+            </Button>
+          ) : (
+            <Button
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              color="info"
+              onClick={() => familyGroupStatus("leave_family_group")}
+            >
+              Leave Group
+            </Button>
+          )}
+        </div>
+      </form>
 
-    <Dialog open={showmodal} toggle={() => closegroupModal()}>
-      <DialogHeader> Add to Group</DialogHeader>
-      <DialogBody>
-        {" "}
-        <AddToGroup id={donor.id} />
-      </DialogBody>
-      <DialogFooter>
-        <Button
-          variant="text"
-          color="red"
-          onClick={() => closegroupModal()}
-          className="mr-1"
-        >
-          <span>Cancel</span>
-        </Button>
-      </DialogFooter>
-    </Dialog>
-  </div>
- 
-  )
-}
+      <Dialog open={showmodal} toggle={() => closegroupModal()}>
+        <DialogHeader> Add to Group</DialogHeader>
+        <DialogBody>
+          {" "}
+          <AddToGroup id={donor.id} />
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => closegroupModal()}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+    </div>
+  );
+};
 
-export default DonorEditIndv
+export default DonorEditIndv;
