@@ -33,7 +33,7 @@ const Menuitems = [
     navlabel: true,
     subheader: "Home",
   },
-  
+
   {
     id: uniqueId(),
     title: "Dashboard",
@@ -175,7 +175,7 @@ const Menuitems = [
         id: uniqueId(),
         title: "School Alloted",
         icon: IconComponents,
-        href: "/",
+        href: "/students-schoolallot",
       },
       {
         id: uniqueId(),
