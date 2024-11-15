@@ -92,15 +92,13 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           spacing={1}
           direction="row"
           alignItems="center"
-          onClick={() => {
-            navigate("/manualguide-book");
-          }}
+      
         >
-          <Tooltip title="Help" arrow>
+          {/* <Tooltip title="Help" arrow>
             <IconButton color="inherit" aria-label="menu">
               <IconInfoOctagon height={20} width={20} />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           <Tooltip title="Profile" arrow>
             <Profile />

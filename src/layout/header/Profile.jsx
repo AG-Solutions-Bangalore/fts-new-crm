@@ -25,6 +25,8 @@ const Profile = () => {
     setAnchorEl2(null);
   };
 
+  const navigate = useNavigate()
+
  
 
   return (
@@ -80,11 +82,21 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText>My Account</ListItemText>
         </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
           <ListItemIcon>
             <IconListCheck width={20} />
           </ListItemIcon>
           <ListItemText>My Tasks</ListItemText>
+        </MenuItem> */}
+        <MenuItem 
+            onClick={() => {
+            navigate("/manualguide-book");
+          }}
+        >
+          <ListItemIcon>
+            <IconListCheck width={20} />
+          </ListItemIcon>
+          <ListItemText>Help</ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
           <Button

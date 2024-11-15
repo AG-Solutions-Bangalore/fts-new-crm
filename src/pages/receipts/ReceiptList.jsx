@@ -5,6 +5,7 @@ import axios from 'axios';
 import BASE_URL from '../../base/BaseUrl';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import { IconEdit, IconEye } from '@tabler/icons-react';
+import moment from 'moment';
 
 const ReceiptList = () => {
     const [receiptList, setReceiptList] = useState([]);
@@ -55,6 +56,19 @@ const ReceiptList = () => {
             accessorKey: "receipt_date",
             header: "Date",
             size: 150,
+            Cell: ({ row }) => {
+              const date = row.original.receipt_date;
+              console.log(date)
+              return (
+                <>
+                 {date ? 
+                    moment.utc(date).format("DD-MM-YYYY") : 
+                    'N/A'
+                  }
+                </>
+              )
+             
+            },
           },
           {
             accessorKey: "receipt_exemption_type",
@@ -93,15 +107,16 @@ const ReceiptList = () => {
                   onClick={()=>navigate(`/view-receipts/${id}`)}
                    title='Receipt View'
                     className="flex items-center space-x-2"
+                  
                   >
-                    <IconEye title="View" className="h-5 w-5 cursor-pointer" />
+                    <IconEye  className="h-5 w-5 text-blue-500 cursor-pointer" />
                   </div>
                   <div
                   title='Receipt Edit'
                   onClick={()=>navigate(`/receipt-edit/${id}`)}
                     className="flex items-center space-x-2"
                   >
-                    <IconEdit  className="h-5 w-5 cursor-pointer" />
+                    <IconEdit  className="h-5 w-5 text-blue-500 cursor-pointer" />
                   </div>
                   
                 </div>

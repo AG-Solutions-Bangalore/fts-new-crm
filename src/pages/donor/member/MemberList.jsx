@@ -113,9 +113,10 @@ const MemberList = () => {
               {email && email.toLowerCase() !== "null" && (
                 <div
                   onClick={() => sendEmail(email)}
+                  title="Send Mail"
                   className="flex items-center space-x-2"
                 >
-                  <IconMail title="Edit" className="h-5 w-5 cursor-pointer" />
+                  <IconMail  className="h-5 w-5 text-blue-500 cursor-not-allowed  " />
                 </div>
               )}
             </div>
