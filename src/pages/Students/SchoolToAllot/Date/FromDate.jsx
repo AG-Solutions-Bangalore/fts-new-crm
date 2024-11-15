@@ -1,2 +1,2 @@
-let schoolalotcurrentfromdate = "2022-04-01";
+let schoolalotcurrentfromdate = "-04-012022";
 export default schoolalotcurrentfromdate;

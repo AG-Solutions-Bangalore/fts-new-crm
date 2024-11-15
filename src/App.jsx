@@ -61,6 +61,8 @@ import Faq from "./pages/others/Faq";
 import Team from "./pages/others/team/Team";
 import Notification from "./pages/others/notification/Notification";
 import ManualGuideBook from "./pages/ManualGuideBook/ManualGuideBook";
+import SchoolAllot from "./pages/Students/SchoolAllot/SchoolAllot";
+import SchoolAllotEdit from "./pages/Students/SchoolAllot/SchoolAllotEdit";
 const App = () => {
   return (
     <>
@@ -138,8 +140,10 @@ const App = () => {
         <Route path="/students-full-list-view/:id" element={<FullListView />} />
         <Route path="/students-to-allot" element={<SchoolToAllot />} />
         <Route path="/students-addschoolalot" element={<DonorDetails />} />
-      
 
+        <Route path="/students-schoolallot" element={<SchoolAllot />} />
+        <Route path="/students-allotedit" element={<SchoolAllotEdit />} />
+        
         {/* others  */}
         <Route path="/faq" element={<Faq />} />
         <Route path="/team" element={<Team />} />

@@ -1,28 +1,21 @@
-import { CardBody, Card, Input } from "@material-tailwind/react";
 import {
-  CardContent,
   Dialog,
   FormLabel,
   Tooltip,
-  Typography,
 } from "@mui/material";
-import moment from "moment";
 import { useEffect, useState } from "react";
-import { MdHighlightOff, MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, } from "react-router-dom";
 import { toast } from "react-toastify";
 import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import { IconArrowBack, IconCircleX } from "@tabler/icons-react";
+import {  IconCircleX } from "@tabler/icons-react";
 
 const StatesList = () => {
   const navigate = useNavigate();
 
-  const { id } = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [student, setStudent] = useState({});
 
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
