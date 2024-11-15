@@ -59,26 +59,26 @@ const DonorView = ({ viewerId, onClose }) => {
     const fetchViewerData = async () => {
       try {
         axios
-      .get(`${BASE_URL}/api/fetch-donor-by-id/${viewerId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setDonor(res.data.individualCompany);
-        setDonorFam(res.data.family_details);
-        setCompany(res.data.company_details);
-        setFamGroup(res.data.related_group);
-        setLoader(false);
-      });
+          .get(`${BASE_URL}/api/fetch-donor-by-id/${viewerId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((res) => {
+            setDonor(res.data.individualCompany);
+            setDonorFam(res.data.family_details);
+            setCompany(res.data.company_details);
+            setFamGroup(res.data.related_group);
+            setLoader(false);
+          });
       } catch (error) {
         console.error("Error fetching donor data:", error);
       }
     };
-    
-      if (viewerId) {
-        fetchViewerData();
-      }
+
+    if (viewerId) {
+      fetchViewerData();
+    }
   }, [viewerId]);
 
   const relId = donor?.indicomp_related_id;
@@ -125,11 +125,11 @@ const DonorView = ({ viewerId, onClose }) => {
                     ? `${donor.title} ${donor.indicomp_full_name}`
                     : `M/s ${donor.indicomp_full_name}`}
                 </h3>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs font-semibold text-black">
                   FTS Id: {donor.indicomp_fts_id}
                 </p>
                 {famgroup.map((fam, key) => (
-                  <p key={key} className="text-xs text-green-600">
+                  <p key={key} className="text-xs font-semibold text-black">
                     Family Group: {fam.indicomp_full_name}
                   </p>
                 ))}
@@ -137,13 +137,14 @@ const DonorView = ({ viewerId, onClose }) => {
 
               {localStorage.getItem("user_type_id") != 4 && (
                 <div className="flex gap-2">
-                  <Button
+                  <button
                     // onClick={() => navigate(`/receipt-list/${donor?.viewerId}`)}
                     onClick={toggleOldReceiptDetailsDrawer(true)}
-                    className="px-4 py-2 text-xs bg-gradient-to-r from-blue-500 to-red-600 text-white rounded-lg hover:from-green-600 hover:to-red-700 transition-all shadow-sm"
+                    // className="px-4 py-2 text-xs bg-gradient-to-r from-blue-500 to-red-600 text-white rounded-lg hover:from-green-600 hover:to-red-700 transition-all shadow-sm"
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                   >
                     Old Receipts
-                  </Button>
+                  </button>
                   <SwipeableDrawer
                     anchor="right"
                     open={oldreceiptDetailsDrawer}
@@ -155,13 +156,13 @@ const DonorView = ({ viewerId, onClose }) => {
                       viewerId={viewerId}
                     />
                   </SwipeableDrawer>
-                  <Button
+                  <button
                     onClick={toggleReceiptDetailsDrawer(true)}
                     // onClick={() => navigate(`/receipt-details/${donor?.viewerId}`)}
-                    className="px-4 py-2 text-xs bg-gradient-to-r from-blue-500 to-red-600 text-white rounded-lg hover:from-green-600 hover:to-red-700 transition-all shadow-sm"
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                   >
                     Receipts & Family Details
-                  </Button>
+                  </button>
                   <SwipeableDrawer
                     anchor="right"
                     open={receiptDetailsDrawer}

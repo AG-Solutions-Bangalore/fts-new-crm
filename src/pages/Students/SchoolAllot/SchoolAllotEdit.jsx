@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
 import { ContextPanel } from "../../../utils/ContextPanel";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
-import { Card, Input, Spinner, Button } from "@material-tailwind/react";
-import PageTitle from "../../../components/common/PageTitle";
+import { Card, Spinner, Button } from "@material-tailwind/react";
 import toast from "react-hot-toast";
-import { IoMdArrowBack } from "react-icons/io";
-import { MantineReactTable } from "mantine-react-table";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { FormLabel } from "@mui/material";
 
 const SchoolAllotEdit = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
@@ -16,9 +16,8 @@ const SchoolAllotEdit = () => {
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
   const { isPanelUp } = useContext(ContextPanel);
   const [schoolAllot, setSchoolAllot] = useState([]);
-
+  const [selectedRows, setSelectedRows] = useState([]); // Keep track of selected rows
   const navigate = useNavigate();
-
   const id = localStorage.getItem("sclaltid");
   const year = localStorage.getItem("sclaltyear");
 
@@ -76,7 +75,6 @@ const SchoolAllotEdit = () => {
         const schoolsData = schoolsResponse.data.schools || [];
         setSchoolAllot(schoolsData);
 
-        // Sync initial selected schools with the school allotment data
         const defaultSelectedRows = schoolsData.reduce((acc, school, index) => {
           if (schoolalot.schoolalot_school_id?.includes(school.school_code)) {
             acc.push(index);
@@ -98,7 +96,7 @@ const SchoolAllotEdit = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const selectedIds = localStorage.getItem("selectedSchoolIds") || "";
+    const selectedIds = selectedSchoolIds.join(","); // Get selected school IDs
     const data = {
       donor_related_id: id,
       schoolalot_financial_year: schoolalot.schoolalot_financial_year,
@@ -128,54 +126,120 @@ const SchoolAllotEdit = () => {
     { accessorKey: "village", header: "Village" },
     { accessorKey: "school_code", header: "School Code" },
   ];
+  const onRowSelectionChange = (rows) => {
+    // Get all selected row IDs from the `rows` object
+    const selectedIds = Object.keys(rows)
+      .filter((key) => rows[key] === true) // Only include selected rows (those with value `true`)
+      .map((key) => {
+        const rowIndex = parseInt(key, 10); // Convert key to number to get correct index
+        return schoolToAllot[rowIndex]?.school_code; // Map to school_code of selected rows
+      });
 
+    // Update the selected school IDs state
+    setSelectedSchoolIds(selectedIds);
+    console.log("Selected School IDs:", selectedIds); // For debugging purposes
+  };
+
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed";
+
+  // const table = useMantineReactTable({
+  // columns={columns}
+  // data={schoolToAllot}
+  //   enableRowSelection: (row) => row.original.status_label !== "Allotted", // Disable selection for "Allotted" rows
+  //   getRowId: (originalRow) => originalRow.school_code,
+  //   onRowSelectionChange: setRowSelection,
+  //   enableDensityToggle: false,
+  //   enableColumnActions: false,
+  //   enableFullScreenToggle: false,
+  //   enableHiding: false,
+  //   state: { rowSelection },
+  //   getRowProps: (row) => ({
+  //     style: {
+  //       cursor:
+  //         row.original.status_label === "Allotted" ? "not-allowed" : "pointer",
+  //       backgroundColor:
+  //         row.original.status_label === "Allotted" ? "#f0f0f0" : "white",
+  //     },
+  //   }),
+  // });
+
+  //   <MantineReactTable
+  //   columns={columns}
+  //   data={schoolToAllot}
+  //   enableDensityToggle={false}
+  //   enableColumnActions={false}
+  //   enableFullScreenToggle={false}
+  //   enableHiding={false}
+  //   state={{
+  //     rowSelection: selectedSchoolIds.reduce(
+  //       (acc, id) => ({ ...acc, [id]: true }),
+  //       {}
+  //     ),
+  //   }}
+  //   onRowSelectionChange={onRowSelectionChange}
+  //   enableRowSelection
+  //   enableFilters
+  // />
   return (
     <Layout>
-      <PageTitle
-        title="Donor Details"
-        icon={IoMdArrowBack}
-        backLink={"/students-schoolallot"}
-      />
+      <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
+        <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
+          <div className="flex  items-center gap-2">
+            <IconInfoCircle className="w-4 h-4" />
+            <span>Donor Details</span>
+          </div>
+          <IconArrowBack
+            onClick={() => navigate("/students-schoolallot")}
+            className="cursor-pointer hover:text-red-600"
+          />
+        </h2>
+      </div>
+      <hr />
       <Card>
-        <div className="grid grid-cols md:grid-cols-3 gap-4 p-4">
-          <Input
-            label="School Allot Year"
-            name="schoolalot_financial_year"
-            value={schoolalot.schoolalot_financial_year}
-            disabled
-            labelProps={{
-              className: "!text-gray-500",
-            }}
-          />
-          <Input
-            label="From Date"
-            name="schoolalot_from_date"
-            type="date"
-            disabled
-            value={schoolalot.schoolalot_from_date}
-            labelProps={{
-              className: "!text-gray-500",
-            }}
-          />
-          <Input
-            label="To Date"
-            name="schoolalot_to_date"
-            type="date"
-            disabled
-            value={schoolalot.schoolalot_to_date}
-            labelProps={{
-              className: "!text-gray-500",
-            }}
-          />
-          <Input
-            label="Schools Id"
-            name="indicomp_fts_id"
-            disabled
-            value={schoolalot.schoolalot_school_id}
-            labelProps={{
-              className: "!text-gray-500",
-            }}
-          />
+        <div className="grid grid-cols md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+          <div>
+            <FormLabel required>School Allot Year</FormLabel>
+            <input
+              name="schoolalot_financial_year"
+              value={schoolalot.schoolalot_financial_year}
+              className={inputClass}
+              required
+              disabled
+            />
+          </div>
+          <div>
+            <FormLabel required>From Date</FormLabel>
+            <input
+              type="date"
+              name="schoolalot_from_date"
+              value={schoolalot.schoolalot_from_date}
+              className={inputClass}
+              required
+              disabled
+            />
+          </div>
+          <div>
+            <FormLabel required>To Date</FormLabel>
+            <input
+              type="date"
+              name="schoolalot_to_date"
+              value={schoolalot.schoolalot_to_date}
+              className={inputClass}
+              required
+              disabled
+            />
+          </div>
+          <div>
+            <FormLabel required>Schools Id</FormLabel>
+            <input
+              name="indicomp_fts_id"
+              value={schoolalot.schoolalot_school_id}
+              className={inputClass}
+              required
+              disabled
+            />
+          </div>
         </div>
         <div className="mt-5">
           {loading ? (
@@ -183,35 +247,8 @@ const SchoolAllotEdit = () => {
               <Spinner className="h-12 w-12" color="purple" />
             </div>
           ) : (
-            <MantineReactTable
-              columns={columns}
-              data={schoolToAllot}
-              enableDensityToggle={false}
-              enableColumnActions={false}
-              enableFullScreenToggle={false}
-              enableHiding={false}
-              state={{
-                rowSelection: selectedSchoolIds.reduce(
-                  (acc, id) => ({ ...acc, [id]: true }),
-                  {}
-                ),
-              }}
-              onRowSelectionChange={(newRowSelection) => {
-                const selectedIds = Object.keys(newRowSelection).filter(
-                  (key) => newRowSelection[key]
-                ); 
-
-                setSelectedSchoolIds(selectedIds);
-                localStorage.setItem(
-                  "selectedSchoolIds",
-                  selectedIds.join(",")
-                );
-
-                console.log("Selected School IDs:", selectedIds);
-              }}
-              enableRowSelection
-              enableFilters
-            />
+            // <MantineReactTable table={table} />
+            <h1>test</h1>
           )}
         </div>
         <div className="mt-5 flex justify-end p-4">

@@ -214,11 +214,10 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
     e.preventDefault();
     // const form = document.getElementById("addIndiv");
     const form = e.target;
-    if (
-        !form.checkValidity()) {
+    if (!form.checkValidity()) {
       toast.error("Fill all required");
       setIsButtonDisabled(false);
-      return;   
+      return;
     }
     const data = {
       indicomp_full_name: donor.indicomp_full_name,
@@ -260,7 +259,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
       data.donor_related_id = id;
     }
 
-   
     setIsButtonDisabled(true);
 
     axios({
@@ -271,46 +269,46 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res) => {
-      toast.success("Data Inserted Sucessfully");
+      toast.success("Donor Created Sucessfully");
       fetchDonorData();
       onClose();
       setDonor({
         indicomp_full_name: "",
-    title: "",
-    indicomp_com_contact_name: "",
-    indicomp_com_contact_designation: "",
-    indicomp_gender: "",
-    indicomp_dob_annualday: "",
-    indicomp_pan_no: "",
-    indicomp_image_logo: "",
-    indicomp_remarks: "",
-    indicomp_promoter: "",
-    indicomp_newpromoter: "",
-    indicomp_belongs_to: "",
-    indicomp_source: "",
-    indicomp_donor_type: "",
-    indicomp_type: "",
-    indicomp_mobile_phone: "",
-    indicomp_mobile_whatsapp: "",
-    indicomp_email: "",
-    indicomp_website: "",
-    indicomp_res_reg_address: "",
-    indicomp_res_reg_area: "",
-    indicomp_res_reg_ladmark: "",
-    indicomp_res_reg_city: "",
-    indicomp_res_reg_state: "",
-    indicomp_res_reg_pin_code: "",
-    indicomp_off_branch_address: "",
-    indicomp_off_branch_area: "",
-    indicomp_off_branch_ladmark: "",
-    indicomp_off_branch_city: "",
-    indicomp_off_branch_state: "",
-    indicomp_off_branch_pin_code: "",
-    indicomp_corr_preffer: "Registered",
-    indicomp_csr: "",
-      })
+        title: "",
+        indicomp_com_contact_name: "",
+        indicomp_com_contact_designation: "",
+        indicomp_gender: "",
+        indicomp_dob_annualday: "",
+        indicomp_pan_no: "",
+        indicomp_image_logo: "",
+        indicomp_remarks: "",
+        indicomp_promoter: "",
+        indicomp_newpromoter: "",
+        indicomp_belongs_to: "",
+        indicomp_source: "",
+        indicomp_donor_type: "",
+        indicomp_type: "",
+        indicomp_mobile_phone: "",
+        indicomp_mobile_whatsapp: "",
+        indicomp_email: "",
+        indicomp_website: "",
+        indicomp_res_reg_address: "",
+        indicomp_res_reg_area: "",
+        indicomp_res_reg_ladmark: "",
+        indicomp_res_reg_city: "",
+        indicomp_res_reg_state: "",
+        indicomp_res_reg_pin_code: "",
+        indicomp_off_branch_address: "",
+        indicomp_off_branch_area: "",
+        indicomp_off_branch_ladmark: "",
+        indicomp_off_branch_city: "",
+        indicomp_off_branch_state: "",
+        indicomp_off_branch_pin_code: "",
+        indicomp_corr_preffer: "Registered",
+        indicomp_csr: "",
+      });
     });
-     
+
     setIsButtonDisabled(false);
   };
 
@@ -354,7 +352,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
 
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-             
               <FormLabel required>Company Name</FormLabel>
               <input
                 type="text"
@@ -370,7 +367,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>Type</FormLabel>
               <select
                 name="indicomp_type"
@@ -389,7 +385,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>Title</FormLabel>
               <select
                 name="title"
@@ -408,7 +403,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>Contact Name</FormLabel>
               <input
                 type="text"
@@ -421,7 +415,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel>Designation</FormLabel>
               <input
                 type="text"
@@ -433,7 +426,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>Gender</FormLabel>
               <select
                 name="indicomp_gender"
@@ -452,7 +444,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>Annual Day</FormLabel>
               <input
                 type="date"
@@ -489,7 +480,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>Upload Logo</FormLabel>
               <input
                 type="file"
@@ -503,7 +493,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel>Remarks</FormLabel>
               <input
                 type="text"
@@ -515,7 +504,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel required>Promoter</FormLabel>
               <select
                 name="indicomp_promoter"
@@ -548,12 +536,10 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
                     className={inputClass}
                   />
                 </>
-               
               </div>
             )}
 
             <div>
-              
               <FormLabel>Belong To</FormLabel>
               <select
                 name="indicomp_belongs_to"
@@ -571,7 +557,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel>Source</FormLabel>
               <select
                 name="indicomp_source"
@@ -589,7 +574,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>Donor Type</FormLabel>
               <select
                 name="indicomp_donor_type"
@@ -607,7 +591,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>CSR</FormLabel>
               <select
                 name="indicomp_csr"
@@ -634,7 +617,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
 
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div>
-              
               <FormLabel required>Mobile Phone</FormLabel>
               <input
                 type="tel"
@@ -648,7 +630,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>WhatsApp</FormLabel>
               <input
                 type="tel"
@@ -661,7 +642,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel>Email</FormLabel>
               <input
                 type="email"
@@ -673,7 +653,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>Website</FormLabel>
               <input
                 type="text"
@@ -694,7 +673,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
           </h2>
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-             
               <FormLabel>House & Street Number</FormLabel>
               <input
                 type="text"
@@ -706,7 +684,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>Area</FormLabel>
               <input
                 type="text"
@@ -718,7 +695,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>Landmark</FormLabel>
               <input
                 type="text"
@@ -730,7 +706,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>City</FormLabel>
               <input
                 type="text"
@@ -743,7 +718,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>State</FormLabel>
               <select
                 name="indicomp_res_reg_state"
@@ -762,7 +736,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>Pincode</FormLabel>
               <input
                 type="text"
@@ -784,7 +757,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
           </h2>
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-             
               <FormLabel>Office & Street Number</FormLabel>
               <input
                 type="text"
@@ -796,7 +768,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel>Area</FormLabel>
               <input
                 type="text"
@@ -808,7 +779,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel>Landmark</FormLabel>
               <input
                 type="text"
@@ -820,7 +790,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-              
               <FormLabel>City</FormLabel>
               <input
                 type="text"
@@ -832,7 +801,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>State</FormLabel>
               <select
                 name="indicomp_off_branch_state"
@@ -850,7 +818,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel>Pincode</FormLabel>
               <input
                 type="text"
@@ -863,7 +830,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             </div>
 
             <div>
-             
               <FormLabel required>Correspondence Preference</FormLabel>
               <select
                 name="indicomp_corr_preffer"
@@ -884,13 +850,13 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
         </div>
         {/* Form Actions */}
         <div className="flex gap-4 justify-start">
-          <Button
+          <button
             type="submit"
-            className="bg-[#269fbd] hover:bg-green-700"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >
             {isButtonDisabled ? "Submitting..." : "Submit"}
-          </Button>
+          </button>
 
           {/* <Link to="listing">
             <Button color="green" className="px-6 py-2">
