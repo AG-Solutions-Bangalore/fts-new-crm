@@ -5,14 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { MdConfirmationNumber, MdEdit } from "react-icons/md";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import MUIDataTable from "mui-datatables";
 import moment from "moment";
 import { Spinner } from "@material-tailwind/react";
-import PageTitle from "../../../components/common/PageTitle";
-import { FaArrowLeft } from "react-icons/fa6";
-import { IoEyeOutline } from "react-icons/io5";
-
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { IconEdit, IconEye } from "@tabler/icons-react";
+import { Tooltip } from "@mui/material";
 const SchoolAllot = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -35,22 +32,8 @@ const SchoolAllot = () => {
         });
 
         const res = response.data?.schoolAllot;
-        if (Array.isArray(res)) {
-          const tempRows = res.map((item, index) => [
-            index + 1,
-            item["indicomp_full_name"],
-            item["schoolalot_financial_year"],
-            moment(item["schoolalot_from_date"]).format("DD-MM-YYYY"),
-            moment(item["schoolalot_to_date"]).format("DD-MM-YYYY"),
 
-            item["receipt_no_of_ots"],
-
-            item["no_of_schools_allotted"],
-            item["receipt_no_of_ots"] - item["no_of_schools_allotted"],
-            item["id"] + "#" + item["schoolalot_financial_year"],
-          ]);
-          setSchoolAllot(tempRows);
-        }
+        setSchoolAllot(res);
       } catch (error) {
         console.error("Error fetching approved list request data", error);
       } finally {
@@ -62,172 +45,133 @@ const SchoolAllot = () => {
   }, [isPanelUp, navigate]);
 
   const columns = [
+    { accessorKey: "indicomp_full_name", header: "Donor Name" },
+    { accessorKey: "schoolalot_financial_year", header: "School Allot Year" },
     {
-      name: "#",
-      label: "#",
-      options: {
-        filter: false,
-        sort: false,
+      accessorKey: "schoolalot_from_date",
+      header: "From Date",
+      Cell: ({ row }) => {
+        const formattedDate = moment(row.original.schoolalot_from_date).format(
+          "DD-MM-YYYY"
+        );
+        return <span>{formattedDate}</span>;
       },
     },
     {
-      name: "Donor Name",
-      label: "Donor Name",
-      options: {
-        filter: true,
-        sort: false,
+      accessorKey: "schoolalot_to_date",
+      header: "To Date",
+      Cell: ({ row }) => {
+        const formattedDate = moment(row.original.schoolalot_to_date).format(
+          "DD-MM-YYYY"
+        );
+        return <span>{formattedDate}</span>;
       },
     },
+    { accessorKey: "receipt_no_of_ots", header: "OTS Received" },
+    { accessorKey: "no_of_schools_allotted", header: "Schools Allotted" },
     {
-      name: "School Allot Year",
-      label: "School Allot Year",
-      options: {
-        filter: true,
-        sort: false,
+      accessorKey: "pending",
+      header: "Pending",
+      Cell: ({ row }) => {
+        const pending =
+          row.original.receipt_no_of_ots - row.original.no_of_schools_allotted;
+        return <span>{pending}</span>;
       },
     },
-    {
-      name: "From Date",
-      label: "From Date",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "To Date",
-      label: "To Date",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "OTS Received",
-      label: "OTS Received",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "Schools Allotted",
-      label: "Schools Allotted",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "Pending",
-      label: "Pending ",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: localStorage.getItem("id") == 1 ? "Action" : "",
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: (value) => {
-          const newValue = value.substring(0, value.indexOf("#"));
-          const newYear = value.substring(value.indexOf("#") + 1);
-          const handleedit = () => {
-            navigate("/students-allotedit");
-            console.log("this");
-            localStorage.setItem("sclaltid", newValue);
-            localStorage.setItem("sclaltyear", newYear);
-          };
+    ...(localStorage.getItem("id") == 1
+      ? [
+          {
+            enableColumnFilter: false,
 
-          const handleview = () => {
-            navigate("/students-allotview");
-            localStorage.setItem("sclaltid", newValue);
-          };
+            accessorKey: "Action",
+            header: "Action",
+            Cell: ({ row }) => {
+              const newValue = row.original.id;
 
-          const handleletter = () => {
-            navigate("/students-allotletter");
-            localStorage.setItem("sclaltid", newValue);
-          };
+              const newYear = row.original.schoolalot_financial_year.substring(
+                row.original.schoolalot_financial_year.indexOf("#") + 1
+              );
+              const handleedit = () => {
+                navigate("/students-allotedit");
+                console.log("this");
+                localStorage.setItem("sclaltid", newValue);
+                localStorage.setItem("sclaltyear", newYear);
+              };
 
-          return (
-            <div>
-              <div onClick={handleedit}>
-                <Link
-                  style={{
-                    display: localStorage.getItem("id") == 1 ? "" : "none",
-                  }}
-                >
-                  <MdEdit
-                    title="edit"
-                    className="h-5 w-5 cursor-pointer text-blue-500"
-                  />{" "}
-                </Link>
-              </div>
-              <div onClick={handleview}>
-                <Link
-                  style={{
-                    display: localStorage.getItem("id") == 1 ? "" : "none",
-                  }}
-                >
-                  <IoEyeOutline
-                    title="view"
-                    className="h-5 w-5 cursor-pointer text-blue-500"
-                  />{" "}
-                </Link>
-              </div>
-              <div onClick={handleletter}>
-                <Link
-                  style={{
-                    display: localStorage.getItem("id") == 1 ? "" : "none",
-                  }}
-                >
-                  <MdConfirmationNumber
-                    title="Allotment"
-                    className="h-5 w-5 cursor-pointer text-blue-500"
-                  />
-                </Link>
-              </div>
-            </div>
-          );
-        },
-      },
-    },
+              const handleview = () => {
+                navigate("/students-allotview");
+                localStorage.setItem("sclaltid", newValue);
+              };
+
+              const handleletter = () => {
+                navigate("/students-allotletter");
+                localStorage.setItem("sclaltid", newValue);
+              };
+              return (
+                <div>
+                  <div onClick={handleedit}>
+                    <Link
+                      style={{
+                        display: localStorage.getItem("id") == 1 ? "" : "none",
+                      }}
+                    >
+                      <Tooltip title="Edit" arrow>
+                        <IconEdit className="h-5 w-5 cursor-pointer text-blue-500" />
+                      </Tooltip>
+                    </Link>
+                  </div>
+                  <div onClick={handleview}>
+                    <Link
+                      style={{
+                        display: localStorage.getItem("id") == 1 ? "" : "none",
+                      }}
+                    >
+                      <Tooltip title="View" arrow>
+                        <IconEye className="h-5 w-5 cursor-pointer text-blue-500" />
+                      </Tooltip>
+                    </Link>
+                  </div>
+                  <div onClick={handleletter}>
+                    <Link
+                      style={{
+                        display: localStorage.getItem("id") == 1 ? "" : "none",
+                      }}
+                    >
+                      <Tooltip title="Allotment" arrow>
+                        <MdConfirmationNumber className="h-5 w-5 cursor-pointer text-blue-500" />
+                      </Tooltip>
+                    </Link>
+                  </div>
+                </div>
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
-  const options = {
-    selectableRows: "none",
-    elevation: 0,
-    filterType: "textField",
-    selectableRows: false,
-    responsive: "standard",
-    viewColumns: true,
-    download: false,
-    print: false,
-    setRowProps: (rowData) => {
-      return {
-        style: {
-          borderBottom: "10px solid #f1f7f9",
-        },
-      };
-    },
-  };
-
+  const table = useMantineReactTable({
+    columns,
+    data: schoolAllot,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableFullScreenToggle: false,
+    enableHiding: false,
+  });
   return (
     <Layout>
-      <PageTitle title="Schools Allotments List" />
+      <div className="flex  bg-white p-4 mb-4 rounded-lg shadow-md">
+        <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-xl md:text-2xl sm:text-sm text-center md:text-left">
+          Schools Allotments List
+        </h1>
+      </div>
       <div className="mt-5">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <Spinner className="h-12 w-12" color="purple" />
+            <Spinner />
           </div>
         ) : (
-          <MUIDataTable
-            data={schoolAllot ? schoolAllot : []}
-            columns={columns}
-            options={options}
-          />
+          <MantineReactTable table={table} />
         )}
       </div>
     </Layout>

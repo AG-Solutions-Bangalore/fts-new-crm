@@ -4,11 +4,11 @@ import { ContextPanel } from "../../../utils/ContextPanel";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
-import MUIDataTable from "mui-datatables";
 import { Card, Input, Spinner, Button } from "@material-tailwind/react";
 import PageTitle from "../../../components/common/PageTitle";
 import toast from "react-hot-toast";
 import { IoMdArrowBack } from "react-icons/io";
+import { MantineReactTable } from "mantine-react-table";
 
 const SchoolAllotEdit = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
@@ -16,6 +16,7 @@ const SchoolAllotEdit = () => {
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
   const { isPanelUp } = useContext(ContextPanel);
   const [schoolAllot, setSchoolAllot] = useState([]);
+
   const navigate = useNavigate();
 
   const id = localStorage.getItem("sclaltid");
@@ -51,6 +52,7 @@ const SchoolAllotEdit = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
           `${BASE_URL}/api/fetch-schoolsallot-by-id/${id}`,
@@ -74,7 +76,7 @@ const SchoolAllotEdit = () => {
         const schoolsData = schoolsResponse.data.schools || [];
         setSchoolAllot(schoolsData);
 
-        // Set initial selected rows based on schoolalot_school_id
+        // Sync initial selected schools with the school allotment data
         const defaultSelectedRows = schoolsData.reduce((acc, school, index) => {
           if (schoolalot.schoolalot_school_id?.includes(school.school_code)) {
             acc.push(index);
@@ -82,17 +84,7 @@ const SchoolAllotEdit = () => {
           return acc;
         }, []);
         setSelectedSchoolIds(defaultSelectedRows);
-        setSchoolToAllot(
-          schoolsData.map((item) => [
-            item.school_state,
-            item.district,
-            item.achal,
-            item.cluster,
-            item.sub_cluster,
-            item.village,
-            item.school_code,
-          ])
-        );
+        setSchoolToAllot(schoolsData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -128,43 +120,14 @@ const SchoolAllotEdit = () => {
   };
 
   const columns = [
-    { name: "State", label: "State" },
-    { name: "District", label: "District" },
-    { name: "Achal", label: "Achal" },
-    { name: "Cluster", label: "Cluster" },
-    { name: "Sub Cluster", label: "Sub Cluster" },
-    { name: "Village", label: "Village" },
-    { name: "School Code", label: "School Code" },
+    { accessorKey: "school_state", header: "State" },
+    { accessorKey: "district", header: "District" },
+    { accessorKey: "achal", header: "Achal" },
+    { accessorKey: "cluster", header: "Cluster" },
+    { accessorKey: "sub_cluster", header: "Sub Cluster" },
+    { accessorKey: "village", header: "Village" },
+    { accessorKey: "school_code", header: "School Code" },
   ];
-
-  const options = {
-    filterType: "checkbox",
-    filter: true,
-    search: true,
-    print: false,
-    viewColumns: false,
-    download: false,
-    selectableRows: true,
-    responsive: "standard",
-    rowsSelected: selectedSchoolIds,
-    // selectableRows: "multiple",
-    selectToolbarPlacement: "above",
-    isRowSelectable: (dataIndex) =>
-      schoolAllot[dataIndex]?.status_label !== "Allotted",
-    selectableRowsOnClick: true,
-    onRowSelectionChange: (currentRowSelected, allRowsSelected) => {
-      const tempValue = allRowsSelected.map((row) => row.dataIndex);
-      const newIds = tempValue.map((index) => schoolAllot[index]?.school_code);
-
-      // Convert array to a comma-separated string and store in localStorage
-      const selectedIdsString = newIds.join(",");
-      setSelectedSchoolIds(tempValue); // to trigger UI selection
-      localStorage.setItem("selectedSchoolIds", selectedIdsString);
-
-      console.log("Selected School IDs (string):", selectedIdsString);
-    },
-    customToolbarSelect: () => null,
-  };
 
   return (
     <Layout>
@@ -220,10 +183,34 @@ const SchoolAllotEdit = () => {
               <Spinner className="h-12 w-12" color="purple" />
             </div>
           ) : (
-            <MUIDataTable
-              data={schoolToAllot}
+            <MantineReactTable
               columns={columns}
-              options={options}
+              data={schoolToAllot}
+              enableDensityToggle={false}
+              enableColumnActions={false}
+              enableFullScreenToggle={false}
+              enableHiding={false}
+              state={{
+                rowSelection: selectedSchoolIds.reduce(
+                  (acc, id) => ({ ...acc, [id]: true }),
+                  {}
+                ),
+              }}
+              onRowSelectionChange={(newRowSelection) => {
+                const selectedIds = Object.keys(newRowSelection).filter(
+                  (key) => newRowSelection[key]
+                ); 
+
+                setSelectedSchoolIds(selectedIds);
+                localStorage.setItem(
+                  "selectedSchoolIds",
+                  selectedIds.join(",")
+                );
+
+                console.log("Selected School IDs:", selectedIds);
+              }}
+              enableRowSelection
+              enableFilters
             />
           )}
         </div>
