@@ -1,28 +1,24 @@
-import { Typography } from "@material-tailwind/react";
-import { HeartIcon } from "@heroicons/react/24/solid";
+import React from "react";
 
-export function Footer() {
-  const year = new Date().getFullYear();
-  const brandName = "AG Solutions";
-  const brandLink = "https://www.ag-solutions.in";
-
+const Footer = () => {
   return (
-    <footer className="py-2">
-      <div className="flex w-full flex-wrap items-center justify-center gap-6 px-2">
-        <Typography variant="small" className="font-normal text-inherit">
-          Copyright@ 2024-25 by{" "}
-          <a
-            href={brandLink}
-            target="_blank"
-            className="transition-colors hover:text-blue-500 font-bold"
-          >
-            {brandName}
-          </a>{" "}
-          . All rights reserved.
-        </Typography>
-      </div>
-    </footer>
+    <>
+
+     <div className="bg-[#FFFFFF]  rounded-lg shadow-sm p-2   ">
+     
+       
+       <div className=" flex flex-row items-center justify-between">
+         <h2 className="text-xs  text-gray-600 ">
+         Current Year - 2024-25
+         </h2>
+         <p className="text-xs  text-gray-600 ">
+         Handcrafted with love by AG Solutions.
+         </p>
+      
+     </div>
+   </div>
+   </>
   );
-}
+};
 
 export default Footer;

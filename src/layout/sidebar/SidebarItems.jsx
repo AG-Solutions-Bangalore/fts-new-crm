@@ -9,6 +9,7 @@ import NavGroup from "./NavGroup/NavGroup";
 const SidebarItems = ({ toggleMobileSidebar, isCollapsed }) => {
   const location = useLocation();
   const pathDirect = location.pathname;
+ 
 
   return (
     <Box sx={{ px: "20px"  }}>

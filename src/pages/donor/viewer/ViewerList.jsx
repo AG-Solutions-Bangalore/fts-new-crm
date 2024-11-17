@@ -168,7 +168,7 @@ const ViewerList = () => {
       });
   return (
     <Layout>
-        <div className="max-w-screen">
+        <div className="max-w-7xl">
        <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
             <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
               Viewer List

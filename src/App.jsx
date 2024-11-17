@@ -63,6 +63,7 @@ import Notification from "./pages/others/notification/Notification";
 import ManualGuideBook from "./pages/ManualGuideBook/ManualGuideBook";
 import SchoolAllot from "./pages/Students/SchoolAllot/SchoolAllot";
 import SchoolAllotEdit from "./pages/Students/SchoolAllot/SchoolAllotEdit";
+import DuplicateEdit from "./pages/donor/duplicate/DuplicateEdit";
 const App = () => {
   return (
     <>
@@ -82,6 +83,7 @@ const App = () => {
         <Route path="/edit-viewer/:id" element={<EditViewer />} />
         <Route path="/member-list" element={<MemberList />} />
         <Route path="/duplicate-list" element={<DuplicateList />} />
+        <Route path="/duplicate-edit/:id" element={<DuplicateEdit />} />
         {/* receipt  */}
         <Route path="/receipt-list" element={<ReceiptList />} />
         <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />

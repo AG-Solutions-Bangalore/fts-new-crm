@@ -54,10 +54,12 @@ const MemberList = () => {
       {
         accessorKey: "indicomp_full_name",
         header: "Full Name",
+        size:50,
       },
       {
         accessorKey: "indicomp_type",
         header: "Type",
+        size:50,
       },
 
       {
@@ -73,6 +75,7 @@ const MemberList = () => {
       {
         accessorKey: "spouse_contact",
         header: "Spouse/Contact",
+        size:50,
         Cell: ({ value, row }) => {
           const indicompType = row.original.indicomp_type;
           const spouseRow = row.original?.indicomp_spouse_name;
@@ -87,15 +90,18 @@ const MemberList = () => {
       {
         accessorKey: "indicomp_mobile_phone",
         header: "Mobile",
+        size:50,
       },
 
       {
         accessorKey: "indicomp_email",
         header: "Email",
+        size:50,
       },
       {
         accessorKey: "receipt.m_ship_vailidity",
         header: "Validity",
+        size:50,
         Cell: ({ row }) => {
           const Validity = row.original.receipt.m_ship_vailidity;
           return <span>31-3-{Validity}</span>;
@@ -105,6 +111,7 @@ const MemberList = () => {
       {
         id: "id",
         header: "Action",
+        size:50,
         Cell: ({ row }) => {
           const email = row.original.indicomp_email;
 

@@ -8,6 +8,7 @@ import {
   MdPhone,
   MdEmail,
   MdLocationOn,
+  MdWeb,
 } from "react-icons/md";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
@@ -182,185 +183,180 @@ const DonorView = ({ viewerId, onClose }) => {
       </div>
 
       {donor && (
-        <div className="space-y-6">
-          {/* Main Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Personal Information Card */}
-            <Card className="p-4 border-l-4 border-green-500  rounded-xl shadow-sm hover:shadow-md  hover:bg-gradient-to-r from-green-50 to-green-300 transition-shadow">
-              <div className="flex items-center gap-2 mb-4">
-                <MdPerson className="text-green-600 w-5 h-5" />
-                <h5 className="text-sm font-semibold text-black">
-                  Personal Information
-                </h5>
+            <div className="flex flex-col  bg-gray-50">
+            {/* Section 1: Personal/Company Information and Additional Details */}
+            <div className="w-full mb-8">
+              <div className="bg-white rounded-xl p-8 shadow-md">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                  {/* Personal/Company Info */}
+                  <div className="border-r pr-6">
+                    <SectionHeader
+                      icon={<MdPerson className="text-blue-600 w-6 h-6" />}
+                      title={donor.indicomp_type === "Individual" ? "Personal Information" : "Company Details"}
+                    />
+                    <div className="grid gap-4 mt-4">
+                      {donor.indicomp_type === "Individual" ? (
+                        <>
+                          <InfoField label="Father Name" value={donor.indicomp_father_name} />
+                          <InfoField label="Mother Name" value={donor.indicomp_mother_name} />
+                          <InfoField label="Spouse Name" value={donor.indicomp_spouse_name} />
+                          <InfoField
+                            label="Date of Birth"
+                            value={donor.indicomp_dob_annualday
+                              ? Moment(donor.indicomp_dob_annualday).format("DD MMMM, YYYY")
+                              : "Not Available"}
+                          />
+                          <InfoField label="Gender" value={donor.indicomp_gender} />
+                        </>
+                      ) : (
+                        <>
+                          <InfoField label="Contact Person" value={donor.indicomp_com_contact_name} />
+                          <InfoField label="Designation" value={donor.indicomp_com_contact_designation} />
+                          <InfoField label="CSR Status" value={donor.indicomp_csr} />
+                        </>
+                      )}
+                    </div>
+                  </div>
+      
+                  {/* Additional Details */}
+                  <div className="xl:col-span-2 mt-3 ">
+                    <SectionHeader
+                      icon={<IconInfoCircle className="text-purple-600 w-6 h-6" />}
+                      title="Additional Details"
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                      <InfoField label="Belongs To" value={donor.indicomp_belongs_to} />
+                      <InfoField label="PAN Number" value={donor.indicomp_pan_no} />
+                      <InfoField label="Promoter" value={donor.indicomp_promoter} />
+                      <InfoField label="Source" value={donor.indicomp_source} />
+                      <InfoField label="Donor Type" value={donor.indicomp_donor_type} />
+                      <InfoField label="Type" value={donor.indicomp_type} />
+                      <InfoField label="Remarks" value={donor.indicomp_remarks} />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-4">
-                {donor.indicomp_type === "Individual" ? (
-                  <>
-                    <InfoField
-                      label="Father Name"
-                      value={donor.indicomp_father_name}
+            </div>
+      
+            {/* Section 2: Contact and Address Information */}
+            <div className="w-full">
+              <div className="bg-white rounded-xl p-8  shadow-md">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Contact Information */}
+                  <div>
+                    <SectionHeader
+                      icon={<MdPhone className="text-green-600 w-6 h-6" />}
+                      title="Contact Information"
                     />
-                    <InfoField
-                      label="Mother Name"
-                      value={donor.indicomp_mother_name}
+                    <div className="grid gap-4 mt-4">
+                      <ContactItem
+                        icon={<MdPhone className="text-blue-500 w-5 h-5" />}
+                        label="Mobile"
+                        value={donor.indicomp_mobile_phone}
+                      />
+                      <ContactItem
+                        icon={<MdPhone className="text-green-500 w-5 h-5" />}
+                        label="WhatsApp"
+                        value={donor.indicomp_mobile_whatsapp}
+                      />
+                      <ContactItem
+                        icon={<MdEmail className="text-orange-500 w-5 h-5" />}
+                        label="Email"
+                        value={donor.indicomp_email}
+                      />
+                      <ContactItem
+                        icon={<MdWeb className="text-red-500 w-5 h-5" />}
+                        label="Website"
+                        value={donor.indicomp_website}
+                      />
+                     
+                    </div>
+                  </div>
+      
+                  {/* Address Information */}
+                  <div>
+                    <SectionHeader
+                      icon={<MdLocationOn className="text-orange-600 w-6 h-6" />}
+                      title="Address Information"
                     />
-                    <InfoField
-                      label="Spouse Name"
-                      value={donor.indicomp_spouse_name}
-                    />
-                    <InfoField
-                      label="DOB"
-                      value={
-                        donor.indicomp_dob_annualday
-                          ? Moment(donor.indicomp_dob_annualday).format(
-                              "DD-MM-YYYY"
-                            )
-                          : "N/A"
-                      }
-                    />
-                    <InfoField label="Gender" value={donor.indicomp_gender} />
-                  </>
-                ) : (
-                  <>
-                    <InfoField
-                      label="Contact Name"
-                      value={donor.indicomp_com_contact_name}
-                    />
-                    <InfoField
-                      label="Designation"
-                      value={donor.indicomp_com_contact_designation}
-                    />
-                    <InfoField label="CSR" value={donor.indicomp_csr} />
-                  </>
-                )}
+                    <div className="space-y-8 mt-4">
+                      <AddressDisplay
+                        title="Residence Address"
+                        address={
+                          donor.indicomp_res_reg_address
+                            ? {
+                                address: donor.indicomp_res_reg_address,
+                                area: donor.indicomp_res_reg_area,
+                                landmark: donor.indicomp_res_reg_ladmark,
+                                city: donor.indicomp_res_reg_city,
+                                state: donor.indicomp_res_reg_state,
+                                pincode: donor.indicomp_res_reg_pin_code,
+                              }
+                            : null
+                        }
+                      />
+                      <AddressDisplay
+                        title="Office Address"
+                        address={
+                          donor.indicomp_off_branch_address
+                            ? {
+                                address: donor.indicomp_off_branch_address,
+                                area: donor.indicomp_off_branch_area,
+                                landmark: donor.indicomp_off_branch_ladmark,
+                                city: donor.indicomp_off_branch_city,
+                                state: donor.indicomp_off_branch_state,
+                                pincode: donor.indicomp_off_branch_pin_code,
+                              }
+                            : null
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </Card>
-
-            {/* Communication Card */}
-            <Card className="p-4 border-l-4 border-red-500  hover:bg-gradient-to-r from-red-50 to-red-300  rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-2 mb-4">
-                <MdPhone className="text-green-600 w-5 h-5" />
-                <h5 className="text-sm font-semibold text-black">
-                  Communication Details
-                </h5>
-              </div>
-              <div className="space-y-4">
-                <InfoField
-                  label="Mobile"
-                  value={donor.indicomp_mobile_phone}
-                  icon={<MdPhone />}
-                />
-                <InfoField
-                  label="WhatsApp"
-                  value={donor.indicomp_mobile_whatsapp}
-                  icon={<MdPhone />}
-                />
-                <InfoField
-                  label="Email"
-                  value={donor.indicomp_email}
-                  icon={<MdEmail />}
-                />
-                <InfoField label="Website" value={donor.indicomp_website} />
-              </div>
-            </Card>
+            </div>
           </div>
-
-          {/* Additional Information Card */}
-          <Card className="p-4 border-l-4 border-blue-500  hover:bg-gradient-to-r from-blue-50 to-blue-300  rounded-xl shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-2 mb-4">
-              <IconInfoCircle className="text-green-600 w-5 h-5" />
-              <h5 className="text-sm font-semibold text-black">
-                Additional Information
-              </h5>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <InfoField label="Belongs To" value={donor.indicomp_belongs_to} />
-              <InfoField label="PAN Number" value={donor.indicomp_pan_no} />
-              <InfoField label="Promoter" value={donor.indicomp_promoter} />
-              <InfoField label="Source" value={donor.indicomp_source} />
-              <InfoField label="Donor Type" value={donor.indicomp_donor_type} />
-              <InfoField label="Type" value={donor.indicomp_type} />
-            </div>
-            <div className="mt-4">
-              <InfoField
-                label="Remarks"
-                value={donor.indicomp_remarks}
-                fullWidth
-              />
-            </div>
-          </Card>
-
-          {/* Address Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="p-4 border-l-4 border-yellow-500  hover:bg-gradient-to-r from-yellow-50 to-yellow-300  rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-2 mb-4">
-                <MdLocationOn className="text-green-600 w-5 h-5" />
-                <h5 className="text-sm font-semibold text-black">
-                  Residence Address
-                </h5>
-              </div>
-              <AddressField
-                address={
-                  donor.indicomp_res_reg_address
-                    ? {
-                        address: donor.indicomp_res_reg_address,
-                        area: donor.indicomp_res_reg_area,
-                        landmark: donor.indicomp_res_reg_ladmark,
-                        city: donor.indicomp_res_reg_city,
-                        state: donor.indicomp_res_reg_state,
-                        pincode: donor.indicomp_res_reg_pin_code,
-                      }
-                    : null
-                }
-              />
-            </Card>
-
-            <Card className="p-4 border-l-4 border-yellow-500  hover:bg-gradient-to-r from-yellow-50 to-yellow-300    rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-2 mb-4">
-                <MdBusiness className="text-green-600 w-5 h-5" />
-                <h5 className="text-sm font-semibold text-black">
-                  Office Address
-                </h5>
-              </div>
-              <AddressField
-                address={
-                  donor.indicomp_off_branch_address
-                    ? {
-                        address: donor.indicomp_off_branch_address,
-                        area: donor.indicomp_off_branch_area,
-                        landmark: donor.indicomp_off_branch_ladmark,
-                        city: donor.indicomp_off_branch_city,
-                        state: donor.indicomp_off_branch_state,
-                        pincode: donor.indicomp_off_branch_pin_code,
-                      }
-                    : null
-                }
-              />
-            </Card>
-          </div>
-        </div>
       )}
     </div>
   );
 };
 
-const InfoField = ({ label, value, icon }) => (
-  <div className="relative">
-    <label className=" text-sm font-semibold text-black mb-1 flex items-center gap-2">
-      {icon && <span className="text-gray-500">{icon}</span>}
-      {label}
-    </label>
-    <div className="w-full px-3 py-2 text-xs border rounded-lg border-green-500 bg-white hover:bg-gray-50 transition-colors">
-      {value || "N/A"}
-    </div>
+
+const SectionHeader = ({ icon, title }) => (
+  <div className="flex items-center gap-3 mb-4">
+    <div className="bg-gray-100 p-2 rounded-lg">{icon}</div>
+    <h5 className="text-lg font-semibold text-black">{title}</h5>
   </div>
 );
 
-const AddressField = ({ address }) => (
-  <div className="w-full px-3 py-2 text-xs border rounded-lg border-green-500 bg-white hover:bg-gray-50 transition-colors min-h-[2.5rem]">
-    {address
-      ? `${address.address}, ${address.area}, ${address.landmark}, ${address.city}, ${address.state} - ${address.pincode}`
-      : "N/A"}
+const InfoField = ({ label, value }) => (
+  <div className="space-y-1">
+    <p className="text-sm font-medium text-gray-600">{label}</p>
+    <p className="text-sm text-gray-900">{value || "Not Available"}</p>
+  </div>
+);
+
+const ContactItem = ({ icon, label, value }) => (
+  <div className="flex items-center gap-4">
+    {icon}
+    <InfoField label={label} value={value} />
+  </div>
+);
+
+const AddressDisplay = ({ title, address }) => (
+  <div className="space-y-2">
+    <h6 className="text-sm font-medium text-gray-600">{title}</h6>
+    <div className="text-sm text-gray-900 leading-relaxed">
+      {address ? (
+        <div className="space-y-1">
+          <p>{address.address}</p>
+          <p>{address.area}{address.landmark && `, ${address.landmark}`}</p>
+          <p>{address.city}, {address.state} - {address.pincode}</p>
+        </div>
+      ) : (
+        <p>Address not available</p>
+      )}
+    </div>
   </div>
 );
 

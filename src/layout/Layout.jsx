@@ -2,6 +2,7 @@ import { styled, Container, Box } from "@mui/material";
 import Sidebar from "./sidebar/Sidebar";
 import Header from "./header/Header";
 import React from "react";
+import Footer from "../components/Footer";
 
 
 const MainWrapper = styled("div")(() => ({
@@ -63,6 +64,7 @@ const Layout = ({ children }) => {
           {/* End Page */}
           {/* ------------------------------------------- */}
         </Container>
+       <div className="p-4 md:p-7 lg:p-7"> <Footer /></div>
       </PageWrapper>
     </MainWrapper>
   );

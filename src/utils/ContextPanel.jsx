@@ -59,6 +59,7 @@ const AppProvider = ({ children }) => {
           "/edit-viewer",
           "/duplicate-list",
           "/create-receipts",
+          "/duplicate-edit",
           //master
           "/master/chapters",
           "/edit-chapter",
