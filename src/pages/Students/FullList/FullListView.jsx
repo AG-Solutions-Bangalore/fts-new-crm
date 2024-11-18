@@ -1,20 +1,30 @@
 import { useParams } from "react-router-dom";
-import Layout from "../../../layout/Layout";
-import PageTitle from "../../../components/common/PageTitle";
-import { IoArrowBack } from "react-icons/io5";
-import { Card } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import moment from "moment";
+import { Card } from "@material-tailwind/react";
+import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
-import moment from "moment/moment";
-import { IconArrowBack } from "@tabler/icons-react";
 
-function FullListView() {
+// Reusable Components
+const SectionHeader = ({ title }) => (
+  <div className="flex justify-between items-center py-3 border-b border-gray-300">
+    <h5 className="text-lg font-semibold text-gray-700">{title}</h5>
+  </div>
+);
+
+const InfoField = ({ label, value }) => (
+  <div className="flex justify-between py-2">
+    <p className="text-sm font-medium text-gray-800">{label}</p>
+    <p className="text-sm text-gray-800">{value || "Not Available"}</p>
+  </div>
+);
+
+const FullListView = () => {
   const { id } = useParams();
-  const [schooladoption, setSchoolAdoption] = useState([]);
   const [school, setSchool] = useState({});
+  const [schoolAdoption, setSchoolAdoption] = useState([]);
 
-  //FRTCH chapterwise
   useEffect(() => {
     const fetchSchoolData = async () => {
       try {
@@ -26,193 +36,112 @@ function FullListView() {
             },
           }
         );
-
         setSchool(response.data.schools);
         setSchoolAdoption(response.data.schoolsadoption);
       } catch (error) {
-        console.error("Error fetching year data:", error);
+        console.error("Error fetching school data:", error);
       }
     };
 
     fetchSchoolData();
-  }, []);
-  console.log(schooladoption);
-  console.log(school);
+  }, [id]);
+
   return (
-    <>
-      <Layout>
-        <div className="sticky top-0 p-2 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
-          <h4 className="text-black flex items-center text-center md:text-left">
-            <PageTitle
-              title="School Details"
-              icon={IconArrowBack}
-              backLink="/students-full-list"
-            />
-          </h4>
-        </div>
-        <hr />
+    <Layout>
+      <div className="max-w-screen">
+       
+        
 
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-10 gap-4">
-            <Card className="md:col-span-7 p-4">
-              <div className="p-1 text-xl flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4">
-                <h3 className="text-blue-500">{school.msid_fund}</h3>
-                <h3 className="text-blue-500">
-                  {school.village} - {school.district}
-                </h3>
-              </div>
-              <hr />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Main School Info */}
+          <Card className="lg:col-span-8 p-6 space-y-6 shadow-lg">
+          <div className=" flex flex-row items-center justify-between">
+          <div >
+            <h1 className="border-b-2  font-[500] border-dashed border-orange-800">
+            School Details
+            </h1>
+         
+          </div>
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-blue-600">
+                {school.msid_fund}
+              </h3>
+              <p className="text-black">
+                {school.village}, {school.district}
+              </p>
+            </div>
+          </div>
+            <hr />
+          
+            <div >
+              <InfoField label="School" value={`${school.village} (${school.school_id})`} />
+              <InfoField label="Opening Date" value={moment(school.date_of_opening).format("DD-MM-YYYY")} />
+              <InfoField label="Region" value={`${school.region} (${school.region_code})`} />
+              <InfoField label="Acchal" value={`${school.achal} (${school.achal_code})`} />
+              <InfoField label="Cluster" value={`${school.cluster} (${school.cluster_code})`} />
+              <InfoField label="Sub Cluster" value={`${school.sub_cluster} (${school.sub_cluster_code})`} />
+              <InfoField label="Teacher Name" value={`${school.teacher} (${school.teacher_gender})`} />
+              <InfoField label="Total Students (Boys/Girls)" value={`${school.total} (${school.boys} / ${school.girls})`} />
+            </div>
+          </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                <p>
-                  <strong className="flex">School:</strong>
-                  <span className="text-blue-500">
-                    {school.village} - ({school.school_id})
-                  </span>
-                </p>
-                <p>
-                  <strong className="flex">Opening Date:</strong>
-                  <span className="text-blue-500">
-                    {moment(school.date_of_opening).format("DD-MM-YYYY")}
-                  </span>
-                </p>
-                <p>
-                  <strong className="flex">Region:</strong>
-                  <span className="text-blue-500">
-                    {school.region} - ({school.region_code})
-                  </span>
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                <p>
-                  <strong className="flex">Achal:</strong>
-                  <span className="text-blue-500">
-                    {school.achal} - ({school.achal_code})
-                  </span>
-                </p>
-                <p>
-                  <strong className="flex">Cluster:</strong>
-                  <span className="text-blue-500">
-                    {school.cluster} - ({school.cluster_code})
-                  </span>
-                </p>
-                <p>
-                  <strong className="flex">Sub Cluster:</strong>
-                  <span className="text-blue-500">
-                    {school.sub_cluster} - ({school.sub_cluster_code})
-                  </span>
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                <p>
-                  <strong className="flex">Teacher Name:</strong>
-                  <span className="text-blue-500">
-                    {school.teacher} - ({school.teacher_gender})
-                  </span>
-                </p>
-                <p>
-                  <strong className="flex">Total - Boys/Girls:</strong>
-                  <span className="text-blue-500">
-                    {school.total} - ({school.boys} / {school.girls})
-                  </span>
-                </p>
-              </div>
-
-              <h3 className="text-xl font-bold p-4">Village</h3>
-              <hr />
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-                <p>
-                  <strong className="flex">Total Population:</strong>
-                  <span className="text-blue-500">{school.population}</span>
-                </p>
-                <p>
-                  <strong className="flex">Male Literacy:</strong>
-                  <span className="text-blue-500">
-                    {school.literacy_rate_male}
-                  </span>
-                </p>
-                <p>
-                  <strong className="flex">Female Literacy:</strong>
-                  <span className="text-blue-500">
-                    {school.literacy_rate_female}
-                  </span>
-                </p>
+          {/* Additional Info and Contacts */}
+          <div className="lg:col-span-4 space-y-6">
+            <Card className="p-6 shadow-lg">
+              <SectionHeader title="Contact Information" />
+              <div className="mt-4">
+                <InfoField label="Samiti Pramukh" value={school.vidyalaya_samity_pramukh} />
+                <InfoField label="VCF" value={`${school.vcf_name} (${school.vcf_phone})`} />
+                <InfoField label="SCF" value={`${school.scf_name} (${school.scf_phone})`} />
               </div>
             </Card>
 
-            <div className="flex flex-col md:col-span-3 space-y-4">
-              <Card className="w-full">
-                <div className="p-5 text-md">
-                  <h3 className="text-lg">Contact Info</h3>
-                  <hr className="my-2" />
-
-                  <div className="my-2">
-                    <span className="text-blue-500">
-                      Samiti Pramukh - {school.vidyalaya_samity_pramukh}
-                    </span>
-                  </div>
-                  <div className="my-2">
-                    <span className="text-blue-500">
-                      VCF - {school.vcf_name} - ({school.vcf_phone})
-                    </span>
-                  </div>
-                  <div className="my-2">
-                    <span className="text-blue-500">
-                      SCF - {school.scf_name} - ({school.scf_phone})
-                    </span>
-                  </div>
-                </div>
-              </Card>
-
-              <Card>
-                <div className="p-5 text-lg">
-                  <h3>Adoption Details</h3>
-                  <hr className="my-2 border-gray-300" />
-
-                  {schooladoption.length > 0 ? (
-                    <table className="w-full border-collapse mt-4">
-                      <thead>
-                        <tr className="bg-gray-100 text-sm">
-                          <th className="p-3 border-b-2 border-gray-200">
-                            FTS
-                          </th>
-                          <th className="p-3 border-b-2 border-gray-200">
-                            Name
-                          </th>
-                          <th className="p-3 border-b-2 border-gray-200">
-                            Year
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {schooladoption.map((adoption, key) => (
-                          <tr key={key} className="hover:bg-gray-50 text-sm">
-                            <td className="p-3 border-b border-gray-200">
-                              {adoption.individual_company.indicomp_fts_id}
-                            </td>
-                            <td className="p-3 border-b border-gray-200">
-                              {adoption.individual_company.indicomp_full_name}
-                            </td>
-                            <td className="p-3 border-b border-gray-200">
-                              {adoption.schoolalot_financial_year}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p className="text-gray-500 mt-4">No data available</p>
-                  )}
-                </div>
-              </Card>
-            </div>
+            <Card className="p-6 shadow-lg">
+              <SectionHeader title="Village Statistics" />
+              <div className="mt-4">
+                <InfoField label="Total Population" value={school.population} />
+                <InfoField label="Male Literacy" value={school.literacy_rate_male} />
+                <InfoField label="Female Literacy" value={school.literacy_rate_female} />
+              </div>
+            </Card>
           </div>
         </div>
-      </Layout>
-    </>
+
+        {/* Adoption Details */}
+        <Card className="mt-4 p-4 shadow-lg">
+          <SectionHeader title="Adoption Details" />
+          {schoolAdoption.length > 0 ? (
+            <table className="w-full mt-4 border-collapse">
+              <thead>
+                <tr className="bg-gray-100 text-sm">
+                  <th className="p-3 border-b border-gray-300">FTS</th>
+                  <th className="p-3 border-b border-gray-300">Name</th>
+                  <th className="p-3 border-b border-gray-300">Year</th>
+                </tr>
+              </thead>
+              <tbody>
+                {schoolAdoption.map((adoption, index) => (
+                  <tr key={index} className="hover:bg-gray-50 text-sm">
+                    <td className="p-3 border-b border-gray-200">
+                      {adoption.individual_company.indicomp_fts_id}
+                    </td>
+                    <td className="p-3 border-b border-gray-200">
+                      {adoption.individual_company.indicomp_full_name}
+                    </td>
+                    <td className="p-3 border-b border-gray-200">
+                      {adoption.schoolalot_financial_year}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-gray-500 mt-4">No adoption data available</p>
+          )}
+        </Card>
+      </div>
+    </Layout>
   );
-}
+};
+
 export default FullListView;

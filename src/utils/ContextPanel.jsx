@@ -113,10 +113,11 @@ const AppProvider = ({ children }) => {
           "/students-full-list-view",
           "/students-addschoolalot",
           "/students-schoolallot",
+          "/repeat-donor-allot",
           "/students-allotedit",
           "/students-allotview",
+          "/students-report-donor",
           "/students-allotletter",
-          "/students/report-donor-allotlist",
           "/students-schoolallot",
           "/students-allotedit",
 

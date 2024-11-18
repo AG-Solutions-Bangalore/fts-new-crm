@@ -12,7 +12,7 @@ import {
   Dialog,
   FormLabel,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { IconMail, IconUser, IconCircleX } from "@tabler/icons-react";
 import Logout from "../../components/Logout";
@@ -35,12 +35,13 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-
+  const token = localStorage.getItem("token")
+  const location = useLocation(); 
   const getData = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/fetch-profile`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       setFirstName(res.data.user.first_name || "");
@@ -51,9 +52,13 @@ const Profile = () => {
       toast.error("Failed to load profile data");
     }
   };
+  
   useEffect(() => {
-    getData();
-  }, []);
+    if (token && location.pathname === "/profile") {
+   
+      getData();
+    }
+  }, [location.pathname, token]);
   const onUpdateProfile = async (e) => {
     e.preventDefault();
     if (!firstName) {

@@ -1,23 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { ContextPanel } from "../../../utils/ContextPanel";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
-import { Card, Spinner, Button } from "@material-tailwind/react";
-import toast from "react-hot-toast";
+import { Card, Button } from "@material-tailwind/react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
-import { FormLabel } from "@mui/material";
+import { toast } from "react-toastify";
+import MUIDataTable from "mui-datatables";
 
 const SchoolAllotEdit = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
-  const { isPanelUp } = useContext(ContextPanel);
+ 
   const [schoolAllot, setSchoolAllot] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]); // Keep track of selected rows
   const navigate = useNavigate();
+
   const id = localStorage.getItem("sclaltid");
   const year = localStorage.getItem("sclaltyear");
 
@@ -51,7 +50,6 @@ const SchoolAllotEdit = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         const response = await axios.get(
           `${BASE_URL}/api/fetch-schoolsallot-by-id/${id}`,
@@ -75,6 +73,7 @@ const SchoolAllotEdit = () => {
         const schoolsData = schoolsResponse.data.schools || [];
         setSchoolAllot(schoolsData);
 
+        // Set initial selected rows based on schoolalot_school_id
         const defaultSelectedRows = schoolsData.reduce((acc, school, index) => {
           if (schoolalot.schoolalot_school_id?.includes(school.school_code)) {
             acc.push(index);
@@ -82,7 +81,17 @@ const SchoolAllotEdit = () => {
           return acc;
         }, []);
         setSelectedSchoolIds(defaultSelectedRows);
-        setSchoolToAllot(schoolsData);
+        setSchoolToAllot(
+          schoolsData.map((item) => [
+            item.school_state,
+            item.district,
+            item.achal,
+            item.cluster,
+            item.sub_cluster,
+            item.village,
+            item.school_code,
+          ])
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -91,12 +100,12 @@ const SchoolAllotEdit = () => {
     };
 
     fetchData();
-  }, [id, year, isPanelUp, schoolalot.schoolalot_financial_year]);
+  }, [id, year, schoolalot.schoolalot_financial_year]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const selectedIds = selectedSchoolIds.join(","); // Get selected school IDs
+    const selectedIds = localStorage.getItem("selectedSchoolIds") || "";
     const data = {
       donor_related_id: id,
       schoolalot_financial_year: schoolalot.schoolalot_financial_year,
@@ -118,74 +127,69 @@ const SchoolAllotEdit = () => {
   };
 
   const columns = [
-    { accessorKey: "school_state", header: "State" },
-    { accessorKey: "district", header: "District" },
-    { accessorKey: "achal", header: "Achal" },
-    { accessorKey: "cluster", header: "Cluster" },
-    { accessorKey: "sub_cluster", header: "Sub Cluster" },
-    { accessorKey: "village", header: "Village" },
-    { accessorKey: "school_code", header: "School Code" },
+    { name: "State", label: "State" },
+    { name: "District", label: "District" },
+    { name: "Achal", label: "Achal" },
+    { name: "Cluster", label: "Cluster" },
+    { name: "Sub Cluster", label: "Sub Cluster" },
+    { name: "Village", label: "Village" },
+    { name: "School Code", label: "School Code" },
   ];
-  const onRowSelectionChange = (rows) => {
-    // Get all selected row IDs from the `rows` object
-    const selectedIds = Object.keys(rows)
-      .filter((key) => rows[key] === true) // Only include selected rows (those with value `true`)
-      .map((key) => {
-        const rowIndex = parseInt(key, 10); // Convert key to number to get correct index
-        return schoolToAllot[rowIndex]?.school_code; // Map to school_code of selected rows
-      });
 
-    // Update the selected school IDs state
-    setSelectedSchoolIds(selectedIds);
-    console.log("Selected School IDs:", selectedIds); // For debugging purposes
+  const options = {
+    filterType: "checkbox",
+    filter: true,
+    search: true,
+    print: false,
+    viewColumns: false,
+    download: false,
+    selectableRows: true,
+    responsive: "standard",
+    rowsSelected: selectedSchoolIds,
+    // selectableRows: "multiple",
+    selectToolbarPlacement: "above",
+    isRowSelectable: (dataIndex) =>
+      schoolAllot[dataIndex]?.status_label !== "Allotted",
+    selectableRowsOnClick: true,
+    onRowSelectionChange: (currentRowSelected, allRowsSelected) => {
+      const tempValue = allRowsSelected.map((row) => row.dataIndex);
+      const newIds = tempValue.map((index) => schoolAllot[index]?.school_code);
+
+      // Convert array to a comma-separated string and store in localStorage
+      const selectedIdsString = newIds.join(",");
+      setSelectedSchoolIds(tempValue); // to trigger UI selection
+      localStorage.setItem("selectedSchoolIds", selectedIdsString);
+
+      console.log("Selected School IDs (string):", selectedIdsString);
+    },
+    customToolbarSelect: () => null,
   };
+
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
 
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed";
 
-  // const table = useMantineReactTable({
-  // columns={columns}
-  // data={schoolToAllot}
-  //   enableRowSelection: (row) => row.original.status_label !== "Allotted", // Disable selection for "Allotted" rows
-  //   getRowId: (originalRow) => originalRow.school_code,
-  //   onRowSelectionChange: setRowSelection,
-  //   enableDensityToggle: false,
-  //   enableColumnActions: false,
-  //   enableFullScreenToggle: false,
-  //   enableHiding: false,
-  //   state: { rowSelection },
-  //   getRowProps: (row) => ({
-  //     style: {
-  //       cursor:
-  //         row.original.status_label === "Allotted" ? "not-allowed" : "pointer",
-  //       backgroundColor:
-  //         row.original.status_label === "Allotted" ? "#f0f0f0" : "white",
-  //     },
-  //   }),
-  // });
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center h-full">
+          Loading...
+        </div>
+      </Layout>
+    );
+  }
 
-  //   <MantineReactTable
-  //   columns={columns}
-  //   data={schoolToAllot}
-  //   enableDensityToggle={false}
-  //   enableColumnActions={false}
-  //   enableFullScreenToggle={false}
-  //   enableHiding={false}
-  //   state={{
-  //     rowSelection: selectedSchoolIds.reduce(
-  //       (acc, id) => ({ ...acc, [id]: true }),
-  //       {}
-  //     ),
-  //   }}
-  //   onRowSelectionChange={onRowSelectionChange}
-  //   enableRowSelection
-  //   enableFilters
-  // />
   return (
     <Layout>
-      <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
-        <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
-          <div className="flex  items-center gap-2">
+      <div className="sticky top-0 p-2 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
+        <h2 className="px-5 text-[black] text-lg flex flex-row justify-between items-center rounded-xl p-2">
+          <div className="flex items-center gap-2">
             <IconInfoCircle className="w-4 h-4" />
             <span>Donor Details</span>
           </div>
@@ -242,14 +246,13 @@ const SchoolAllotEdit = () => {
           </div>
         </div>
         <div className="mt-5">
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <Spinner className="h-12 w-12" color="purple" />
-            </div>
-          ) : (
-            // <MantineReactTable table={table} />
-            <h1>test</h1>
-          )}
+          {/* <MantineReactTable table={table} /> */}
+          <MUIDataTable
+          title ="School List"
+              data={schoolToAllot}
+              columns={columns}
+              options={options}
+            />
         </div>
         <div className="mt-5 flex justify-end p-4">
           <Button onClick={onSubmit} color="purple">

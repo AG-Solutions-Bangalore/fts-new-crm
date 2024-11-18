@@ -1,229 +1,137 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Layout from "../../../layout/Layout";
 import { ContextPanel } from "../../../utils/ContextPanel";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
-import { MdConfirmationNumber, MdEdit } from "react-icons/md";
-import MUIDataTable from "mui-datatables";
-import { Spinner } from "@material-tailwind/react";
-import PageTitle from "../../../components/common/PageTitle";
-import moment from "moment/moment";
+
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { IconEdit } from "@tabler/icons-react";
+import { toast } from "react-toastify";
 
 const AllotedList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentYear, setCurrentYear] = useState("");
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
-  const [check, setCheck] = useState(false);
-  //fetchyear
-  const [currentYear, setCurrentYear] = useState("");
+  const { id } = useParams();
+  const userId = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
+  
+  const fetchYearData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCurrentYear(response.data.year.current_year);
+    } catch (error) {
+      console.error("Error fetching year data:", error);
+    }
+  };
+
+  // Fetch school allotment data
+  const fetchSchoolAllotData = async () => {
+    if (!isPanelUp) {
+      navigate("/maintenance");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}/api/fetch-school-allot-repeat/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSchoolAllot(response.data?.schoolAllot || []);
+    } catch (error) {
+      console.error("Error fetching school allot data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const updateNext = async (e, allotId) => {
+    e.preventDefault();
+    console.log("current year",currentYear)
+    if (!currentYear) {
+      toast.error("Current year is required for updating.");
+      return;
+    }
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/api/update-schoolsallot-repeat/${allotId}`,
+        { schoolalot_financial_year: currentYear },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Donor allotment updated successfully.");
+      navigate("/home");
+    } catch (error) {
+      console.error("Error updating allotment:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchYearData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        setCurrentYear(response.data.year.current_year);
-        console.log("Current Year:", response.data.year.current_year);
-      } catch (error) {
-        console.error("Error fetching year data:", error);
-      }
-    };
-
     fetchYearData();
   }, []);
 
   useEffect(() => {
-    const fetchApprovedRData = async () => {
-      if (!isPanelUp) {
-        navigate("/maintenance");
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${BASE_URL}/api/fetch-school-allot`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const res = response.data?.schoolAllot;
-        if (Array.isArray(res)) {
-          const tempRows = res.map((item, index) => [
-            index + 1,
-            item["indicomp_full_name"],
-            item["schoolalot_financial_year"],
-            moment(item["schoolalot_from_date"]).format("DD-MM-YYYY"),
-            moment(item["schoolalot_to_date"]).format("DD-MM-YYYY"),
-
-            item["receipt_no_of_ots"],
-
-            item["no_of_schools_allotted"],
-            item["receipt_no_of_ots"] - item["no_of_schools_allotted"],
-            item["id"],
-          ]);
-          setSchoolAllot(tempRows);
-        }
-      } catch (error) {
-        console.error("Error fetching approved list request data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchApprovedRData();
-  }, [isPanelUp, navigate]);
-  //put
-  const updatenext = (value) => {
-    let data = {
-      schoolalot_financial_year: currentYear,
-    };
-    axios({
-      url: BASE_URL + "/api/update-schoolsallot-repeat/" + value,
-      method: "PUT",
-      data,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      console.log("edit1", res.data);
-    });
-  };
-
-  const columns = [
+    fetchSchoolAllotData();
+  }, [id]);
+ 
+  const columns = useMemo(() => [
+    { accessorKey: "indicomp_full_name", header: "Donor Name", size: 50 },
+    { accessorKey: "schoolalot_year", header: "School Allot Year", size: 50 },
+    { accessorKey: "schoolalot_from_date", header: "From Date", size: 50 },
+    { accessorKey: "schoolalot_to_date", header: "To Date", size: 50 },
+    { accessorKey: "receipt_no_of_ots", header: "OTS Received", size: 50 },
+    { accessorKey: "no_of_schools_allotted", header: "Schools Allotted", size: 50 },
     {
-      name: "#",
-      label: "#",
-      options: {
-        filter: false,
-        sort: false,
-      },
+      accessorKey: "pending",
+      header: "Pending",
+      size: 50,
+      Cell: ({ row }) => row.original.receipt_no_of_ots - row.original.no_of_schools_allotted,
     },
     {
-      name: "Donor Name",
-      label: "Donor Name",
-      options: {
-        filter: false,
-        sort: false,
-      },
+      id: "id",
+      header: userId === "1" ? "Action" : "",
+      size: 50,
+      Cell: ({ row }) => (
+        userId === "1" && (
+          <IconEdit
+            className="h-5 w-5 text-blue-500 cursor-pointer"
+            title="Update Next"
+            onClick={(e) => updateNext(e, row.original.id)}
+          />
+        )
+      ),
     },
-    {
-      name: "School Allot Year",
-      label: "School Allot Year",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "From Date",
-      label: "From Date",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "To Date",
-      label: "To Date",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "OTS Received",
-      label: "OTS Received",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "Schools Allotted",
-      label: "Schools Allotted",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "Pending",
-      label: "Pending ",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: localStorage.getItem("id") == 1 ? "Action" : "",
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: (value) => {
-          const handleedit = () => {
-            updatenext(value);
-          };
+  ], [currentYear, userId]);
 
-          return (
-            <div>
-              <div onClick={handleedit}>
-                <Link
-                  style={{
-                    display: localStorage.getItem("id") == 1 ? "" : "none",
-                  }}
-                >
-                  <MdEdit
-                    title="edit"
-                    className="h-5 w-5 cursor-pointer text-blue-500"
-                  />{" "}
-                </Link>
-              </div>
-            </div>
-          );
-        },
-      },
-    },
-  ];
+  const table = useMantineReactTable({
+    columns,
+    data: schoolAllot || [],
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableHiding: false,
+    enableStickyHeader: true,
+    enableStickyFooter: true,
+    mantineTableContainerProps: { sx: { maxHeight: "400px" } },
+  });
 
-  const options = {
-    selectableRows: "none",
-    elevation: 0,
-    responsive: "standard",
-    viewColumns: true,
-    download: false,
-    print: false,
-    setRowProps: (rowData) => {
-      return {
-        style: {
-          borderBottom: "10px solid #f1f7f9",
-        },
-      };
-    },
-  };
 
   return (
     <Layout>
-      <PageTitle title="Schools Allotted List" />
-      <div className="mt-5">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Spinner className="h-12 w-12" color="purple" />
+    
+      <div className="max-w-screen">
+          <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
+            <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
+            Schools Allotted List(Repeat Donor)
+            </h1>
+           
           </div>
-        ) : (
-          <MUIDataTable
-            data={schoolAllot ? schoolAllot : []}
-            columns={columns}
-            options={options}
-          />
-        )}
-      </div>
+          <div className=" shadow-md">
+            <MantineReactTable table={table} />
+          </div>
+        </div>
     </Layout>
   );
 };

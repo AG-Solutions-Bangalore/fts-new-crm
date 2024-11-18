@@ -1,18 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { ContextPanel } from "../../../utils/ContextPanel";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
-import { Spinner } from "@material-tailwind/react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEye } from "@tabler/icons-react";
 
 const FullList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
-  const navigate = useNavigate();
+ 
   const [currentYear, setCurrentYear] = useState("");
   const [chapter, setChapter] = useState([]);
 
@@ -57,7 +54,7 @@ const FullList = () => {
       }
     };
     fetchApprovedRData();
-  }, [isPanelUp, navigate, currentYear]);
+  }, [ currentYear]);
 
   // Fetch Chapterwise Data
   useEffect(() => {
@@ -83,20 +80,22 @@ const FullList = () => {
   const columns = [
     {
       accessorKey: "index",
-      header: "#",
+      header: "Sl No.",
+      size:50,
       Cell: ({ row }) => <span>{row.index + 1}</span>,
     },
-    { accessorKey: "school_state", header: "State" },
-    { accessorKey: "district", header: "District" },
-    { accessorKey: "achal", header: "Achal" },
-    { accessorKey: "cluster", header: "Cluster" },
-    { accessorKey: "sub_cluster", header: "Sub Cluster" },
-    { accessorKey: "village", header: "Village" },
-    { accessorKey: "school_code", header: "School Code" },
-    { accessorKey: "status_label", header: "Status" },
+    { accessorKey: "school_state", header: "State",size:50, },
+    { accessorKey: "district", header: "District" ,size:50,},
+    { accessorKey: "achal", header: "Achal" ,size:50, },
+    { accessorKey: "cluster", header: "Cluster" ,size:50, },
+    { accessorKey: "sub_cluster", header: "Sub Cluster" ,size:50, },
+    { accessorKey: "village", header: "Village" ,size:50, },
+    { accessorKey: "school_code", header: "School Code" ,size:50, },
+    { accessorKey: "status_label", header: "Status" ,size:50, },
     {
       accessorKey: "actions",
       header: "Actions",
+      size:50,
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <Link to={`/students-full-list-view/${row.original.id}`}>
@@ -126,8 +125,8 @@ const FullList = () => {
 
         <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
           {chapter.map((item, index) => (
-            <div key={index} className="flex items-center space-x-1">
-              <h1 className="font-bold text-blue-500 sm:text-xs md:text-lg">
+            <div key={index} className="flex items-center  space-x-1">
+              <h1 className="font-semibold text-blue-500 sm:text-xs md:text-sm">
                 {item.chapter_name} - {item.school_count}
               </h1>
             </div>
@@ -136,15 +135,11 @@ const FullList = () => {
       </div>
 
       <div className="mt-5">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Spinner />
-          </div>
-        ) : (
+      
           <div className="w-full">
-            {schoolAllot.length > 0 && <MantineReactTable table={table} />}
+             <MantineReactTable table={table} />
           </div>
-        )}
+   
       </div>
     </Layout>
   );

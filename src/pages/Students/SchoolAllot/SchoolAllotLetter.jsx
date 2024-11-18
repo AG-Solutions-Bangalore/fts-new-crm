@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
@@ -7,19 +7,19 @@ import Logo2 from "../../../assets/receipt/top.png";
 import Logo3 from "../../../assets/receipt/ekal.png";
 import Layout from "../../../layout/Layout";
 import { FaArrowLeft } from "react-icons/fa";
-import PageTitleBar from "../../../components/common/PageTitle";
 import { LuDownload } from "react-icons/lu";
 import { IoIosPrint } from "react-icons/io";
 import { Button } from "@mui/material";
+import ReactToPrint from "react-to-print";
 
 const SchoolAllotLetter = () => {
   const navigate = useNavigate();
+  const componentRef = useRef();
   const [SchoolAlotReceipt, setSchoolAlotReceipt] = useState({});
   const [chapter, setChapter] = useState({});
   const [SchoolAlotView, setSchoolAlotView] = useState([]);
   const [OTSReceipts, setOTSReceipts] = useState([]);
   const isLoggedIn = localStorage.getItem("sclaltid");
-
   const today = new Date().toLocaleDateString("en-GB");
 
   useEffect(() => {
@@ -45,11 +45,13 @@ const SchoolAllotLetter = () => {
   return (
     <Layout>
       <div className="invoice-wrapper overflow-x-auto grid md:grid-cols-1 1fr">
-        <PageTitleBar
-          title="Allotment Letter"
-          icon={FaArrowLeft}
-          backLink="/students-schoolallot"
-        />
+       
+        <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
+            <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
+            Allotment Letter
+            </h1>
+          
+          </div>
         <div className="flex flex-col items-center">
           <div className="sm:w-[90%] md:w-[90%] lg:w-[70%] mx-auto ">
             <div className="bg-white shadow-md rounded-lg px-16 pb-16 pt-6 ">
@@ -58,14 +60,20 @@ const SchoolAllotLetter = () => {
                   <LuDownload className="text-lg" />
                   <span>PDF</span>
                 </Button>
-
-                <Button variant="text" className="flex items-center space-x-2">
-                  <IoIosPrint className="text-lg" />
-                  <span>Print Letter</span>
-                </Button>
+                <ReactToPrint
+                      trigger={() => (
+                        <Button variant="text" className="flex items-center space-x-2">
+                        <IoIosPrint className="text-lg" />
+                        <span>Print Letter</span>
+                      </Button>
+                      )}
+                      content={() => componentRef.current}
+                    />
+                
               </div>
 
               <hr className="mb-6" />
+              <div ref={componentRef}>
               <div className="flex justify-between items-center mb-4 ">
                 <div className="invoice-logo">
                   <img src={Logo1} alt="session-logo" width="80" height="80" />
@@ -421,6 +429,9 @@ const SchoolAllotLetter = () => {
                     </label>
                   </div>
                 </div>
+              </div>
+           
+
               </div>
             </div>
           </div>

@@ -1,28 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
-import Layout from "../../../layout/Layout";
-import { ContextPanel } from "../../../utils/ContextPanel";
+
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import BASE_URL from "../../../base/BaseUrl";
 
-import MUIDataTable from "mui-datatables";
-import { Spinner } from "@material-tailwind/react";
-import PageTitle from "../../../components/common/PageTitle";
-import { IoMdArrowBack } from "react-icons/io";
+import Layout from "../../../layout/Layout";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { ContextPanel } from "../../../utils/ContextPanel";
+import BASE_URL from "../../../base/BaseUrl";
 
 const SchoolAllotView = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
-
+  const id = localStorage.getItem("sclaltid");
   useEffect(() => {
     const fetchApprovedRData = async () => {
       if (!isPanelUp) {
         navigate("/maintenance");
         return;
       }
-      const id = localStorage.getItem("sclaltid");
+      
 
       setLoading(true);
 
@@ -34,22 +32,8 @@ const SchoolAllotView = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
-        const res = response.data?.SchoolAlotView;
-        if (Array.isArray(res)) {
-          const tempRows = res.map((item, index) => [
-            index + 1,
-            item["school_state"],
-            item["district"],
-            item["achal"],
-            item["cluster"],
-            item["sub_cluster"],
-            item["village"],
-            item["school_code"],
-            item["id"],
-          ]);
-          setSchoolAllot(tempRows);
-        }
+        setSchoolAllot(response.data?.SchoolAlotView)
+        
       } catch (error) {
         console.error("Error fetching approved list request data", error);
       } finally {
@@ -58,112 +42,49 @@ const SchoolAllotView = () => {
     };
 
     fetchApprovedRData();
-  }, [isPanelUp, navigate]);
+  }, []);
+
 
   const columns = [
-    {
-      name: "#",
-      label: "#",
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-    {
-      name: "State",
-      label: "State",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "District",
-      label: "District",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "Achal",
-      label: "Achal",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "Cluster",
-      label: "Cluster",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "Sub Cluster",
-      label: "Sub Cluster",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "Village",
-      label: "Village",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "School Code",
-      label: "School Code ",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
+    { accessorKey: "school_state", header: "State",size:50, },
+    { accessorKey: "district", header: "District",size:50, },
+    { accessorKey: "achal", header: "Achal",size:50, },
+    { accessorKey: "cluster", header: "Cluster",size:50, },
+    { accessorKey: "sub_cluster", header: "Sub Cluster",size:50, },
+    { accessorKey: "village", header: "Village",size:50, },
+    { accessorKey: "school_code", header: "School Code",size:50, },
   ];
 
-  const options = {
-    filterType: "textField",
-    selectableRows: false,
-    elevation: 0,
-    responsive: "standard",
-    viewColumns: true,
-    download: false,
-    print: false,
-    setRowProps: (rowData) => {
-      return {
-        style: {
-          borderBottom: "10px solid #f1f7f9",
-        },
-      };
-    },
-  };
+  const table = useMantineReactTable({
+    columns,
+    data: schoolAllot || [],
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableStickyHeader:true,
+    enableStickyFooter:true,
+    mantineTableContainerProps: { sx: { maxHeight: '400px' } },
+
+    initialState:{ columnVisibility: { address: false } },
+    
+  });
+
+ 
 
   return (
     <Layout>
-      <PageTitle
-        title="Schools Allotments Details"
-        icon={IoMdArrowBack}
-        backLink={"/students-schoolallot"}
-      />
-      <div className="mt-5">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Spinner className="h-12 w-12" color="purple" />
+      <div className="max-w-screen">
+      <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
+            <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
+            Schools Allotments Details
+            </h1>
+          
           </div>
-        ) : (
-          <MUIDataTable
-            data={schoolAllot ? schoolAllot : []}
-            columns={columns}
-            options={options}
-          />
-        )}
+          <div className=" shadow-md">
+            <MantineReactTable table={table} />
+          </div>
       </div>
+    
     </Layout>
   );
 };

@@ -64,6 +64,10 @@ import ManualGuideBook from "./pages/ManualGuideBook/ManualGuideBook";
 import SchoolAllot from "./pages/Students/SchoolAllot/SchoolAllot";
 import SchoolAllotEdit from "./pages/Students/SchoolAllot/SchoolAllotEdit";
 import DuplicateEdit from "./pages/donor/duplicate/DuplicateEdit";
+import SchoolAllotView from "./pages/Students/SchoolAllot/SchoolAllotView";
+import SchoolAllotLetter from "./pages/Students/SchoolAllot/SchoolAllotLetter";
+import RepeatDonors from "./pages/Students/RepeatDonors/RepeatDonors";
+import AllotedList from "./pages/Students/RepeatDonors/AllotedList";
 const App = () => {
   return (
     <>
@@ -150,17 +154,18 @@ const App = () => {
         <Route path="/faq" element={<Faq />} />
         <Route path="/team" element={<Team />} />
         <Route path="/notification" element={<Notification />} />
-        {/*
-        <Route path="/students-report-donor" element={<RepeatDonors />} />
+        
+        {/* <Route path="/students-report-donor" element={<RepeatDonors />} /> */}
 
         <Route path="/students-schoolallot" element={<SchoolAllot />} />
         <Route path="/students-allotedit" element={<SchoolAllotEdit />} />
         <Route path="/students-allotview" element={<SchoolAllotView />} />
-        <Route path="/students-allotletter" element={<SchoolAllotLetter />} /> */}
-        {/* <Route
-          path="/students/report-donor-allotlist"
+        <Route path="/students-allotletter" element={<SchoolAllotLetter />} />
+        <Route path="/students-report-donor" element={<RepeatDonors />} />
+        <Route
+          path="/repeat-donor-allot/:id"
           element={<AllotedList />}
-        /> */}
+        />
       </Routes>
     </>
   );

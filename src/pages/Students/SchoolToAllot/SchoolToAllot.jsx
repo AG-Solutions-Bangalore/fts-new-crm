@@ -60,18 +60,19 @@ const SchoolToAllot = () => {
     //   header: "#",
     //   Cell: ({ row }) => <span>{row.index + 1}</span>,
     // },
-    { accessorKey: "donorName", header: "Donor Name" },
-    { accessorKey: "type", header: "Type" },
-    { accessorKey: "mobile", header: "Mobile" },
-    { accessorKey: "email", header: "Email" },
-    { accessorKey: "allotmentYear", header: "Allotment Year" },
-    { accessorKey: "otsReceived", header: "OTS Received" },
+    { accessorKey: "donorName", header: "Donor Name",size:50, },
+    { accessorKey: "type", header: "Type" ,size:50,},
+    { accessorKey: "mobile", header: "Mobile",size:50, },
+    { accessorKey: "email", header: "Email",size:50, },
+    { accessorKey: "allotmentYear", header: "Allotment Year",size:50, },
+    { accessorKey: "otsReceived", header: "OTS Received",size:50, },
     ...(localStorage.getItem("id") == 1
       ? [
           {
             enableColumnFilter: false,
 
             accessorKey: "allotmentAction",
+            size:50,
             header: "Allotment",
             Cell: ({ row }) => {
               const value = row.getValue("allotmentAction");
@@ -126,7 +127,7 @@ const SchoolToAllot = () => {
   return (
     <Layout>
       <div className="flex  bg-white p-4 mb-4 rounded-lg shadow-md">
-        <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-xl md:text-2xl sm:text-sm text-center md:text-left">
+        <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-lg md:text-lg sm:text-sm text-center md:text-left">
           School To Allot
         </h1>
       </div>
