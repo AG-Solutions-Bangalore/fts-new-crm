@@ -131,7 +131,7 @@ const DonorDetails = () => {
 
   const options = {
     filterType: "textField",
-    selectableRows: false,
+ 
     filter: true,
     search: true,
     print: false,

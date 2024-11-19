@@ -58,7 +58,7 @@ const ReceiptThree = () => {
     }, []);
   return (
     <div className=" flex justify-center">
-    <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[70%]">
+    <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">
      
       <div className="p-2"
      

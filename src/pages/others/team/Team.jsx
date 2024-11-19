@@ -149,10 +149,7 @@ const Team = () => {
               <IconInfoCircle className="w-4 h-4" />
               <span>Committee Summary</span>
             </div>
-            <IconArrowBack
-              onClick={() => navigate("/donor-list")}
-              className="cursor-pointer hover:text-red-600"
-            />
+              
           </h2>
         </div>
         <hr />

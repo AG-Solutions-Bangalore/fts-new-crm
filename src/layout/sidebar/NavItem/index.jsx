@@ -119,7 +119,7 @@ export default function NavItem({
       ? `${theme.palette.primary.main}!important`
       : theme.palette.text.secondary,
     fontWeight: pathDirect === item?.href ? "600 !important" : "400",
-    paddingLeft: "20px",
+    paddingLeft: !isCollapsed ? "20px" : "10px",
     "&:before": {
       content: '""',
       position: "absolute",
@@ -252,17 +252,20 @@ export default function NavItem({
               label={item?.chip}
             />
           )}
-          {item?.subItems && (
-            <ListItemIcon
-              sx={{
-                minWidth: "36px",
-                p: "3px 0",
-                color: "inherit",
-              }}
-            >
-              {isExpanded ? <IconChevronUp /> : <IconChevronDown />}
-            </ListItemIcon>
-          )}
+       {
+        isCollapsed ? "":
+        item?.subItems && (
+          <ListItemIcon
+            sx={{
+              minWidth: "36px",
+              p: "3px 0",
+              color: "inherit",
+            }}
+          >
+            {isExpanded ? <IconChevronUp /> : <IconChevronDown />}
+          </ListItemIcon>
+        )
+       }
 
           
         </ListItemStyled>
@@ -319,7 +322,7 @@ export default function NavItem({
                   >
                     <subItem.icon stroke={1.5} size="1.1rem" />
                   </ListItemIcon>
-                  <ListItemText primary={subItem.title} />
+                  <ListItemText primary={!isCollapsed ? subItem.title : ""}    />
                 </SubItemStyled>
               </Link>
             ))}

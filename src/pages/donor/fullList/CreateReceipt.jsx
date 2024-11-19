@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -7,6 +7,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import { Button } from "@material-tailwind/react";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { ContextPanel } from "../../../utils/ContextPanel";
 const exemption = [
   {
     value: "80G",
@@ -144,25 +145,8 @@ const CreateReceipt = ({ donorId, onClose }) => {
   const preyear = todayyear;
   const finyear = +twoDigitYear + 1;
   const finalyear = preyear + "-" + finyear;
+  const {currentYear} = useContext(ContextPanel)
 
-  const [currentYear, setCurrentYear] = useState("");
-  useEffect(() => {
-    const fetchYearData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        setCurrentYear(response.data.year.current_year);
-      } catch (error) {
-        console.error("Error fetching year data:", error);
-      }
-    };
-
-    fetchYearData();
-  }, []);
 
   const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);

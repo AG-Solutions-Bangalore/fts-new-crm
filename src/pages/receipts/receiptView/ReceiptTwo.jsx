@@ -62,7 +62,7 @@ const ReceiptTwo = () => {
 
   return (
     <div className=" flex justify-center">
-      <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[70%]">
+      <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">
         <div className="p-10" style={{ margin: "5px" }}>
           <div
             className="flex justify-between"

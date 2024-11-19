@@ -513,7 +513,7 @@ const DonorEditComp = ({ id }) => {
                 disabled
                 value={donor.indicomp_image_logo}
                 onChange={(e) => onInputChange(e)}
-                className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-[#E1F5FA] file:text-black hover:file:bg-green-500"
+                className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-[#E1F5FA] file:text-black cursor-not-allowed"
               />
               <p className="text-xs text-gray-500 mt-1">Upload Company Logo</p>
             </div>

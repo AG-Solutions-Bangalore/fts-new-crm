@@ -250,22 +250,22 @@ const DonorView = ({ viewerId, onClose }) => {
                     />
                     <div className="grid gap-4 mt-4">
                       <ContactItem
-                        icon={<MdPhone className="text-blue-500 w-5 h-5" />}
+                        // icon={<MdPhone className="text-blue-500 w-5 h-5" />}
                         label="Mobile"
                         value={donor.indicomp_mobile_phone}
                       />
                       <ContactItem
-                        icon={<MdPhone className="text-green-500 w-5 h-5" />}
+                        // icon={<MdPhone className="text-green-500 w-5 h-5" />}
                         label="WhatsApp"
                         value={donor.indicomp_mobile_whatsapp}
                       />
                       <ContactItem
-                        icon={<MdEmail className="text-orange-500 w-5 h-5" />}
+                        // icon={<MdEmail className="text-orange-500 w-5 h-5" />}
                         label="Email"
                         value={donor.indicomp_email}
                       />
                       <ContactItem
-                        icon={<MdWeb className="text-red-500 w-5 h-5" />}
+                        // icon={<MdWeb className="text-red-500 w-5 h-5" />}
                         label="Website"
                         value={donor.indicomp_website}
                       />
@@ -283,7 +283,7 @@ const DonorView = ({ viewerId, onClose }) => {
                       <AddressDisplay
                         title="Residence Address"
                         address={
-                          donor.indicomp_res_reg_address
+                          donor.indicomp_res_reg_address || donor.indicomp_res_reg_city
                             ? {
                                 address: donor.indicomp_res_reg_address,
                                 area: donor.indicomp_res_reg_area,
@@ -298,7 +298,7 @@ const DonorView = ({ viewerId, onClose }) => {
                       <AddressDisplay
                         title="Office Address"
                         address={
-                          donor.indicomp_off_branch_address
+                          donor.indicomp_off_branch_address || donor.indicomp_res_reg_city
                             ? {
                                 address: donor.indicomp_off_branch_address,
                                 area: donor.indicomp_off_branch_area,

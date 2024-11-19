@@ -54,7 +54,7 @@ const Profile = () => {
   };
   
   useEffect(() => {
-    if (token && location.pathname === "/profile") {
+    if (token ) {
    
       getData();
     }

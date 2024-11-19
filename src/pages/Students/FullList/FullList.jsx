@@ -1,34 +1,20 @@
-import React, {  useEffect, useState } from "react";
+import React, {  useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEye } from "@tabler/icons-react";
+import { ContextPanel } from "../../../utils/ContextPanel";
 
 const FullList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
- 
-  const [currentYear, setCurrentYear] = useState("");
+
+  const {currentYear} = useContext(ContextPanel)
   const [chapter, setChapter] = useState([]);
 
-  // Fetch Year Data
-  useEffect(() => {
-    const fetchYearData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setCurrentYear(response.data.year.current_year);
-      } catch (error) {
-        console.error("Error fetching year data:", error);
-      }
-    };
-    fetchYearData();
-  }, []);
+ 
 
   // Fetch Approved List Data
   useEffect(() => {

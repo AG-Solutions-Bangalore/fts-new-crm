@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../layout/Layout";
 import BASE_URL from "../../base/BaseUrl";
 import axios from "axios";
@@ -36,6 +36,7 @@ import {
   User,
   IndianRupee,
 } from "lucide-react";
+import { ContextPanel } from "../../utils/ContextPanel";
 
 Chart.register(ArcElement, ...registerables);
 const DashboardCard = ({ title, value, icon: Icon, color }) => (
@@ -70,9 +71,10 @@ const Home = () => {
   const [graphData, setGraphData] = useState(null);
   const [graph1, setGraph1] = useState([]);
   const [graph2, setGraph2] = useState([]);
-  const [currentYear, setCurrentYear] = useState("");
+  
   const userTypeId = localStorage.getItem("user_type_id");
   const [showmodalNotice, setShowmodalNotice] = useState(false);
+  const {currentYear} = useContext(ContextPanel)
 
   // Panel visibility states
   const [visiblePanels, setVisiblePanels] = useState({
@@ -90,21 +92,7 @@ const Home = () => {
     }));
   };
 
-  useEffect(() => {
-    const fetchYearData = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setCurrentYear(response.data?.year?.current_year || "");
-      } catch (error) {
-        console.error("Error fetching year data:", error);
-      }
-    };
-    fetchYearData();
-  }, []);
+
 
   const fetchNotices = async () => {
     try {

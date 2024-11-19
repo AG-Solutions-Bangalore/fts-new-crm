@@ -99,20 +99,20 @@ const ReceiptOne = () => {
     });
   };
 
-  const downloadReceipt = (e) => {
+  const downloadReceipt = async (e) => {
     e.preventDefault();
-    axios({
-      url: `${BASE_URL}/download-receipts?id=${theId}`,
+    await axios({
+      url: `${BASE_URL}/api/download-receipts?id=${theId}`,
       method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("login")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then(() => {
-        alert("Receipt Downloaded Successfully");
+        toast.success("Receipt Downloaded Successfully");
       })
       .catch(() => {
-        alert("Receipt Not Downloaded");
+        toast.error("Receipt Not Downloaded");
       });
   };
 
@@ -182,12 +182,17 @@ const ReceiptOne = () => {
           <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
             {localStorage.getItem("user_type_id") != 4 && (
               <div className="flex justify-end p-4 space-x-4">
+                  
+               
                 <button
-                  onClick={downloadReceipt}
+                  
                   className="flex items-center text-blue-600 hover:text-blue-800"
                 >
+                 <a  href={BASE_URL+"/api/download-receipts?id=" + theId}>
                   <span className="mr-2">⬇️</span> Download
+                  </a>
                 </button>
+             
 
                 {receipts?.individual_company?.indicomp_email && (
                   <button

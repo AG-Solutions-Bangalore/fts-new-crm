@@ -10,22 +10,11 @@ import { useNavigate } from "react-router-dom";
 const RepeatDonors = () => {
   const [repeatDonor, setRepeatDonor] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentYear, setCurrentYear] = useState("");
-  const { isPanelUp } = useContext(ContextPanel);
+  const { isPanelUp,currentYear } = useContext(ContextPanel);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("id");
-  // Fetch current year
-  const fetchYearData = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCurrentYear(response.data.year.current_year);
-    } catch (error) {
-      console.error("Error fetching year data:", error);
-    }
-  };
+ 
 
   // Fetch repeat donor data
   const fetchRepeatDonorData = async () => {
@@ -48,11 +37,6 @@ const RepeatDonors = () => {
       setLoading(false);
     }
   };
-
-  // Fetch year data on component mount
-  useEffect(() => {
-    fetchYearData();
-  }, []);
 
   // Fetch repeat donor data when currentYear changes
   useEffect(() => {

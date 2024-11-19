@@ -1,27 +1,29 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
 import { Card } from "@material-tailwind/react";
 import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
+import { IconArrowBack } from "@tabler/icons-react";
 
 // Reusable Components
 const SectionHeader = ({ title }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-300">
-    <h5 className="text-lg font-semibold text-gray-700">{title}</h5>
+    <h5 className="text-lg font-semibold text-black">{title}</h5>
   </div>
 );
 
 const InfoField = ({ label, value }) => (
   <div className="flex justify-between py-2">
-    <p className="text-sm font-medium text-gray-800">{label}</p>
+    <p className="text-sm font-medium text-black">{label}</p>
     <p className="text-sm text-gray-800">{value || "Not Available"}</p>
   </div>
 );
 
 const FullListView = () => {
   const { id } = useParams();
+  const navigate = useNavigate()
   const [school, setSchool] = useState({});
   const [schoolAdoption, setSchoolAdoption] = useState([]);
 
@@ -57,8 +59,11 @@ const FullListView = () => {
           <Card className="lg:col-span-8 p-6 space-y-6 shadow-lg">
           <div className=" flex flex-row items-center justify-between">
           <div >
-            <h1 className="border-b-2  font-[500] border-dashed border-orange-800">
-            School Details
+            <h1 className=" flex flex-row gap-1 font-[500] ">
+            <IconArrowBack
+            onClick={() => navigate("/students-full-list")}
+            className="cursor-pointer hover:text-red-600"
+          /> <span className="border-b-2 text-black font-[500] border-dashed border-orange-800">School Details</span>
             </h1>
          
           </div>
@@ -113,7 +118,7 @@ const FullListView = () => {
           {schoolAdoption.length > 0 ? (
             <table className="w-full mt-4 border-collapse">
               <thead>
-                <tr className="bg-gray-100 text-sm">
+                <tr className="bg-gray-100 text-sm flex items-center justify-between">
                   <th className="p-3 border-b border-gray-300">FTS</th>
                   <th className="p-3 border-b border-gray-300">Name</th>
                   <th className="p-3 border-b border-gray-300">Year</th>
@@ -121,14 +126,14 @@ const FullListView = () => {
               </thead>
               <tbody>
                 {schoolAdoption.map((adoption, index) => (
-                  <tr key={index} className="hover:bg-gray-50 text-sm">
-                    <td className="p-3 border-b border-gray-200">
+                  <tr key={index} className="hover:bg-gray-50 text-sm flex items-center justify-between">
+                    <td className="p-3  border-b text-black border-gray-200">
                       {adoption.individual_company.indicomp_fts_id}
                     </td>
-                    <td className="p-3 border-b border-gray-200">
+                    <td className="p-3  border-b  text-black border-gray-200">
                       {adoption.individual_company.indicomp_full_name}
                     </td>
-                    <td className="p-3 border-b border-gray-200">
+                    <td className="p-3   border-b text-black border-gray-200">
                       {adoption.schoolalot_financial_year}
                     </td>
                   </tr>

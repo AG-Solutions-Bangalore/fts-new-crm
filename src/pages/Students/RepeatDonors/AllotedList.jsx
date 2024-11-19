@@ -12,23 +12,13 @@ import { toast } from "react-toastify";
 const AllotedList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentYear, setCurrentYear] = useState("");
-  const { isPanelUp } = useContext(ContextPanel);
+  const { isPanelUp ,currentYear} = useContext(ContextPanel);
   const navigate = useNavigate();
   const { id } = useParams();
   const userId = localStorage.getItem("id");
   const token = localStorage.getItem("token");
   
-  const fetchYearData = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCurrentYear(response.data.year.current_year);
-    } catch (error) {
-      console.error("Error fetching year data:", error);
-    }
-  };
+
 
   // Fetch school allotment data
   const fetchSchoolAllotData = async () => {
@@ -67,10 +57,6 @@ const AllotedList = () => {
       console.error("Error updating allotment:", error);
     }
   };
-
-  useEffect(() => {
-    fetchYearData();
-  }, []);
 
   useEffect(() => {
     fetchSchoolAllotData();
