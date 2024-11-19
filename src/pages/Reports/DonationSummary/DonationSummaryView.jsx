@@ -13,13 +13,15 @@ import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
-
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 const DonationSummaryView = (props) => {
   const [donorsummary, setSummary] = useState([]);
   const [receiptsummary, setReceiptSummary] = useState({});
   const componentRef = useRef();
   const [loader, setLoader] = useState(true);
   const [error, setError] = useState(null);
+  const tableRef = useRef(null);
 
   useEffect(() => {
     const from_date = localStorage.getItem("receipt_from_date");
@@ -62,7 +64,60 @@ const DonationSummaryView = (props) => {
     values: [{ name: "total_amount", caption: "Amount" }],
     showCaption: false,
   };
+  const handleSavePDF = () => {
+    const input = tableRef.current;
 
+    html2canvas(input, { scale: 2 })
+      .then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        const margin = 20;
+
+        const availableWidth = pdfWidth - 2 * margin;
+
+        const ratio = Math.min(
+          availableWidth / imgWidth,
+          pdfHeight / imgHeight
+        );
+
+        const imgX = margin;
+        const imgY = margin;
+
+        pdf.addImage(
+          imgData,
+          "PNG",
+          imgX,
+          imgY,
+          imgWidth * ratio,
+          imgHeight * ratio
+        );
+
+        pdf.save("Donation Summary.pdf");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF: ", error);
+      });
+  };
+
+  const mergeRefs =
+    (...refs) =>
+    (node) => {
+      refs.forEach((ref) => {
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      });
+    };
   return (
     <Layout>
       {loader && (
@@ -78,9 +133,7 @@ const DonationSummaryView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid sm:grid-cols-1 1fr">
-                <div
-                  className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]"
-                >
+                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
                   <PageTitleBar
                     title="Donation Summary"
                     match={props.match}
@@ -91,6 +144,7 @@ const DonationSummaryView = (props) => {
                     <Button
                       variant="text"
                       className="flex items-center space-x-2"
+                      onClick={handleSavePDF}
                     >
                       <LuDownload className="text-lg" />
                       <span>PDF</span>
@@ -98,54 +152,51 @@ const DonationSummaryView = (props) => {
                     <ReactToPrint
                       trigger={() => (
                         <Button
-                        variant="text"
-                        className="flex items-center space-x-2"
-                      >
-                        <IoIosPrint className="text-lg" />
-                        <span>Print Letter</span>
-                      </Button>
+                          variant="text"
+                          className="flex items-center space-x-2"
+                        >
+                          <IoIosPrint className="text-lg" />
+                          <span>Print Letter</span>
+                        </Button>
                       )}
                       content={() => componentRef.current}
                     />
-                   
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={componentRef}>
+                <div ref={mergeRefs(componentRef, tableRef)}>
+                  <div className="flex justify-between items-center mb-4 ">
+                    <div className="invoice-logo">
+                      <img
+                        src={image1}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
+                    <div className="address text-center">
+                      <img src={image2} alt="session-logo" width="320px" />
+                      <h2 className="pt-3">
+                        <strong>
+                          <b className="text-lg text-gray-600">
+                            DONATION SUMMARY
+                          </b>
+                        </strong>
+                      </h2>
+                    </div>
+                    <div className="invoice-logo text-right">
+                      <img
+                        src={image3}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
+                  </div>
 
-                
-                <div  className="flex justify-between items-center mb-4 ">
-                  <div className="invoice-logo">
-                    <img
-                      src={image1}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
+                  <div>
+                    <CustomPivotTable data={donorsummary} />
                   </div>
-                  <div className="address text-center">
-                    <img src={image2} alt="session-logo" width="320px" />
-                    <h2 className="pt-3">
-                      <strong>
-                        <b className="text-lg text-gray-600">
-                          DONATION SUMMARY
-                        </b>
-                      </strong>
-                    </h2>
-                  </div>
-                  <div className="invoice-logo text-right">
-                    <img
-                      src={image3}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <CustomPivotTable data={donorsummary} />
-                </div>
                 </div>
               </div>
             </div>
