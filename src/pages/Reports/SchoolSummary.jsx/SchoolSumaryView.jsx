@@ -13,7 +13,8 @@ import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
-
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 const SchoolSumaryView = (props) => {
   const componentRef = useRef();
   const [SchoolAlotReceipt, setSchoolAlotReceipt] = useState({});
@@ -22,6 +23,7 @@ const SchoolSumaryView = (props) => {
   const [OTSReceipts, setOTSReceipts] = useState({});
   const [loader, setLoader] = useState(true);
   const [error, setError] = useState(null);
+  const tableRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +51,60 @@ const SchoolSumaryView = (props) => {
 
     fetchData();
   }, []);
+  const handleSavePDF = () => {
+    const input = tableRef.current;
 
+    html2canvas(input, { scale: 2 })
+      .then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        const margin = 20;
+
+        const availableWidth = pdfWidth - 2 * margin;
+
+        const ratio = Math.min(
+          availableWidth / imgWidth,
+          pdfHeight / imgHeight
+        );
+
+        const imgX = margin;
+        const imgY = margin;
+
+        pdf.addImage(
+          imgData,
+          "PNG",
+          imgX,
+          imgY,
+          imgWidth * ratio,
+          imgHeight * ratio
+        );
+
+        pdf.save("SCHOOL SUMMARY.pdf");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF: ", error);
+      });
+  };
+
+  const mergeRefs =
+    (...refs) =>
+    (node) => {
+      refs.forEach((ref) => {
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      });
+    };
   return (
     <Layout>
       {loader && (
@@ -85,6 +140,7 @@ const SchoolSumaryView = (props) => {
                     <Button
                       variant="text"
                       className="flex items-center space-x-2"
+                      onClick={handleSavePDF}
                     >
                       <LuDownload className="text-lg" />
                       <span>PDF</span>
@@ -92,149 +148,148 @@ const SchoolSumaryView = (props) => {
                     <ReactToPrint
                       trigger={() => (
                         <Button
-                        variant="text"
-                        className="flex items-center space-x-2"
-                      >
-                        <IoIosPrint className="text-lg" />
-                        <span>Print Letter</span>
-                      </Button>
+                          variant="text"
+                          className="flex items-center space-x-2"
+                        >
+                          <IoIosPrint className="text-lg" />
+                          <span>Print Letter</span>
+                        </Button>
                       )}
                       content={() => componentRef.current}
                     />
-                    
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={componentRef} >
+                <div ref={mergeRefs(componentRef, tableRef)}>
+                  <div className="flex justify-between items-center mb-4 ">
+                    <div className="invoice-logo">
+                      <img
+                        src={image1}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
+                    <div className="address text-center">
+                      <img src={image2} alt="session-logo" width="320px" />
+                      <h2 className="pt-3">
+                        <strong>
+                          <b className="text-lg text-gray-600">
+                            SCHOOL SUMMARY
+                          </b>
+                        </strong>
+                      </h2>
+                    </div>
+                    <div className="invoice-logo text-right">
+                      <img
+                        src={image3}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
+                  </div>
 
-             
-                <div className="flex justify-between items-center mb-4 ">
-                  <div className="invoice-logo">
-                    <img
-                      src={image1}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
-                  </div>
-                  <div className="address text-center">
-                    <img src={image2} alt="session-logo" width="320px" />
-                    <h2 className="pt-3">
-                      <strong>
-                        <b className="text-lg text-gray-600">SCHOOL SUMMARY</b>
-                      </strong>
-                    </h2>
-                  </div>
-                  <div className="invoice-logo text-right">
-                    <img
-                      src={image3}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
-                  </div>
-                </div>
-
-                <div>
                   <div>
-                    <label>
-                      Donor Id : {SchoolAlotReceipt.indicomp_fts_id}
-                    </label>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div>
-                    {SchoolAlotReceipt?.individual_company?.indicomp_type !==
-                      "Individual" && (
+                    <div>
                       <label>
-                        Donor Name :{" "}
-                        {
-                          SchoolAlotReceipt?.individual_company
-                            ?.indicomp_full_name
-                        }
+                        Donor Id : {SchoolAlotReceipt.indicomp_fts_id}
                       </label>
-                    )}
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div>
+                      {SchoolAlotReceipt?.individual_company?.indicomp_type !==
+                        "Individual" && (
+                        <label>
+                          Donor Name :{" "}
+                          {
+                            SchoolAlotReceipt?.individual_company
+                              ?.indicomp_full_name
+                          }
+                        </label>
+                      )}
 
-                    {SchoolAlotReceipt?.individual_company?.indicomp_type ===
-                      "Individual" && (
+                      {SchoolAlotReceipt?.individual_company?.indicomp_type ===
+                        "Individual" && (
+                        <label>
+                          Donor Name :{" "}
+                          {
+                            SchoolAlotReceipt?.individual_company
+                              ?.indicomp_full_name
+                          }
+                        </label>
+                      )}
+                    </div>
+                    <div>
                       <label>
-                        Donor Name :{" "}
-                        {
-                          SchoolAlotReceipt?.individual_company
-                            ?.indicomp_full_name
-                        }
+                        No of Schools :
+                        {OTSReceipts.map((otsreceipt, key) => (
+                          <> {otsreceipt.receipt_no_of_ots}</>
+                        ))}
                       </label>
-                    )}
+                    </div>
                   </div>
-                  <div>
-                    <label>
-                      No of Schools :
-                      {OTSReceipts.map((otsreceipt, key) => (
-                        <> {otsreceipt.receipt_no_of_ots}</>
-                      ))}
-                    </label>
+                  <div className="my-5 overflow-x-auto mb-14">
+                    <table className="min-w-full border-collapse border border-black">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          {[
+                            "STATE",
+                            "ANCHAL  CLUSTER",
+                            "STATE",
+                            "SUB CLUSTER",
+                            "VILLAGE",
+                            "TEACHER",
+                            "BOYS",
+                            "GIRLS  ",
+                            "TOTAL",
+                          ].map((header) => (
+                            <th
+                              key={header}
+                              className="border border-black px-4 py-2 text-center text-xs"
+                            >
+                              {header}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Array.isArray(SchoolAlotView) &&
+                          SchoolAlotView.map((dataSumm) => (
+                            <tr key={dataSumm.id}>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.school_state}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.achal}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.cluster}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.sub_cluster}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.village}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.teacher}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.boys}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.girls}
+                              </td>
+                              <td className="border border-black px-4 py-2 text-xs">
+                                {dataSumm.total}
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
                   </div>
-                </div>
-                <div className="my-5 overflow-x-auto mb-14">
-                  <table className="min-w-full border-collapse border border-black">
-                    <thead>
-                      <tr className="bg-gray-200">
-                        {[
-                          "STATE",
-                          "ANCHAL  CLUSTER",
-                          "STATE",
-                          "SUB CLUSTER",
-                          "VILLAGE",
-                          "TEACHER",
-                          "BOYS",
-                          "GIRLS  ",
-                          "TOTAL",
-                        ].map((header) => (
-                          <th
-                            key={header}
-                            className="border border-black px-4 py-2 text-center text-xs"
-                          >
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Array.isArray(SchoolAlotView) &&
-                        SchoolAlotView.map((dataSumm) => (
-                          <tr key={dataSumm.id}>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.school_state}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.achal}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.cluster}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.sub_cluster}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.village}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.teacher}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.boys}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.girls}
-                            </td>
-                            <td className="border border-black px-4 py-2 text-xs">
-                              {dataSumm.total}
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
                 </div>
               </div>
             </div>

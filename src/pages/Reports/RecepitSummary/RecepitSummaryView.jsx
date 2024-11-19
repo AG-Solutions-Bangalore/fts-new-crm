@@ -13,7 +13,8 @@ import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
-
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 const RecepitSummaryView = (props) => {
   const componentRef = useRef();
   const [donorsummary, setSummary] = useState([]);
@@ -31,6 +32,7 @@ const RecepitSummaryView = (props) => {
   );
   const [loader, setLoader] = useState(true);
   const [error, setError] = useState(null);
+  const tableRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +67,60 @@ const RecepitSummaryView = (props) => {
     fetchData();
   }, []);
 
+  const handleSavePDF = () => {
+    const input = tableRef.current;
+
+    html2canvas(input, { scale: 2 })
+      .then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        const margin = 20;
+
+        const availableWidth = pdfWidth - 2 * margin;
+
+        const ratio = Math.min(
+          availableWidth / imgWidth,
+          pdfHeight / imgHeight
+        );
+
+        const imgX = margin;
+        const imgY = margin;
+
+        pdf.addImage(
+          imgData,
+          "PNG",
+          imgX,
+          imgY,
+          imgWidth * ratio,
+          imgHeight * ratio
+        );
+
+        pdf.save("Recepit Summary.pdf");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF: ", error);
+      });
+  };
+
+  const mergeRefs =
+    (...refs) =>
+    (node) => {
+      refs.forEach((ref) => {
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      });
+    };
   return (
     <Layout>
       {loader && (
@@ -94,6 +150,7 @@ const RecepitSummaryView = (props) => {
                     <Button
                       variant="text"
                       className="flex items-center space-x-2"
+                      onClick={handleSavePDF}
                     >
                       <LuDownload className="text-lg" />
                       <span>PDF</span>
@@ -101,194 +158,195 @@ const RecepitSummaryView = (props) => {
                     <ReactToPrint
                       trigger={() => (
                         <Button
-                        variant="text"
-                        className="flex items-center space-x-2"
-                      >
-                        <IoIosPrint className="text-lg" />
-                        <span>Print Letter</span>
-                      </Button>
+                          variant="text"
+                          className="flex items-center space-x-2"
+                        >
+                          <IoIosPrint className="text-lg" />
+                          <span>Print Letter</span>
+                        </Button>
                       )}
                       content={() => componentRef.current}
                     />
-                    
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div  ref={componentRef}>
-
-               
-                <div className="flex justify-between items-center mb-4 ">
-                  <div className="invoice-logo">
-                    <img
-                      src={image1}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
+                <div ref={mergeRefs(componentRef, tableRef)}>
+                  <div className="flex justify-between items-center mb-4 ">
+                    <div className="invoice-logo">
+                      <img
+                        src={image1}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
+                    <div className="address text-center">
+                      <img src={image2} alt="session-logo" width="320px" />
+                      <h2 className="pt-3">
+                        <strong>
+                          <b className="text-lg text-gray-600">
+                            RECPIT SUMMARY
+                          </b>
+                        </strong>
+                      </h2>
+                    </div>
+                    <div className="invoice-logo text-right">
+                      <img
+                        src={image3}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
                   </div>
-                  <div className="address text-center">
-                    <img src={image2} alt="session-logo" width="320px" />
-                    <h2 className="pt-3">
-                      <strong>
-                        <b className="text-lg text-gray-600">RECPIT SUMMARY</b>
-                      </strong>
-                    </h2>
-                  </div>
-                  <div className="invoice-logo text-right">
-                    <img
-                      src={image3}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
-                  </div>
-                </div>
 
-                <div className="my-5">
-                  <table className="min-w-full border-collapse border border-black">
-                    <thead>
-                      <tr className="bg-gray-200">
-                        {[
-                          "Month",
-                          "Recepit Type",
-                          "NO of Recpits",
-                          "No of OTS",
-                          "Amount",
-                        ].map((header) => (
-                          <th
-                            key={header}
-                            className="border border-black px-4 py-2 text-center text-xs"
-                          >
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {donorsummary.map((dataSumm) => (
-                        <tr key={dataSumm.id}>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.month_year}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.receipt_donation_type}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.total_count}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.total_ots}
-                          </td>
-
-                          <td className="border border-black text-right px-4 text-xs ">
-                            <NumericFormat
-                              value={dataSumm.total_amount}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              thousandsGroupStyle="lakh"
-                              prefix={"₹"}
-                              decimalScale={0}
-                              fixedDecimalScale={true}
-                            />
-                          </td>
+                  <div className="my-5">
+                    <table className="min-w-full border-collapse border border-black">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          {[
+                            "Month",
+                            "Recepit Type",
+                            "NO of Recpits",
+                            "No of OTS",
+                            "Amount",
+                          ].map((header) => (
+                            <th
+                              key={header}
+                              className="border border-black px-4 py-2 text-center text-xs"
+                            >
+                              {header}
+                            </th>
+                          ))}
                         </tr>
+                      </thead>
+                      <tbody>
+                        {donorsummary.map((dataSumm) => (
+                          <tr key={dataSumm.id}>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.month_year}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.receipt_donation_type}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.total_count}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.total_ots}
+                            </td>
+
+                            <td className="border border-black text-right px-4 text-xs ">
+                              <NumericFormat
+                                value={dataSumm.total_amount}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                thousandsGroupStyle="lakh"
+                                prefix={"₹"}
+                                decimalScale={0}
+                                fixedDecimalScale={true}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td
+                            colSpan={2}
+                            className="border border-black text-center font-bold text-xs"
+                          >
+                            Total
+                          </td>
+                          {grandtotal.map((grandcount, key) => (
+                            <td className="border border-black px-4 py-2 text-xs font-bold">
+                              {grandcount.total_grand_count}
+                            </td>
+                          ))}
+                          {grandots.map((footv, key) => (
+                            <td className="border border-black px-4 py-2 text-xs font-bold">
+                              {footv.total_no_of_ots}
+                            </td>
+                          ))}
+
+                          {receiptsummaryfootertotal.map((foota, key) => (
+                            <td className="border border-black text-right px-4  py-2 text-xs font-bold">
+                              <NumericFormat
+                                value={foota.total_grand_amount}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                thousandsGroupStyle="lakh"
+                                prefix={"₹"}
+                                decimalScale={0}
+                                fixedDecimalScale={true}
+                              />
+                            </td>
+                          ))}
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  <div className="grid grid-cols-4 my-7">
+                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                      <b className="items-center text-center">
+                        One Teacher School
+                      </b>
+                      {receiptTotalOTS.map((grandcount, key) => (
+                        <NumericFormat
+                          thousandSeparator={true}
+                          thousandsGroupStyle="lakh"
+                          displayType={"text"}
+                          prefix={"₹ "}
+                          value={grandcount.total_ots_donation}
+                          className="mt-2"
+                        />
                       ))}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td
-                          colSpan={2}
-                          className="border border-black text-center font-bold text-xs"
-                        >
-                          Total
-                        </td>
-                        {grandtotal.map((grandcount, key) => (
-                          <td className="border border-black px-4 py-2 text-xs font-bold">
-                            {grandcount.total_grand_count}
-                          </td>
-                        ))}
-                        {grandots.map((footv, key) => (
-                          <td className="border border-black px-4 py-2 text-xs font-bold">
-                            {footv.total_no_of_ots}
-                          </td>
-                        ))}
+                    </div>
 
-                        {receiptsummaryfootertotal.map((foota, key) => (
-                          <td className="border border-black text-right px-4  py-2 text-xs font-bold">
-                            <NumericFormat
-                              value={foota.total_grand_amount}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              thousandsGroupStyle="lakh"
-                              prefix={"₹"}
-                              decimalScale={0}
-                              fixedDecimalScale={true}
-                            />
-                          </td>
-                        ))}
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-                <div className="grid grid-cols-4 mt-6">
-                  <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                    <b className="items-center text-center">
-                      One Teacher School
-                    </b>
-                    {receiptTotalOTS.map((grandcount, key) => (
-                      <NumericFormat
-                        thousandSeparator={true}
-                        thousandsGroupStyle="lakh"
-                        displayType={"text"}
-                        prefix={"₹ "}
-                        value={grandcount.total_ots_donation}
-                        className="mt-2"
-                      />
-                    ))}
-                  </div>
+                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                      <b className="items-center text-center">
+                        Membership Fees
+                      </b>
+                      {receiptTotalMembership.map((grandcount, key) => (
+                        <NumericFormat
+                          thousandSeparator={true}
+                          thousandsGroupStyle="lakh"
+                          displayType={"text"}
+                          prefix={"₹ "}
+                          value={grandcount.total_membership_donation}
+                          className="mt-2"
+                        />
+                      ))}
+                    </div>
 
-                  <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                    <b className="items-center text-center">Membership Fees</b>
-                    {receiptTotalMembership.map((grandcount, key) => (
-                      <NumericFormat
-                        thousandSeparator={true}
-                        thousandsGroupStyle="lakh"
-                        displayType={"text"}
-                        prefix={"₹ "}
-                        value={grandcount.total_membership_donation}
-                        className="mt-2"
-                      />
-                    ))}
-                  </div>
+                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                      <b className="items-center text-center">Gn. Donation</b>
+                      {totalsummarygeneral.map((grandcount, key) => (
+                        <NumericFormat
+                          thousandSeparator={true}
+                          thousandsGroupStyle="lakh"
+                          displayType={"text"}
+                          prefix={"₹ "}
+                          value={grandcount.total_general_donation}
+                          className="mt-2"
+                        />
+                      ))}
+                    </div>
 
-                  <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                    <b className="items-center text-center">Gn. Donation</b>
-                    {totalsummarygeneral.map((grandcount, key) => (
-                      <NumericFormat
-                        thousandSeparator={true}
-                        thousandsGroupStyle="lakh"
-                        displayType={"text"}
-                        prefix={"₹ "}
-                        value={grandcount.total_general_donation}
-                        className="mt-2"
-                      />
-                    ))}
+                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                      <b className="items-center text-center">Total</b>
+                      {receiptsummary.map((grandcount, key) => (
+                        <NumericFormat
+                          thousandSeparator={true}
+                          thousandsGroupStyle="lakh"
+                          displayType={"text"}
+                          prefix={"₹ "}
+                          value={grandcount.total_donation}
+                          className="mt-2"
+                        />
+                      ))}
+                    </div>
                   </div>
-
-                  <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                    <b className="items-center text-center">Total</b>
-                    {receiptsummary.map((grandcount, key) => (
-                      <NumericFormat
-                        thousandSeparator={true}
-                        thousandsGroupStyle="lakh"
-                        displayType={"text"}
-                        prefix={"₹ "}
-                        value={grandcount.total_donation}
-                        className="mt-2"
-                      />
-                    ))}
-                  </div>
-                </div>
                 </div>
               </div>
             </div>
