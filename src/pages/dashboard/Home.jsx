@@ -4,34 +4,18 @@ import BASE_URL from "../../base/BaseUrl";
 import axios from "axios";
 import CountUp from "react-countup";
 import moment from "moment";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, registerables } from "chart.js";
 import { toast } from "react-toastify";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Button,
-  List,
-  ListItem,
-  Chip,
-} from "@material-tailwind/react";
-import { IconMinusVertical, IconX, IconReload } from "@tabler/icons-react";
 import { NumericFormat } from "react-number-format";
 import {
   Users,
-  UserCircle,
   Building2,
-  DollarSign,
   Bell,
   BarChart3,
   PieChart,
   RefreshCcw,
-  Minimize2,
   X,
-  ChevronRight,
   LayoutDashboard,
   User,
   IndianRupee,
@@ -56,11 +40,7 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => (
         </div>
       </div>
     </div>
-    {/* <div className="px-6 py-3 bg-gray-50">
-      <div className="flex items-center text-sm">
-        <span className="text-gray-600">Updated just now</span>
-      </div>
-    </div> */}
+  
   </div>
 );
 
@@ -73,7 +53,6 @@ const Home = () => {
   const [graph2, setGraph2] = useState([]);
   
   const userTypeId = localStorage.getItem("user_type_id");
-  const [showmodalNotice, setShowmodalNotice] = useState(false);
   const {currentYear} = useContext(ContextPanel)
 
   // Panel visibility states
@@ -84,14 +63,6 @@ const Home = () => {
     receiptsBar: true,
     receiptsPie: true,
   });
-
-  const togglePanel = (panel) => {
-    setVisiblePanels((prev) => ({
-      ...prev,
-      [panel]: !prev[panel],
-    }));
-  };
-
 
 
   const fetchNotices = async () => {
@@ -265,12 +236,12 @@ const Home = () => {
                     </h2>
                   </div>
                   <div className="flex gap-2">
-                    <button
+                    {/* <button
                       onClick={() => togglePanel("notices")}
                       className="p-2 hover:bg-gray-100 rounded-lg"
                     >
                       <Minimize2 className="h-5 w-5 text-gray-500" />
-                    </button>
+                    </button> */}
                     <button
                       onClick={() =>
                         setVisiblePanels((prev) => ({
@@ -352,12 +323,12 @@ const Home = () => {
                     <h2 className="text-lg font-bold text-gray-900">Summary</h2>
                   </div>
                   <div className="flex gap-2">
-                    <button
+                    {/* <button
                       onClick={() => togglePanel("totalDonation")}
                       className="p-2 hover:bg-gray-100 rounded-lg"
                     >
                       <Minimize2 className="h-5 w-5 text-gray-500" />
-                    </button>
+                    </button> */}
                     <button
                       onClick={() =>
                         setVisiblePanels((prev) => ({
@@ -409,12 +380,12 @@ const Home = () => {
                     </h2>
                   </div>
                   <div className="flex gap-2">
-                    <button
+                    {/* <button
                       onClick={() => togglePanel("receiptsPie")}
                       className="p-2 hover:bg-gray-100 rounded-lg"
                     >
                       <Minimize2 className="h-5 w-5 text-gray-500" />
-                    </button>
+                    </button> */}
                     <button
                       onClick={() =>
                         setVisiblePanels((prev) => ({
@@ -451,7 +422,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Floating Action Button */}
         <button
           onClick={() => {
             fetchResult();

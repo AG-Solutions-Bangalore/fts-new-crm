@@ -855,7 +855,7 @@ const DonorEditIndv = ({ id }) => {
         <div className="flex gap-4 justify-start">
           <button
             type="submit"
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >
             {isButtonDisabled ? "Updating..." : "Update"}
@@ -863,7 +863,7 @@ const DonorEditIndv = ({ id }) => {
           {donor.indicomp_related_id == donor.indicomp_fts_id ? (
             <button
               onClick={() => openmodal()}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Attach to Group
             </button>
@@ -871,24 +871,36 @@ const DonorEditIndv = ({ id }) => {
             <button
               disabled
               onClick={() => openmodal()}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Attach to Group
             </button>
           )}
           {donor.indicomp_related_id == donor.indicomp_fts_id ? (
-            <Button disabled className="bg-blue-500 hover:bg-green-700">
+            <button
+              disabled
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            >
               Leave Group
-            </Button>
+            </button>
           ) : (
-            <Button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            <button
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
               color="info"
               onClick={() => familyGroupStatus("leave_family_group")}
             >
               Leave Group
-            </Button>
+            </button>
           )}
+          <button
+            type="submit"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md"
+            onClick={() => {
+              navigate("/donor-list");
+            }}
+          >
+            Cancel
+          </button>
         </div>
       </form>
 
