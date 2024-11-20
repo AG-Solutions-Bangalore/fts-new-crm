@@ -15,6 +15,9 @@ import { toast } from "react-toastify";
 import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 const DonorGroupView = (props) => {
   const componentRef = useRef();
   const [donorsummary, setSummary] = useState([]);
@@ -26,6 +29,7 @@ const DonorGroupView = (props) => {
   );
   const [loader, setLoader] = useState(true);
   const [error, setError] = useState(null);
+  const tableRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,6 +94,61 @@ const DonorGroupView = (props) => {
         toast.error("Receipt is Not Downloaded");
       });
   };
+
+  const handleSavePDF = () => {
+    const input = tableRef.current;
+
+    html2canvas(input, { scale: 2 })
+      .then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        const margin = 20;
+
+        const availableWidth = pdfWidth - 2 * margin;
+
+        const ratio = Math.min(
+          availableWidth / imgWidth,
+          pdfHeight / imgHeight
+        );
+
+        const imgX = margin;
+        const imgY = margin;
+
+        pdf.addImage(
+          imgData,
+          "PNG",
+          imgX,
+          imgY,
+          imgWidth * ratio,
+          imgHeight * ratio
+        );
+
+        pdf.save("Donor_Summary_Group.pdf");
+      })
+      .catch((error) => {
+        console.error("Error generating PDF: ", error);
+      });
+  };
+
+  const mergeRefs =
+    (...refs) =>
+    (node) => {
+      refs.forEach((ref) => {
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      });
+    };
   return (
     <Layout>
       {loader && (
@@ -116,6 +175,7 @@ const DonorGroupView = (props) => {
                     <Button
                       variant="text"
                       className="flex items-center space-x-2"
+                      onClick={handleSavePDF}
                     >
                       <LuDownload className="text-lg" />
                       <span>PDF</span>
@@ -132,250 +192,249 @@ const DonorGroupView = (props) => {
                     <ReactToPrint
                       trigger={() => (
                         <Button
-                      variant="text"
-                      className="flex items-center space-x-2"
-                    >
-                      <IoIosPrint className="text-lg" />
-                      <span>Print Letter</span>
-                    </Button>
+                          variant="text"
+                          className="flex items-center space-x-2"
+                        >
+                          <IoIosPrint className="text-lg" />
+                          <span>Print Letter</span>
+                        </Button>
                       )}
                       content={() => componentRef.current}
                     />
-                    
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={componentRef} >
-
-               
-                <div className="flex justify-between items-center mb-4  "  >
-                  <div className="invoice-logo">
-                    <img
-                      src={image1}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
+                <div ref={mergeRefs(componentRef, tableRef)}>
+                  <div className="flex justify-between items-center mb-4  ">
+                    <div className="invoice-logo">
+                      <img
+                        src={image1}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
+                    <div className="address text-center">
+                      <img src={image2} alt="session-logo" width="320px" />
+                      <h2 className="pt-3">
+                        <strong>
+                          <b className="text-lg text-gray-600">
+                            DONOR GROUP SUMMARY
+                          </b>
+                        </strong>
+                      </h2>
+                    </div>
+                    <div className="invoice-logo text-right">
+                      <img
+                        src={image3}
+                        alt="session-logo"
+                        width="80"
+                        height="80"
+                      />
+                    </div>
                   </div>
-                  <div className="address text-center">
-                    <img src={image2} alt="session-logo" width="320px" />
-                    <h2 className="pt-3">
-                      <strong>
-                        <b className="text-lg text-gray-600">
-                          DONOR GROUP SUMMARY
+
+                  {individual.map((individ, key) => (
+                    <div className="grid grid-cols-5 mt-6" key={key}>
+                      <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                        <b className="items-center text-center">Full Name :</b>
+                        <span>
+                          {individ.indicomp_type == "Individual" && (
+                            <>
+                              {individ.title} {individ.indicomp_full_name}
+                            </>
+                          )}
+                          {individ.indicomp_type != "Individual" && (
+                            <> M/s {individ.indicomp_full_name}</>
+                          )}
+                        </span>
+                      </div>
+
+                      <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                        <b className="items-center text-center">
+                          Contact Person/Spouse :
                         </b>
-                      </strong>
-                    </h2>
-                  </div>
-                  <div className="invoice-logo text-right">
-                    <img
-                      src={image3}
-                      alt="session-logo"
-                      width="80"
-                      height="80"
-                    />
-                  </div>
-                </div>
+                        <span>
+                          {individ.indicomp_type == "Individual" && (
+                            <> {individ.indicomp_spouse_name}</>
+                          )}
+                          {individ.indicomp_type != "Individual" && (
+                            <> {individ.indicomp_com_contact_name}</>
+                          )}
+                        </span>
+                      </div>
 
-                {individual.map((individ, key) => (
-                  <div className="grid grid-cols-5 mt-6" key={key}>
-                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                      <b className="items-center text-center">Full Name :</b>
-                      <span>
-                        {individ.indicomp_type == "Individual" && (
-                          <>
-                            {individ.title} {individ.indicomp_full_name}
-                          </>
-                        )}
-                        {individ.indicomp_type != "Individual" && (
-                          <> M/s {individ.indicomp_full_name}</>
-                        )}
-                      </span>
+                      <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                        <b className="items-center text-center">Mobile :</b>
+                        <span>{individ.indicomp_mobile_phone}</span>
+                      </div>
+
+                      <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                        <b className="items-center text-center">PAN Number :</b>
+                        <span>{individ.indicomp_pan_no}</span>
+                      </div>
+
+                      <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
+                        <b className="items-center text-center">Promoter :</b>
+                        <span>{individ.indicomp_promoter}</span>
+                      </div>
                     </div>
+                  ))}
 
-                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                      <b className="items-center text-center">
-                        Contact Person/Spouse :
-                      </b>
-                      <span>
-                        {individ.indicomp_type == "Individual" && (
-                          <> {individ.indicomp_spouse_name}</>
-                        )}
-                        {individ.indicomp_type != "Individual" && (
-                          <> {individ.indicomp_com_contact_name}</>
-                        )}
-                      </span>
-                    </div>
-
-                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                      <b className="items-center text-center">Mobile :</b>
-                      <span>{individ.indicomp_mobile_phone}</span>
-                    </div>
-
-                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                      <b className="items-center text-center">PAN Number :</b>
-                      <span>{individ.indicomp_pan_no}</span>
-                    </div>
-
-                    <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
-                      <b className="items-center text-center">Promoter :</b>
-                      <span>{individ.indicomp_promoter}</span>
-                    </div>
-                  </div>
-                ))}
-
-                <div ref={componentRef} className="my-5">
-                  <table className="min-w-full border-collapse border border-black">
-                    <thead>
-                      <tr className="bg-gray-200">
-                        {[
-                          "Receipt Date",
-                          "Receipt No",
-                          "Donor",
-                          "Promoter",
-                          "Year",
-                          "Amount",
-                          "Exemption Type",
-                          "Donation Type",
-                          "No of OTS",
-                          "Pay Mode",
-                          "Pay Details",
-                          "Realization Date",
-                          "Reason",
-                          "Remarks",
-                        ].map((header) => (
-                          <th
-                            key={header}
-                            className="border border-black px-2 py-2 text-center text-xs"
-                          >
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {donorsummary.map((dataSumm) => (
-                        <tr key={dataSumm.id}>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {Moment(dataSumm.receipt_date).format("DD-MM-YYYY")}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.receipt_no}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.indicomp_full_name}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.indicomp_promoter}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.receipt_financial_year}
-                          </td>
-                          <td className="border border-black px-4 py-2 text-xs">
-                            {dataSumm.receipt_total_amount}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_exemption_type}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_donation_type}{" "}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_no_of_ots}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_tran_pay_mode}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_tran_pay_details}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_realization_date != null && (
-                              <>
-                                {Moment(
-                                  dataSumm.receipt_realization_date
-                                ).format("DD-MM-YYYY")}
-                              </>
-                            )}
-                            {dataSumm.receipt_realization_date == null && (
-                              <>{dataSumm.receipt_realization_date}</>
-                            )}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_reason}
-                          </td>
-                          <td className="border border-black text-center text-xs">
-                            {dataSumm.receipt_remarks}
-                          </td>
+                  <div ref={componentRef} className="my-5">
+                    <table className="min-w-full border-collapse border border-black">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          {[
+                            "Receipt Date",
+                            "Receipt No",
+                            "Donor",
+                            "Promoter",
+                            "Year",
+                            "Amount",
+                            "Exemption Type",
+                            "Donation Type",
+                            "No of OTS",
+                            "Pay Mode",
+                            "Pay Details",
+                            "Realization Date",
+                            "Reason",
+                            "Remarks",
+                          ].map((header) => (
+                            <th
+                              key={header}
+                              className="border border-black px-2 py-2 text-center text-xs"
+                            >
+                              {header}
+                            </th>
+                          ))}
                         </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td
-                          colSpan={5}
-                          className="border border-black text-center font-bold text-xs"
-                        >
-                          Total
-                        </td>
-                        {receiptsummaryfootertotal.map((footv, key) => (
-                          <td className="border border-black text-center text-xs font-bold">
-                            {footv.total_grand_amount}
-                          </td>
+                      </thead>
+                      <tbody>
+                        {donorsummary.map((dataSumm) => (
+                          <tr key={dataSumm.id}>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {Moment(dataSumm.receipt_date).format(
+                                "DD-MM-YYYY"
+                              )}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.receipt_no}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.indicomp_full_name}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.indicomp_promoter}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.receipt_financial_year}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-xs">
+                              {dataSumm.receipt_total_amount}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_exemption_type}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_donation_type}{" "}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_no_of_ots}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_tran_pay_mode}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_tran_pay_details}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_realization_date != null && (
+                                <>
+                                  {Moment(
+                                    dataSumm.receipt_realization_date
+                                  ).format("DD-MM-YYYY")}
+                                </>
+                              )}
+                              {dataSumm.receipt_realization_date == null && (
+                                <>{dataSumm.receipt_realization_date}</>
+                              )}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_reason}
+                            </td>
+                            <td className="border border-black text-center text-xs">
+                              {dataSumm.receipt_remarks}
+                            </td>
+                          </tr>
                         ))}
-
-                        <td
-                          className="border border-black text-right px-4 text-sm md:text-base font-bold"
-                          colSpan={2}
-                        ></td>
-
-                        {receiptsummaryfooterOTS.map((footv, key) => (
-                          <td className="border border-black text-center text-xs font-bold">
-                            {footv.total_no_of_ots}
-                          </td>
-                        ))}
-
-                        <td
-                          className="border border-black text-right px-4 text-xs font-bold"
-                          colSpan={5}
-                        ></td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-                {/* //TABLE BELOW */}
-                <div className="flex justify-center items-center  ">
-                  <b className="text-lg text-gray-600">TOTAL</b>
-                </div>
-
-                <div ref={componentRef} className="my-5 ">
-                  <table className="min-w-full border-collapse border border-black">
-                    <thead>
-                      <tr className="bg-gray-200">
-                        {["Year", "Total  Amount"].map((header) => (
-                          <th
-                            key={header}
-                            className="border border-black px-4 py-2 text-center text-sm md:text-base"
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td
+                            colSpan={5}
+                            className="border border-black text-center font-bold text-sm p-2"
                           >
-                            {header}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {receiptsummary.map((dataSumm) => (
-                        <tr key={dataSumm.id}>
-                          <td className="border border-black px-4 py-2 text-sm md:text-base text-center">
-                            {dataSumm.receipt_financial_year}
+                            Total
                           </td>
-                          <td className="border border-black px-4 py-2 text-sm md:text-base text-center">
-                            {dataSumm.receipt_total_amount}
-                          </td>
+                          {receiptsummaryfootertotal.map((footv, key) => (
+                            <td className="border border-black text-center text-sm p-2 font-bold">
+                              {footv.total_grand_amount}
+                            </td>
+                          ))}
+
+                          <td
+                            className="border border-black text-right px-4 text-sm p-2 md:text-base font-bold"
+                            colSpan={2}
+                          ></td>
+
+                          {receiptsummaryfooterOTS.map((footv, key) => (
+                            <td className="border border-black text-center text-xs font-bold">
+                              {footv.total_no_of_ots}
+                            </td>
+                          ))}
+
+                          <td
+                            className="border border-black text-right px-4 text-xs font-bold"
+                            colSpan={5}
+                          ></td>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </tfoot>
+                    </table>
+                  </div>
+                  {/* //TABLE BELOW */}
+                  <div className="flex justify-center items-center  ">
+                    <b className="text-lg text-gray-600">TOTAL</b>
+                  </div>
+
+                  <div ref={componentRef} className="my-5 ">
+                    <table className="min-w-full border-collapse border border-black">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          {["Year", "Total  Amount"].map((header) => (
+                            <th
+                              key={header}
+                              className="border border-black px-4 py-2 text-center text-sm md:text-base"
+                            >
+                              {header}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {receiptsummary.map((dataSumm) => (
+                          <tr key={dataSumm.id}>
+                            <td className="border border-black px-4 py-2 text-sm md:text-base text-center">
+                              {dataSumm.receipt_financial_year}
+                            </td>
+                            <td className="border border-black px-4 py-2 text-sm md:text-base text-center">
+                              {dataSumm.receipt_total_amount}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

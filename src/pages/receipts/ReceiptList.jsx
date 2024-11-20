@@ -59,7 +59,7 @@ const ReceiptList = () => {
         size: 150,
         Cell: ({ row }) => {
           const date = row.original.receipt_date;
-         
+
           return <>{date ? moment.utc(date).format("DD-MM-YYYY") : "N/A"}</>;
         },
       },
@@ -95,25 +95,20 @@ const ReceiptList = () => {
               >
                 <IconEye className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
-              <div
-                title="Receipt Edit"
-                onClick={() => {
-                  const encryptedId = encryptId(id);
-                  if (encryptedId) {
-                    navigate(`/receipt-edit/${encryptedId}`);
-                  }
-                }}
-                //   onClick={() => {
-                //     const encryptedId = CryptoJS.AES.encrypt(
-                //         id.toString(),
-                //         "my-sceret-assembled"
-                //     ).toString(); // Encrypt the ID
-                //     navigate(`/receipt-edit/${encodeURIComponent(encryptedId)}`);
-                // }}
-                className="flex items-center space-x-2"
-              >
-                <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
-              </div>
+              {userType === 2 && (
+                <div
+                  title="Receipt Edit"
+                  onClick={() => {
+                    const encryptedId = encryptId(id);
+                    if (encryptedId) {
+                      navigate(`/receipt-edit/${encryptedId}`);
+                    }
+                  }}
+                  className="flex items-center space-x-2"
+                >
+                  <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
+                </div>
+              )}
             </div>
           );
         },

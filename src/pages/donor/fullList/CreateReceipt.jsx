@@ -145,8 +145,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
   const preyear = todayyear;
   const finyear = +twoDigitYear + 1;
   const finalyear = preyear + "-" + finyear;
-  const {currentYear} = useContext(ContextPanel)
-
+  const { currentYear } = useContext(ContextPanel);
 
   const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -591,18 +590,11 @@ const CreateReceipt = ({ donorId, onClose }) => {
         <div className="flex gap-4 justify-start">
           <button
             type="submit"
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >
             {isButtonDisabled ? "Submitting..." : "Submit"}
           </button>
-          {/* <Button
-        onClick={() => onClose()}
-        type="button"
-        className="bg-blue-500 hover:bg-green-700"
-      >
-        Back
-      </Button> */}
         </div>
       </form>
     </div>

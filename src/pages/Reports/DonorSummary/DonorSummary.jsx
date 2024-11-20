@@ -78,7 +78,7 @@ const DonorSummary = () => {
         <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
           <h2 className=" px-5 text-[black] text-lg   flex flex-row gap-2 items-center  rounded-xl p-2 ">
             {/* <IconInfoCircle className="w-4 h-4" /> */}
-            <span>Download Receipts</span>
+            <span>Donor Summary</span>
           </h2>
         </div>
         <hr />
@@ -126,13 +126,13 @@ const DonorSummary = () => {
 
             <div className="flex justify-start py-4">
               <button
-                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                 onClick={onReporIndividualtView}
               >
                 Individual View
               </button>
               <button
-                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                 onClick={onReportGroupView}
               >
                 Group View

@@ -107,13 +107,13 @@ const OldReceipt = ({viewerId,onClose}) => {
                   >
                     <IconEye title="View" className="h-5 w-5  text-blue-500 cursor-pointer" />
                   </div>
-                  <div
+                  {/* <div
                   title='Receipt Edit'
                   onClick={()=>navigate(`/receipt-edit/${id}`)}
                     className="flex items-center space-x-2"
                   >
                     <IconEdit  className="h-5 w-5 text-blue-500 cursor-pointer" />
-                  </div>
+                  </div> */}
                  
                 </div>
               );

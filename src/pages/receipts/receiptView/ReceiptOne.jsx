@@ -6,9 +6,9 @@ import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import { MdHighlightOff } from "react-icons/md";
-import Logo1 from '../../../assets/receipt/fts.png'
-import Logo2 from '../../../assets/receipt/top.png'
-import Logo3 from '../../../assets/receipt/ekal.png'
+import Logo1 from "../../../assets/receipt/fts.png";
+import Logo2 from "../../../assets/receipt/top.png";
+import Logo3 from "../../../assets/receipt/ekal.png";
 import moment from "moment";
 const ReceiptOne = () => {
   const componentRef = useRef();
@@ -182,17 +182,11 @@ const ReceiptOne = () => {
           <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
             {localStorage.getItem("user_type_id") != 4 && (
               <div className="flex justify-end p-4 space-x-4">
-                  
-               
-                <button
-                  
-                  className="flex items-center text-blue-600 hover:text-blue-800"
-                >
-                 <a  href={BASE_URL+"/api/download-receipts?id=" + theId}>
-                  <span className="mr-2">⬇️</span> Download
+                <button className="flex items-center text-blue-600 hover:text-blue-800">
+                  <a href={BASE_URL + "/api/download-receipts?id=" + theId}>
+                    <span className="mr-2">⬇️</span> Download
                   </a>
                 </button>
-             
 
                 {receipts?.individual_company?.indicomp_email && (
                   <button
@@ -214,7 +208,7 @@ const ReceiptOne = () => {
                     </p>
                     <button
                       onClick={handleClickOpen}
-                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                      className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2"
                     >
                       Add Email
                     </button>
@@ -227,8 +221,6 @@ const ReceiptOne = () => {
                 >
                   <span className="mr-2">🖨️</span> Print Receipt
                 </button>
-
-                
               </div>
             )}
 
@@ -603,7 +595,7 @@ const ReceiptOne = () => {
                   <button
                     disabled={isButtonDisabled}
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2"
                   >
                     {isButtonDisabled ? "Submiting..." : "Submit"}
                   </button>

@@ -108,7 +108,6 @@ const DonorList = () => {
         header: "Fts Id",
         isVisible: columnVisibility.indicomp_fts_id,
         enableHiding: false,
-       
       },
       {
         accessorKey: "indicomp_full_name",
@@ -119,7 +118,6 @@ const DonorList = () => {
         accessorKey: "indicomp_type",
         header: "Type",
         size: 50,
-        
       },
       {
         accessorKey: "indicomp_spouse_name",
@@ -159,14 +157,8 @@ const DonorList = () => {
         size: 150,
         Cell: ({ value, row }) => {
           const valueData = row.original?.indicomp_email;
-       
-          return (
-            <div
-              
-            >
-              {valueData}
-            </div>
-          );
+
+          return <div>{valueData}</div>;
         },
       },
       {
@@ -184,27 +176,23 @@ const DonorList = () => {
                 className="flex items-center space-x-2"
                 title="Edit"
               >
-                <IconEdit  className="h-5 w-5 text-blue-500 cursor-pointer" />
+                <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
 
               <div
-             
                 onClick={toggleViewerDrawer(true, id)}
                 className="flex items-center space-x-2"
                 title="View"
               >
-                <IconEye  className="h-5 w-5 text-blue-500 cursor-pointer" />
+                <IconEye className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
               {userType == "1" ? (
                 <div
                   onClick={toggleReceiptDrawer(true, id)}
                   className="flex items-center space-x-2"
-                   title="Create Reciept"
+                  title="Create Reciept"
                 >
-                  <IconReceipt
-                   
-                    className="h-5 w-5 text-blue-500 cursor-pointer"
-                  />
+                  <IconReceipt className="h-5 w-5 text-blue-500 cursor-pointer" />
                 </div>
               ) : (
                 ""
@@ -223,14 +211,13 @@ const DonorList = () => {
     enableFullScreenToggle: false,
     enableDensityToggle: false,
     enableColumnActions: false,
-    enableHiding:false,
+    enableHiding: false,
     state: { columnVisibility },
-    enableStickyHeader:true,
-    enableStickyFooter:true,
-    mantineTableContainerProps: { sx: { maxHeight: '400px' } },
+    enableStickyHeader: true,
+    enableStickyFooter: true,
+    mantineTableContainerProps: { sx: { maxHeight: "400px" } },
     onColumnVisibilityChange: setColumnVisibility,
-    initialState:{ columnVisibility: { address: false } },
-    
+    initialState: { columnVisibility: { address: false } },
   });
 
   return (
@@ -243,7 +230,7 @@ const DonorList = () => {
             </h1>
             <div className="flex gap-2">
               <button
-                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                 onClick={toggleIndividualDrawer(true)}
               >
                 + Individual
@@ -261,7 +248,7 @@ const DonorList = () => {
               </SwipeableDrawer>
               <div>
                 <button
-                  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                   onClick={toggleCompanyDrawer(true)}
                 >
                   + Company
@@ -291,7 +278,6 @@ const DonorList = () => {
           onClose={toggleReceiptDrawer(false)}
           onOpen={toggleReceiptDrawer(true)}
         >
-         
           <CreateReceipt
             donorId={selectedDonorId}
             onClose={toggleReceiptDrawer(false)}
@@ -304,7 +290,6 @@ const DonorList = () => {
           onClose={toggleViewerDrawer(false)}
           onOpen={toggleViewerDrawer(true)}
         >
-         
           <DonorView
             viewerId={selectedViewerId}
             onClose={toggleViewerDrawer(false)}
