@@ -35,8 +35,8 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-  const token = localStorage.getItem("token")
-  const location = useLocation(); 
+  const token = localStorage.getItem("token");
+  const location = useLocation();
   const getData = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/fetch-profile`, {
@@ -52,10 +52,9 @@ const Profile = () => {
       toast.error("Failed to load profile data");
     }
   };
-  
+
   useEffect(() => {
-    if (token ) {
-   
+    if (token) {
       getData();
     }
   }, [location.pathname, token]);
@@ -303,7 +302,8 @@ const Profile = () => {
                       value={email}
                       disabled
                       onChange={(e) => setEmail(e.target.value)}
-                      className={inputClass}
+                      // className={inputClass}
+                      className=" cursor-not-allowed w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500"
                     />
                   </div>
                 </div>

@@ -114,7 +114,7 @@ function DownloadTeam() {
           </div>
           <div className="flex justify-start py-4">
             <button
-              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
               onClick={onSubmit}
               disabled={isButtonDisabled}
             >
