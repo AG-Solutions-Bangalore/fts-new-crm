@@ -873,52 +873,56 @@ const DonorEditComp = ({ id }) => {
             </div>
           </div>
         </div>
-
         <div className="flex gap-4 justify-start">
-          <button
-            type="submit"
-            color="blue"
-            disabled={isButtonDisabled}
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md px-6 py-2"
-          >
-            {isButtonDisabled ? "Updating..." : "Update"}
-          </button>
+        <button
+          type="submit"
+          color="blue"
+          disabled={isButtonDisabled}
+          className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md px-6 py-2"
+        >
+          {isButtonDisabled ? "Updating..." : "Update"}
+        </button>
 
-          {donor.indicomp_related_id == donor.indicomp_fts_id ? (
-            <button
-              onClick={() => openmodal()}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-            >
-              Attach to Group
-            </button>
-          ) : (
-            <button
-              disabled
-              onClick={() => openmodal()}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-            >
-              Attach to Group
-            </button>
-          )}
-
-          {donor.indicomp_related_id == donor.indicomp_fts_id ? (
-            <button
-              disabled
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-            >
-              Leave Group
-            </button>
-          ) : (
-            <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-              color="info"
-              onClick={() => familyGroupStatus("leave_family_group")}
-            >
-              Leave Group
-            </button>
-          )}
-        </div>
+        
+      </div>
       </form>
+      <div className="flex gap-4 justify-end">
+      
+
+        {donor.indicomp_related_id == donor.indicomp_fts_id ? (
+          <button
+            onClick={() => openmodal()}
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+          >
+            Attach to Group
+          </button>
+        ) : (
+          <button
+            disabled
+            onClick={() => openmodal()}
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+          >
+            Attach to Group
+          </button>
+        )}
+
+        {donor.indicomp_related_id == donor.indicomp_fts_id ? (
+          <button
+            disabled
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+          >
+            Leave Group
+          </button>
+        ) : (
+          <button
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            color="info"
+            onClick={() => familyGroupStatus("leave_family_group")}
+          >
+            Leave Group
+          </button>
+        )}
+      </div>
       <Dialog open={showmodal} toggle={() => closegroupModal()}>
         <DialogHeader> Add to Group</DialogHeader>
         <DialogBody>

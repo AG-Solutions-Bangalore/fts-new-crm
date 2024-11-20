@@ -860,6 +860,11 @@ const DonorEditIndv = ({ id }) => {
           >
             {isButtonDisabled ? "Updating..." : "Update"}
           </button>
+          
+        </div>
+      </form>
+      <div className="flex gap-4 justify-end">
+         
           {donor.indicomp_related_id == donor.indicomp_fts_id ? (
             <button
               onClick={() => openmodal()}
@@ -890,7 +895,6 @@ const DonorEditIndv = ({ id }) => {
             </Button>
           )}
         </div>
-      </form>
 
       <Dialog open={showmodal} toggle={() => closegroupModal()}>
         <DialogHeader> Add to Group</DialogHeader>
