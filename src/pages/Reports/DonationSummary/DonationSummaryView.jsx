@@ -7,7 +7,7 @@ import Layout from "../../../layout/Layout";
 import image1 from "../../../assets/receipt/fts.png";
 import image2 from "../../../assets/receipt/top.png";
 import image3 from "../../../assets/receipt/ekal.png";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaFilePdf } from "react-icons/fa6";
 import CustomPivotTable from "./CustomPivotTable";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
@@ -15,6 +15,23 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+
+const printStyles = `
+  @media print {
+
+
+
+
+    /* Print content with 20px margin */
+    .print-content {
+      margin: 40px !important; /* Apply 20px margin to the printed content */
+
+      }
+
+
+
+  }
+`;
 const DonationSummaryView = (props) => {
   const [donorsummary, setSummary] = useState([]);
   const [receiptsummary, setReceiptSummary] = useState({});
@@ -118,6 +135,19 @@ const DonationSummaryView = (props) => {
         }
       });
     };
+
+  useEffect(() => {
+    // Add print styles to document head
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = printStyles;
+    document.head.appendChild(styleSheet);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
   return (
     <Layout>
       {loader && (
@@ -133,38 +163,43 @@ const DonationSummaryView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid sm:grid-cols-1 1fr">
-                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
+                <div className="flex items-center space-y-4 self-end md:flex-row justify-between sm:space-y-0 md:space-x-4 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
                   <PageTitleBar
                     title="Donation Summary"
                     match={props.match}
                     icon={IconArrowBack}
                     backLink="/report/donation"
                   />
-                  <div className="flex">
-                    <Button
+                  <div className="flex space-x-8 ">
+                    <button
                       variant="text"
                       className="flex items-center space-x-2"
                       onClick={handleSavePDF}
                     >
-                      <LuDownload className="text-lg" />
-                      <span>PDF</span>
-                    </Button>
+                      <FaFilePdf className="text-lg" />
+                      <span className="text-lg font-semibold  ">PDF</span>
+                    </button>
                     <ReactToPrint
                       trigger={() => (
-                        <Button
+                        <button
                           variant="text"
                           className="flex items-center space-x-2"
                         >
                           <IoIosPrint className="text-lg" />
-                          <span>Print Letter</span>
-                        </Button>
+                          <span className="text-lg font-semibold  ">
+                            Print Letter
+                          </span>
+                        </button>
                       )}
                       content={() => componentRef.current}
                     />
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={mergeRefs(componentRef, tableRef)}>
+                <div
+                  ref={mergeRefs(componentRef, tableRef)}
+                  className="print-content"
+                >
                   <div className="flex justify-between items-center mb-4 ">
                     <div className="invoice-logo">
                       <img
@@ -178,7 +213,7 @@ const DonationSummaryView = (props) => {
                       <img src={image2} alt="session-logo" width="320px" />
                       <h2 className="pt-3">
                         <strong>
-                          <b className="text-lg text-gray-600">
+                          <b className="text-xl text-[#464D69]">
                             DONATION SUMMARY
                           </b>
                         </strong>

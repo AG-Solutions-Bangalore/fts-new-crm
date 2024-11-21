@@ -8,7 +8,7 @@ import Moment from "moment";
 import image1 from "../../../assets/receipt/fts.png";
 import image2 from "../../../assets/receipt/top.png";
 import image3 from "../../../assets/receipt/ekal.png";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaFilePdf } from "react-icons/fa6";
 import moment from "moment/moment";
 import { IoIosPrint } from "react-icons/io";
 import { FaWhatsapp } from "react-icons/fa";
@@ -19,7 +19,22 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+const printStyles = `
+  @media print {
 
+
+
+
+    /* Print content with 20px margin */
+    .print-content {
+      margin: 40px !important; /* Apply 20px margin to the printed content */
+
+      }
+
+
+
+  }
+`;
 const DonorSummaryView = (props) => {
   const componentRef = useRef();
   const [donorsummary, setSummary] = useState([]);
@@ -121,7 +136,7 @@ const DonorSummaryView = (props) => {
         );
 
         const imgX = margin;
-        const imgY = margin; 
+        const imgY = margin;
 
         pdf.addImage(
           imgData,
@@ -150,6 +165,19 @@ const DonorSummaryView = (props) => {
         }
       });
     };
+
+  useEffect(() => {
+    // Add print styles to document head
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = printStyles;
+    document.head.appendChild(styleSheet);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
   return (
     <Layout>
       {loader && (
@@ -165,40 +193,42 @@ const DonorSummaryView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid md:grid-cols-1 1fr">
-                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
+                <div className="flex items-center space-y-4 self-end md:flex-row justify-between sm:space-y-0 md:space-x-4 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
                   <PageTitle
                     title="Donor Summary"
                     match={props.match}
                     icon={IconArrowBack}
                     backLink="/report/donorsummary"
                   />
-                  <div className="flex">
+                  <div className="flex space-x-8 ">
                     {" "}
-                    <Button
+                    <button
                       variant="text"
                       className="flex items-center space-x-2"
                       onClick={handleSavePDF}
                     >
-                      <LuDownload className="text-lg" />
-                      <span>PDF</span>
-                    </Button>
-                    <Button
+                      <FaFilePdf className="text-lg" />
+                      <span className="text-lg font-semibold  ">PDF</span>
+                    </button>
+                    <button
                       variant="text"
                       className="flex items-center space-x-2"
                       onClick={onSubmit}
                     >
                       <LuDownload className="text-lg" />
-                      <span>Download</span>
-                    </Button>
+                      <span className="text-lg font-semibold  ">Download</span>
+                    </button>
                     <ReactToPrint
                       trigger={() => (
-                        <Button
+                        <button
                           variant="text"
                           className="flex items-center space-x-2"
                         >
                           <IoIosPrint className="text-lg" />
-                          <span>Print Letter</span>
-                        </Button>
+                          <span className="text-lg font-semibold ">
+                            Print Letter
+                          </span>
+                        </button>
                       )}
                       content={() => componentRef.current}
                     />
@@ -206,7 +236,10 @@ const DonorSummaryView = (props) => {
                 </div>
 
                 <hr className="mb-6"></hr>
-                <div ref={mergeRefs(componentRef, tableRef)}>
+                <div
+                  ref={mergeRefs(componentRef, tableRef)}
+                  className="print-content"
+                >
                   <div className="flex justify-between items-center mb-4 ">
                     <div className="invoice-logo">
                       <img
@@ -220,7 +253,9 @@ const DonorSummaryView = (props) => {
                       <img src={image2} alt="session-logo" width="320px" />
                       <h2 className="pt-3">
                         <strong>
-                          <b className="text-lg text-gray-600">DONOR SUMMARY</b>
+                          <b className="text-xl text-[#464D69]">
+                            DONOR SUMMARY
+                          </b>
                         </strong>
                       </h2>
                     </div>
@@ -234,7 +269,7 @@ const DonorSummaryView = (props) => {
                     </div>
                   </div>
 
-                  {individual.map((individ, key) => (
+                  {/* {individual.map((individ, key) => (
                     <div
                       className="grid sm:md:grid-cols-3 lg:grid-cols-5 space-y-2 mt-6"
                       key={key}
@@ -285,6 +320,57 @@ const DonorSummaryView = (props) => {
                       <div className="col-xl-3 flex items-center flex-col mb-4 md:mb-0">
                         <b className="items-center text-center">Promoter :</b>
                         <span>{individ.indicomp_promoter}</span>
+                      </div>
+                    </div>
+                  ))} */}
+                  {individual.map((individ, key) => (
+                    <div className="flex justify-between mb-6" key={key}>
+                      <div>
+                        <p className="font-bold mb-1">
+                          Full Name:{" "}
+                          <span className="font-normal">
+                            {individ.indicomp_type === "Individual" ? (
+                              <>
+                                {individ.title} {individ.indicomp_full_name}
+                              </>
+                            ) : (
+                              <>M/s {individ.indicomp_full_name}</>
+                            )}
+                          </span>
+                        </p>
+                        <p className="font-bold mb-1">
+                          Contact Person/Spouse:{" "}
+                          <span className="font-normal">
+                            {individ.indicomp_type === "Individual" ? (
+                              <>{individ.indicomp_spouse_name}</>
+                            ) : (
+                              <>
+                                {individ.title}{" "}
+                                {individ.indicomp_com_contact_name}
+                              </>
+                            )}
+                          </span>
+                        </p>
+                        <p className="font-bold mb-1">
+                          Promoter:{" "}
+                          <span className="font-normal">
+                            {individ.indicomp_promoter}
+                          </span>
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-bold mb-1">
+                          Mobile:{" "}
+                          <span className="font-normal">
+                            {individ.indicomp_mobile_phone}
+                          </span>
+                        </p>
+                        <p className="font-bold mb-1">
+                          PAN Number:{" "}
+                          <span className="font-normal">
+                            {individ.indicomp_pan_no}
+                          </span>
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -364,7 +450,7 @@ const DonorSummaryView = (props) => {
                           </tr>
                         ))}
                       </tbody>
-                      <tfoot >
+                      <tfoot>
                         <tr>
                           <td
                             colSpan={3}
@@ -393,7 +479,7 @@ const DonorSummaryView = (props) => {
                   </div>
                   {/* //TABLE BELOW */}
                   <div className="flex justify-center items-center  ">
-                    <b className="text-lg text-gray-600">TOTAL</b>
+                    <b className="text-xl text-[#464D69]">TOTAL</b>
                   </div>
 
                   <div className="my-5 ">

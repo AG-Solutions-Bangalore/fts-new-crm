@@ -8,13 +8,30 @@ import Moment from "moment";
 import image1 from "../../../assets/receipt/fts.png";
 import image2 from "../../../assets/receipt/top.png";
 import image3 from "../../../assets/receipt/ekal.png";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaFilePdf } from "react-icons/fa6";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+
+const printStyles = `
+  @media print {
+
+
+
+
+    /* Print content with 20px margin */
+    .print-content {
+      margin: 40px !important; /* Apply 20px margin to the printed content */
+
+      }
+
+
+
+  }
+`;
 const SchoolSumaryView = (props) => {
   const componentRef = useRef();
   const [SchoolAlotReceipt, setSchoolAlotReceipt] = useState({});
@@ -105,6 +122,19 @@ const SchoolSumaryView = (props) => {
         }
       });
     };
+
+  useEffect(() => {
+    // Add print styles to document head
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = printStyles;
+    document.head.appendChild(styleSheet);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
   return (
     <Layout>
       {loader && (
@@ -120,10 +150,7 @@ const SchoolSumaryView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid sm:grid-cols-1 1fr">
-                <div
-                  className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]
-"
-                >
+                <div className="flex items-center space-y-4 self-end md:flex-row justify-between sm:space-y-0 md:space-x-4 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
                   <PageTitleBar
                     title="School Summary"
                     match={props.match}
@@ -131,36 +158,41 @@ const SchoolSumaryView = (props) => {
                     backLink="/report/school"
                   />
                   <div
-                    className="flex"
+                    className="flex space-x-8"
                     style={{
                       display:
                         localStorage.getItem("user_type_id") == 4 ? "none" : "",
                     }}
                   >
-                    <Button
+                    <button
                       variant="text"
                       className="flex items-center space-x-2"
                       onClick={handleSavePDF}
                     >
-                      <LuDownload className="text-lg" />
-                      <span>PDF</span>
-                    </Button>
+                      <FaFilePdf className="text-lg" />
+                      <span className="text-lg font-semibold  ">PDF</span>
+                    </button>
                     <ReactToPrint
                       trigger={() => (
-                        <Button
+                        <button
                           variant="text"
                           className="flex items-center space-x-2"
                         >
                           <IoIosPrint className="text-lg" />
-                          <span>Print Letter</span>
-                        </Button>
+                          <span className="text-lg font-semibold  ">
+                            Print Letter
+                          </span>
+                        </button>
                       )}
                       content={() => componentRef.current}
                     />
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={mergeRefs(componentRef, tableRef)}>
+                <div
+                  ref={mergeRefs(componentRef, tableRef)}
+                  className="print-content"
+                >
                   <div className="flex justify-between items-center mb-4 ">
                     <div className="invoice-logo">
                       <img
@@ -174,7 +206,7 @@ const SchoolSumaryView = (props) => {
                       <img src={image2} alt="session-logo" width="320px" />
                       <h2 className="pt-3">
                         <strong>
-                          <b className="text-lg text-gray-600">
+                          <b className="text-xl text-[#464D69]">
                             SCHOOL SUMMARY
                           </b>
                         </strong>
@@ -189,14 +221,14 @@ const SchoolSumaryView = (props) => {
                       />
                     </div>
                   </div>
-
-                  <div>
+                  {/* <div>
                     <div>
                       <label>
                         Donor Id : {SchoolAlotReceipt.indicomp_fts_id}
                       </label>
                     </div>
                   </div>
+                  //////{" "}
                   <div className="flex justify-between">
                     <div>
                       {SchoolAlotReceipt?.individual_company?.indicomp_type !==
@@ -228,6 +260,51 @@ const SchoolSumaryView = (props) => {
                           <> {otsreceipt.receipt_no_of_ots}</>
                         ))}
                       </label>
+                    </div>
+                  </div>
+                  ////// */}
+                  <div className="flex justify-between mb-6">
+                    <div>
+                      <p className="font-bold">
+                        Donor Id :{" "}
+                        <span className="font-normal">
+                          {SchoolAlotReceipt.indicomp_fts_id}
+                        </span>
+                      </p>
+                      <p className="font-bold">
+                        Donor Name:{" "}
+                        <span className="font-normal">
+                          {SchoolAlotReceipt?.individual_company
+                            ?.indicomp_type !== "Individual"
+                            ? SchoolAlotReceipt?.individual_company
+                                ?.indicomp_full_name
+                            : SchoolAlotReceipt?.individual_company
+                                ?.indicomp_full_name}
+                        </span>
+                      </p>
+
+                      {SchoolAlotReceipt?.individual_company?.indicomp_type ===
+                        "Individual" && (
+                        <p className="font-bold">
+                          Contact Person/Spouse:{" "}
+                          <span className="font-normal">
+                            {
+                              SchoolAlotReceipt?.individual_company
+                                ?.indicomp_spouse_name
+                            }
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-bold">
+                        No of Schools:{" "}
+                        {OTSReceipts.map((otsreceipt, key) => (
+                          <span key={key} className="font-normal">
+                            {otsreceipt.receipt_no_of_ots}
+                          </span>
+                        ))}
+                      </p>
                     </div>
                   </div>
                   <div className="my-5 overflow-x-auto mb-14">
