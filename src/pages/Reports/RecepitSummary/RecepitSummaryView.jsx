@@ -15,6 +15,23 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+
+const printStyles = `
+  @media print {
+
+
+
+
+    /* Print content with 20px margin */
+    .print-content {
+      margin: 40px !important; /* Apply 20px margin to the printed content */
+
+      }
+
+
+
+  }
+`;
 const RecepitSummaryView = (props) => {
   const componentRef = useRef();
   const [donorsummary, setSummary] = useState([]);
@@ -121,6 +138,19 @@ const RecepitSummaryView = (props) => {
         }
       });
     };
+
+  useEffect(() => {
+    // Add print styles to document head
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = printStyles;
+    document.head.appendChild(styleSheet);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
   return (
     <Layout>
       {loader && (
@@ -169,7 +199,10 @@ const RecepitSummaryView = (props) => {
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={mergeRefs(componentRef, tableRef)}>
+                <div
+                  ref={mergeRefs(componentRef, tableRef)}
+                  className="print-content"
+                >
                   <div className="flex justify-between items-center mb-4 ">
                     <div className="invoice-logo">
                       <img
