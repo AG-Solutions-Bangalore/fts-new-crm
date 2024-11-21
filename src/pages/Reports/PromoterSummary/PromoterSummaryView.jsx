@@ -8,7 +8,7 @@ import Moment from "moment";
 import image1 from "../../../assets/receipt/fts.png";
 import image2 from "../../../assets/receipt/top.png";
 import image3 from "../../../assets/receipt/ekal.png";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaFilePdf } from "react-icons/fa6";
 import CustomPivotTable from "./CustomPivotTable";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
@@ -129,7 +129,7 @@ const PromoterSummaryView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto ">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto  grid sm:grid-cols-1 1fr ">
-                <div className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
+                <div className="flex items-center space-y-4 self-end md:flex-row justify-between sm:space-y-0 md:space-x-4 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
                   <PageTitle
                     title="Promoter Summary"
                     match={props.match}
@@ -137,25 +137,27 @@ const PromoterSummaryView = (props) => {
                     backLink="/report/promoter"
                   />
 
-                  <div className="flex ">
-                    <Button
+                  <div className="flex space-x-8 ">
+                    <button
                       variant="text"
                       className="flex items-center space-x-2"
                       onClick={handleSavePDF}
                     >
-                      <LuDownload className="text-lg" />
-                      <span>PDF</span>
-                    </Button>
+                      <FaFilePdf className="text-lg" />
+                      <span className="text-lg font-semibold  ">PDF</span>
+                    </button>
 
                     <ReactToPrint
                       trigger={() => (
-                        <Button
+                        <button
                           variant="text"
                           className="flex items-center space-x-2"
                         >
                           <IoIosPrint className="text-lg" />
-                          <span>Print Letter</span>
-                        </Button>
+                          <span className="text-lg font-semibold  ">
+                            Print Letter
+                          </span>
+                        </button>
                       )}
                       content={() => componentRef.current}
                     />
@@ -177,7 +179,7 @@ const PromoterSummaryView = (props) => {
                       <img src={image2} alt="session-logo" width="320px" />
                       <h2 className="pt-3">
                         <strong>
-                          <b className="text-lg text-gray-600">
+                          <b className="text-xl text-[#464D69]">
                             PROMOTER SUMMARY
                           </b>
                         </strong>

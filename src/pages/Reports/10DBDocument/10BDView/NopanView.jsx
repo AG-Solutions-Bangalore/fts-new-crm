@@ -8,7 +8,7 @@ import image2 from "../../../../assets/receipt/top.png";
 import image3 from "../../../../assets/receipt/ekal.png";
 import Layout from "../../../../layout/Layout";
 import BASE_URL from "../../../../base/BaseUrl";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaFilePdf } from "react-icons/fa6";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
@@ -114,35 +114,34 @@ const NopanView = (props) => {
           <div className="flex flex-col items-center">
             <div className="w-full mx-auto">
               <div className="bg-white shadow-md rounded-lg p-6 overflow-x-auto grid sm:grid-cols-1 1fr">
-                <div
-                  className="flex items-center space-y-4 self-end md:flex-row md:justify-between sm:space-y-0 md:space-x-4 mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]
-"
-                >
+                <div className="flex items-center space-y-4 self-end md:flex-row justify-between sm:space-y-0 md:space-x-4 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA]">
                   <PageTitleBar
                     title="Receipt Document"
                     icon={IconArrowBack}
                     match={props.match}
                     backLink="/report/otg"
                   />{" "}
-                  <div className="flex">
-                    <Button
+                  <div className="flex space-x-8 ">
+                    <button
                       variant="text"
                       className="flex items-center space-x-2"
                       onClick={handleSavePDF}
                     >
-                      <LuDownload className="text-lg" />
-                      <span>PDF</span>
-                    </Button>
+                      <FaFilePdf className="text-lg" />
+                      <span className="text-lg font-semibold ">PDF</span>
+                    </button>
 
                     <ReactToPrint
                       trigger={() => (
-                        <Button
+                        <button
                           variant="text"
                           className="flex items-center space-x-2"
                         >
                           <IoIosPrint className="text-lg" />
-                          <span>Print Letter</span>
-                        </Button>
+                          <span className="text-lg font-semibold ">
+                            Print Letter
+                          </span>
+                        </button>
                       )}
                       content={() => componentRef.current}
                     />
@@ -157,9 +156,7 @@ const NopanView = (props) => {
                     </div>
                     <div className="text-center">
                       <img src={image2} alt="header-logo" width="320px" />
-                      <h2 className="pt-3 font-bold text-lg text-gray-600">
-                        FORM No. 10BD
-                      </h2>
+                      <b className="text-xl text-[#464D69]">FORM No. 10BD</b>
                     </div>
                     <div className="invoice-logo text-right">
                       <img src={image3} alt="logo" width="80" height="80" />
