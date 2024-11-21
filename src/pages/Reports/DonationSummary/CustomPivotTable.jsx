@@ -153,25 +153,61 @@ const CustomPivotTable = ({ data }) => {
             </td>
             {donationTypes.map((type, index) => (
               <React.Fragment key={index}>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "right",
+                  }}
+                >
                   {groupedData[year][type]?.donationCount || 0}
                 </td>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "right",
+                  }}
+                >
                   {groupedData[year][type]?.otsCount || 0}
                 </td>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "right",
+                  }}
+                >
                   {groupedData[year][type]?.totalAmount || 0}
                 </td>
               </React.Fragment>
             ))}
 
-            <td style={{ border: "1px solid black", padding: "8px" }}>
+            <td
+              style={{
+                border: "1px solid black",
+                padding: "8px",
+                textAlign: "right",
+              }}
+            >
               {grandTotalDonations}
             </td>
-            <td style={{ border: "1px solid black", padding: "8px" }}>
+            <td
+              style={{
+                border: "1px solid black",
+                padding: "8px",
+                textAlign: "right",
+              }}
+            >
               {grandTotalOTS}
             </td>
-            <td style={{ border: "1px solid black", padding: "8px" }}>
+            <td
+              style={{
+                border: "1px solid black",
+                padding: "8px",
+                textAlign: "right",
+              }}
+            >
               {grandTotalAmount}
             </td>
           </tr>
@@ -180,7 +216,13 @@ const CustomPivotTable = ({ data }) => {
 
       <tfoot className="text-xs">
         <tr>
-          <td style={{ border: "1px solid black", padding: "8px" }}>
+          <td
+            style={{
+              border: "1px solid black",
+              padding: "8px",
+              textAlign: "left",
+            }}
+          >
             <strong>Grand Total:</strong>
           </td>
           {donationTypes.map((type, index) => {
@@ -201,26 +243,57 @@ const CustomPivotTable = ({ data }) => {
 
             return (
               <React.Fragment key={index}>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "right",
+                  }}
+                >
                   <strong>{totalDonationsForType}</strong>
                 </td>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "right",
+                  }}
+                >
                   <strong>{totalOTSForType}</strong>
                 </td>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "right",
+                  }}
+                >
                   <strong>{totalAmountForType}</strong>
                 </td>
               </React.Fragment>
             );
           })}
 
-          <td style={{ border: "1px solid black", padding: "8px" }}>
+          <td
+            style={{
+              border: "1px solid black",
+              padding: "8px",
+              textAlign: "right",
+            }}
+          >
             <strong>{grandTotalDonations}</strong>
           </td>
-          <td style={{ border: "1px solid black", padding: "8px" }}>
+          <td
+            style={{
+              border: "1px solid black",
+              padding: "8px",
+              textAlign: "right",
+            }}
+          >
             <strong>{grandTotalOTS}</strong>
           </td>
-          <td style={{ border: "1px solid black", padding: "8px" }}>
+          <td style={{ border: "1px solid black", padding: "8px",
+                    textAlign: "right", }}>
             <strong>{grandTotalAmount}</strong>
           </td>
         </tr>
