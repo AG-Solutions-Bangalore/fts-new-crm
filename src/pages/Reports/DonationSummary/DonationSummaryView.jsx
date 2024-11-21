@@ -15,6 +15,23 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+
+const printStyles = `
+  @media print {
+
+
+
+
+    /* Print content with 20px margin */
+    .print-content {
+      margin: 40px !important; /* Apply 20px margin to the printed content */
+
+      }
+
+
+
+  }
+`;
 const DonationSummaryView = (props) => {
   const [donorsummary, setSummary] = useState([]);
   const [receiptsummary, setReceiptSummary] = useState({});
@@ -118,6 +135,19 @@ const DonationSummaryView = (props) => {
         }
       });
     };
+
+  useEffect(() => {
+    // Add print styles to document head
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = printStyles;
+    document.head.appendChild(styleSheet);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
   return (
     <Layout>
       {loader && (
@@ -166,7 +196,10 @@ const DonationSummaryView = (props) => {
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={mergeRefs(componentRef, tableRef)}>
+                <div
+                  ref={mergeRefs(componentRef, tableRef)}
+                  className="print-content"
+                >
                   <div className="flex justify-between items-center mb-4 ">
                     <div className="invoice-logo">
                       <img
@@ -180,7 +213,7 @@ const DonationSummaryView = (props) => {
                       <img src={image2} alt="session-logo" width="320px" />
                       <h2 className="pt-3">
                         <strong>
-                          <b className="text-lg text-gray-600">
+                          <b className="text-xl text-[#464D69]">
                             DONATION SUMMARY
                           </b>
                         </strong>

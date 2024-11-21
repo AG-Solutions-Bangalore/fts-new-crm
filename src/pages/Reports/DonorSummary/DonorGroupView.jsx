@@ -17,7 +17,22 @@ import ReactToPrint from "react-to-print";
 
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+const printStyles = `
+  @media print {
 
+
+
+
+    /* Print content with 20px margin */
+    .print-content {
+      margin: 40px !important; /* Apply 20px margin to the printed content */
+
+      }
+
+
+
+  }
+`;
 const DonorGroupView = (props) => {
   const componentRef = useRef();
   const [donorsummary, setSummary] = useState([]);
@@ -149,6 +164,19 @@ const DonorGroupView = (props) => {
         }
       });
     };
+
+  useEffect(() => {
+    // Add print styles to document head
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = printStyles;
+    document.head.appendChild(styleSheet);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
   return (
     <Layout>
       {loader && (
@@ -206,7 +234,10 @@ const DonorGroupView = (props) => {
                   </div>
                 </div>
                 <hr className="mb-6"></hr>
-                <div ref={mergeRefs(componentRef, tableRef)}>
+                <div
+                  ref={mergeRefs(componentRef, tableRef)}
+                  className="print-content"
+                >
                   <div className="flex justify-between items-center mb-4  ">
                     <div className="invoice-logo">
                       <img
@@ -286,7 +317,7 @@ const DonorGroupView = (props) => {
                     <div className="flex  justify-between mb-6" key={key}>
                       {/* Left Section */}
                       <div className="mb-4 md:mb-0">
-                        <p className="font-bold">
+                        <p className="font-bold mb-1">
                           Full Name:{" "}
                           <span className="font-normal">
                             {individ.indicomp_type === "Individual" ? (
@@ -298,7 +329,7 @@ const DonorGroupView = (props) => {
                             )}
                           </span>
                         </p>
-                        <p className="font-bold">
+                        <p className="font-bold mb-1">
                           Contact Person/Spouse:{" "}
                           <span className="font-normal">
                             {individ.indicomp_type === "Individual" ? (
@@ -311,7 +342,7 @@ const DonorGroupView = (props) => {
                             )}
                           </span>
                         </p>
-                        <p className="font-bold">
+                        <p className="font-bold mb-1">
                           Promoter:{" "}
                           <span className="font-normal">
                             {individ.indicomp_promoter}
@@ -321,13 +352,13 @@ const DonorGroupView = (props) => {
 
                       {/* Right Section */}
                       <div>
-                        <p className="font-bold">
+                        <p className="font-bold mb-1">
                           Mobile:{" "}
                           <span className="font-normal">
                             {individ.indicomp_mobile_phone}
                           </span>
                         </p>
-                        <p className="font-bold">
+                        <p className="font-bold mb-1">
                           PAN Number:{" "}
                           <span className="font-normal">
                             {individ.indicomp_pan_no}
