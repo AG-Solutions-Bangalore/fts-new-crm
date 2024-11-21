@@ -4,7 +4,7 @@ import { ContextPanel } from "../../../utils/ContextPanel";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
-import { MdConfirmationNumber} from "react-icons/md";
+import { MdConfirmationNumber } from "react-icons/md";
 import moment from "moment";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit, IconEye } from "@tabler/icons-react";
@@ -45,12 +45,16 @@ const SchoolAllot = () => {
   }, []);
 
   const columns = [
-    { accessorKey: "indicomp_full_name", header: "Donor Name" ,size:50, },
-    { accessorKey: "schoolalot_financial_year", header: "School Allot Year",size:50, },
+    { accessorKey: "indicomp_full_name", header: "Donor Name", size: 50 },
+    {
+      accessorKey: "schoolalot_financial_year",
+      header: "School Allot Year",
+      size: 50,
+    },
     {
       accessorKey: "schoolalot_from_date",
       header: "From Date",
-      size:50,
+      size: 50,
       Cell: ({ row }) => {
         const formattedDate = moment(row.original.schoolalot_from_date).format(
           "DD-MM-YYYY"
@@ -61,7 +65,7 @@ const SchoolAllot = () => {
     {
       accessorKey: "schoolalot_to_date",
       header: "To Date",
-      size:50,
+      size: 50,
       Cell: ({ row }) => {
         const formattedDate = moment(row.original.schoolalot_to_date).format(
           "DD-MM-YYYY"
@@ -69,12 +73,16 @@ const SchoolAllot = () => {
         return <span>{formattedDate}</span>;
       },
     },
-    { accessorKey: "receipt_no_of_ots", header: "OTS Received",size:50, },
-    { accessorKey: "no_of_schools_allotted", header: "Schools Allotted",size:50, },
+    { accessorKey: "receipt_no_of_ots", header: "OTS Received", size: 50 },
+    {
+      accessorKey: "no_of_schools_allotted",
+      header: "Schools Allotted",
+      size: 50,
+    },
     {
       accessorKey: "pending",
       header: "Pending",
-      size:50,
+      size: 50,
       Cell: ({ row }) => {
         const pending =
           row.original.receipt_no_of_ots - row.original.no_of_schools_allotted;
@@ -88,13 +96,11 @@ const SchoolAllot = () => {
 
             accessorKey: "Action",
             header: "Action",
-            size:50,
+            size: 50,
             Cell: ({ row }) => {
               const newValue = row.original.id;
 
-              const newYear = row.original.schoolalot_financial_year.substring(
-                row.original.schoolalot_financial_year.indexOf("#") + 1
-              );
+              const newYear = row.original.schoolalot_financial_year;
               const handleedit = () => {
                 navigate("/students-allotedit");
                 console.log("this");
@@ -164,17 +170,13 @@ const SchoolAllot = () => {
   });
   return (
     <Layout>
-     
       <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
-            <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
-            Schools Allotments List
-            </h1>
-          
-          </div>
+        <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
+          Schools Allotments List
+        </h1>
+      </div>
       <div className="mt-5">
-        
-          <MantineReactTable table={table} />
-     
+        <MantineReactTable table={table} />
       </div>
     </Layout>
   );
