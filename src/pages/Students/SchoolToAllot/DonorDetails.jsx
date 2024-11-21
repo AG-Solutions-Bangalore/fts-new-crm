@@ -6,9 +6,8 @@ import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import MUIDataTable from "mui-datatables";
 import toast from "react-hot-toast";
-import schoolalotcurrentfromdate from "./Date/FromDate";
-import schoolalotcurrenttodate from "./Date/ToDate";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { FormLabel } from "@mui/material";
 
 const DonorDetails = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
@@ -22,22 +21,19 @@ const DonorDetails = () => {
   const fyear = localStorage.getItem("fyearstl");
   console.log(year);
   // Get the first and last date
-  const fromdate = schoolalotcurrentfromdate.toString();
-  const todate = schoolalotcurrenttodate.toString();
+  const [dateschool, setDateschool] = useState({});
 
   const [schoolalot, setSchoolalot] = useState({
     indicomp_fts_id: "",
     schoolalot_financial_year: year,
-    schoolalot_to_date: todate,
-    schoolalot_from_date: fromdate,
+    schoolalot_to_date: "",
+    schoolalot_from_date: "",
     schoolalot_school_id: "",
     rept_fin_year: fyear,
   });
-
-
+  console.log("date", schoolalot);
   const [userdata, setUserdata] = useState("");
-
-  useEffect(() => {
+  const FetchSchool = () => {
     axios({
       url: BASE_URL + "/api/fetch-schoolsallotdonor-by-id/" + id,
       method: "GET",
@@ -48,6 +44,28 @@ const DonorDetails = () => {
       console.log("editdon", res.data);
       setUserdata(res.data.SchoolAlotDonor);
     });
+  };
+
+  const FetchDate = () => {
+    axios({
+      url: `${BASE_URL}/api/fetch-school-allot-year-by-year/${schoolalot.schoolalot_financial_year}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => {
+        console.log("editdon", res.data.schoolallotyear);
+        setDateschool(res.data.schoolallotyear);
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+      });
+  };
+
+  useEffect(() => {
+    FetchSchool();
+    FetchDate();
   }, []);
   useEffect(() => {
     const fetchApprovedRData = async () => {
@@ -98,8 +116,8 @@ const DonorDetails = () => {
     let data = {
       indicomp_fts_id: userdata.indicomp_fts_id,
       schoolalot_financial_year: year,
-      schoolalot_to_date: schoolalot.schoolalot_to_date,
-      schoolalot_from_date: schoolalot.schoolalot_from_date,
+      schoolalot_to_date: dateschool.school_allot_to,
+      schoolalot_from_date: dateschool.school_allot_from,
       schoolalot_school_id: schoolIdsSelected,
       rept_fin_year: fyear,
     };
@@ -130,8 +148,8 @@ const DonorDetails = () => {
   ];
 
   const options = {
-    filterType: "textField",
- 
+    // filterType: "textField",
+
     filter: true,
     search: true,
     print: false,
@@ -157,76 +175,10 @@ const DonorDetails = () => {
     customToolbarSelect: () => null,
   };
 
-  const InfoField = ({ label, value, icon }) => (
-    <div className="relative">
-      <label className=" text-sm font-semibold text-black mb-1 flex items-center gap-2">
-        {icon && <span className="text-gray-500">{icon}</span>}
-        {label}
-      </label>
-      <div className="w-full px-3 py-2 text-xs border rounded-lg border-green-500 bg-white hover:bg-gray-50 transition-colors">
-        {value}
-      </div>
-    </div>
-  );
-
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed";
   return (
     <Layout>
-      {/* <PageTitle
-        title="Donor Details"
-        icon={IoMdArrowBack}
-        backLink={"/students-to-allot"}
-      />
-      <Card>
-        <div className="grid grid-cols md:grid-cols-3 gap-4 p-2">
-          <Input
-            label="School Allot Year"
-            name="schoolalot_financial_year"
-            value={schoolalot.schoolalot_financial_year}
-            disabled
-            labelProps={{
-              className: "!text-gray-500",
-            }}
-          />
-          <Input
-            label="From Date"
-            name="schoolalot_from_date"
-            type="date"
-            disabled
-            value={schoolalot.schoolalot_from_date}
-            labelProps={{
-              className: "!text-gray-500",
-            }}
-          />
-          <Input
-            label="To Date"
-            name="schoolalot_to_date"
-            type="date"
-            disabled
-            value={schoolalot.schoolalot_to_date}
-            labelProps={{
-              className: "!text-gray-500",
-            }}
-          />
-        </div>
-        <div className="mt-5">
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <Spinner className="h-12 w-12" color="purple" />
-            </div>
-          ) : (
-            <MUIDataTable
-              data={schoolToAllot}
-              columns={columns}
-              options={options}
-            />
-          )}
-        </div>
-        <div className="mt-5 flex justify-end p-4">
-          <Button onClick={onSubmit} color="purple">
-            Submit
-          </Button>
-        </div>
-      </Card> */}
       <div className="  bg-[#FFFFFF] p-2   ">
         <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
@@ -245,19 +197,47 @@ const DonorDetails = () => {
         <hr />
         <div>
           <div className="grid grid-cols md:grid-cols-3 gap-4 p-4">
-            <InfoField
-              label="School Allot Year"
-              value={schoolalot.schoolalot_financial_year}
-            />
-            <InfoField
-              label="From Date"
-              value={schoolalot.schoolalot_from_date}
-            />
-            <InfoField label="To Date" value={schoolalot.schoolalot_to_date} />
+            <div>
+              <FormLabel>
+                School Allot Year<span className="text-red-600">*</span>
+              </FormLabel>
+              <input
+                // type="date"
+                label="School Allot Year"
+                value={schoolalot.schoolalot_financial_year}
+                className={inputClass}
+                required
+                disabled
+              />
+            </div>
+            <div>
+              <FormLabel>
+                From Date<span className="text-red-600">*</span>
+              </FormLabel>
+              <input
+                type="date"
+                value={dateschool.school_allot_from}
+                className={inputClass}
+                required
+                disabled
+              />
+            </div>
+            <div>
+              <FormLabel>
+                To Date<span className="text-red-600">*</span>
+              </FormLabel>
+              <input
+                type="date"
+                value={dateschool.school_allot_to}
+                className={inputClass}
+                required
+                disabled
+              />
+            </div>
           </div>
           <div className="mt-5">
-          <MUIDataTable
-          title="School List"
+            <MUIDataTable
+              title="School List"
               data={schoolToAllot}
               columns={columns}
               options={options}
@@ -266,7 +246,7 @@ const DonorDetails = () => {
           <div className="mt-5 flex justify-end p-4">
             <button
               onClick={onSubmit}
-              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
             >
               Submit
             </button>

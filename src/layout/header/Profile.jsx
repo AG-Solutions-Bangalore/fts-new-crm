@@ -311,7 +311,7 @@ const Profile = () => {
                   <button
                     disabled={isButtonDisabled}
                     type="submit"
-                    className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 h-15 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
                   >
                     {isButtonDisabled ? "updating..." : "Update Profile"}
                   </button>
@@ -388,9 +388,9 @@ const Profile = () => {
                   <button
                     disabled={isButtonDisabled}
                     type="submit"
-                    className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 h-15 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
                   >
-                    {isButtonDisabled ? "updating..." : "Update Profile"}
+                    {isButtonDisabled ? "updating..." : "Update Profile "}
                   </button>
                 </div>
               </div>
