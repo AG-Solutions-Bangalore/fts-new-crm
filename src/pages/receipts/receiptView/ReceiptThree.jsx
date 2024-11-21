@@ -1,18 +1,20 @@
 import axios from 'axios';
 import numWords from 'num-words';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import BASE_URL from '../../../base/BaseUrl';
 import moment from 'moment';
 import Logo1 from '../../../assets/receipt/fts.png'
 import Logo2 from '../../../assets/receipt/top.png'
 import Logo3 from '../../../assets/receipt/ekal.png'
+import ReactToPrint from 'react-to-print';
+import { IoIosPrint } from 'react-icons/io';
 
 const ReceiptThree = () => {
     const navigate = useNavigate();
 
     const { id } = useParams();
-  
+    const componentRef = useRef();
   
   
     const [states, setStates] = useState([]);
@@ -59,8 +61,22 @@ const ReceiptThree = () => {
   return (
     <div className=" flex justify-center">
     <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">
-     
-      <div className="p-2"
+    <div>
+        <ReactToPrint
+                      trigger={() => (
+                        <button
+                     
+                          className="flex items-center space-x-2 hover:text-red-400"
+                        >
+                          <IoIosPrint className="text-lg" />
+                          <span>Print Letter</span>
+                        </button>
+                      )}
+                      content={() => componentRef.current}
+                    />
+        </div>
+        <hr className="border-b border-blue-gray-400" />
+      <div ref={componentRef} className="p-2"
      
        style={{ margin: "5px" }}>
         <div className="flex justify-between items-center ">

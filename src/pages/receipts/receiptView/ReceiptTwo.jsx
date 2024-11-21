@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
 import { toast } from "react-toastify";
 import numWords from "num-words";
 import moment from "moment";
+import ReactToPrint from "react-to-print";
+import { IoIosPrint } from "react-icons/io";
 
 const ReceiptTwo = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-
+  const componentRef = useRef();
   const [viewerId, setID] = useState(0);
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
@@ -63,7 +65,22 @@ const ReceiptTwo = () => {
   return (
     <div className=" flex justify-center">
       <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">
-        <div className="p-10" style={{ margin: "5px" }}>
+        <div>
+        <ReactToPrint
+                      trigger={() => (
+                        <button
+                     
+                          className="flex items-center space-x-2 hover:text-red-400"
+                        >
+                          <IoIosPrint className="text-lg" />
+                          <span>Print Letter</span>
+                        </button>
+                      )}
+                      content={() => componentRef.current}
+                    />
+        </div>
+        <hr className="border-b border-blue-gray-400" />
+        <div ref={componentRef} className="p-10" style={{ margin: "5px" }}>
           <div
             className="flex justify-between"
             style={{

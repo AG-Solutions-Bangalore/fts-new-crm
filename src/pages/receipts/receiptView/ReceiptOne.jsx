@@ -10,6 +10,7 @@ import Logo1 from "../../../assets/receipt/fts.png";
 import Logo2 from "../../../assets/receipt/top.png";
 import Logo3 from "../../../assets/receipt/ekal.png";
 import moment from "moment";
+import { IconDownload, IconMail, IconPrinter, IconReceipt } from "@tabler/icons-react";
 const ReceiptOne = () => {
   const componentRef = useRef();
   const componentRefp = useRef();
@@ -61,10 +62,8 @@ const ReceiptOne = () => {
     })
     .replace(/\//g, "-");
 
-  useEffect(() => {
-    setTheId(id);
-
-    axios({
+  const fetchDataReceipt = async () => {
+    await axios({
       url: `${BASE_URL}/api/fetch-receipt-by-id/${id}`,
       method: "GET",
       headers: {
@@ -78,6 +77,10 @@ const ReceiptOne = () => {
       setCountry(res.data.country);
       setLoader(false);
     });
+  };
+  useEffect(() => {
+    setTheId(id);
+    fetchDataReceipt();
   }, []);
 
   const printReceipt = (e) => {
@@ -88,7 +91,7 @@ const ReceiptOne = () => {
   const sendEmail = (e) => {
     e.preventDefault();
     axios({
-      url: `${BASE_URL}/send-receipt?id=${theId}`,
+      url: `${BASE_URL}/api/send-receipt?id=${theId}`,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("login")}`,
@@ -133,8 +136,9 @@ const ReceiptOne = () => {
     }
     setIsButtonDisabled(true);
     const formData = {
-      indicomp_email: donor.indicomp_email,
+      indicomp_email: donor1.indicomp_email,
     };
+    console.log("formdata", formData);
     try {
       const response = await axios.put(
         `${BASE_URL}/api/update-donor-email/${localStorage.getItem("ftsid")}`,
@@ -146,17 +150,12 @@ const ReceiptOne = () => {
         }
       );
 
-      if (response.data.code == "200") {
+      if (response.status == "200") {
         handleClose();
+        fetchDataReceipt()
         toast.success("Data Added Successfully");
       } else {
-        if (response.data.code == "401") {
-          toast.error("Data  Duplicate Entry");
-        } else if (response.data.code == "402") {
-          toast.error("Data  Duplicate Entry");
-        } else {
-          toast.error("Data  Duplicate Entry");
-        }
+        toast.error("Data  Duplicate Entry");
       }
     } catch (error) {
       console.error("Error updating Data :", error);
@@ -184,7 +183,10 @@ const ReceiptOne = () => {
               <div className="flex justify-end p-4 space-x-4">
                 <button className="flex items-center text-blue-600 hover:text-blue-800">
                   <a href={BASE_URL + "/api/download-receipts?id=" + theId}>
-                    <span className="mr-2">⬇️</span> Download
+                    <span className="mr-2 flex items-center gap-1">
+                      <IconDownload className="h-5 w-5 text-black"/>
+                        <p>Download</p>
+                      </span> 
                   </a>
                 </button>
 
@@ -193,7 +195,9 @@ const ReceiptOne = () => {
                     onClick={sendEmail}
                     className="flex items-center text-blue-600 hover:text-blue-800"
                   >
-                    <span className="mr-2">✉️</span>
+                    <span className="mr-2">
+                      <IconMail className="h-5 w-5 text-black"/>
+                    </span>
                     Email
                     <div className="text-xs ml-1">
                       {`Sent ${receipts.receipt_email_count || 0} times`}
@@ -204,7 +208,10 @@ const ReceiptOne = () => {
                 {receipts?.individual_company?.indicomp_email === null && (
                   <div>
                     <p className="text-red-500">
-                      <span className="mr-2">✉️</span> Email not found
+                      <span className="mr-2">
+                        
+                        <IconPrinter className="h-5 w-5 text-black"/>
+                        </span> Email not found
                     </p>
                     <button
                       onClick={handleClickOpen}
@@ -227,7 +234,7 @@ const ReceiptOne = () => {
             <div className="p-4" ref={componentRefp}>
               <div className="relative">
                 <img
-                  src="../fts_watermark.png"
+                  src={Logo1}
                   alt="water mark"
                   className=" absolute top-24 left-[360px]  opacity-30 "
                 />
