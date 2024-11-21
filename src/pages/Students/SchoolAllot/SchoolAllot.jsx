@@ -100,7 +100,8 @@ const SchoolAllot = () => {
             Cell: ({ row }) => {
               const newValue = row.original.id;
 
-              const newYear = row.original.schoolalot_financial_year;
+              const newYear = row.original.schoolalot_financial_year
+
               const handleedit = () => {
                 navigate("/students-allotedit");
                 console.log("this");
