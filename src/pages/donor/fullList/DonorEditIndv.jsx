@@ -860,13 +860,10 @@ const DonorEditIndv = ({ id }) => {
           >
             {isButtonDisabled ? "Updating..." : "Update"}
           </button>
-          
-        </div>
-      </form>
-      <div className="flex gap-4 justify-end">
-         
+
           {donor.indicomp_related_id == donor.indicomp_fts_id ? (
             <button
+              type="button"
               onClick={() => openmodal()}
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
@@ -875,8 +872,9 @@ const DonorEditIndv = ({ id }) => {
           ) : (
             <button
               disabled
+              type="button"
               onClick={() => openmodal()}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-not-allowed hover:animate-pulse w-36 text-white bg-blue-100 hover:bg-green-100 p-2 rounded-lg shadow-md"
             >
               Attach to Group
             </button>
@@ -884,7 +882,8 @@ const DonorEditIndv = ({ id }) => {
           {donor.indicomp_related_id == donor.indicomp_fts_id ? (
             <button
               disabled
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              type="button"
+              className="text-center text-sm font-[400] cursor-not-allowed hover:animate-pulse w-36 text-white bg-blue-100 hover:bg-green-100 p-2 rounded-lg shadow-md"
             >
               Leave Group
             </button>
@@ -892,13 +891,14 @@ const DonorEditIndv = ({ id }) => {
             <button
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
               color="info"
+              type="button"
               onClick={() => familyGroupStatus("leave_family_group")}
             >
               Leave Group
             </button>
           )}
           <button
-            type="submit"
+            type="button"
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md"
             onClick={() => {
               navigate("/donor-list");
@@ -907,6 +907,8 @@ const DonorEditIndv = ({ id }) => {
             Cancel
           </button>
         </div>
+      </form>
+      <div className="flex gap-4 justify-end"></div>
 
       <Dialog open={showmodal} toggle={() => closegroupModal()}>
         <DialogHeader> Add to Group</DialogHeader>

@@ -214,38 +214,38 @@ const RecepitDocument = () => {
           </div>
           <div className="flex flex-wrap justify-start gap-4 py-4">
             <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md w-full sm:w-auto"
-              onClick={onSubmit}
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                onClick={onSubmit}
             >
               Download
             </button>
             <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md w-full sm:w-auto"
-              onClick={onReportView}
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                onClick={onReportView}
             >
               View
             </button>
             <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md w-full sm:w-auto"
-              onClick={onSubmitNopan}
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                onClick={onSubmitNopan}
             >
               No pan Download
             </button>
             <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md w-full sm:w-auto"
-              onClick={onReportNopanView}
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                onClick={onReportNopanView}
             >
               No pan View
             </button>
             <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md w-full sm:w-auto"
-              onClick={onSubmitGroup}
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                onClick={onSubmitGroup}
             >
               Download Group
             </button>
             <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md w-full sm:w-auto"
-              onClick={onReportGroupView}
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                onClick={onReportGroupView}
             >
               View Group
             </button>

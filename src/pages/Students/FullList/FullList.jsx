@@ -62,12 +62,7 @@ const FullList = () => {
 
   // Define columns for MantineReactTable
   const columns = [
-    {
-      accessorKey: "index",
-      header: "Sl No.",
-      size: 50,
-      Cell: ({ row }) => <span>{row.index + 1}</span>,
-    },
+
     { accessorKey: "school_state", header: "State", size: 50 },
     { accessorKey: "district", header: "District", size: 50 },
     { accessorKey: "achal", header: "Achal", size: 50 },
@@ -75,10 +70,11 @@ const FullList = () => {
     { accessorKey: "sub_cluster", header: "Sub Cluster", size: 50 },
     { accessorKey: "village", header: "Village", size: 50 },
     { accessorKey: "school_code", header: "School Code", size: 50 },
-    { accessorKey: "status_label", header: "Status", size: 50 },
+    { accessorKey: "status_label", header: "Status", size: 50, },
     {
       accessorKey: "actions",
       header: "Actions",
+      enableColumnFilter: false,
       size: 50,
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">

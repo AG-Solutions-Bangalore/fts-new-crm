@@ -13,7 +13,7 @@ const SchoolAllotEdit = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
- 
+
   const [schoolAllot, setSchoolAllot] = useState([]);
   const navigate = useNavigate();
 
@@ -248,16 +248,19 @@ const SchoolAllotEdit = () => {
         <div className="mt-5">
           {/* <MantineReactTable table={table} /> */}
           <MUIDataTable
-          title ="School List"
-              data={schoolToAllot}
-              columns={columns}
-              options={options}
-            />
+            title="School List"
+            data={schoolToAllot}
+            columns={columns}
+            options={options}
+          />
         </div>
-        <div className="mt-5 flex justify-end p-4">
-          <Button onClick={onSubmit} color="purple">
+        <div className="mt-5 flex justify-start p-4">
+          <button
+            onClick={onSubmit}
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+          >
             Update
-          </Button>
+          </button>
         </div>
       </Card>
     </Layout>

@@ -81,55 +81,6 @@ const donation_type_2 = [
   },
 ];
 
-const member_date = [
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-  {
-    value: "2024",
-    label: "2024",
-  },
-  {
-    value: "2025",
-    label: "2025",
-  },
-  {
-    value: "2026",
-    label: "2026",
-  },
-];
-
-const school_year = [
-  {
-    value: "2020-21",
-    label: "2020-21",
-  },
-  {
-    value: "2021-22",
-    label: "2021-22",
-  },
-  {
-    value: "2022-23",
-    label: "2022-23",
-  },
-  {
-    value: "2023-24",
-    label: "2023-24",
-  },
-  {
-    value: "2024-25",
-    label: "2024-25",
-  },
-  {
-    value: "2025-26",
-    label: "2025-26",
-  },
-];
 const CreateReceipt = ({ donorId, onClose }) => {
   const today = new Date();
   const navigate = useNavigate();
@@ -151,7 +102,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loader, setLoader] = useState(true);
   const [donor, setDonor] = useState({
-    receipt_date: todayback,
+    receipt_date: "",
     receipt_old_no: "",
     receipt_exemption_type: "",
     receipt_financial_year: "",
@@ -240,6 +191,48 @@ const CreateReceipt = ({ donorId, onClose }) => {
         setDatasource(res.data.datasource);
       });
   }, []);
+  const [membershipyear, setMembershipYear] = useState([]);
+  const FetchMemeberShipYear = () => {
+    axios
+      .get(`${BASE_URL}/api/fetch-membership-year`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setMembershipYear(res.data.membershipyear);
+      });
+  };
+  const [schoolallotyear, setSchoolAllotYear] = useState([]);
+  const FetchSchoolAllotYear = () => {
+    axios
+      .get(`${BASE_URL}/api/fetch-school-allot-year`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setSchoolAllotYear(res.data.schoolallotyear);
+      });
+  };
+  const [recepitcontrol, setRecepitControl] = useState({});
+  const FetchRecepitYear = () => {
+    axios
+      .get(`${BASE_URL}/api/fetch-receipt-control`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setRecepitControl(res.data.receipt_control);
+        console.log("data", res.data.receipt_control);
+      });
+  };
+  useEffect(() => {
+    FetchSchoolAllotYear();
+    FetchMemeberShipYear();
+    FetchRecepitYear();
+  }, []);
 
   const pan = userdata.indicomp_pan_no == "" ? "NA" : userdata.indicomp_pan_no;
 
@@ -250,31 +243,41 @@ const CreateReceipt = ({ donorId, onClose }) => {
       form.reportValidity();
       return;
     }
+
     setIsButtonDisabled(true);
-    const formData = {
-      indicomp_fts_id: userdata.indicomp_fts_id,
-      receipt_date: todayback,
-      receipt_old_no: donor.receipt_old_no,
-      receipt_exemption_type: donor.receipt_exemption_type,
-      receipt_financial_year: currentYear,
-      schoolalot_year: donor.schoolalot_year,
-      receipt_total_amount: donor.receipt_total_amount,
-      receipt_realization_date: donor.receipt_realization_date,
-      receipt_donation_type: donor.receipt_donation_type,
-      receipt_tran_pay_mode: donor.receipt_tran_pay_mode,
-      receipt_tran_pay_details: donor.receipt_tran_pay_details,
-      receipt_remarks: donor.receipt_remarks,
-      receipt_reason: donor.receipt_reason,
-      receipt_email_count: donor.receipt_email_count,
-      receipt_created_at: donor.receipt_created_at,
-      receipt_created_by: donor.receipt_created_by,
-      receipt_update_at: donor.receipt_update_at,
-      receipt_update_by: donor.receipt_update_by,
-      m_ship_vailidity: donor.m_ship_vailidity,
-      receipt_no_of_ots: donor.receipt_no_of_ots,
-      donor_promoter: userdata.indicomp_promoter,
-      donor_source: donor.donor_source,
-    };
+    const formData = new FormData();
+    formData.append("indicomp_fts_id", userdata.indicomp_fts_id);
+    if (
+      recepitcontrol.date_open === "No" &&
+      recepitcontrol.date_open_one === "No"
+    ) {
+      formData.append("receipt_date", todayback);
+    } else if (recepitcontrol.date_open === "Yes") {
+      formData.append("receipt_date", donor.receipt_date);
+    } else if (recepitcontrol.date_open_one === "Yes") {
+      formData.append("receipt_date", recepitcontrol.date_open_one_date);
+    }
+
+    formData.append("receipt_old_no", donor.receipt_old_no);
+    formData.append("receipt_exemption_type", donor.receipt_exemption_type);
+    formData.append("receipt_financial_year", currentYear);
+    formData.append("schoolalot_year", donor.schoolalot_year);
+    formData.append("receipt_total_amount", donor.receipt_total_amount);
+    formData.append("receipt_realization_date", donor.receipt_realization_date);
+    formData.append("receipt_donation_type", donor.receipt_donation_type);
+    formData.append("receipt_tran_pay_mode", donor.receipt_tran_pay_mode);
+    formData.append("receipt_tran_pay_details", donor.receipt_tran_pay_details);
+    formData.append("receipt_remarks", donor.receipt_remarks);
+    formData.append("receipt_reason", donor.receipt_reason);
+    formData.append("receipt_email_count", donor.receipt_email_count);
+    formData.append("receipt_created_at", donor.receipt_created_at);
+    formData.append("receipt_created_by", donor.receipt_created_by);
+    formData.append("receipt_update_at", donor.receipt_update_at);
+    formData.append("receipt_update_by", donor.receipt_update_by);
+    formData.append("m_ship_vailidity", donor.m_ship_vailidity);
+    formData.append("receipt_no_of_ots", donor.receipt_no_of_ots);
+    formData.append("donor_promoter", userdata.indicomp_promoter);
+    formData.append("donor_source", donor.donor_source);
     try {
       const response = await axios.post(
         `${BASE_URL}/api/create-receipt`,
@@ -346,13 +349,29 @@ const CreateReceipt = ({ donorId, onClose }) => {
             </div>
             <div className="space-y-1 relative">
               <div className="flex items-center">
-                <h3 className="text-md font-semibold text-black">
-                  {moment(donor.receipt_date).format("DD-MM-YYYY")}
-                </h3>
-                <p className=" absolute -mt-9 text-xs font-semibold text-black">
-                  Year: {currentYear}
-                </p>
+                {recepitcontrol.date_open === "No" &&
+                recepitcontrol.date_open_one === "No" ? (
+                  <h3 className="text-md font-semibold text-black">
+                    {moment(todayback).format("DD-MM-YYYY")}
+                  </h3>
+                ) : (
+                  ""
+                )}
+                {recepitcontrol.date_open_one === "Yes" ? (
+                  <h3 className="text-md font-semibold text-black">
+                    {moment(recepitcontrol.date_open_one_date).format(
+                      "DD-MM-YYYY"
+                    )}
+                    {/* {recepitcontrol.date_open_one} */}
+                  </h3>
+                ) : (
+                  ""
+                )}
               </div>
+
+              <p className="   text-xs font-semibold text-black">
+                Year: {currentYear}
+              </p>
               <p className="text-xs font-semibold text-black">Pan : {pan}</p>
             </div>
             {donor.receipt_total_amount > 2000 &&
@@ -379,6 +398,26 @@ const CreateReceipt = ({ donorId, onClose }) => {
             <span>Receipt Details</span>
           </h2>
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recepitcontrol.date_open === "Yes" ? (
+              <div>
+                <FormLabel required>Receipt Date</FormLabel>
+                <input
+                  type="date"
+                  name="receipt_date"
+                  value={donor.receipt_date}
+                  onChange={(e) => onInputChange(e)}
+                  className={inputClass}
+                  required
+                  min={moment(recepitcontrol.date_open_from).format(
+                    "YYYY-MM-DD"
+                  )}
+                  max={moment(recepitcontrol.date_open_to).format("YYYY-MM-DD")}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+
             <div>
               <FormLabel required>Category</FormLabel>
               <select
@@ -474,22 +513,26 @@ const CreateReceipt = ({ donorId, onClose }) => {
                 value={donor.receipt_realization_date}
                 onChange={(e) => onInputChange(e)}
                 className={inputClass}
+                max={new Date().toISOString().split("T")[0]}
               />
             </div>
 
             {donor.receipt_donation_type == "Membership" ? (
               <div>
-                <FormLabel>Membership End Date</FormLabel>
+                <FormLabel>
+                  Membership End Date<span className="text-red-500">*</span>
+                </FormLabel>
                 <select
                   name="m_ship_vailidity"
                   value={donor.m_ship_vailidity}
                   onChange={(e) => onInputChange(e)}
                   className={inputClassSelect}
+                  required
                 >
                   <option value="">Select Membership End Date</option>
-                  {member_date.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  {membershipyear.map((option) => (
+                    <option key={option.value} value={option.membership_year}>
+                      {option.membership_year}
                     </option>
                   ))}
                 </select>
@@ -523,7 +566,9 @@ const CreateReceipt = ({ donorId, onClose }) => {
             )}
             {donor.receipt_donation_type == "One Teacher School" ? (
               <div>
-                <FormLabel>No of Schools</FormLabel>
+                <FormLabel>
+                  No of Schools<span className="text-red-500">*</span>
+                </FormLabel>
                 <input
                   type="text"
                   maxLength={3}
@@ -531,6 +576,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
                   value={donor.receipt_no_of_ots}
                   onChange={(e) => onInputChange(e)}
                   className={inputClass}
+                  required
                 />
               </div>
             ) : (
@@ -538,17 +584,20 @@ const CreateReceipt = ({ donorId, onClose }) => {
             )}
             {donor.receipt_donation_type == "One Teacher School" ? (
               <div>
-                <FormLabel>School Allottment Year</FormLabel>
+                <FormLabel>
+                  School Allottment Year <span className="text-red-500">*</span>
+                </FormLabel>
                 <select
                   name="schoolalot_year"
                   value={donor.schoolalot_year}
                   onChange={(e) => onInputChange(e)}
                   className={inputClassSelect}
+                  required
                 >
                   <option value="">Select Allotment year</option>
-                  {school_year.map((source) => (
-                    <option key={source.value} value={source.value}>
-                      {source.label}
+                  {schoolallotyear.map((source) => (
+                    <option key={source.value} value={source.school_allot_year}>
+                      {source.school_allot_year}
                     </option>
                   ))}
                 </select>

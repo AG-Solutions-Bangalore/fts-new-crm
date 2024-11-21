@@ -5,6 +5,7 @@ import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
+import { toast } from "react-toastify";
 
 const DuplicateList = () => {
   const [duplicateData, setDuplicateData] = useState(null);
@@ -14,47 +15,52 @@ const DuplicateList = () => {
   const [columnVisibility, setColumnVisibility] = useState({
     indicomp_spouse_name: false,
     indicomp_com_contact_name: false,
-   
   });
 
-  useEffect(() => {
-    const fetchDuplicateData = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${BASE_URL}/api/fetch-donors-duplicate`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  const fetchDuplicateData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/fetch-donors-duplicate`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-        setDuplicateData(response.data?.individualCompanies);
-      } catch (error) {
-        console.error("Error fetching duplicate data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setDuplicateData(response.data?.individualCompanies);
+    } catch (error) {
+      console.error("Error fetching duplicate data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchDuplicateData();
-    setLoading(false);
   }, []);
 
   const handleDuplicateDelete = async (e, id) => {
     e.preventDefault();
-    axios({
-      url: BASE_URL + "/api/update-donors-duplicate-by-id/" + id,
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      toast.success("Data Updated Sucessfully");
+    try {
+      const response = await axios({
+        url: BASE_URL + "/api/update-donors-duplicate-by-id/" + id,
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-      navigate("/donor-list");
-    });
+      if (response.status === 200) {
+        toast.success("Duplicate Deleted Successfully");
+        fetchDuplicateData();
+      } else {
+        toast.error("Data Update Error");
+      }
+    } catch (error) {
+      toast.error("An error occurred: " + error.message);
+    }
   };
 
   const columns = useMemo(
@@ -62,17 +68,17 @@ const DuplicateList = () => {
       {
         accessorKey: "indicomp_fts_id",
         header: "Fts Id",
-        size:50,
+        size: 50,
       },
       {
         accessorKey: "indicomp_full_name",
         header: "Name",
-        size:50,
+        size: 50,
       },
       {
         accessorKey: "indicomp_type",
         header: "Type",
-        size:50,
+        size: 50,
       },
       {
         accessorKey: "indicomp_spouse_name",
@@ -103,23 +109,23 @@ const DuplicateList = () => {
       {
         accessorKey: "indicomp_mobile_phone",
         header: "Mobile",
-        size:50,
+        size: 50,
       },
       {
         accessorKey: "indicomp_email",
         header: "Email",
-        size:50,
+        size: 50,
       },
       {
         accessorKey: "receipt_count",
         header: "Receipt Count",
-        size:50,
+        size: 50,
       },
 
       {
         id: "id",
         header: "Action",
-        size:50,
+        size: 50,
         Cell: ({ row }) => {
           const id = row.original.id;
           const receiptCount = row.original.receipt_count;
@@ -159,8 +165,6 @@ const DuplicateList = () => {
     enableColumnActions: false,
     enableHiding: false,
     state: { columnVisibility },
-    
-   
   });
   return (
     <Layout>
