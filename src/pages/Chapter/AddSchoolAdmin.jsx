@@ -261,7 +261,7 @@ const AddSchoolAdmin = () => {
                 className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-400 hover:bg-red-900 p-2 rounded-lg shadow-md mr-2"
                 onClick={() => navigate("/chapter")}
               >
-                Back
+                Cancel
               </button>
             </div>
           </form>

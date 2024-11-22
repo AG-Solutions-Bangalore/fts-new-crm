@@ -95,7 +95,7 @@ const ReceiptList = () => {
               >
                 <IconEye className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
-              {userType === 2 && (
+              {userType === "2" && (
                 <div
                   title="Receipt Edit"
                   onClick={() => {

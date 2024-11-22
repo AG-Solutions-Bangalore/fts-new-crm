@@ -205,7 +205,7 @@ const DataSource = () => {
           <span
             className={`btn text-white px-4 py-2 rounded-lg shadow-md ${
               row.original.chapter_id !== 0
-                ? "bg-blue-600 hover:bg-blue-700"
+                ? "bg-blue-600 hover:bg-blue-700 "
                 : "bg-blue-400 cursor-not-allowed"
             }`}
           >
@@ -227,7 +227,12 @@ const DataSource = () => {
 
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
-
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   return (
     <Layout>
       <div>
@@ -241,7 +246,7 @@ const DataSource = () => {
               onClick={handleClickOpen}
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
             >
-              Create A New Data Source
+              Create Data Source
             </button>
           </h2>
         </div>
@@ -300,7 +305,7 @@ const DataSource = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
                       >
                         {isButtonDisabled ? "Submiting..." : "Submit"}
                       </button>
@@ -360,9 +365,9 @@ const DataSource = () => {
                       <button
                         type="submit"
                         disabled={isButtonDisabled}
-                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
                       >
-                        Update Data Source
+                        Update 
                       </button>
                     </div>
                   </div>
