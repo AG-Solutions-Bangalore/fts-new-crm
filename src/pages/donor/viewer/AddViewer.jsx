@@ -17,6 +17,7 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
   const [userName, setUserName] = useState("");
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [viewerChapterIds, setViewerChapterIds] = useState([]);
@@ -50,6 +51,7 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
     fetchChapterData();
     setLoading(false);
   }, []);
+  const today = new Date().toISOString().split("T")[0];
 
   const handleClick = (e) => {
     var targetName = e.target.name;
@@ -112,6 +114,9 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
   const onEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
 
   const onuser_positionChange = (e) => {
     setuser_position(e.target.value);
@@ -142,6 +147,7 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
       viewer_end_date: endDate,
       chapter_ids_comma_separated: chapterIds,
       user_position: user_position,
+      password: password,
     };
 
     setIsButtonDisabled(true);
@@ -158,7 +164,7 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
     );
 
     toast.success("Viwer Added Successfully");
-    fetchViewerData()
+    fetchViewerData();
     onClose();
     setFirstName("");
     setLastName("");
@@ -167,6 +173,7 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
     setEmail("");
     setStartDate("");
     setEndDate("");
+    setPassword("");
     setViewerChapterIds([]);
     setChapterIds("");
     setchapter_id("");
@@ -213,8 +220,6 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
             <span>Viwer Details</span>
           </h2>
           <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
-         
-
             <div>
               <FormLabel required>Full Name</FormLabel>
               <input
@@ -226,8 +231,6 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
                 required
               />
             </div>
-
-         
 
             <div>
               <FormLabel required>User Name (Login Name)</FormLabel>
@@ -241,7 +244,6 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
               />
             </div>
 
-           
             <div>
               <FormLabel required>Mobile</FormLabel>
               <input
@@ -254,7 +256,6 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
                 required
               />
             </div>
-           
 
             <div>
               <FormLabel required>Email</FormLabel>
@@ -268,12 +269,11 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
               />
             </div>
 
-           
-
             <div>
-              <FormLabel>Chapter</FormLabel>
+              <FormLabel required>Chapter</FormLabel>
               <select
                 name="chapter_id"
+                required
                 value={chapter_id}
                 onChange={(e) => onuser_chapteridChange(e)}
                 className={inputClassSelect}
@@ -290,7 +290,6 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
               </p>
             </div>
 
-       
             <div>
               <FormLabel required>Designation</FormLabel>
               <input
@@ -303,34 +302,47 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
               />
             </div>
 
-          
             <div>
-              <FormLabel>Start Date</FormLabel>
+              <FormLabel required>Start Date</FormLabel>
               <input
                 name="startDate"
                 type="date"
                 value={startDate}
                 onChange={(e) => onStartDateChange(e)}
                 className={inputClass}
+                required
+                min={today}
               />
             </div>
 
-          
             <div>
-              <FormLabel>End Date</FormLabel>
+              <FormLabel required>End Date</FormLabel>
               <input
                 name="endDate"
                 type="date"
                 value={endDate}
                 onChange={(e) => onEndDateChange(e)}
                 className={inputClass}
+                required
+                min={today}
+              />
+            </div>
+
+            <div>
+              <FormLabel required>Enter Password</FormLabel>
+              <input
+                name="password"
+                type="password"
+                value={password}
+                onChange={(e) => onPasswordChange(e)}
+                className={inputClass}
+                required
               />
             </div>
           </div>
         </div>
         {/* chapter accociated  */}
-        <div >
-      
+        <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
             <IconInfoCircle className="w-4 h-4" />
             <span>Chapters Associated</span>
@@ -354,19 +366,22 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
         </div>
         {/* form actio  */}
         <div className="flex gap-4 justify-start">
-        <Button
+          <button
             type="submit"
-            className="bg-[#269fbd] hover:bg-green-700"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >
             {isButtonDisabled ? "Submitting..." : "Submit"}
-          </Button>
+          </button>
 
-          {/* <Link to="/">
-            <Button color="red" className="px-6">
+          <Link to="/viewer-list">
+            <button
+              color="red"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+            >
               Cancel
-            </Button>
-          </Link> */}
+            </button>
+          </Link>
         </div>
       </form>
     </div>

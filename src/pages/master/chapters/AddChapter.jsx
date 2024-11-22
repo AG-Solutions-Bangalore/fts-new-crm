@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { MdKeyboardBackspace } from "react-icons/md";
+import {  useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Input } from "@material-tailwind/react";
-import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
-import { FormLabel } from "@mui/material";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import SelectInput from "../../../components/common/SelectInput";
-const AddChapter = ({ onClose }) => {
+const AddChapter = ({ onClose, fetchChapter }) => {
   const navigate = useNavigate();
 
   const [chapter, setChapter] = useState({
@@ -30,7 +26,6 @@ const AddChapter = ({ onClose }) => {
   const [states, setStates] = useState([]);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("id");
     if (!isLoggedIn) {
@@ -60,7 +55,7 @@ const AddChapter = ({ onClose }) => {
     }
   };
 
-  useEffect(() => {
+  const Chapterdata = () => {
     axios
       .get(`${BASE_URL}/api/fetch-states`, {
         headers: {
@@ -70,6 +65,9 @@ const AddChapter = ({ onClose }) => {
       .then((res) => {
         setStates(res.data?.states);
       });
+  };
+  useEffect(() => {
+    Chapterdata();
   }, []);
 
   const onSubmit = async (e) => {
@@ -105,17 +103,26 @@ const AddChapter = ({ onClose }) => {
         }
       );
 
-      if (response.data.code == 200) {
+      if (response.status == 200) {
         toast.success("Chapter is Created Successfully");
+        fetchChapter();
         onClose();
+        setChapter({
+          chapter_name: "",
+          chapter_code: "",
+          chapter_address: "",
+          chapter_city: "",
+          chapter_pin: "",
+          chapter_state: "",
+          chapter_phone: "",
+          chapter_whatsapp: "",
+          chapter_email: "",
+          chapter_website: "",
+          chapter_date_of_incorporation: "",
+          chapter_region_code: "",
+        });
       } else {
-        if (response.data.code == 401) {
-          toast.error("Chapter Duplicate Entry");
-        } else if (response.data.code == 402) {
-          toast.error("Chapter Duplicate Entry");
-        } else {
-          toast.error("An unknown error occurred");
-        }
+        toast.error("An unknown error occurred");
       }
     } catch (error) {
       console.error("Error updating Chapter:", error);
@@ -126,6 +133,12 @@ const AddChapter = ({ onClose }) => {
   };
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   return (
     <div className="  bg-[#FFFFFF] p-2  w-[48rem]  overflow-y-auto custom-scroll-add ">
       {/* Title */}
@@ -134,7 +147,7 @@ const AddChapter = ({ onClose }) => {
         <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
           <div className="flex  items-center gap-2">
             <IconInfoCircle className="w-4 h-4" />
-            <span>Add Chapters</span>
+            <span>Add Chapters </span>
           </div>
           <IconArrowBack
             onClick={() => onClose()}
@@ -163,7 +176,7 @@ const AddChapter = ({ onClose }) => {
             <div>
               <FormLabel required>Address</FormLabel>
               <input
-                name="chapter_name"
+                name="chapter_address"
                 value={chapter.chapter_address}
                 onChange={onInputChange}
                 className={inputClass}
@@ -220,7 +233,7 @@ const AddChapter = ({ onClose }) => {
               />
             </div>
             <div>
-              <FormLabel required>Whatsapp</FormLabel>
+              <FormLabel>Whatsapp</FormLabel>
               <input
                 name="chapter_whatsapp"
                 value={chapter.chapter_whatsapp}
@@ -242,18 +255,17 @@ const AddChapter = ({ onClose }) => {
               />
             </div>
             <div>
-              <FormLabel required>Website</FormLabel>
+              <FormLabel>Website</FormLabel>
               <input
                 name="chapter_website"
                 value={chapter.chapter_website}
                 onChange={onInputChange}
                 className={inputClass}
-                type="email"
               />
             </div>
 
             <div>
-              <FormLabel required>Incorporation Date</FormLabel>
+              <FormLabel>Incorporation Date</FormLabel>
               <input
                 name="chapter_date_of_incorporation"
                 value={chapter.chapter_date_of_incorporation}
@@ -267,18 +279,18 @@ const AddChapter = ({ onClose }) => {
           <div className="flex justify-start ">
             <button
               type="submit"
-              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
               disabled={isButtonDisabled}
             >
               {" "}
               {isButtonDisabled ? "Submiting..." : "Submit"}
             </button>
             <button
-              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-700 p-2 rounded-lg shadow-md mr-2"
               onClick={() => onClose()}
             >
               {" "}
-              Back
+              Cancel
             </button>
           </div>
         </form>

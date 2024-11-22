@@ -102,13 +102,10 @@ const FAQList = () => {
       );
 
       if (response.status === 200) {
-        setUsers(response.data.faqs);
         toast.success("FAQ is Created Successfully");
-        setUser({ header1: "", text1: "" });
-
-        handleClose(e);
-
         fetchData();
+        setUser({ header1: "", text1: "" });
+        handleClose(e);
       } else {
         toast.error("FAQ Duplicate Entry");
       }
@@ -145,10 +142,9 @@ const FAQList = () => {
       );
 
       if (response.status === 200) {
-        setUsers(response.data.faqs);
         toast.success("FAQ is Updated Successfully");
-        handleClose1(e);
         fetchData();
+        handleClose1(e);
       } else {
         toast.error("FAQ Duplicate Entry");
       }
@@ -206,6 +202,13 @@ const FAQList = () => {
   };
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 resize-none";
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
   return (
     <Layout>
       <div>
@@ -217,7 +220,7 @@ const FAQList = () => {
           <div className="flex flex-wrap gap-2 justify-center mt-2 md:mt-0">
             <button
               onClick={handleClickOpen}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Create FAQ
             </button>
@@ -281,7 +284,7 @@ const FAQList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Submiting..." : "Submit"}
                       </button>
@@ -324,7 +327,7 @@ const FAQList = () => {
                       <div>
                         <FormLabel required>Enter Heading</FormLabel>
                         <input
-                          name="header"
+                          name="header1"
                           value={user1.header1}
                           onChange={(e) => onUserInputChange1(e)}
                           className={inputClass}
@@ -334,7 +337,7 @@ const FAQList = () => {
                       <div>
                         <FormLabel required>Enter Message</FormLabel>
                         <textarea
-                          name="text"
+                          name="text1"
                           value={user1.text1}
                           onChange={(e) => onUserInputChange1(e)}
                           className={inputClass}
@@ -348,7 +351,7 @@ const FAQList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Updating..." : "Update"}
                       </button>

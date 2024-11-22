@@ -31,9 +31,19 @@ const UserDrop = [
     value: "1",
     label: "User",
   },
+  // {
+  //   value: "4",
+  //   label: "Viewer",
+  // },
+];
+const status = [
   {
-    value: "4",
-    label: "Viewer",
+    value: "Active",
+    label: "Active",
+  },
+  {
+    value: "Inactive",
+    label: "Inactive",
   },
 ];
 const Chapter = () => {
@@ -75,6 +85,7 @@ const Chapter = () => {
     password: "",
     confirm_password: "",
     user_type_id: "",
+    user_status:""
   });
 
   const [selected_user_id, setSelectedUserId] = useState("");
@@ -129,6 +140,7 @@ const Chapter = () => {
       password: "",
       confirm_password: "",
       user_type_id: "",
+      user_status:""
     });
   };
 
@@ -149,6 +161,7 @@ const Chapter = () => {
       password: "",
       confirm_password: "",
       user_type_id: "",
+      user_status:""
     });
   };
   const fetchData = () => {
@@ -263,6 +276,7 @@ const Chapter = () => {
       phone: user.phone,
       user_type: user.user_type_id,
       chapter_id: user.chapter_code,
+      user_status:user.user_status,
     };
 
     try {
@@ -299,6 +313,7 @@ const Chapter = () => {
 
     { accessorKey: "email", header: "Email" },
     { accessorKey: "phone", header: "Phone" },
+    { accessorKey: "user_status", header: "Status" },
     {
       accessorKey: "edit",
       header: "Edit",
@@ -316,6 +331,7 @@ const Chapter = () => {
                 first_name: row.original.first_name,
                 last_name: row.original.last_name,
                 user_type_id: row.original.user_type_id,
+                user_status:row.original.user_status,
               });
               setSelectedUserId(row.original.id);
               handleClickOpen1();
@@ -411,7 +427,7 @@ const Chapter = () => {
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
             <div className="flex  items-center gap-2">
               <IconInfoCircle className="cursor-pointer hover:text-red-600" />
-              <span>Chapters</span>
+              <span>Chapters </span>
             </div>
 
             <button
@@ -759,6 +775,20 @@ const Chapter = () => {
                           name="user_type_id"
                           onChange={(e) => onUserInputChange(e)}
                           placeholder="Select  User Type"
+                        />
+                      </div>
+                      <div className="form-group ">
+                        <SelectInput
+                          label="Status"
+                          options={status.map((item) => ({
+                            value: item.value,
+                            label: item.label,
+                          }))}
+                          required
+                          value={user.user_status}
+                          name="user_status"
+                          onChange={(e) => onUserInputChange(e)}
+                          placeholder="Select  Status"
                         />
                       </div>
                     </div>

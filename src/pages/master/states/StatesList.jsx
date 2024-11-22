@@ -1,16 +1,12 @@
-import {
-  Dialog,
-  FormLabel,
-  Tooltip,
-} from "@mui/material";
+import { Dialog, FormLabel, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import {  IconCircleX } from "@tabler/icons-react";
+import { IconCircleX } from "@tabler/icons-react";
 
 const StatesList = () => {
   const navigate = useNavigate();
@@ -111,14 +107,16 @@ const StatesList = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Data Source is Created Successfully");
+        toast.success("State is Created Successfully");
+        fetchStates();
+
         handleClose(e);
       } else {
-        toast.error("Data Source Duplicate Entry");
+        toast.error("State Duplicate Entry");
       }
     } catch (error) {
-      console.error("Error updating Data Source:", error);
-      toast.error("Error updating Data Source");
+      console.error("Error updating State:", error);
+      toast.error("Error updating State");
     } finally {
       setIsButtonDisabled(false);
     }
@@ -150,26 +148,23 @@ const StatesList = () => {
       );
 
       if (response.status === 200) {
-        setUsers(response.data.states);
-        toast.success("Data Source is Updated Successfully");
+        // setUsers(response.data.states);
+        fetchStates();
+
+        toast.success("State is Updated Successfully");
         handleClose1(e);
       } else {
-        toast.error("Data Source Duplicate Entry");
+        toast.error("State Duplicate Entry");
       }
     } catch (error) {
-      console.error("Error updating Data Source:", error);
-      toast.error("Error updating Data Source");
+      console.error("Error updating State:", error);
+      toast.error("Error updating State");
     } finally {
       setIsButtonDisabled(false);
     }
   };
 
   const columns = [
-    // {
-    //   accessorKey: "sl_no",
-    //   header: "Sl No",
-    //   Cell: ({ row }) => row.index + 1,
-    // },
     {
       accessorKey: "state_name",
       header: "State",
@@ -206,6 +201,12 @@ const StatesList = () => {
     },
   ];
 
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   const table = useMantineReactTable({
     columns,
     data: users,
@@ -227,7 +228,7 @@ const StatesList = () => {
           <div className="flex flex-wrap gap-2 justify-center mt-2 md:mt-0">
             <button
               onClick={handleClickOpen}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Create States
             </button>
@@ -307,7 +308,7 @@ const StatesList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Submitting..." : "Submit"}
                       </button>
@@ -384,7 +385,7 @@ const StatesList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Updating..." : "Update"}
                       </button>

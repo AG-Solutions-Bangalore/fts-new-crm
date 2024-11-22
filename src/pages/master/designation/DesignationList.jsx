@@ -188,7 +188,12 @@ const DesignationList = () => {
     enableFullScreenToggle: false,
     enableHiding: false,
   });
-
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
@@ -202,7 +207,7 @@ const DesignationList = () => {
           <div className="flex flex-wrap gap-2 justify-center mt-2 md:mt-0">
             <button
               onClick={handleClickOpen}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-48 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Create Designation
             </button>
@@ -252,7 +257,7 @@ const DesignationList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Submiting..." : "Submit"}
                       </button>
@@ -304,7 +309,7 @@ const DesignationList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Updating..." : "Update"}
                       </button>

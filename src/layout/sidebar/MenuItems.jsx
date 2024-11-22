@@ -229,18 +229,7 @@ const Menuitems = [
         icon: IconCopy,
         href: "/report/otg",
       },
-      // {
-      //   id: uniqueId(),
-      //   title: "Suspense Summary",
-      //   icon: IconCopy,
-      //   href: "/",
-      // },
-      // {
-      //   id: uniqueId(),
-      //   title: "Payment Summary",
-      //   icon: IconCopy,
-      //   href: "/",
-      // },
+
     ],
   },
   {

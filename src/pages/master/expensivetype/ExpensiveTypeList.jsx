@@ -93,10 +93,9 @@ const ExpensiveTypeList = () => {
 
       if (response.status === 200) {
         toast.success("Expensive Type is Created Successfully");
-        setUsers(response.data.otsexptype);
+        fetchData();
         setUser({ ots_exp_type: "" });
         handleClose(e);
-        fetchData();
       } else {
         toast.error("Expensive Type Duplicate Entry");
       }
@@ -132,10 +131,9 @@ const ExpensiveTypeList = () => {
       );
 
       if (response.status === 200) {
-        setUsers(response.data.otsexptype);
+        fetchData();
         toast.success("Expensive Type is Updated Successfully");
         handleClose1(e);
-        fetchData();
       } else {
         toast.error("Expensive Type Duplicate Entry");
       }
@@ -188,6 +186,14 @@ const ExpensiveTypeList = () => {
   });
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
   return (
     <Layout>
       <div>
@@ -199,7 +205,7 @@ const ExpensiveTypeList = () => {
           <div className="flex flex-wrap gap-2 justify-center mt-2 md:mt-0">
             <button
               onClick={handleClickOpen}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-48 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             >
               Create OTS Expensive
             </button>
@@ -252,7 +258,7 @@ const ExpensiveTypeList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Submiting..." : "Submit"}
                       </button>
@@ -307,7 +313,7 @@ const ExpensiveTypeList = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Updating..." : "Update"}
                       </button>

@@ -78,6 +78,19 @@ const ReceiptList = () => {
         header: "Amount",
         size: 50,
       },
+      ...(userType === "4"
+        ? [
+            {
+              accessorKey: "chapter_name",
+              header: "Chapter",
+              size: 50,
+              Cell: ({ row }) => {
+                const fullName = row.original.chapter.chapter_name;
+                return <span>{fullName}</span>;
+              },
+            },
+          ]
+        : []),
 
       {
         id: "id",
