@@ -228,44 +228,47 @@ const DonorList = () => {
             <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
               Donor List
             </h1>
-            <div className="flex gap-2">
-              <button
-                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                onClick={toggleIndividualDrawer(true)}
-              >
-                + Individual
-              </button>
-              <SwipeableDrawer
-                anchor="right"
-                open={individualDrawer}
-                onClose={toggleIndividualDrawer(false)}
-                onOpen={toggleIndividualDrawer(true)}
-              >
-                <AddIndivisual
-                  onClose={toggleIndividualDrawer(false)}
-                  fetchDonorData={fetchDonorData}
-                />
-              </SwipeableDrawer>
-              <div>
+
+            {userType === "1" && (
+              <div className="flex gap-2">
                 <button
                   className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                  onClick={toggleCompanyDrawer(true)}
+                  onClick={toggleIndividualDrawer(true)}
                 >
-                  + Company
+                  + Individual
                 </button>
                 <SwipeableDrawer
                   anchor="right"
-                  open={companyDrawer}
-                  onClose={toggleCompanyDrawer(false)}
-                  onOpen={toggleCompanyDrawer(true)}
+                  open={individualDrawer}
+                  onClose={toggleIndividualDrawer(false)}
+                  onOpen={toggleIndividualDrawer(true)}
                 >
-                  <AddCompany
-                    onClose={toggleCompanyDrawer(false)}
+                  <AddIndivisual
+                    onClose={toggleIndividualDrawer(false)}
                     fetchDonorData={fetchDonorData}
                   />
                 </SwipeableDrawer>
+                <div>
+                  <button
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                    onClick={toggleCompanyDrawer(true)}
+                  >
+                    + Company
+                  </button>
+                  <SwipeableDrawer
+                    anchor="right"
+                    open={companyDrawer}
+                    onClose={toggleCompanyDrawer(false)}
+                    onOpen={toggleCompanyDrawer(true)}
+                  >
+                    <AddCompany
+                      onClose={toggleCompanyDrawer(false)}
+                      fetchDonorData={fetchDonorData}
+                    />
+                  </SwipeableDrawer>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div className=" shadow-md">
             <MantineReactTable table={table} />

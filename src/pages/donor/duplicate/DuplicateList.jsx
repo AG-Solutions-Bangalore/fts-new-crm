@@ -11,7 +11,7 @@ const DuplicateList = () => {
   const [duplicateData, setDuplicateData] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const userType = parseInt(localStorage.getItem("user_type_id"), 10);
+  const userType = localStorage.getItem("user_type_id");
   const [columnVisibility, setColumnVisibility] = useState({
     indicomp_spouse_name: false,
     indicomp_com_contact_name: false,
@@ -63,8 +63,8 @@ const DuplicateList = () => {
     }
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const baseColumns = [
       {
         accessorKey: "indicomp_fts_id",
         header: "Fts Id",
@@ -105,7 +105,6 @@ const DuplicateList = () => {
           }
         },
       },
-
       {
         accessorKey: "indicomp_mobile_phone",
         header: "Mobile",
@@ -121,8 +120,10 @@ const DuplicateList = () => {
         header: "Receipt Count",
         size: 50,
       },
+    ];
 
-      {
+    if (userType === "1") {
+      baseColumns.push({
         id: "id",
         header: "Action",
         size: 50,
@@ -152,10 +153,11 @@ const DuplicateList = () => {
             </div>
           );
         },
-      },
-    ],
-    []
-  );
+      });
+    }
+
+    return baseColumns;
+  }, [userType, navigate, handleDuplicateDelete, columnVisibility]);
 
   const table = useMantineReactTable({
     columns,

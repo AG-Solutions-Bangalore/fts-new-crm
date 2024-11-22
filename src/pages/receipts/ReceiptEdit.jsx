@@ -68,55 +68,8 @@ const donation_type_2 = [
   },
 ];
 
-const member_date = [
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-  {
-    value: "2024",
-    label: "2024",
-  },
-  {
-    value: "2025",
-    label: "2025",
-  },
-  {
-    value: "2026",
-    label: "2026",
-  },
-];
 
-const school_year = [
-  {
-    value: "2020-21",
-    label: "2020-21",
-  },
-  {
-    value: "2021-22",
-    label: "2021-22",
-  },
-  {
-    value: "2022-23",
-    label: "2022-23",
-  },
-  {
-    value: "2023-24",
-    label: "2023-24",
-  },
-  {
-    value: "2024-25",
-    label: "2024-25",
-  },
-  {
-    value: "2025-26",
-    label: "2025-26",
-  },
-];
+
 
 const ReceiptEdit = () => {
   const { id } = useParams();
@@ -181,7 +134,32 @@ const ReceiptEdit = () => {
     }
   };
 
-  useEffect(() => {
+  const [membershipyear, setMembershipYear] = useState([]);
+  const FetchMemeberShipYear = () => {
+    axios
+      .get(`${BASE_URL}/api/fetch-membership-year`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setMembershipYear(res.data.membershipyear);
+      });
+  };
+  const [schoolallotyear, setSchoolAllotYear] = useState([]);
+
+  const FetchSchoolAllotYear = () => {
+    axios
+      .get(`${BASE_URL}/api/fetch-school-allot-year`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setSchoolAllotYear(res.data.schoolallotyear);
+      });
+  };
+  const DonorData = () => {
     axios
       .get(`${BASE_URL}/api/fetch-donor-by-id/${decryptedId}`, {
         headers: {
@@ -192,6 +170,11 @@ const ReceiptEdit = () => {
         setUserdata(res.data.individualCompany);
         setLoader(false);
       });
+  };
+  useEffect(() => {
+    FetchSchoolAllotYear();
+    DonorData();
+    FetchMemeberShipYear();
   }, []);
   useEffect(() => {
     axios
@@ -436,9 +419,9 @@ const ReceiptEdit = () => {
                     className={inputClassSelect}
                   >
                     <option value="">Select Membership End Date</option>
-                    {member_date.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
+                    {membershipyear.map((option) => (
+                      <option key={option.membership_year} value={option.membership_year}>
+                        {option.membership_year}
                       </option>
                     ))}
                   </select>
@@ -495,9 +478,12 @@ const ReceiptEdit = () => {
                     className={inputClassSelect}
                   >
                     <option value="">Select Allotment year</option>
-                    {school_year.map((source) => (
-                      <option key={source.value} value={source.value}>
-                        {source.label}
+                    {schoolallotyear.map((source) => (
+                      <option
+                        key={source.school_allot_year}
+                        value={source.school_allot_year}
+                      >
+                        {source.school_allot_year}
                       </option>
                     ))}
                   </select>
