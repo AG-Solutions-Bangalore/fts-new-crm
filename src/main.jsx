@@ -9,7 +9,7 @@ import { baselightTheme } from "./utils/theme/DefaultColors.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter >
       <AppProvider>
         <ThemeProvider theme={baselightTheme} >
           <App />

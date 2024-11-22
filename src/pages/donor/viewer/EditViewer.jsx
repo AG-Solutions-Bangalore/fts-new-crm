@@ -56,7 +56,7 @@ const EditViewer = () => {
       setViewerChapterIds(temparray);
     }
 
-    const theChapterIds = "";
+    let theChapterIds = "";
     for (let i = 0; i < viewerChapterIds.length; i++) {
       theChapterIds = theChapterIds + "," + viewerChapterIds[i];
     }
