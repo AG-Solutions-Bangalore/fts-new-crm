@@ -25,27 +25,27 @@ const ChaptersList = () => {
     setChapterDrawer(open);
   };
 
-  useEffect(() => {
-    const fetchOrderList = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${BASE_URL}/api/fetch-chapters`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.data && response.data.chapters) {
-          setChapterList(response.data.chapters);
-        } else {
-          console.error("No chapters found in response");
-        }
-      } catch (error) {
-        console.error("Error while fetching chapters: ", error);
-      } finally {
-        setLoading(false);
+  const fetchOrderList = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/api/fetch-chapters`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data && response.data.chapters) {
+        setChapterList(response.data.chapters);
+      } else {
+        console.error("No chapters found in response");
       }
-    };
+    } catch (error) {
+      console.error("Error while fetching chapters: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchOrderList();
   }, []);
 
@@ -105,24 +105,22 @@ const ChaptersList = () => {
         </h1>
 
         <div className="flex flex-wrap gap-2 justify-center mt-2 md:mt-0">
-          {/* <Link
-            // to="/add-chapter"
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-          > */}
           <button
             onClick={toggleIndividualDrawer(true)}
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
           >
             + Add Chapter
           </button>
-          {/* </Link> */}
           <SwipeableDrawer
             anchor="right"
             open={chapterDrawer}
             onClose={toggleIndividualDrawer(false)}
             onOpen={toggleIndividualDrawer(true)}
           >
-            <AddChapter onClose={toggleIndividualDrawer(false)} />
+            <AddChapter
+              onClose={toggleIndividualDrawer(false)}
+              fetchChapter={fetchOrderList}
+            />
           </SwipeableDrawer>
         </div>
       </div>

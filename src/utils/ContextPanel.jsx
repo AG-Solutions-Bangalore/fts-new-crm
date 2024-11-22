@@ -12,7 +12,6 @@ const AppProvider = ({ children }) => {
   const location = useLocation();
   const userTypeId = localStorage.getItem("user_type_id");
   const [currentYear, setCurrentYear] = useState("");
-  
 
   const checkPanelStatus = async () => {
     try {
@@ -149,7 +148,6 @@ const AppProvider = ({ children }) => {
         );
         if (isAllowedPath) {
           navigate(currentPath + location.search);
-          
         } else {
           navigate("/home");
         }
@@ -175,7 +173,9 @@ const AppProvider = ({ children }) => {
   }, []);
 
   return (
-    <ContextPanel.Provider value={{ isPanelUp, setIsPanelUp, userTypeId,currentYear }}>
+    <ContextPanel.Provider
+      value={{ isPanelUp, setIsPanelUp, userTypeId, currentYear }}
+    >
       {children}
     </ContextPanel.Provider>
   );

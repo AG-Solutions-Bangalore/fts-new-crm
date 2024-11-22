@@ -152,7 +152,7 @@ const AddSchool = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Data Updated Sucessfully");
+        toast.success("School Updated Sucessfully");
         navigate("/master/chapters");
       } else {
         toast.error("An unknown error occurred");
@@ -166,7 +166,7 @@ const AddSchool = () => {
   };
 
   const inputClass =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed";
   const schoolId = localStorage.getItem("schoolId");
   const backlink = () => navigate(`/view-chapter/${schoolId}`);
   return (
@@ -251,16 +251,16 @@ const AddSchool = () => {
             <div className="flex justify-start py-4">
               <button
                 type="submit"
-                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                 disabled={isButtonDisabled}
               >
                 {isButtonDisabled ? "Submiting..." : "Submit"}
               </button>
               <button
-                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-700 p-2 rounded-lg shadow-md ml-4"
                 onClick={backlink}
               >
-                Back
+                Cancel
               </button>
             </div>
           </form>

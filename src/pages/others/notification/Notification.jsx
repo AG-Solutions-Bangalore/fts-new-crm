@@ -197,16 +197,6 @@ const Notification = () => {
             handleOpenDialog={handleOpenDialog}
           />
         </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpenDialog}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
 
       <Dialog open={open} handler={handleOpen}>

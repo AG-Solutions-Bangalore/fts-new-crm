@@ -37,6 +37,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const location = useLocation();
+
   const getData = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/fetch-profile`, {
@@ -57,7 +58,7 @@ const Profile = () => {
     if (token) {
       getData();
     }
-  }, [location.pathname, token]);
+  }, []);
   const onUpdateProfile = async (e) => {
     e.preventDefault();
     if (!firstName) {

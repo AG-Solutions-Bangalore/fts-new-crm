@@ -18,24 +18,27 @@ const UserDrop = [
     label: "User",
   },
   {
-    value: "4",
+    value: "2",
     label: "Admin",
   },
+  // {
+  //   value: "4",
+  //   label: "Viewer",
+  // },
 ];
 
 const ViewChapter = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  console.log(id, "viewparmsid");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [student, setStudent] = useState({});
   const [individualDrawer, setIndividualDrawer] = useState(false);
   const toggleIndividualDrawer = (open) => () => {
     setIndividualDrawer(open);
   };
+  const [chapter, setChapter] = useState([]);
   const [users, setUsers] = useState([]);
-
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -49,27 +52,11 @@ const ViewChapter = () => {
   const [selected_user_id, setSelectedUserId] = useState("");
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const validateOnlyDigits = (value) => {
-    return /^\d+$/.test(value);
-  };
+  const [error, setError] = useState("");
 
   const handleClose = (e) => {
     setOpen(false);
     setIndividualDrawer(false);
-    setUser({
-      name: "",
-      email: "",
-      first_name: "",
-      last_name: "",
-      phone: "",
-      password: "",
-      confirm_password: "",
-      user_type_id: "",
-    });
   };
 
   const handleClickOpen1 = (e) => {
@@ -99,7 +86,7 @@ const ViewChapter = () => {
         },
       })
       .then((res) => {
-        setUser(res.data.chapter);
+        setChapter(res.data.chapter);
         setUsers(res.data.users);
       });
   };
@@ -114,6 +101,15 @@ const ViewChapter = () => {
       ...user,
       [name]: value,
     });
+    if (name === "confirm_password") {
+      if (value && value !== user.password) {
+        setError("Passwords do not match");
+      } else {
+        setError("");
+      }
+    } else {
+      setError("");
+    }
   };
 
   const createUser = async (e) => {
@@ -123,6 +119,10 @@ const ViewChapter = () => {
       form.reportValidity();
       return;
     }
+    if (user.password !== user.confirm_password) {
+      setError("!Passwords do not match");
+      return;
+    }
     setIsButtonDisabled(true);
     const formData = {
       name: user.name,
@@ -130,9 +130,11 @@ const ViewChapter = () => {
       last_name: user.last_name,
       email: user.email,
       phone: user.phone,
+      password: user.password,
       user_type: user.user_type_id,
-      chapter_id: user.chapter_code,
+      chapter_id: chapter.chapter_code,
     };
+    console.log("data", formData);
     try {
       const response = await axios.post(
         `${BASE_URL}/api/create-user`,
@@ -145,9 +147,21 @@ const ViewChapter = () => {
       );
 
       if (response.status === 200) {
-        setUsers(response.data.users);
+        // setUsers(response.data.users);
+        fetchData();
+
         handleClose();
         toast.success("User is Created Successfully");
+        setUser({
+          name: "",
+          email: "",
+          first_name: "",
+          last_name: "",
+          phone: "",
+          password: "",
+          confirm_password: "",
+          user_type_id: "",
+        });
       } else {
         toast.error("User Duplicate Entry");
       }
@@ -192,10 +206,8 @@ const ViewChapter = () => {
         }
       );
 
-      // Check for successful response
       if (response.status === 200) {
         console.log(response.data.users);
-        setUsers(response.data.users);
         toast.success("User is Updated Successfully");
         handleClose1(e);
       } else {
@@ -205,16 +217,11 @@ const ViewChapter = () => {
       console.error("Error updating User:", error);
       toast.error("Error updating User");
     } finally {
-      setIsButtonDisabled(false); // Re-enable the button after processing
+      setIsButtonDisabled(false);
     }
   };
 
   const columns = [
-    // {
-    //   accessorKey: "index",
-    //   header: "#",
-    //   Cell: ({ row }) => <span>{row.index + 1}</span>,
-    // },
     {
       accessorKey: "first_name",
       header: "Name",
@@ -228,7 +235,7 @@ const ViewChapter = () => {
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
-            className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
+            className=" text-center  w-20 text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
             onClick={() => {
               setUser({
                 ...user,
@@ -254,7 +261,7 @@ const ViewChapter = () => {
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
-            className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
+            className=" text-center  w-20 text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
             onClick={() => {
               localStorage.setItem("schoolId", id);
 
@@ -280,6 +287,12 @@ const ViewChapter = () => {
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
 
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   return (
     <Layout>
       <div className=" bg-[#FFFFFF] p-2  rounded-lg  ">
@@ -295,44 +308,53 @@ const ViewChapter = () => {
             />
           </h2>
         </div>
+
         <div className="p-4 bg-red-50 rounded-b-xl">
-          <div className="flex flex-col sm:flex-row md:justify-between items-start space-y-4 sm:space-y-0">
+          <div className="flex justify-between items-start">
             <div className="space-y-1">
               <h3 className="text-lg font-semibold text-black">
-                {user.chapter_name}
+                {chapter.chapter_name}
               </h3>
-              <p className="text-xs text-gray-600">
-                State :{user.chapter_state}
+              <p className="text-xs font-semibold text-black">
+                State :{chapter.chapter_state}
               </p>
-
-              <p className="text-xs text-green-600">
-                City : {user.chapter_city}
+              <p className="text-xs font-semibold text-black">
+                City : {chapter.chapter_city}
               </p>
-              <p className="text-xs text-green-600">{user.mobile_device}</p>
-              <p className="text-xs text-green-600">PIN : {user.chapter_pin}</p>
+              <p className="text-xs font-semibold text-black">
+                {chapter.mobile_device}
+              </p>
+              <p className="text-xs font-semibold text-black">
+                PIN : {chapter.chapter_pin}
+              </p>
             </div>
             <div className="space-y-1 relative">
-              <div className="flex items-center">
-                <p className="  text-xs text-gray-600">
-                  {user.chapter_date_of_incorporation}
-                </p>
-              </div>
-              <p className="text-xs text-green-600">
-                Phone : {user.chapter_phone}
+              <p className="   text-xs font-semibold text-black">
+                {chapter.chapter_date_of_incorporation}
               </p>
-              <p className="text-xs text-green-600">
-                What's App : {user.chapter_whatsapp}{" "}
+              <p className="   text-xs font-semibold text-black">
+                Phone : {chapter.chapter_phone}{" "}
               </p>
-              <p className="text-xs text-green-600">{user.chapter_email}</p>
-              <p className="text-xs text-green-600">
-                {student.chapter_website}
+              <p className="text-xs font-semibold text-black">
+                {" "}
+                What's App : {chapter.chapter_whatsapp}{" "}
               </p>
-              <p className="text-xs text-green-600">
-                Address : {user.chapter_address}
+              <p className="text-xs font-semibold text-black">
+                {" "}
+                Email: {chapter.chapter_email}{" "}
               </p>
-            </div>
+              <p className="text-xs font-semibold text-black">
+                {" "}
+                {chapter.chapter_website}{" "}
+              </p>
+              <p className="text-xs font-semibold text-black">
+                {" "}
+                Address : {chapter.chapter_address}
+              </p>
+            </div>{" "}
           </div>
         </div>
+
         <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] mt-2 ">
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
             <div className="flex  items-center gap-2">
@@ -344,7 +366,7 @@ const ViewChapter = () => {
             </div>
 
             <button
-              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+              className=" text-center  w-36 text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
               onClick={toggleIndividualDrawer(true)}
             >
               Create New User
@@ -419,14 +441,20 @@ const ViewChapter = () => {
                       <FormLabel required>Enter Phone Number</FormLabel>
                       <input
                         type="text"
-                        maxLength={10}
                         name="phone"
                         value={user.phone}
-                        onChange={(e) => onUserInputChange(e)}
+                        onChange={(e) => {
+                          const phone = e.target.value;
+                          // Only update the value if it consists of digits and doesn't exceed length of 10
+                          if (/^\d*$/.test(phone) && phone.length <= 10) {
+                            onUserInputChange(e);
+                          }
+                        }}
                         className={inputClass}
                         required
                       />
                     </div>
+
                     <div className="form-group ">
                       <SelectInput
                         label="Select User Type"
@@ -435,12 +463,14 @@ const ViewChapter = () => {
                         value={user.user_type_id}
                         onChange={(e) => onUserInputChange(e)}
                         placeholder="Select  User Type"
+                        required
                       />
                     </div>
 
                     <div>
                       <FormLabel required>Enter Password</FormLabel>
                       <input
+                        type="password"
                         name="password"
                         value={user.password}
                         onChange={(e) => onUserInputChange(e)}
@@ -451,19 +481,21 @@ const ViewChapter = () => {
                     <div>
                       <FormLabel required>Confirm Password</FormLabel>
                       <input
+                        type="password"
                         name="confirm_password"
                         value={user.confirm_password}
                         onChange={(e) => onUserInputChange(e)}
                         className={inputClass}
                         required
                       />
+                      {error && <p className="text-red-600 text-sm">{error}</p>}
                     </div>
                   </div>
                   <div className="mt-5 flex justify-center">
                     <button
                       disabled={isButtonDisabled}
                       type="submit"
-                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                      className=" text-center  w-36 text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                     >
                       {isButtonDisabled ? "SUbmiting..." : "Submit"}
                     </button>
@@ -559,6 +591,7 @@ const ViewChapter = () => {
                         value={user.user_type_id}
                         onChange={(e) => onUserInputChange(e)}
                         placeholder="Select  User Type"
+                        required
                       />
                     </div>
                   </div>
@@ -566,7 +599,7 @@ const ViewChapter = () => {
                     <button
                       disabled={isButtonDisabled}
                       type="submit"
-                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                      className=" text-center w-36 text-sm font-[400 ] cursor-pointer hover:animate-pulse  text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                     >
                       {isButtonDisabled ? "Updating..." : "Update"}
                     </button>

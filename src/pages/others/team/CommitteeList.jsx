@@ -1,29 +1,22 @@
 import axios from "axios";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import BASE_URL from "../../../base/BaseUrl";
 import { IconInfoCircle, IconPhotoPlus, IconTrash } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 import AddToImage from "./AddToImage";
 import {
-  Button,
   Dialog,
   DialogBody,
-  DialogHeader,
-  DialogFooter,
 } from "@material-tailwind/react";
 
 const CommitteeList = () => {
   const [committeeData, setCommitteelist] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectDonorId, setSelectDonorId] = useState(null);
-
+  const userType = localStorage.getItem("user_type_id");
   const fetchCommitteeData = async () => {
     try {
-      setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(`${BASE_URL}/api/fetch-commitee`, {
         headers: {
@@ -35,7 +28,6 @@ const CommitteeList = () => {
     } catch (error) {
       console.error("Error fetching Factory data", error);
     } finally {
-      setLoading(false);
     }
   };
   useEffect(() => {
@@ -71,13 +63,12 @@ const CommitteeList = () => {
     setSelectDonorId(null);
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const baseColumns = [
       {
         accessorKey: "individual_company.indicomp_image_logo",
         header: "Photo",
         enableColumnFilter: false,
-
         Cell: ({ value, row }) => {
           const imageData =
             row.original?.individual_company.indicomp_image_logo;
@@ -108,7 +99,6 @@ const CommitteeList = () => {
         header: "Donor",
         Cell: ({ value, row }) => {
           const valueData = row.original?.individual_company.indicomp_full_name;
-
           return <div>{valueData}</div>;
         },
       },
@@ -120,21 +110,22 @@ const CommitteeList = () => {
         accessorKey: "designation",
         header: "Designation",
       },
-
       {
         accessorKey: "individual_company.indicomp_mobile_phone",
         header: "Mobile",
         Cell: ({ value, row }) => {
           const valueData =
             row.original?.individual_company.indicomp_mobile_phone;
-
           return <div>{valueData}</div>;
         },
       },
+    ];
 
-      {
-        id: "id",
+    if (userType === "1") {
+      baseColumns.push({
+        id: "action",
         header: "Action",
+        size: 50,
         Cell: ({ row }) => {
           const id = row.original.id;
           const handleId = row.original.indicomp_fts_id;
@@ -159,10 +150,11 @@ const CommitteeList = () => {
             </div>
           );
         },
-      },
-    ],
-    []
-  );
+      });
+    }
+
+    return baseColumns;
+  }, [userType]);
 
   const table = useMantineReactTable({
     columns,
@@ -194,16 +186,6 @@ const CommitteeList = () => {
             handleCloseDialog={handleCloseDialog}
           />
         </DialogBody>
-        {/* <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleCloseDialog}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-        </DialogFooter> */}
       </Dialog>
     </>
   );

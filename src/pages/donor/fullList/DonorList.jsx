@@ -151,6 +151,7 @@ const DonorList = () => {
         header: "Mobile",
         size: 50,
       },
+
       {
         accessorKey: "indicomp_email",
         header: "Email",
@@ -161,6 +162,15 @@ const DonorList = () => {
           return <div>{valueData}</div>;
         },
       },
+      ...(userType === "4"
+        ? [
+            {
+              accessorKey: "chapter_name",
+              header: "Chapter",
+              size: 50,
+            },
+          ]
+        : []),
       {
         id: "id",
         header: "Action",
@@ -171,14 +181,17 @@ const DonorList = () => {
 
           return (
             <div className="flex gap-2">
-              <div
-                onClick={() => navigate(`/donor-edit/${id}`)}
-                className="flex items-center space-x-2"
-                title="Edit"
-              >
-                <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
-              </div>
-
+              {userType == "1" || userType == "2" ? (
+                <div
+                  onClick={() => navigate(`/donor-edit/${id}`)}
+                  className="flex items-center space-x-2"
+                  title="Edit"
+                >
+                  <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
+                </div>
+              ) : (
+                ""
+              )}
               <div
                 onClick={toggleViewerDrawer(true, id)}
                 className="flex items-center space-x-2"

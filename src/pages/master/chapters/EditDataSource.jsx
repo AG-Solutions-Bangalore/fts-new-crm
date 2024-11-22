@@ -128,7 +128,6 @@ const EditDataSource = () => {
           data_source_type: "",
           chapter_id: "",
         });
-        // navigate("/master/chapters");
       } else {
         toast.error("Failed to update Data Source");
       }
@@ -172,7 +171,6 @@ const EditDataSource = () => {
           data_source_type: "",
           chapter_id: "",
         });
-        // navigate("/master/chapters");
       } else {
         toast.error("Failed to update Data Source");
       }
@@ -197,6 +195,8 @@ const EditDataSource = () => {
     {
       accessorKey: "edit",
       header: "Edit",
+      enableColumnFilter: false,
+
       Cell: ({ row }) => (
         <button
           onClick={() => handleClickOpen1(row.original.id)}
@@ -227,7 +227,12 @@ const EditDataSource = () => {
 
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
-
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   return (
     <Layout>
       <div>
@@ -242,9 +247,9 @@ const EditDataSource = () => {
             </div>
             <button
               onClick={handleClickOpen}
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse  text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
             >
-              Create A New Data Source
+              Create Data Source
             </button>
           </h2>
         </div>
@@ -300,7 +305,7 @@ const EditDataSource = () => {
                       <button
                         disabled={isButtonDisabled}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                       >
                         {isButtonDisabled ? "Submiting..." : "Submit"}
                       </button>
@@ -357,9 +362,9 @@ const EditDataSource = () => {
                       <button
                         type="submit"
                         disabled={isButtonDisabled}
-                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                       >
-                        Update Data Source
+                        Update 
                       </button>
                     </div>
                   </div>

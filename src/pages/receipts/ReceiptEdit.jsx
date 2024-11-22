@@ -68,9 +68,6 @@ const donation_type_2 = [
   },
 ];
 
-
-
-
 const ReceiptEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -284,36 +281,35 @@ const ReceiptEdit = () => {
             />
           </h2>
         </div>
+
         <div className="p-4 bg-red-50 rounded-b-xl">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <h3 className="text-lg font-semibold text-black">
                 {donor.individual_company.indicomp_full_name}
               </h3>
-              <p className="text-xs text-gray-600">
+              <p className="text-sm font-semibold text-black">
                 FTS Id: {donor.individual_company.indicomp_fts_id}
               </p>
-
-              <p className="text-xs text-black">
-                Receipt Ref : {donor.receipt_ref_no}
+              <p className="text-sm font-semibold text-black">
+                Receipt Ref: {donor.receipt_ref_no}
               </p>
             </div>
             <div className="space-y-1 relative">
-              <div className="flex items-center">
-                <h3 className="text-lg font-semibold text-black">
-                  {moment(donor.receipt_date).format("DD-MM-YYYY")}
-                </h3>
-                <p className=" absolute -mt-8 text-xs text-gray-600">
-                  {donor.receipt_financial_year}
-                </p>
-              </div>
-              <p className="text-xs text-green-600">Pan : {pan}</p>
-              <p className="text-xs text-black">
-                Exemption Type : {donor.receipt_exemption_type}
+              <p className="   text-sm font-semibold text-black">
+                {donor.receipt_financial_year}
               </p>
-            </div>
+              <p className="   text-sm font-semibold text-black">
+                {moment(donor.receipt_date).format("DD-MM-YYYY")}
+              </p>
+              <p className="text-xs font-semibold text-black">Pan : {pan}</p>
+              <p className="   text-xs font-semibold text-black">
+                Exemption Type: {donor.receipt_exemption_type}
+              </p>
+            </div>{" "}
           </div>
         </div>
+
         <hr />
         <form
           onSubmit={handleSubmit}
@@ -420,7 +416,10 @@ const ReceiptEdit = () => {
                   >
                     <option value="">Select Membership End Date</option>
                     {membershipyear.map((option) => (
-                      <option key={option.membership_year} value={option.membership_year}>
+                      <option
+                        key={option.membership_year}
+                        value={option.membership_year}
+                      >
                         {option.membership_year}
                       </option>
                     ))}
@@ -533,21 +532,21 @@ const ReceiptEdit = () => {
             </div>
           </div>
           {/* Form Actions */}
-          <div className="flex gap-4 justify-start">
-            <Button
+          <div className="flex gap-4 justify-center">
+            <button
               type="submit"
-              className="bg-[#269fbd] hover:bg-green-700"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
               disabled={isButtonDisabled}
             >
-              {isButtonDisabled ? "Submitting..." : "Submit"}
-            </Button>
-            {/* <Button
-            onClick={() => onClose()}
-            type="button"
-            className="bg-blue-500 hover:bg-green-700"
-          >
-            Back
-          </Button> */}
+              {isButtonDisabled ? "Updateting..." : "Update"}
+            </button>
+            <button
+              type="button"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-700 p-2 rounded-lg shadow-md mr-2"
+              disabled={isButtonDisabled}
+            >
+              Cancel
+            </button>
           </div>
         </form>
       </div>

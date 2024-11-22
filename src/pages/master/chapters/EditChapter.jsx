@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { MdKeyboardBackspace } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import SelectInput from "../../../components/common/SelectInput";
-import { FormLabel } from "@mui/material";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 
 const committee_type = [
@@ -32,7 +30,9 @@ const EditChapter = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  const [states, setStates] = useState([]);
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [chapter, setChapter] = useState({
     chapter_name: "",
     chapter_code: "",
@@ -49,11 +49,6 @@ const EditChapter = () => {
     auth_sign: "",
   });
 
-  console.log(chapter, "chapter");
-
-  const [states, setStates] = useState([]);
-
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("id");
     if (!isLoggedIn) {
@@ -156,6 +151,13 @@ const EditChapter = () => {
   };
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
   return (
     <Layout>
       <div>
@@ -228,6 +230,7 @@ const EditChapter = () => {
                     label: item.state_name,
                   }))}
                   onChange={onInputChange}
+                  
                   placeholder="Select State"
                 />
               </div>
@@ -245,7 +248,7 @@ const EditChapter = () => {
                 />
               </div>
               <div>
-                <FormLabel required>Whatsapp</FormLabel>
+                <FormLabel>Whatsapp</FormLabel>
                 <input
                   name="chapter_whatsapp"
                   value={chapter.chapter_whatsapp}
@@ -267,7 +270,7 @@ const EditChapter = () => {
                 />
               </div>
               <div>
-                <FormLabel required>Website</FormLabel>
+                <FormLabel>Website</FormLabel>
                 <input
                   name="chapter_website"
                   value={chapter.chapter_website}
@@ -277,7 +280,7 @@ const EditChapter = () => {
               </div>
 
               <div>
-                <FormLabel required>Incorporation Date</FormLabel>
+                <FormLabel>Incorporation Date</FormLabel>
                 <input
                   name="chapter_date_of_incorporation"
                   value={chapter.chapter_date_of_incorporation}
@@ -287,7 +290,7 @@ const EditChapter = () => {
                 />
               </div>
               <div>
-                <FormLabel required>Region Code</FormLabel>
+                <FormLabel>Region Code</FormLabel>
                 <input
                   name="chapter_region_code"
                   value={chapter.chapter_region_code}
@@ -299,27 +302,29 @@ const EditChapter = () => {
 
               <div>
                 <SelectInput
-                  label="Committee Member for Sign"
+                  label="Comm. Member for Sign"
                   name="auth_sign"
                   value={chapter.auth_sign}
                   options={committee_type}
                   onChange={onInputChange}
                   placeholder="Select State"
+                  required
                 />
+                <p className="text-[10px] p-1 mx-2 ">Committe Member</p>
               </div>
             </div>
 
             <div className="flex justify-start ">
               <button
                 type="submit"
-                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                 disabled={isButtonDisabled}
               >
                 {isButtonDisabled ? "Updating..." : "Update"}
               </button>
               <Link to="/master/chapters">
-                <button className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4">
-                  Back
+                <button className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-700 p-2 rounded-lg shadow-md ml-4">
+                  Cancel
                 </button>
               </Link>
             </div>

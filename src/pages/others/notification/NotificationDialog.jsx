@@ -1,16 +1,15 @@
-import { Button } from '@material-tailwind/react';
-import { IconInfoCircle } from '@tabler/icons-react';
-import axios from 'axios';
-import React, { useState } from 'react'
-import { toast } from 'react-toastify';
-import BASE_URL from '../../../base/BaseUrl';
+import { Button } from "@material-tailwind/react";
+import { IconInfoCircle } from "@tabler/icons-react";
+import axios from "axios";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import BASE_URL from "../../../base/BaseUrl";
 
-const NotificationDialog = ({fetchNotices,handleOpenDialog}) => {
-    
+const NotificationDialog = ({ fetchNotices, handleOpenDialog }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [noticeName, setNoticeName] = useState('');
-  const [noticeDetail, setNoticeDetail] = useState('');
-  const [toBeSentTo, setToBeSentTo] = useState('users');
+  const [noticeName, setNoticeName] = useState("");
+  const [noticeDetail, setNoticeDetail] = useState("");
+  const [toBeSentTo, setToBeSentTo] = useState("users");
   const sento = [
     { value: "To All", label: "To All" },
     { value: "To Only Viewers", label: "To Only Viewers" },
@@ -18,14 +17,13 @@ const NotificationDialog = ({fetchNotices,handleOpenDialog}) => {
     { value: "To Only Users", label: "To Only Users" },
   ];
 
-
   const handleNoticeNameChange = (e) => setNoticeName(e.target.value);
   const handleNoticeDetailChange = (e) => setNoticeDetail(e.target.value);
   const handleTargetChange = (e) => setToBeSentTo(e.target.value);
 
   const handleSubmitNotice = async (e) => {
     e.preventDefault();
-    setIsButtonDisabled
+    setIsButtonDisabled;
     try {
       const response = await axios.post(
         `${BASE_URL}/api/superadmin-add-notice`,
@@ -52,26 +50,26 @@ const NotificationDialog = ({fetchNotices,handleOpenDialog}) => {
       }
     } catch (error) {
       console.error("Error adding notice:", error);
-      toast.error("Error Adding Notice")
-    }finally{
-        setIsButtonDisabled(false);
+      toast.error("Error Adding Notice");
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
-    const FormLabel = ({ children, required }) => (
-        <label className="block text-sm font-semibold text-black mb-1 ">
-          {children}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-      );
-    
-      const inputClassSelect =
-        "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
-      const inputClass =
-        "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
+
+  const inputClassSelect =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
     <div className="  bg-[#FFFFFF]    rounded-lg  ">
-         <div className="sticky top-0 p-2  mb-2 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
+      <div className="sticky top-0 p-2  mb-2 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
         <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
           <div className="flex  items-center gap-2">
             <IconInfoCircle className="w-4 h-4" />
@@ -80,7 +78,7 @@ const NotificationDialog = ({fetchNotices,handleOpenDialog}) => {
         </h2>
       </div>
       <hr />
-        
+
       <form
         onSubmit={handleSubmitNotice}
         id="dowRecp"
@@ -89,65 +87,64 @@ const NotificationDialog = ({fetchNotices,handleOpenDialog}) => {
       >
         <div className="grid grid-cols-1  md:grid-cols-1 lg:grid-cols-1 gap-2">
           <div>
-          <FormLabel required>Notice Title</FormLabel>
-              <input
-                type="text"
-                name="notice_name"
-                value={noticeName}
-                onChange={handleNoticeNameChange}
-             
-                className={inputClass}
-                required
-              />
-              
-          </div>
-          <div>
-          <FormLabel required>Notice Details</FormLabel>
-              <input
-                type="text"
-                name="notice_detail"
-                value={noticeDetail}
-                onChange={handleNoticeDetailChange}
-        
-                className={inputClass}
-                required
-              />
-           
-          </div>
-          <div>
-          <FormLabel required>TSend To</FormLabel>
-              <select
-                name="to_be_sent_to"
-                value={toBeSentTo}
-                onChange={handleTargetChange}
-                required
-                className={inputClassSelect}
-              >
-                <option value="">Select Send To</option>
-                {sento.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-          </div>
-          <div>
-            <Button
-              type="submit"
-              color="blue"
-              disabled={isButtonDisabled}
+            <FormLabel required>Notice Title</FormLabel>
+            <input
+              type="text"
+              name="notice_name"
+              value={noticeName}
+              onChange={handleNoticeNameChange}
               className={inputClass}
+              required
+            />
+          </div>
+          <div>
+            <FormLabel required>Notice Details</FormLabel>
+            <input
+              type="text"
+              name="notice_detail"
+              value={noticeDetail}
+              onChange={handleNoticeDetailChange}
+              className={inputClass}
+              required
+            />
+          </div>
+          <div>
+            <FormLabel required>TSend To</FormLabel>
+            <select
+              name="to_be_sent_to"
+              value={toBeSentTo}
+              onChange={handleTargetChange}
+              required
+              className={inputClassSelect}
+            >
+              <option value="">Select Send To</option>
+              {sento.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex justify-center gap-2 p-3">
+            <button
+              type="submit"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+              disabled={isButtonDisabled}
             >
               {isButtonDisabled ? "Updating..." : "Update"}
-            </Button>
+            </button>
+            <button
+              type="button"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-700 p-2 rounded-lg shadow-md mr-2"
+              onClick={handleOpenDialog}
+            >
+              Cancel{" "}
+            </button>
           </div>
         </div>
       </form>
-        
-        
-        
-        </div>
-  )
-}
+    </div>
+  );
+};
 
-export default NotificationDialog
+export default NotificationDialog;
