@@ -65,19 +65,16 @@ const ReceiptTwo = () => {
   return (
     <div className=" flex justify-center">
       <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">
-        <div>
-        <ReactToPrint
-                      trigger={() => (
-                        <button
-                     
-                          className="flex items-center space-x-2 hover:text-red-400"
-                        >
-                          <IoIosPrint className="text-lg" />
-                          <span>Print Letter</span>
-                        </button>
-                      )}
-                      content={() => componentRef.current}
-                    />
+        <div className="p-2 flex justify-end ">
+          <ReactToPrint
+            trigger={() => (
+              <button className="flex items-center space-x-2 ">
+                <IoIosPrint className="text-lg" />
+                <span>Print Letter</span>
+              </button>
+            )}
+            content={() => componentRef.current}
+          />
         </div>
         <hr className="border-b border-blue-gray-400" />
         <div ref={componentRef} className="p-10" style={{ margin: "5px" }}>

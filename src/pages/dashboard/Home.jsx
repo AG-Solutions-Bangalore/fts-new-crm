@@ -20,6 +20,13 @@ import {
   User,
   IndianRupee,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
+
 import { ContextPanel } from "../../utils/ContextPanel";
 
 Chart.register(ArcElement, ...registerables);
@@ -40,7 +47,6 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => (
         </div>
       </div>
     </div>
-  
   </div>
 );
 
@@ -51,9 +57,12 @@ const Home = () => {
   const [graphData, setGraphData] = useState(null);
   const [graph1, setGraph1] = useState([]);
   const [graph2, setGraph2] = useState([]);
-  
+  const [open, setOpen] = useState(false);
+  const [selectedNotice, setSelectedNotice] = useState(null);
+
+  const handleOpen = () => setOpen(!open);
   const userTypeId = localStorage.getItem("user_type_id");
-  const {currentYear} = useContext(ContextPanel)
+  const { currentYear } = useContext(ContextPanel);
 
   // Panel visibility states
   const [visiblePanels, setVisiblePanels] = useState({
@@ -63,7 +72,6 @@ const Home = () => {
     receiptsBar: true,
     receiptsPie: true,
   });
-
 
   const fetchNotices = async () => {
     try {
@@ -236,12 +244,6 @@ const Home = () => {
                     </h2>
                   </div>
                   <div className="flex gap-2">
-                    {/* <button
-                      onClick={() => togglePanel("notices")}
-                      className="p-2 hover:bg-gray-100 rounded-lg"
-                    >
-                      <Minimize2 className="h-5 w-5 text-gray-500" />
-                    </button> */}
                     <button
                       onClick={() =>
                         setVisiblePanels((prev) => ({
@@ -283,15 +285,10 @@ const Home = () => {
                           {notice.is_read == 0 && (
                             <button
                               onClick={() => {
-                                if (
-                                  window.confirm(
-                                    "Confirm that you have read this notice?"
-                                  )
-                                ) {
-                                  markNoticeAsRead(notice.id);
-                                }
+                                setSelectedNotice(notice);
+                                handleOpen();
                               }}
-                              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                             >
                               Acknowledge
                             </button>
@@ -433,6 +430,32 @@ const Home = () => {
           <RefreshCcw className="h-6 w-6 text-blue-600" />
         </button>
       </div>
+
+      <Dialog open={open} handler={handleOpen}>
+        <DialogHeader>Acknowledge Notice</DialogHeader>
+        <DialogBody>
+          Are you sure you have read and understood this notice?
+        </DialogBody>
+        <DialogFooter>
+          <button
+            className="bg-red-600 text-white px-4 py-2 rounded-lg mr-2"
+            onClick={handleOpen}
+          >
+            Cancel
+          </button>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+            onClick={() => {
+              if (selectedNotice) {
+                markNoticeAsRead(selectedNotice.id);
+              }
+              handleOpen();
+            }}
+          >
+            Yes, I Understand
+          </button>
+        </DialogFooter>
+      </Dialog>
     </Layout>
   );
 };

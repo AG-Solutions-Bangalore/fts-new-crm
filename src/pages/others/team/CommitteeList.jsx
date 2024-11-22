@@ -7,12 +7,12 @@ import { IconInfoCircle, IconPhotoPlus, IconTrash } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 import AddToImage from "./AddToImage";
 import {
-    Button,
-    Dialog,
-    DialogBody,
-    DialogHeader,
-    DialogFooter,
-  } from "@material-tailwind/react";
+  Button,
+  Dialog,
+  DialogBody,
+  DialogHeader,
+  DialogFooter,
+} from "@material-tailwind/react";
 
 const CommitteeList = () => {
   const [committeeData, setCommitteelist] = useState([]);
@@ -75,7 +75,9 @@ const CommitteeList = () => {
     () => [
       {
         accessorKey: "individual_company.indicomp_image_logo",
-        header: "Logo",
+        header: "Photo",
+        enableColumnFilter: false,
+
         Cell: ({ value, row }) => {
           const imageData =
             row.original?.individual_company.indicomp_image_logo;
@@ -119,8 +121,6 @@ const CommitteeList = () => {
         header: "Designation",
       },
 
-      
-
       {
         accessorKey: "individual_company.indicomp_mobile_phone",
         header: "Mobile",
@@ -137,7 +137,7 @@ const CommitteeList = () => {
         header: "Action",
         Cell: ({ row }) => {
           const id = row.original.id;
-          const handleId = row.original.indicomp_fts_id
+          const handleId = row.original.indicomp_fts_id;
 
           return (
             <div className="flex gap-2">
@@ -148,9 +148,9 @@ const CommitteeList = () => {
               >
                 <IconTrash className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
-          
+
               <div
-               onClick={() => handleOpenDialog(handleId)} 
+                onClick={() => handleOpenDialog(handleId)}
                 className="flex items-center space-x-2"
                 title="Add Photos"
               >
@@ -175,29 +175,36 @@ const CommitteeList = () => {
   return (
     <>
       <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
-          <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
-            <div className="flex  items-center gap-2">
-              <IconInfoCircle className="w-4 h-4" />
-              <span>Committee List</span>
-            </div>
-          </h2>
-        </div>
-        <hr />
+        <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
+          <div className="flex  items-center gap-2">
+            <IconInfoCircle className="w-4 h-4" />
+            <span>Committee List</span>
+          </div>
+        </h2>
+      </div>
+      <hr />
       <div className=" shadow-md">
         <MantineReactTable table={table} />
       </div>
       <Dialog open={openDialog} handler={handleCloseDialog}>
-      
         <DialogBody>
-          <AddToImage selectDonorId={selectDonorId} setOpenDialog={setOpenDialog}  />
+          <AddToImage
+            selectDonorId={selectDonorId}
+            setOpenDialog={setOpenDialog}
+            handleCloseDialog={handleCloseDialog}
+          />
         </DialogBody>
-        <DialogFooter>
-          <Button variant="text" color="red" onClick={handleCloseDialog} className="mr-1">
+        {/* <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleCloseDialog}
+            className="mr-1"
+          >
             <span>Cancel</span>
           </Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </Dialog>
-     
     </>
   );
 };

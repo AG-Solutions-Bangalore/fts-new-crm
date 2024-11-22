@@ -22,7 +22,7 @@ const PageTitle = ({ title, icon: Icon, backLink }) => {
           <Icon className="text-black cursor-pointer hover:text-red-600" />
         </div>
       )}
-      <div className=" text-black  font-semibold">{title}</div>
+      <div className=" text-black  ">{title}</div>
     </div>
   );
 };

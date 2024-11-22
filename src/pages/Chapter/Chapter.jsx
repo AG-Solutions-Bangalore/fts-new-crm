@@ -33,12 +33,13 @@ const UserDrop = [
   },
   {
     value: "4",
-    label: "Admin",
+    label: "Viewer",
   },
 ];
 const Chapter = () => {
   const navigate = useNavigate();
   const id = localStorage.getItem("chapter_id");
+  const [error, setError] = useState("");
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(false);
@@ -173,6 +174,16 @@ const Chapter = () => {
       ...user,
       [name]: value,
     });
+
+    if (name === "confirm_password") {
+      if (value && value !== user.password) {
+        setError("Passwords do not match");
+      } else {
+        setError("");
+      }
+    } else {
+      setError(""); // Clear error for other fields
+    }
   };
 
   const createUser = async (e) => {
@@ -182,6 +193,10 @@ const Chapter = () => {
       form.reportValidity();
       return;
     }
+    if (user.password !== user.confirm_password) {
+      setError("Passwords do not match");
+      return;
+    }
     setIsButtonDisabled2(true);
     const formData = {
       name: user.name,
@@ -189,9 +204,11 @@ const Chapter = () => {
       last_name: user.last_name,
       email: user.email,
       phone: user.phone,
+      password: user.password,
       user_type: user.user_type_id,
-      chapter_id: user.chapter_code,
+      chapter_id: id,
     };
+    console.log(formData, "formdata");
     try {
       const response = await axios.post(
         `${BASE_URL}/api/create-user`,
@@ -204,7 +221,7 @@ const Chapter = () => {
       );
 
       if (response.status === 200) {
-        setUsers(response.data.users);
+        fetchData();
         handleClose();
         toast.success("User is Created Successfully");
         setUser({
@@ -232,7 +249,6 @@ const Chapter = () => {
     e.preventDefault();
     const form = e.target;
 
-    // Check if form is valid
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
@@ -250,7 +266,6 @@ const Chapter = () => {
     };
 
     try {
-      // Send PUT request
       const response = await axios.put(
         `${BASE_URL}/api/update-user/${selected_user_id}`,
         formData,
@@ -261,7 +276,6 @@ const Chapter = () => {
         }
       );
 
-      // Check for successful response
       if (response.status === 200) {
         toast.success("User is Updated Successfully");
         handleClose1(e);
@@ -273,16 +287,11 @@ const Chapter = () => {
       console.error("Error updating User:", error);
       toast.error("Error updating User");
     } finally {
-      setIsButtonDisabled1(false); // Re-enable the button after processing
+      setIsButtonDisabled1(false);
     }
   };
 
   const columns = [
-    // {
-    //   accessorKey: "index",
-    //   header: "#",
-    //   Cell: ({ row }) => <span>{row.index + 1}</span>,
-    // },
     {
       accessorKey: "first_name",
       header: "Name",
@@ -297,7 +306,7 @@ const Chapter = () => {
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
-            className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
             onClick={() => {
               setUser({
                 ...user,
@@ -324,7 +333,7 @@ const Chapter = () => {
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
-            className="bg-[#269fbd] hover:bg-green-700 p-2 text-white rounded"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
             onClick={() => navigate(`/chapter/view-shool/${row.original.id}`)}
           >
             School
@@ -388,6 +397,13 @@ const Chapter = () => {
         setIsButtonDisabled(false);
       });
   };
+
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   return (
     <Layout>
       <div className=" bg-[#FFFFFF] p-2  rounded-lg  ">
@@ -399,7 +415,7 @@ const Chapter = () => {
             </div>
 
             <button
-              className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
               onClick={toggleIndividualDrawer(true)}
             >
               Create New User
@@ -427,18 +443,18 @@ const Chapter = () => {
             <div className="p-6 space-y-1 ">
               <div>
                 <div className="mt-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-2">
-                    <div>
-                      <FormLabel required>Address</FormLabel>
-                      <input
-                        name="chapter_address"
-                        value={chapter.chapter_address}
-                        onChange={(e) => onInputChange(e)}
-                        className={inputClass}
-                        required
-                      />
-                    </div>
+                  <div className="mb-4 ">
+                    <FormLabel required>Address</FormLabel>
+                    <input
+                      name="chapter_address"
+                      value={chapter.chapter_address}
+                      onChange={(e) => onInputChange(e)}
+                      className={inputClass}
+                      required
+                    />
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
                     <div>
                       <FormLabel required>Phone</FormLabel>
                       <input
@@ -453,7 +469,7 @@ const Chapter = () => {
                     </div>
 
                     <div>
-                      <FormLabel required>Whatsapp</FormLabel>
+                      <FormLabel>Whatsapp</FormLabel>
                       <input
                         type="text"
                         maxLength={10}
@@ -461,7 +477,6 @@ const Chapter = () => {
                         value={chapter.chapter_whatsapp}
                         onChange={(e) => onInputChange(e)}
                         className={inputClass}
-                        required
                       />
                     </div>
                     <div>
@@ -476,19 +491,19 @@ const Chapter = () => {
                       />
                     </div>
                     <div>
-                      <FormLabel required>Website</FormLabel>
+                      <FormLabel>Website</FormLabel>
                       <input
                         name="chapter_website"
                         value={chapter.chapter_website}
                         onChange={(e) => onInputChange(e)}
                         className={inputClass}
-                        required
                       />
                     </div>
                     <div className="form-group ">
                       <SelectInput
                         label="Committee Member for Sign"
                         name="auth_sign"
+                        required
                         value={chapter.auth_sign}
                         options={committee_type}
                         onChange={(e) => onInputChange(e)}
@@ -496,14 +511,13 @@ const Chapter = () => {
                       />
                     </div>
                     <div>
-                      <FormLabel required>Date Of Incorporation</FormLabel>
+                      <FormLabel>Date Of Incorporation</FormLabel>
                       <input
                         type="date"
                         name="chapter_date_of_incorporation"
                         value={chapter.chapter_date_of_incorporation}
                         onChange={(e) => onInputChange(e)}
                         className={inputClass}
-                        required
                       />
                     </div>
                   </div>
@@ -511,7 +525,7 @@ const Chapter = () => {
                     <button
                       disabled={isButtonDisabled}
                       type="submit"
-                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                      className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
                     >
                       {isButtonDisabled ? "Updating..." : "Update"}
                     </button>
@@ -584,24 +598,29 @@ const Chapter = () => {
                         required
                       />
                     </div>
-
                     <div>
                       <FormLabel required>Enter Phone Number</FormLabel>
                       <input
                         type="text"
-                        maxLength={10}
                         name="phone"
                         value={user.phone}
-                        onChange={(e) => onUserInputChange(e)}
+                        onChange={(e) => {
+                          const phone = e.target.value;
+                          if (/^\d*$/.test(phone) && phone.length <= 10) {
+                            onUserInputChange(e);
+                          }
+                        }}
                         className={inputClass}
                         required
                       />
                     </div>
+
                     <div className="form-group ">
                       <SelectInput
                         label="Select User Type"
                         options={UserDrop}
                         name="user_type_id"
+                        required
                         onChange={(e) => onUserInputChange(e)}
                         placeholder="Select  User Type"
                       />
@@ -610,6 +629,7 @@ const Chapter = () => {
                       <FormLabel required>Enter Password</FormLabel>
                       <input
                         name="password"
+                        type="password"
                         value={user.password}
                         onChange={(e) => onUserInputChange(e)}
                         className={inputClass}
@@ -620,18 +640,20 @@ const Chapter = () => {
                       <FormLabel required>Confirm Password</FormLabel>
                       <input
                         name="confirm_password"
+                        type="password"
                         value={user.confirm_password}
                         onChange={(e) => onUserInputChange(e)}
                         className={inputClass}
                         required
                       />
+                      {error && <p className="text-red-600 text-sm">{error}</p>}
                     </div>
                   </div>
                   <div className="mt-5 flex justify-center">
                     <button
                       disabled={isButtonDisabled2}
                       type="submit"
-                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                      className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
                     >
                       {isButtonDisabled2 ? "SUbmiting..." : "Submit"}
                     </button>
@@ -651,7 +673,7 @@ const Chapter = () => {
             sx={{
               backdropFilter: "blur(5px) sepia(5%)",
               "& .MuiDialog-paper": {
-                borderRadius: "18px", 
+                borderRadius: "18px",
               },
             }}
           >
@@ -679,7 +701,8 @@ const Chapter = () => {
                           name="name"
                           value={user.name} // Ensure the value is bound to user.name
                           onChange={(e) => onUserInputChange(e)} // Handle change
-                          className={inputClass}
+                          const
+                          className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed"
                           required
                           disabled
                         />
@@ -714,7 +737,12 @@ const Chapter = () => {
                           maxLength={10}
                           name="phone"
                           value={user.phone}
-                          onChange={(e) => onUserInputChange(e)}
+                          onChange={(e) => {
+                            const phone = e.target.value;
+                            if (/^\d*$/.test(phone) && phone.length <= 10) {
+                              onUserInputChange(e);
+                            }
+                          }}
                           className={inputClass}
                           required
                         />
@@ -726,6 +754,7 @@ const Chapter = () => {
                             value: item.value,
                             label: item.label,
                           }))}
+                          required
                           value={user.user_type_id}
                           name="user_type_id"
                           onChange={(e) => onUserInputChange(e)}
@@ -737,7 +766,7 @@ const Chapter = () => {
                       <button
                         disabled={isButtonDisabled1}
                         type="submit"
-                        className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
                       >
                         {isButtonDisabled1 ? "Updating..." : "Update"}
                       </button>

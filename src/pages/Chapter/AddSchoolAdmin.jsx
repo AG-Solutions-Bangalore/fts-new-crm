@@ -162,9 +162,14 @@ const AddSchoolAdmin = () => {
       setIsButtonDisabled(false);
     }
   };
-
+  const FormLabel = ({ children, required }) => (
+    <label className="block text-sm font-semibold text-black mb-1 ">
+      {children}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+  );
   const inputClass =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed";
   return (
     <Layout>
       <div>
@@ -247,13 +252,13 @@ const AddSchoolAdmin = () => {
             <div className="flex justify-start py-4">
               <button
                 type="submit"
-                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
                 disabled={isButtonDisabled}
               >
                 {isButtonDisabled ? "Submiting..." : "Submit"}
               </button>
               <button
-                className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-400 hover:bg-red-900 p-2 rounded-lg shadow-md mr-2"
                 onClick={() => navigate("/chapter")}
               >
                 Back

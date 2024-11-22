@@ -16,6 +16,7 @@ import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import MemberSelect from "./MemberSelect";
 import { toast } from "react-toastify";
 import CommitteeList from "./CommitteeList";
+import moment from "moment/moment";
 
 const Team = () => {
   const [committee, setCommittee] = useState({
@@ -23,16 +24,14 @@ const Team = () => {
     designation: "",
     indicomp_fts_id: "",
     indicomp_full_name: "",
-    receipt_from_date: defaultfromdate,
-    receipt_to_date: defaulttodates,
+    receipt_from_date: "",
+    receipt_to_date: "",
   });
 
   const [openDialog, setOpenDialog] = useState(false);
   const [designationOptions, setDesignationOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [loadingCommittees, setLoadingCommittees] = useState(true);
-  const navigate = useNavigate();
   const commiteeOptions = [
     { value: "Executive Committee", label: "Executive Committee" },
     { value: "Mahila Samiti", label: "Mahila Samiti" },
@@ -41,7 +40,6 @@ const Team = () => {
   ];
 
   const onInputChange = (name, value) => {
-   
     setCommittee((prev) => ({
       ...prev,
       [name]: value,
@@ -50,7 +48,6 @@ const Team = () => {
   const onInputChange1 = (e) => {
     const { name, value } = e.target;
 
- 
     setCommittee((prev) => ({
       ...prev,
       [name]: value,
@@ -89,9 +86,33 @@ const Team = () => {
       toast.error("Error fetching designations");
     }
   };
+  const [committes, setCommittes] = useState({});
 
+  const fetchCommiteDate = async () => {
+    const theLoginToken = localStorage.getItem("token");
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${theLoginToken}`,
+      },
+    };
+
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/fetch-committee-date`,
+        requestOptions
+      );
+      const data = await response.json();
+      setCommittes(data.committeDate);
+    } catch (error) {
+      console.error("Error fetching designations:", error);
+      toast.error("Error fetching designations");
+    }
+  };
+  console.log(committes);
   useEffect(() => {
     fetchDesignations();
+    fetchCommiteDate();
   }, []);
 
   const onSubmit = async (e) => {
@@ -100,8 +121,8 @@ const Team = () => {
     const data = {
       committee_type: committee.committee_type,
       designation: committee.designation,
-      start_date: committee.receipt_from_date,
-      end_date: committee.receipt_to_date,
+      start_date: committes.committee_from,
+      end_date: committes.committee_to,
       indicomp_fts_id: committee.indicomp_full_name,
     };
 
@@ -117,15 +138,15 @@ const Team = () => {
         designation: "",
         indicomp_fts_id: "",
         indicomp_full_name: "",
-        receipt_from_date: defaultfromdate,
-        receipt_to_date: defaulttodates,
+        receipt_from_date: "",
+        receipt_to_date: "",
       });
       //   fetchCommittees();
     } catch (error) {
       toast.error("Error creating committee");
       console.error(error);
-    }finally{
-        setIsButtonDisabled(false);
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
@@ -149,7 +170,6 @@ const Team = () => {
               <IconInfoCircle className="w-4 h-4" />
               <span>Committee Summary</span>
             </div>
-              
           </h2>
         </div>
         <hr />
@@ -208,56 +228,44 @@ const Team = () => {
               />
             </div>
             <div>
-              <FormLabel>From Date</FormLabel>
+              <FormLabel required>Start Date</FormLabel>
               <input
                 type="date"
                 disabled
                 name="receipt_from_date"
-                value={committee.receipt_from_date}
+                required
+                value={committes.committee_from}
                 onChange={(e) => onInputChange(e.target.name, e.target.value)}
-                className={inputClass}
+                className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed"
               />
             </div>
             <div>
-              <FormLabel>To Date</FormLabel>
+              <FormLabel required>End Date</FormLabel>
               <input
                 type="date"
                 name="receipt_to_date"
                 disabled
-                value={committee.receipt_to_date}
-                onChange={(e) => onInputChange(e.target.name, e.target.value)}
-                className={inputClass}
+                value={committes.committee_to}
+                required
+                className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed"
               />
             </div>
-            <div>
-            <FormLabel>Sumbit</FormLabel>
-            <Button
-            type="submit"
-            color="blue"
-            disabled={isButtonDisabled}
-            className={inputClass}
-          >
-            {isButtonDisabled ? "Updating..." : "Update"}
-          </Button>
-            </div>
           </div>
-          {/* <div className="flex gap-4 justify-start">
-          <Button
-            type="submit"
-            color="blue"
-            disabled={isButtonDisabled}
-            className="px-6 py-2"
-          >
-            {isButtonDisabled ? "Updating..." : "Update"}
-          </Button>
-        </div> */}
-         
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              disabled={isButtonDisabled}
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+            >
+              {isButtonDisabled ? "Updating..." : "Update"}
+            </button>
+          </div>
         </form>
       </div>
 
-     <div className="  bg-[#FFFFFF] p-2  mt-5   rounded-lg  ">
-     <CommitteeList/>
-     </div>
+      <div className="  bg-[#FFFFFF] p-2  mt-5   rounded-lg  ">
+        <CommitteeList />
+      </div>
 
       <Dialog open={openDialog} handler={handleOpenDialog}>
         <DialogHeader> Add to Member</DialogHeader>
@@ -265,14 +273,12 @@ const Team = () => {
           <MemberSelect populateDonorName={populateDonorName} />
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            //   onClick={() => closegroupModal()}
-            className="mr-1"
+          <button
+            onClick={() => setOpenDialog(false)}
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-24 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
           >
             <span>Cancel</span>
-          </Button>
+          </button>
         </DialogFooter>
       </Dialog>
     </Layout>

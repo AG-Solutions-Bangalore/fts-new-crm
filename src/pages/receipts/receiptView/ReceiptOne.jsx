@@ -10,7 +10,12 @@ import Logo1 from "../../../assets/receipt/fts.png";
 import Logo2 from "../../../assets/receipt/top.png";
 import Logo3 from "../../../assets/receipt/ekal.png";
 import moment from "moment";
-import { IconDownload, IconMail, IconPrinter, IconReceipt } from "@tabler/icons-react";
+import {
+  IconDownload,
+  IconMail,
+  IconPrinter,
+  IconReceipt,
+} from "@tabler/icons-react";
 const ReceiptOne = () => {
   const componentRef = useRef();
   const componentRefp = useRef();
@@ -152,7 +157,7 @@ const ReceiptOne = () => {
 
       if (response.status == "200") {
         handleClose();
-        fetchDataReceipt()
+        fetchDataReceipt();
         toast.success("Data Added Successfully");
       } else {
         toast.error("Data  Duplicate Entry");
@@ -184,9 +189,9 @@ const ReceiptOne = () => {
                 <button className="flex items-center text-blue-600 hover:text-blue-800">
                   <a href={BASE_URL + "/api/download-receipts?id=" + theId}>
                     <span className="mr-2 flex items-center gap-1">
-                      <IconDownload className="h-5 w-5 text-black"/>
-                        <p>Download</p>
-                      </span> 
+                      <IconDownload className="h-5 w-5 text-black" />
+                      <p>Download</p>
+                    </span>
                   </a>
                 </button>
 
@@ -196,7 +201,7 @@ const ReceiptOne = () => {
                     className="flex items-center text-blue-600 hover:text-blue-800"
                   >
                     <span className="mr-2">
-                      <IconMail className="h-5 w-5 text-black"/>
+                      <IconMail className="h-5 w-5 text-black" />
                     </span>
                     Email
                     <div className="text-xs ml-1">
@@ -209,9 +214,9 @@ const ReceiptOne = () => {
                   <div>
                     <p className="text-red-500">
                       <span className="mr-2">
-                        
-                        <IconPrinter className="h-5 w-5 text-black"/>
-                        </span> Email not found
+                        <IconPrinter className="h-5 w-5 text-black" />
+                      </span>{" "}
+                      Email not found
                     </p>
                     <button
                       onClick={handleClickOpen}
@@ -226,7 +231,10 @@ const ReceiptOne = () => {
                   onClick={printReceipt}
                   className="flex items-center text-blue-600 hover:text-blue-800"
                 >
-                  <span className="mr-2">🖨️</span> Print Receipt
+                  <span className="mr-2 text-black">
+                    <IconPrinter />
+                  </span>{" "}
+                  Print Receipt
                 </button>
               </div>
             )}
@@ -275,9 +283,9 @@ const ReceiptOne = () => {
 
                 <div className="text-center border-x -mt-6 border-black p-1">
                   <p className="text-xs">
-                    Head Office: Harish Mukherjee Road, 
-                    Kolkata-26. Web: www.ftsindia.com Ph: 033 - 2454
-                    4510/11/12/13 PAN: AAAAF0290L
+                    Head Office: Harish Mukherjee Road, Kolkata-26. Web:
+                    www.ftsindia.com Ph: 033 - 2454 4510/11/12/13 PAN:
+                    AAAAF0290L
                   </p>
                 </div>
 

@@ -20,17 +20,18 @@ const Logout = ({ open, handleOpen }) => {
       <DialogHeader>Confirm Logout</DialogHeader>
       <DialogBody>Are you sure you want to log out?</DialogBody>
       <DialogFooter>
-        <Button
-          variant="text"
-          color="red"
+        <button
+          className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md mr-2"
           onClick={handleOpen}
-          className="mr-1"
         >
           <span>Cancel</span>
-        </Button>
-        <Button variant="gradient" color="green" onClick={handleLogout}>
+        </button>
+        <button
+          className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+          onClick={handleLogout}
+        >
           <span>Confirm</span>
-        </Button>
+        </button>
       </DialogFooter>
     </Dialog>
   );

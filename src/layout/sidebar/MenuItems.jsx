@@ -1,18 +1,13 @@
 import {
-  IconAperture,
   IconCopy,
   IconHierarchy,
   IconChartDots2,
   IconLayoutDashboard,
-  IconLogin,
-  IconMoodHappy,
   IconUser,
   IconLanguage,
   IconBriefcase,
   IconMessages,
   IconTypography,
-  IconUserPlus,
-  IconRotate2,
   IconCash,
   IconCardboards,
   IconUsers,
@@ -24,10 +19,12 @@ import {
   IconReport,
   IconDownload,
   IconPeace,
+  IconBell,
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
 const userTypeId = localStorage.getItem("user_type_id");
+console.log("userTypeId", userTypeId);
 const Menuitems = [
   {
     navlabel: true,
@@ -199,7 +196,7 @@ const Menuitems = [
       {
         id: uniqueId(),
         title: "Donor Summary",
-        icon: IconTypography,
+        icon: IconCopy,
         href: "/report/donorsummary",
       },
       {
@@ -256,7 +253,7 @@ const Menuitems = [
       {
         id: uniqueId(),
         title: "Receipt",
-        icon: IconTypography,
+        icon: IconCopy,
         href: "/download/receipts",
       },
       {
@@ -311,13 +308,13 @@ const Menuitems = [
       {
         id: uniqueId(),
         title: "Team",
-        icon: IconCopy,
+        icon: IconUsers,
         href: "/team",
       },
       {
         id: uniqueId(),
         title: "Notification",
-        icon: IconCopy,
+        icon: IconBell,
         href: "/notification",
       },
     ],
