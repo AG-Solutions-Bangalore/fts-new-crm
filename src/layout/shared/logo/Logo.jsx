@@ -1,4 +1,3 @@
-
 import { styled } from "@mui/material";
 
 import { Link } from "react-router-dom";
@@ -16,18 +15,26 @@ const LargeLinkStyled = styled(Link)(() => ({
   display: "block",
 }));
 
-const Logo = ({isCollapsed}) => {
+const Logo = ({ isCollapsed }) => {
   return (
-
-   
-  <>
+    <>
       {!isCollapsed ? (
-        <LinkStyled to="/">
-          <img src="/images/logos/fts1.png" alt="logo" className="h-16" priority />
+        <LinkStyled to="/home">
+          <img
+            src="/images/logos/fts1.png"
+            alt="logo"
+            className="h-16"
+            priority
+          />
         </LinkStyled>
       ) : (
-        <LargeLinkStyled to="/">
-          <img src="/images/logos/fts_wm.png" alt="logo" className="h-16" priority />
+        <LargeLinkStyled to="/home">
+          <img
+            src="/images/logos/fts_wm.png"
+            alt="logo"
+            className="h-16"
+            priority
+          />
         </LargeLinkStyled>
       )}
     </>

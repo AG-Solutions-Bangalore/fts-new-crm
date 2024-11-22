@@ -6,7 +6,7 @@ const SelectField = ({ label, name, value, options, onChange, required }) => {
 
   return (
     <div>
-      <label className="block text-sm  text-grey mb-1">
+      <label className="block text-sm  font-semibold text-grey mb-1">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>

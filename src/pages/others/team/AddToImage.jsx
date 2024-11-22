@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@material-tailwind/react";
 
-const AddToImage = ({ selectDonorId, setOpenDialog }) => {
+const AddToImage = ({ selectDonorId, setOpenDialog, handleCloseDialog }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const AddToImage = ({ selectDonorId, setOpenDialog }) => {
   const onSubmit = async (e) => {
     e.preventDefault(); // Call this once at the beginning
     setIsButtonDisabled(true);
-   
+
     if (!selectedFile) {
       toast.error("Please select an image before submitting.");
       return;
@@ -23,25 +23,25 @@ const AddToImage = ({ selectDonorId, setOpenDialog }) => {
     data.append("indicomp_fts_id", selectDonorId);
     data.append("indicomp_image_logo", selectedFile);
 
-
     try {
-       const res = await axios.post(`${BASE_URL}/api/create-committee-image`, data, {
+      const res = await axios.post(
+        `${BASE_URL}/api/create-committee-image`,
+        data,
+        {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        });
-        
-            toast.success("Image Inserted Successfully");
-            setOpenDialog(false)
-       
-        
-      } catch (error) {
-        toast.error("Error creating committee");
-        console.error(error);
-      }finally{
-          setIsButtonDisabled(false);
-      }
-    
+        }
+      );
+
+      toast.success("Image Inserted Successfully");
+      setOpenDialog(false);
+    } catch (error) {
+      toast.error("Error creating committee");
+      console.error(error);
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
 
   const FormLabel = ({ children, required }) => (
@@ -82,15 +82,21 @@ const AddToImage = ({ selectDonorId, setOpenDialog }) => {
             />
             <p className="text-xs text-gray-500 mt-1">Please Add Donor Image</p>
           </div>
-          <div>
-            <Button
+          <div className="flex justify-center">
+            <button
               type="submit"
-              color="blue"
               disabled={isButtonDisabled}
-              className={inputClass}
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-24 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
             >
               {isButtonDisabled ? "Updating..." : "Update"}
-            </Button>
+            </button>
+            <button
+              type="button"
+              onClick={handleCloseDialog}
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-24 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md mr-2"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </form>
