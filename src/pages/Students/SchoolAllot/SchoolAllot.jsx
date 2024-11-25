@@ -100,12 +100,13 @@ const SchoolAllot = () => {
             Cell: ({ row }) => {
               const newValue = row.original.id;
 
-              const newYear = row.original.schoolalot_financial_year
+              const newYear = row.original.schoolalot_financial_year;
 
               const handleedit = () => {
-                navigate("/students-allotedit");
-                console.log("this");
-                localStorage.setItem("sclaltid", newValue);
+                // navigate("/students-allotedit");
+                // console.log("this");
+                navigate(`/students-allotedit/${newValue}`);
+                // localStorage.setItem("sclaltid", newValue);
                 localStorage.setItem("sclaltyear", newYear);
               };
 
@@ -121,7 +122,7 @@ const SchoolAllot = () => {
               return (
                 <div className="flex flex-row gap-1">
                   <div onClick={handleedit}>
-                    <Link
+                    <div
                       style={{
                         display: localStorage.getItem("id") == 1 ? "" : "none",
                       }}
@@ -129,7 +130,7 @@ const SchoolAllot = () => {
                       <Tooltip title="Edit" arrow>
                         <IconEdit className="h-5 w-5 cursor-pointer text-blue-500" />
                       </Tooltip>
-                    </Link>
+                    </div>
                   </div>
                   <div onClick={handleview}>
                     <Link

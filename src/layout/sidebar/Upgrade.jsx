@@ -13,7 +13,7 @@ export const Upgrade = ({isCollapsed}) => {
       sx={{ m: 3}}
     >
       <>
-       <span className="border-b-2 text-[#111C2D] text-sm font-[600] border-dashed border-blue-500"> Updated On: 22-11-2024</span>
+       <span className="border-b-2 text-[#111C2D] text-sm font-[600] border-dashed border-blue-500"> Updated On: 25-11-2024</span>
       </>
     </Box>
     ) : (

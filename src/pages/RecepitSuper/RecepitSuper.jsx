@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "../../layout/Layout";
 import BASE_URL from "../../base/BaseUrl";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconEdit, IconInfoCircle } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import moment from "moment/moment";
 import RecepitSuperDialog from "./RecepitSuperDialog";
@@ -30,7 +30,9 @@ const RecepitSuper = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  const handleClose = () => {
+    setShowModal(false);
+  };
   const onSubmit = (Recepitref) => {
     let data = {
       receipt_ref: Recepitref,
@@ -108,12 +110,10 @@ const RecepitSuper = () => {
 
         return (
           <div className="flex items-center space-x-2">
-            <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            <IconEdit
               onClick={handleOpen}
-            >
-              Edit
-            </button>
+              className="cursor-pointer text-blue-600"
+            />
           </div>
         );
       },
@@ -146,7 +146,10 @@ const RecepitSuper = () => {
 
       <Dialog open={showModal} handler={handleOpenDialog}>
         <div className="max-h-[500px] overflow-y-auto bg-white rounded-lg p-4 w-full sm:w-[300px] md:w-[600px] lg:w-[900px]">
-          <RecepitSuperDialog onSelect={handleChapterSelection} />
+          <RecepitSuperDialog
+            onSelect={handleChapterSelection}
+            handleClose={handleClose}
+          />
         </div>
       </Dialog>
     </Layout>

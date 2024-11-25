@@ -95,23 +95,37 @@ const AddSchoolAdmin = () => {
     setEmail(e.target.value);
   };
 
-  const handleClick = (e) => {
-    var targetName = e.target.name;
-    if (e.target.checked == true) {
-      var temparray = viewerChapterIds;
-      temparray.push(e.target.name);
-      setViewerChapterIds(temparray);
-    } else {
-      var temparray = viewerChapterIds;
-      temparray.splice(temparray.indexOf(targetName), 1);
-      setViewerChapterIds(temparray);
-    }
+  // const handleClick = (e) => {
+  //   var targetName = e.target.name;
+  //   if (e.target.checked == true) {
+  //     var temparray = viewerChapterIds;
+  //     temparray.push(e.target.name);
+  //     setViewerChapterIds(temparray);
+  //   } else {
+  //     var temparray = viewerChapterIds;
+  //     temparray.splice(temparray.indexOf(targetName), 1);
+  //     setViewerChapterIds(temparray);
+  //   }
 
-    var schoolIds = "";
-    for (var i = 0; i < viewerChapterIds.length; i++) {
-      schoolIds = schoolIds + "," + viewerChapterIds[i];
-    }
-    setSchoolIds(schoolIds);
+  //   var schoolIds = "";
+  //   for (var i = 0; i < viewerChapterIds.length; i++) {
+  //     schoolIds = schoolIds + "," + viewerChapterIds[i];
+  //   }
+  //   setSchoolIds(schoolIds);
+  // };
+
+  const handleClick = (e) => {
+    const targetName = e.target.name;
+    setCurrentViewerChapterIds((prevState) => {
+      const newChapterIds = new Set(prevState);
+      if (e.target.checked) {
+        newChapterIds.add(targetName);
+      } else {
+        newChapterIds.delete(targetName);
+      }
+      setSchoolIds([...newChapterIds].join(","));
+      return [...newChapterIds];
+    });
   };
 
   useEffect(() => {
@@ -229,23 +243,18 @@ const AddSchoolAdmin = () => {
               </div>
             </div>
             <div className="flex flex-wrap justify-start items-center gap-4">
-              {chapters.map((chapter, key) => (
-                <div
-                  key={key}
-                  className="flex items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
-                >
+              {chapters.map((chapter) => (
+                <div key={chapter.id} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    defaultChecked={currentViewerChapterIds.includes(
-                      chapter.id + ""
+                    name={chapter.id}
+                    checked={currentViewerChapterIds.includes(
+                      chapter.id.toString()
                     )}
                     onChange={handleClick}
-                    name={chapter.id}
-                    id={chapter.id}
+                    className="form-checkbox h-5 w-5"
                   />
-                  <label htmlFor={chapter.id} className="ml-2 text-sm">
-                    {chapter.chapter_name}
-                  </label>
+                  <span>{chapter.chapter_name}</span>
                 </div>
               ))}
             </div>
