@@ -43,25 +43,17 @@ const EditViewer = () => {
   const [currentViewerChapterIds, setCurrentViewerChapterIds] = useState([]);
 
   const handleClick = (e) => {
-    var targetName = e.target.name;
-
-    if (e.target.checked == true) {
-      var temparray = viewerChapterIds;
-      temparray.push(e.target.name);
-      setViewerChapterIds(temparray);
-    } else {
-      var temparray = viewerChapterIds;
-
-      temparray.splice(temparray.indexOf(targetName), 1);
-      setViewerChapterIds(temparray);
-    }
-
-    let theChapterIds = "";
-    for (let i = 0; i < viewerChapterIds.length; i++) {
-      theChapterIds = theChapterIds + "," + viewerChapterIds[i];
-    }
-
-    setChapterIds(theChapterIds);
+    const targetName = e.target.name;
+    setCurrentViewerChapterIds((prevState) => {
+      const newChapterIds = new Set(prevState);
+      if (e.target.checked) {
+        newChapterIds.add(targetName);
+      } else {
+        newChapterIds.delete(targetName);
+      }
+      setChapterIds([...newChapterIds].join(","));
+      return [...newChapterIds];
+    });
   };
 
   const onFirstNameChange = (e) => {
@@ -120,43 +112,44 @@ const EditViewer = () => {
   };
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("id");
-    if (!isLoggedIn) {
-      window.location = "/signin";
-    } else {
-    }
-
-    var theLoginToken = localStorage.getItem("token");
-
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + theLoginToken,
-      },
+    const fetchChapters = async () => {
+      try {
+        const response = await fetch(BASE_URL + "/api/fetch-chapters", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const data = await response.json();
+        setChapters(data.chapters);
+      } catch (error) {
+        toast.error("Failed to fetch chapters.");
+      }
     };
 
-    fetch(BASE_URL + "/api/fetch-chapters", requestOptions)
-      .then((response) => response.json())
-      .then((data) => setChapters(data.chapters));
+    fetchChapters();
   }, []);
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("id");
-    if (!isLoggedIn) {
-      window.location = "/signin";
-    } else {
-    }
-    axios({
-      url: BASE_URL + "/api/fetch-viewer-by-id/" + id,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      setTheViewer(res.data.users);
-      setLoader(false);
-    });
-  }, []);
+    const fetchViewer = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/fetch-viewer-by-id/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setTheViewer(response.data.users);
+        setLoader(false);
+      } catch (error) {
+        toast.error("Failed to fetch viewer details.");
+      }
+    };
+
+    fetchViewer();
+  }, [id]);
 
   const setTheViewer = (users) => {
     setID(users.id);
@@ -172,18 +165,14 @@ const EditViewer = () => {
     console.log("test", users.user_status);
     setChapterIds(users.viewer_chapter_ids);
     setchapter_id(users.chapter_id);
+
     var res = users.viewer_chapter_ids.split(",");
+    console.log("res check", res);
 
-    var tempChapterIds = [];
-
-    for (var i = 0; i < res.length; i++) {
-      tempChapterIds.push(res[i]);
-    }
-
-    setCurrentViewerChapterIds(tempChapterIds);
+    setCurrentViewerChapterIds(res);
+    console.log("setchaptercurrent", res);
   };
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = document.getElementById("addIndiv");
@@ -391,31 +380,17 @@ const EditViewer = () => {
             </h2>
             <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {chapters.map((chapter) => (
-                <div key={chapter.id} className="flex items-center gap-2">
-                  {currentViewerChapterIds.includes(chapter.id + "") ==
-                    true && (
-                    <input
-                      type="checkbox"
-                      defaultChecked={true}
-                      onChange={handleClick}
-                      name={chapter.id}
-                      id={chapter.id}
-                    />
-                  )}
-
-                  {currentViewerChapterIds.includes(chapter.id + "") ==
-                    false && (
-                    <input
-                      type="checkbox"
-                      defaultChecked={false}
-                      onChange={handleClick}
-                      name={chapter.id}
-                      id={chapter.id}
-                    />
-                  )}
-                  <label htmlFor={`chapter-${chapter.id}`} className="text-sm">
-                    {chapter.chapter_name}
-                  </label>
+                <div key={chapter.id} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    name={chapter.id}
+                    checked={currentViewerChapterIds.includes(
+                      chapter.id.toString()
+                    )}
+                    onChange={handleClick}
+                    className="form-checkbox h-5 w-5"
+                  />
+                  <span>{chapter.chapter_name}</span>
                 </div>
               ))}
             </div>

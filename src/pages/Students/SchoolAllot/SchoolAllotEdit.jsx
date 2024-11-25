@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { Card, Button } from "@material-tailwind/react";
@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import MUIDataTable from "mui-datatables";
 
 const SchoolAllotEdit = () => {
+  const year = localStorage.getItem("sclaltyear");
   const [schoolToAllot, setSchoolToAllot] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
@@ -17,8 +18,8 @@ const SchoolAllotEdit = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const navigate = useNavigate();
 
-  const id = localStorage.getItem("sclaltid");
-  const year = localStorage.getItem("sclaltyear");
+  // const id = localStorage.getItem("sclaltid");
+  const { id } = useParams();
 
   const [schoolalot, setSchoolalot] = useState({
     schoolalot_financial_year: "",
@@ -27,7 +28,6 @@ const SchoolAllotEdit = () => {
     schoolalot_school_id: "",
     rept_fin_year: "",
   });
-
   useEffect(() => {
     const fetchYearData = async () => {
       try {
@@ -60,6 +60,10 @@ const SchoolAllotEdit = () => {
           }
         );
         setSchoolalot(response.data.individualCompanys);
+        localStorage.setItem(
+          "selectedSchoolIds",
+          response.data.individualCompanys.schoolalot_school_id
+        );
 
         const schoolsResponse = await axios.get(
           `${BASE_URL}/api/fetch-school-alloted-list-by-id/${id}/${year}`,
@@ -73,14 +77,19 @@ const SchoolAllotEdit = () => {
         const schoolsData = schoolsResponse.data.schools || [];
         setSchoolAllot(schoolsData);
 
-        // Set initial selected rows based on schoolalot_school_id
+        // Retrieve saved selected school IDs from localStorage
+        const savedSchoolIds =
+          localStorage.getItem("selectedSchoolIds")?.split(",") || [];
+
+        // Map the saved school IDs to the corresponding rows
         const defaultSelectedRows = schoolsData.reduce((acc, school, index) => {
-          if (schoolalot.schoolalot_school_id?.includes(school.school_code)) {
+          if (savedSchoolIds.includes(school.school_code)) {
             acc.push(index);
           }
           return acc;
         }, []);
-        setSelectedSchoolIds(defaultSelectedRows);
+
+        setSelectedSchoolIds(defaultSelectedRows); // Update state
         setSchoolToAllot(
           schoolsData.map((item) => [
             item.school_state,
@@ -100,11 +109,11 @@ const SchoolAllotEdit = () => {
     };
 
     fetchData();
-  }, [id, year, schoolalot.schoolalot_financial_year]);
+  }, [id, year]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const selectedIds = localStorage.getItem("selectedSchoolIds") || "";
     const data = {
       donor_related_id: id,
@@ -123,6 +132,8 @@ const SchoolAllotEdit = () => {
       navigate("/students-schoolallot");
     } catch (error) {
       console.error("Error updating data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -145,8 +156,7 @@ const SchoolAllotEdit = () => {
     download: false,
     selectableRows: true,
     responsive: "standard",
-    rowsSelected: selectedSchoolIds,
-    // selectableRows: "multiple",
+    rowsSelected: selectedSchoolIds, // Use persisted selected rows here
     selectToolbarPlacement: "above",
     isRowSelectable: (dataIndex) =>
       schoolAllot[dataIndex]?.status_label !== "Allotted",
@@ -174,16 +184,6 @@ const SchoolAllotEdit = () => {
 
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed";
-
-  if (loading) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center h-full">
-          Loading...
-        </div>
-      </Layout>
-    );
-  }
 
   return (
     <Layout>
@@ -257,9 +257,10 @@ const SchoolAllotEdit = () => {
         <div className="mt-5 flex justify-start p-4">
           <button
             onClick={onSubmit}
+            disabled={loading}
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
           >
-            Update
+            {loading ? "Updating.." : "Update"}
           </button>
         </div>
       </Card>

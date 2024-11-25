@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-import Layout from "../../layout/Layout";
 import BASE_URL from "../../base/BaseUrl";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { IconCheckbox } from "@tabler/icons-react";
+import { IconSquareRoundedX } from "@tabler/icons-react";
 
-const RecepitSuperDialog = ({ onSelect }) => {
+const RecepitSuperDialog = ({ onSelect, handleClose }) => {
   const [receipt, setRecepit] = useState([]);
 
   const fetchData = () => {
@@ -28,13 +28,6 @@ const RecepitSuperDialog = ({ onSelect }) => {
   const columns = [
     { accessorKey: "indicomp_fts_id", header: "Fts Id", size: 50 },
     { accessorKey: "receipt_ref_no", header: "Recepit Ref" },
-    { accessorKey: "receipt_total_amount", header: "Amount", size: 50 },
-    {
-      accessorKey: "receipt_exemption_type",
-      header: "Exemption Type",
-      size: 50,
-    },
-    { accessorKey: "receipt_donation_type", header: "Donation Type" },
     {
       accessorKey: "chapter_name",
       header: "Chapter Name",
@@ -44,18 +37,24 @@ const RecepitSuperDialog = ({ onSelect }) => {
       },
     },
     {
+      accessorKey: "receipt_exemption_type",
+      header: "Exemption Type",
+      size: 50,
+    },
+    { accessorKey: "receipt_donation_type", header: "Donation Type" },
+    { accessorKey: "receipt_total_amount", header: "Amount", size: 50 },
+
+    {
       accessorKey: "edit",
       header: "Edit",
       enableColumnFilter: false,
       Cell: ({ row }) => {
         const Recepitref = row.original.receipt_ref_no;
         return (
-          <button
+          <IconCheckbox
             onClick={() => onSelect(Recepitref)}
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-          >
-            Select
-          </button>
+            className="cursor-pointer text-blue-600"
+          />
         );
       },
     },
@@ -78,6 +77,10 @@ const RecepitSuperDialog = ({ onSelect }) => {
             <IconInfoCircle className="cursor-pointer hover:text-red-600" />
             <span>Recepit</span>
           </div>
+          <IconSquareRoundedX
+            className="cursor-pointer hover:text-red-600"
+            onClick={handleClose}
+          />
         </h2>
       </div>
 

@@ -153,7 +153,7 @@ const App = () => {
         <Route path="/students-addschoolalot" element={<DonorDetails />} />
 
         <Route path="/students-schoolallot" element={<SchoolAllot />} />
-        <Route path="/students-allotedit" element={<SchoolAllotEdit />} />
+        <Route path="/students-allotedit/:id" element={<SchoolAllotEdit />} />
 
         {/* others  */}
         <Route path="/faq" element={<Faq />} />
