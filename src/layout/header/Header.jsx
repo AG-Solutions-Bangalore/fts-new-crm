@@ -69,17 +69,7 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           <IconMenuDeep width="20" height="20" />
         </IconButton>
 
-        {/* <IconButton
-          size="large"
-          aria-label="show 11 new notifications"
-          color="inherit"
-          aria-controls="msgs-menu"
-          aria-haspopup="true"
-        >
-          <Badge variant="dot" color="primary">
-            <IconBellRinging size="21" stroke="1.5" />
-          </Badge>
-        </IconButton> */}
+    
         <Box flexGrow={1} />
         <Stack
           spacing={1}
@@ -87,13 +77,7 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           alignItems="center"
       
         >
-          {/* <Tooltip title="Help" arrow>
-            <IconButton
-          
-            color="inherit" aria-label="menu">
-              <IconInfoOctagon height={20} width={20} />
-            </IconButton>
-          </Tooltip> */}
+    
 
           <Tooltip title="Profile" arrow>
             <Profile />

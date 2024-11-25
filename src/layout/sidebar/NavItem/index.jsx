@@ -9,9 +9,6 @@ import { styled, useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
-
-
-
 export default function NavItem({
   item,
   level,
@@ -23,14 +20,13 @@ export default function NavItem({
   const theme = useTheme();
   const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
 
-
   const [isExpanded, setIsExpanded] = React.useState(() => {
     if (item?.subItems) {
       const savedState = localStorage.getItem(`menu-${item.id}`);
       const isCurrentPathInSubItems = item.subItems.some(
-        subItem => subItem.href === pathDirect
+        (subItem) => subItem.href === pathDirect
       );
-      return savedState ? savedState === 'true' : isCurrentPathInSubItems;
+      return savedState ? savedState === "true" : isCurrentPathInSubItems;
     }
     return false;
   });
@@ -108,16 +104,16 @@ export default function NavItem({
     },
   }));
 
-
-   const SubItemStyled = styled(ListItemButton)(() => ({
+  const SubItemStyled = styled(ListItemButton)(() => ({
     whiteSpace: "nowrap",
     marginBottom: "2px",
     padding: "5px 10px 5px 0",
     borderRadius: `30px`,
     backgroundColor: "transparent !important",
-    color: pathDirect === item?.href
-      ? `${theme.palette.primary.main}!important`
-      : theme.palette.text.secondary,
+    color:
+      pathDirect === item?.href
+        ? `${theme.palette.primary.main}!important`
+        : theme.palette.text.secondary,
     fontWeight: pathDirect === item?.href ? "600 !important" : "400",
     paddingLeft: !isCollapsed ? "20px" : "10px",
     "&:before": {
@@ -181,7 +177,15 @@ export default function NavItem({
           {...listItemProps}
           disabled={item?.disabled}
           selected={pathDirect === item?.href}
-          onClick={item?.subItems ? handleToggle : undefined} // Only toggle if subItems exist
+          //chnage mm
+
+          onClick={(e) => {
+            if (item?.subItems) {
+              e.preventDefault();
+              handleToggle();
+            }
+          }}
+          // onClick={item?.subItems ? handleToggle : undefined} // Only toggle if subItems exist
           sx={{
             "&:hover": {
               ".MuiListItemIcon-root": {
@@ -252,28 +256,25 @@ export default function NavItem({
               label={item?.chip}
             />
           )}
-       {
-        isCollapsed ? "":
-        item?.subItems && (
-          <ListItemIcon
-            sx={{
-              minWidth: "36px",
-              p: "3px 0",
-              color: "inherit",
-            }}
-          >
-            {isExpanded ? <IconChevronUp /> : <IconChevronDown />}
-          </ListItemIcon>
-        )
-       }
-
-          
+          {isCollapsed
+            ? ""
+            : item?.subItems && (
+                <ListItemIcon
+                  sx={{
+                    minWidth: "36px",
+                    p: "3px 0",
+                    color: "inherit",
+                  }}
+                >
+                  {isExpanded ? <IconChevronUp /> : <IconChevronDown />}
+                </ListItemIcon>
+              )}
         </ListItemStyled>
       </Link>
       {/* Sub-Menu Items (Collapsible) */}
       {item?.subItems && (
         <List component="div" disablePadding>
-           {isExpanded &&
+          {isExpanded &&
             item.subItems.map((subItem) => (
               <Link
                 key={subItem.id}
@@ -315,20 +316,20 @@ export default function NavItem({
                     sx={{
                       minWidth: "36px",
                       p: "3px 0",
-                      color: pathDirect === subItem?.href
-                        ? `${theme.palette.primary.main}!important`
-                        : "inherit",
+                      color:
+                        pathDirect === subItem?.href
+                          ? `${theme.palette.primary.main}!important`
+                          : "inherit",
                     }}
                   >
                     <subItem.icon stroke={1.5} size="1.1rem" />
                   </ListItemIcon>
-                  <ListItemText primary={!isCollapsed ? subItem.title : ""}    />
+                  <ListItemText primary={!isCollapsed ? subItem.title : ""} />
                 </SubItemStyled>
               </Link>
             ))}
         </List>
       )}
-      
     </List>
   );
 }

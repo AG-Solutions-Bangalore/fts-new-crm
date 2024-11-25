@@ -25,9 +25,10 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Spinner,
 } from "@material-tailwind/react";
 
-import { ContextPanel } from "../../utils/ContextPanel";
+// import { ContextPanel } from "../../utils/ContextPanel";
 
 Chart.register(ArcElement, ...registerables);
 const DashboardCard = ({ title, value, icon: Icon, color }) => (
@@ -59,10 +60,14 @@ const Home = () => {
   const [graph2, setGraph2] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedNotice, setSelectedNotice] = useState(null);
+  const [currentYear, setCurrentYear] = useState("");
+  const [loadingNotices, setLoadingNotices] = useState(true);
+  const [loadingDashboardData, setLoadingDashboardData] = useState(true);
 
   const handleOpen = () => setOpen(!open);
   const userTypeId = localStorage.getItem("user_type_id");
-  const { currentYear } = useContext(ContextPanel);
+  // const { currentYear } = useContext(ContextPanel);
+  const isLoading = loadingNotices || loadingDashboardData;
 
   // Panel visibility states
   const [visiblePanels, setVisiblePanels] = useState({
@@ -72,8 +77,24 @@ const Home = () => {
     receiptsBar: true,
     receiptsPie: true,
   });
-
+  const fetchYearData = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setCurrentYear(response.data?.year?.current_year || "");
+    } catch (error) {
+      console.error("Error fetching year data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchYearData();
+  }, []);
   const fetchNotices = async () => {
+    setLoadingNotices(true);
+
     try {
       const url =
         userTypeId == "3"
@@ -88,10 +109,14 @@ const Home = () => {
       setNotification(response.data.notices || []);
     } catch (error) {
       console.error("Error fetching notices:", error);
+    } finally {
+      setLoadingNotices(false);
     }
   };
 
   const fetchResult = async () => {
+    setLoadingDashboardData(true);
+
     try {
       const response = await axios.get(
         `${BASE_URL}/api/fetch-dashboard-data-by/${currentYear}`,
@@ -112,6 +137,8 @@ const Home = () => {
       }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
+    } finally {
+      setLoadingDashboardData(false);
     }
   };
 
@@ -214,221 +241,222 @@ const Home = () => {
             </div>
           </div>
         </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-56">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {cardConfig.map((card, index) => (
+                <DashboardCard
+                  key={index}
+                  title={card.title}
+                  value={card.value}
+                  icon={card.icon}
+                  color={card.color}
+                />
+              ))}
+            </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {cardConfig.map((card, index) => (
-            <DashboardCard
-              key={index}
-              title={card.title}
-              value={card.value}
-              icon={card.icon}
-              color={card.color}
-            />
-          ))}
-        </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Notices Panel */}
-          {visiblePanels.notices && (
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center">
-                      <Bell className="w-5 h-5 text-indigo-600" />
-                    </div>
-                    <h2 className="text-lg font-bold text-gray-900">
-                      Recent Notices
-                    </h2>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() =>
-                        setVisiblePanels((prev) => ({
-                          ...prev,
-                          notices: false,
-                        }))
-                      }
-                      className="p-2 hover:bg-gray-100 rounded-lg"
-                    >
-                      <X className="h-5 w-5 text-gray-500" />
-                    </button>
-                  </div>
-                </div>
-                <div className="divide-y  h-[48.5rem]   overflow-y-auto custom-scroll divide-gray-100">
-                  {datanotification.length > 0 ? (
-                    datanotification.map((notice) => (
-                      <div key={notice.id} className="p-6">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-semibold text-gray-900">
-                            {notice.notice_name}
-                          </h3>
-                          {notice.is_read == 0 ? (
-                            <span className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">
-                              New
-                            </span>
-                          ) : (
-                            <span className="px-2 py-1 bg-green-50 text-green-600 text-xs rounded-full">
-                              Read
-                            </span>
-                          )}
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Notices Panel */}
+              {visiblePanels.notices && (
+                <div className="lg:col-span-2">
+                  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center">
+                          <Bell className="w-5 h-5 text-indigo-600" />
                         </div>
-                        <p className="text-gray-600 text-sm mb-3">
-                          {notice.notice_detail}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-500">
-                            {moment(notice.created_at).format("MMM DD, YYYY")}
-                          </span>
-                          {notice.is_read == 0 && (
-                            <button
-                              onClick={() => {
-                                setSelectedNotice(notice);
-                                handleOpen();
-                              }}
-                              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                            >
-                              Acknowledge
-                            </button>
-                          )}
-                        </div>
+                        <h2 className="text-lg font-bold text-gray-900">
+                          Recent Notices
+                        </h2>
                       </div>
-                    ))
-                  ) : (
-                    <div className="p-6 text-center text-gray-500">
-                      <Bell className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                      <p>No new notices available</p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            setVisiblePanels((prev) => ({
+                              ...prev,
+                              notices: false,
+                            }))
+                          }
+                          className="p-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <X className="h-5 w-5 text-gray-500" />
+                        </button>
+                      </div>
                     </div>
-                  )}
+                    <div className="divide-y  h-[48.5rem]   overflow-y-auto custom-scroll divide-gray-100">
+                      {datanotification.length > 0 ? (
+                        datanotification.map((notice) => (
+                          <div key={notice.id} className="p-6">
+                            <div className="flex justify-between items-start mb-2">
+                              <h3 className="font-semibold text-gray-900">
+                                {notice.notice_name}
+                              </h3>
+                              {notice.is_read == 0 ? (
+                                <span className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">
+                                  New
+                                </span>
+                              ) : (
+                                <span className="px-2 py-1 bg-green-50 text-green-600 text-xs rounded-full">
+                                  Read
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-gray-600 text-sm mb-3">
+                              {notice.notice_detail}
+                            </p>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-gray-500">
+                                {moment(notice.created_at).format(
+                                  "MMM DD, YYYY"
+                                )}
+                              </span>
+                              {notice.is_read == 0 && (
+                                <button
+                                  onClick={() => {
+                                    setSelectedNotice(notice);
+                                    handleOpen();
+                                  }}
+                                  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                                >
+                                  Acknowledge
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-6 text-center text-gray-500">
+                          <Bell className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                          <p>No new notices available</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              )}
+
+              {/* Donation Details Column */}
+              <div className="space-y-6">
+                {/* Donation Summary */}
+                {visiblePanels.totalDonation && (
+                  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center">
+                          <BarChart3 className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <h2 className="text-lg font-bold text-gray-900">
+                          Summary
+                        </h2>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            setVisiblePanels((prev) => ({
+                              ...prev,
+                              totalDonation: false,
+                            }))
+                          }
+                          className="p-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <X className="h-5 w-5 text-gray-500" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <DonationTypeRow
+                        title="OTS"
+                        amount={result.total_ots_donation}
+                        count={result.ots_receipts_count}
+                        color="bg-green-50"
+                        textColor="text-blue-600"
+                      />
+                      <DonationTypeRow
+                        title="Membership"
+                        amount={result.total_membership_donation}
+                        count={result.mem_receipts_count}
+                        color="bg-amber-50"
+                        textColor="text-amber-600"
+                      />
+                      <DonationTypeRow
+                        title="General"
+                        amount={result.total_general_donation}
+                        count={result.gen_receipts_count}
+                        color="bg-blue-50"
+                        textColor="text-emerald-600"
+                      />
+                    </div>
+                  </div>
+                )}
+                {/* Charts */}
+                {visiblePanels.receiptsPie && (
+                  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
+                          <PieChart className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <h2 className="text-lg font-bold text-gray-900">
+                          Distribution
+                        </h2>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() =>
+                            setVisiblePanels((prev) => ({
+                              ...prev,
+                              receiptsPie: false,
+                            }))
+                          }
+                          className="p-2 hover:bg-gray-100 rounded-lg"
+                        >
+                          <X className="h-5 w-5 text-gray-500" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      {graphData && (
+                        <Doughnut
+                          data={graphData}
+                          options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                              legend: {
+                                position: "bottom",
+                              },
+                            },
+                            cutout: "70%",
+                          }}
+                          height={300}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          )}
 
-          {/* Donation Details Column */}
-          <div className="space-y-6">
-            {/* Donation Summary */}
-            {visiblePanels.totalDonation && (
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-emerald-600" />
-                    </div>
-                    <h2 className="text-lg font-bold text-gray-900">Summary</h2>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <button
-                      onClick={() => togglePanel("totalDonation")}
-                      className="p-2 hover:bg-gray-100 rounded-lg"
-                    >
-                      <Minimize2 className="h-5 w-5 text-gray-500" />
-                    </button> */}
-                    <button
-                      onClick={() =>
-                        setVisiblePanels((prev) => ({
-                          ...prev,
-                          totalDonation: false,
-                        }))
-                      }
-                      className="p-2 hover:bg-gray-100 rounded-lg"
-                    >
-                      <X className="h-5 w-5 text-gray-500" />
-                    </button>
-                  </div>
-                </div>
-                <div className="p-6 space-y-4">
-                  <DonationTypeRow
-                    title="OTS"
-                    amount={result.total_ots_donation}
-                    count={result.ots_receipts_count}
-                    color="bg-green-50"
-                    textColor="text-blue-600"
-                  />
-                  <DonationTypeRow
-                    title="Membership"
-                    amount={result.total_membership_donation}
-                    count={result.mem_receipts_count}
-                    color="bg-amber-50"
-                    textColor="text-amber-600"
-                  />
-                  <DonationTypeRow
-                    title="General"
-                    amount={result.total_general_donation}
-                    count={result.gen_receipts_count}
-                    color="bg-blue-50"
-                    textColor="text-emerald-600"
-                  />
-                </div>
-              </div>
-            )}
-            {/* Charts */}
-            {visiblePanels.receiptsPie && (
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
-                      <PieChart className="w-5 h-5 text-purple-600" />
-                    </div>
-                    <h2 className="text-lg font-bold text-gray-900">
-                      Distribution
-                    </h2>
-                  </div>
-                  <div className="flex gap-2">
-                    {/* <button
-                      onClick={() => togglePanel("receiptsPie")}
-                      className="p-2 hover:bg-gray-100 rounded-lg"
-                    >
-                      <Minimize2 className="h-5 w-5 text-gray-500" />
-                    </button> */}
-                    <button
-                      onClick={() =>
-                        setVisiblePanels((prev) => ({
-                          ...prev,
-                          receiptsPie: false,
-                        }))
-                      }
-                      className="p-2 hover:bg-gray-100 rounded-lg"
-                    >
-                      <X className="h-5 w-5 text-gray-500" />
-                    </button>
-                  </div>
-                </div>
-                <div className="p-6">
-                  {graphData && (
-                    <Doughnut
-                      data={graphData}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                          legend: {
-                            position: "bottom",
-                          },
-                        },
-                        cutout: "70%",
-                      }}
-                      height={300}
-                    />
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+            <button
+              onClick={() => {
+                fetchResult();
+                fetchNotices();
+                fetchYearData();
 
-        <button
-          onClick={() => {
-            fetchResult();
-            fetchNotices();
-            toast.success("Dashboard refreshed");
-          }}
-          className="fixed bottom-8 right-8 p-4 bg-white hover:bg-gray-50 rounded-full shadow-lg transition-colors"
-        >
-          <RefreshCcw className="h-6 w-6 text-blue-600" />
-        </button>
+                // toast.success("Dashboard refreshed");
+              }}
+              className="fixed bottom-8 right-8 p-4 bg-white hover:bg-gray-50 rounded-full shadow-lg transition-colors"
+            >
+              <RefreshCcw className="h-6 w-6 text-blue-600" />
+            </button>
+          </>
+        )}
       </div>
 
       <Dialog open={open} handler={handleOpen}>

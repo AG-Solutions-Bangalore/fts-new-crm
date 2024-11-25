@@ -324,7 +324,7 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
-    <div className="  bg-[#FFFFFF] p-2  w-[48rem]  overflow-y-auto custom-scroll-add ">
+    <div className="  bg-[#FFFFFF] p-2  sm:w-[200px] md:w-[48rem]  overflow-y-auto custom-scroll-add ">
       <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
         <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
           <div className="flex  items-center gap-2">
@@ -858,11 +858,6 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
             {isButtonDisabled ? "Submitting..." : "Submit"}
           </button>
 
-          {/* <Link to="listing">
-            <Button color="green" className="px-6 py-2">
-              Back
-            </Button>
-          </Link> */}
         </div>
       </form>
     </div>

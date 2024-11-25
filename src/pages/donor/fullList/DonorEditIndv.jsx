@@ -1,32 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Input,
-  Button,
-  Dialog,
-  DialogBody,
-  DialogFooter,
-  DialogHeader,
-} from "@material-tailwind/react";
+import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 import InputMask from "react-input-mask";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-} from "@mui/material";
-
-import { FaArrowLeft } from "react-icons/fa";
 import AddToGroup from "./AddToGroup";
 import BASE_URL from "../../../base/BaseUrl";
 import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
 import donor_type from "../../../utils/DonorType";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
-
 const gender = [
   {
     value: "Male",
@@ -852,7 +835,7 @@ const DonorEditIndv = ({ id }) => {
         </div>
 
         {/* Form Actions */}
-        <div className="flex gap-4 justify-start">
+        <div className="flex flex-wrap gap-4 justify-start">
           <button
             type="submit"
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
@@ -911,21 +894,26 @@ const DonorEditIndv = ({ id }) => {
       <div className="flex gap-4 justify-end"></div>
 
       <Dialog open={showmodal} toggle={() => closegroupModal()}>
-        <DialogHeader> Add to Group</DialogHeader>
+        <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
+          <div className="flex justify-between items-center px-5">
+            <h2 className="text-black text-lg flex gap-2 items-center rounded-xl p-2">
+              <span>Add To Group</span>
+            </h2>
+            <button
+              className="text-black cursor-pointer hover:text-red-600"
+              onClick={() => closegroupModal()}
+            >
+              <IconArrowBack />
+            </button>
+          </div>
+        </div>
+        <hr />
+
         <DialogBody>
-          {" "}
-          <AddToGroup id={donor.id} />
+          <div className="overflow-y-auto">
+            <AddToGroup id={donor.id} />
+          </div>{" "}
         </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={() => closegroupModal()}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
     </div>
   );

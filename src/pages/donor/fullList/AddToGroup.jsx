@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Typography } from "@material-tailwind/react";
-import { FaEye, FaEdit, FaTicketAlt, FaTrash, FaPlus } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 import BASE_URL from "../../../base/BaseUrl";
-const TABLE_HEAD = ["Name", "Phone", "Actions"];
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 const AddToGroup = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [donorData, setDonorData] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const AddToGroup = ({ id }) => {
 
   const addMemberToGroup = async (relativeId) => {
     try {
-      const response = await axios({
+      await axios({
         url: `${BASE_URL}/api/update-donor/${id}`,
         method: "PUT",
         data: {
@@ -62,6 +61,47 @@ const AddToGroup = ({ id }) => {
     }
   };
 
+  const columns = [
+    {
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "phone",
+      header: "Phone",
+    },
+    {
+      accessorKey: "actions",
+      header: "Actions",
+      enableColumnFilter: false,
+
+      Cell: ({ row }) => (
+        <button
+          onClick={() => addMemberToGroup(row.original.id)}
+          className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+        >
+          Add
+        </button>
+      ),
+    },
+  ];
+
+  // Hooks must always be called
+  const table = useMantineReactTable({
+    columns,
+    data: donorData,
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableHiding: false,
+    state: { columnVisibility },
+    enableStickyHeader: true,
+    enableStickyFooter: true,
+    mantineTableContainerProps: { sx: { maxHeight: "400px" } },
+    onColumnVisibilityChange: setColumnVisibility,
+    initialState: { columnVisibility: { phone: true } },
+  });
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-56">
@@ -69,63 +109,10 @@ const AddToGroup = ({ id }) => {
       </div>
     );
   }
+
   return (
     <div>
-      <Card className="h-56 w-full overflow-scroll custom-scroll">
-        <table className="w-full min-w-max table-auto text-left">
-          <thead>
-            <tr>
-              {TABLE_HEAD.map((head) => (
-                <th
-                  key={head}
-                  className="border-b border-blue-gray-100 bg-blue-gray-50 p-2"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    {head}
-                  </Typography>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {donorData.map(({ name, phone, id }, index) => (
-              <tr key={index} className="even:bg-blue-gray-50/50">
-                <td className="p-2">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {name}
-                  </Typography>
-                </td>
-                <td className="p-2">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {phone}
-                  </Typography>
-                </td>
-                <td className="p-2">
-                  <button
-                    onClick={() => addMemberToGroup(id)}
-                    className="flex items-center text-sm gap-1 p-1 bg-blue-500 hover:bg-red-500 text-white rounded-lg  transition-colors"
-                  >
-                    <FaPlus className="h-2 w-2" />
-                    Add
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+      <MantineReactTable table={table} />
     </div>
   );
 };

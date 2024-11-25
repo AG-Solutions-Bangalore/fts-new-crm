@@ -320,7 +320,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
-    <div className="bg-[#F8FAFC] p-4 w-[48rem] overflow-y-auto custom-scroll-add">
+    <div className="bg-[#F8FAFC] p-4 sm:w-[200px] md:w-[48rem]  overflow-y-auto custom-scroll-add">
       <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-2">
         <div className="bg-[#E1F5FA] p-4 rounded-t-xl border-b-2 border-green-500">
           <div className="flex justify-between items-center">

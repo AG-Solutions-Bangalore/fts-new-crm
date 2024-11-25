@@ -873,7 +873,7 @@ const DonorEditComp = ({ id }) => {
             </div>
           </div>
         </div>
-        <div className="flex gap-4 justify-start">
+        <div className="flex flex-wrap gap-4 justify-start">
           <button
             type="submit"
             color="blue"
@@ -933,20 +933,23 @@ const DonorEditComp = ({ id }) => {
       </form>
 
       <Dialog open={showmodal} toggle={() => closegroupModal()}>
-        <DialogHeader> Add to Group</DialogHeader>
+        <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
+          <div className="flex justify-between items-center px-5">
+            <h2 className="text-black text-lg flex gap-2 items-center rounded-xl p-2">
+              <span>Add To Group</span>
+            </h2>
+            <button
+              className="text-black cursor-pointer hover:text-red-600"
+              onClick={() => closegroupModal()}
+            >
+              <IconArrowBack />
+            </button>
+          </div>
+        </div>
+        <hr />{" "}
         <DialogBody>
           <AddToGroup id={donor.id} />
         </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={() => closegroupModal()}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
     </div>
   );

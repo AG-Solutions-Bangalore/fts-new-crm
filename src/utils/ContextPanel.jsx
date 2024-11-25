@@ -58,6 +58,8 @@ const AppProvider = ({ children }) => {
           "/form",
           "/profile",
           "/change-password",
+          //superrecepit
+          "/recepit-sup",
           //guidebook
           "/manualguide-book",
           // donor
