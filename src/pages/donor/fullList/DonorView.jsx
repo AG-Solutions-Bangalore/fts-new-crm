@@ -101,14 +101,14 @@ const DonorView = ({ viewerId, onClose }) => {
   }
 
   return (
-    <div className="bg-[#F8FAFC] p-4 w-[48rem] overflow-y-auto custom-scroll-add">
+    <div className="bg-[#F8FAFC] p-4 sm:w-[300px] md:w-[48rem] overflow-y-auto custom-scroll-add">
       {/* Header Section */}
-      <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
+      {/* <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
         <div className="bg-[#E1F5FA] p-4 rounded-t-xl border-b-2 border-green-500">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <IconInfoCircle className="w-5 h-5 text-green-600" />
-              <h2 className="text-sm font-semibold text-black">Donor View</h2>
+              <h2 className="text-sm font-semibold text-black">Donor View </h2>
             </div>
             <IconArrowBack
               onClick={onClose}
@@ -158,7 +158,88 @@ const DonorView = ({ viewerId, onClose }) => {
                   <button
                     onClick={toggleReceiptDetailsDrawer(true)}
                     className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-56 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                    >
+                  >
+                    Receipts & Family Details
+                  </button>
+                  <SwipeableDrawer
+                    anchor="right"
+                    open={receiptDetailsDrawer}
+                    onClose={toggleReceiptDetailsDrawer(false)}
+                    onOpen={toggleReceiptDetailsDrawer(true)}
+                  >
+                    <ReceiptDetails
+                      onClose={toggleReceiptDetailsDrawer(false)}
+                      viewerId={viewerId}
+                    />
+                  </SwipeableDrawer>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div> */}
+
+      <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
+        <div className="bg-[#E1F5FA] p-4 sm:p-6 rounded-t-xl border-b-2 border-green-500">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div className="flex items-center gap-3">
+              <IconInfoCircle className="w-5 h-5 text-green-600" />
+              <h2 className="text-sm sm:text-base font-semibold text-black">
+                Donor View
+              </h2>
+            </div>
+            <IconArrowBack
+              onClick={onClose}
+              className="cursor-pointer hover:text-red-600 transition-colors"
+            />
+          </div>
+        </div>
+
+        {donor && (
+          <div className="p-4 sm:p-6 bg-white rounded-b-xl">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+              <div className="space-y-1">
+                <h3 className="text-base sm:text-lg font-semibold text-black">
+                  {donor.indicomp_type === "Individual"
+                    ? `${donor.title} ${donor.indicomp_full_name}`
+                    : `M/s ${donor.indicomp_full_name}`}
+                </h3>
+                <p className="text-xs sm:text-sm font-semibold text-black">
+                  FTS Id: {donor.indicomp_fts_id}
+                </p>
+                {famgroup.map((fam, key) => (
+                  <p
+                    key={key}
+                    className="text-xs sm:text-sm font-semibold text-black"
+                  >
+                    Family Group: {fam.indicomp_full_name}
+                  </p>
+                ))}
+              </div>
+
+              {localStorage.getItem("user_type_id") != 4 && (
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button
+                    onClick={toggleOldReceiptDetailsDrawer(true)}
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-full sm:w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                  >
+                    Old Receipts
+                  </button>
+                  <SwipeableDrawer
+                    anchor="right"
+                    open={oldreceiptDetailsDrawer}
+                    onClose={toggleOldReceiptDetailsDrawer(false)}
+                    onOpen={toggleOldReceiptDetailsDrawer(true)}
+                  >
+                    <OldReceipt
+                      onClose={toggleOldReceiptDetailsDrawer(false)}
+                      viewerId={viewerId}
+                    />
+                  </SwipeableDrawer>
+                  <button
+                    onClick={toggleReceiptDetailsDrawer(true)}
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-full sm:w-56 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                  >
                     Receipts & Family Details
                   </button>
                   <SwipeableDrawer

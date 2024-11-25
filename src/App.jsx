@@ -68,6 +68,7 @@ import SchoolAllotView from "./pages/Students/SchoolAllot/SchoolAllotView";
 import SchoolAllotLetter from "./pages/Students/SchoolAllot/SchoolAllotLetter";
 import RepeatDonors from "./pages/Students/RepeatDonors/RepeatDonors";
 import AllotedList from "./pages/Students/RepeatDonors/AllotedList";
+import RecepitSuper from "./pages/RecepitSuper/RecepitSuper";
 const App = () => {
   return (
     <>
@@ -78,6 +79,10 @@ const App = () => {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/home" element={<Home />} />
         <Route path="/maintenance" element={<Maintenance />} />
+
+        {/* //superRecepit */}
+        <Route path="/recepit-sup" element={<RecepitSuper />} />
+
         {/* donor  */}
         <Route path="/donor-list" element={<DonorList />} />
         <Route path="/add-indivisual" element={<AddIndivisual />} />
@@ -149,12 +154,12 @@ const App = () => {
 
         <Route path="/students-schoolallot" element={<SchoolAllot />} />
         <Route path="/students-allotedit" element={<SchoolAllotEdit />} />
-        
+
         {/* others  */}
         <Route path="/faq" element={<Faq />} />
         <Route path="/team" element={<Team />} />
         <Route path="/notification" element={<Notification />} />
-        
+
         {/* <Route path="/students-report-donor" element={<RepeatDonors />} /> */}
 
         <Route path="/students-schoolallot" element={<SchoolAllot />} />
@@ -162,10 +167,7 @@ const App = () => {
         <Route path="/students-allotview" element={<SchoolAllotView />} />
         <Route path="/students-allotletter" element={<SchoolAllotLetter />} />
         <Route path="/students-report-donor" element={<RepeatDonors />} />
-        <Route
-          path="/repeat-donor-allot/:id"
-          element={<AllotedList />}
-        />
+        <Route path="/repeat-donor-allot/:id" element={<AllotedList />} />
       </Routes>
     </>
   );

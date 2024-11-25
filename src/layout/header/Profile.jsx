@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -10,7 +10,6 @@ import {
   ListItemText,
   Tooltip,
   Dialog,
-  FormLabel,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -37,7 +36,6 @@ const Profile = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const location = useLocation();
-
   const getData = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/fetch-profile`, {
@@ -45,6 +43,8 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      console.log("API response:", res.data);
       setFirstName(res.data.user.first_name || "");
       setPhone(res.data.user.phone || "");
       setEmail(res.data.user.email || "");
@@ -54,11 +54,6 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      getData();
-    }
-  }, []);
   const onUpdateProfile = async (e) => {
     e.preventDefault();
     if (!firstName) {
@@ -144,6 +139,11 @@ const Profile = () => {
     setOpenDialog1(false);
     setAnchorEl2(null);
   };
+
+  const handleopen = () => {
+    setOpenDialog(true);
+    getData();
+  };
   const handleClick2 = (event) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -177,7 +177,7 @@ const Profile = () => {
         onClick={handleClick2}
       >
         <Avatar
-          src="/images/profile/user-1.jpg"
+          src="/src/assets/profile/user-1.jpg"
           alt="image"
           sx={{
             width: 35,
@@ -202,7 +202,7 @@ const Profile = () => {
           },
         }}
       >
-        <MenuItem onClick={() => setOpenDialog(true)}>
+        <MenuItem onClick={handleopen}>
           <ListItemIcon>
             <IconUser width={20} />
           </ListItemIcon>

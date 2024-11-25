@@ -237,7 +237,7 @@ const DonorList = () => {
     <>
       <Layout>
         <div className="max-w-screen">
-          <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
+          {/* <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
             <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
               Donor List
             </h1>
@@ -282,7 +282,56 @@ const DonorList = () => {
                 </div>
               </div>
             )}
+          </div> */}
+          <div className="bg-white p-4 mb-4 rounded-lg shadow-md">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row justify-between gap-4 items-center">
+              <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-center md:text-left">
+                Donor List
+              </h1>
+
+              {userType === "1" && (
+                <div className="flex flex-col md:flex-row gap-2">
+                  <button
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-full md:w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                    onClick={toggleIndividualDrawer(true)}
+                  >
+                    + Individual
+                  </button>
+                  <SwipeableDrawer
+                    anchor="right"
+                    open={individualDrawer}
+                    onClose={toggleIndividualDrawer(false)}
+                    onOpen={toggleIndividualDrawer(true)}
+                  >
+                    <AddIndivisual
+                      onClose={toggleIndividualDrawer(false)}
+                      fetchDonorData={fetchDonorData}
+                    />
+                  </SwipeableDrawer>
+
+                  <button
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-full md:w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                    onClick={toggleCompanyDrawer(true)}
+                  >
+                    + Company
+                  </button>
+                  <SwipeableDrawer
+                    anchor="right"
+                    open={companyDrawer}
+                    onClose={toggleCompanyDrawer(false)}
+                    onOpen={toggleCompanyDrawer(true)}
+                  >
+                    <AddCompany
+                      onClose={toggleCompanyDrawer(false)}
+                      fetchDonorData={fetchDonorData}
+                    />
+                  </SwipeableDrawer>
+                </div>
+              )}
+            </div>
           </div>
+
           <div className=" shadow-md">
             <MantineReactTable table={table} />
           </div>

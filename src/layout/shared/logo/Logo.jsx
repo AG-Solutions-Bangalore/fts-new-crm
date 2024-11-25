@@ -1,7 +1,8 @@
 import { styled } from "@mui/material";
 
 import { Link } from "react-router-dom";
-
+import logosmall from "../../../assets/logos/fts1.png";
+import logstrucn from "../../../assets/logos/fts_wm.png";
 const LinkStyled = styled(Link)(() => ({
   height: "63px",
   width: "180px",
@@ -21,7 +22,8 @@ const Logo = ({ isCollapsed }) => {
       {!isCollapsed ? (
         <LinkStyled to="/home">
           <img
-            src="/images/logos/fts1.png"
+            // src="src/assets/logos/fts1.png"
+            src={logosmall}
             alt="logo"
             className="h-16"
             priority
@@ -30,7 +32,8 @@ const Logo = ({ isCollapsed }) => {
       ) : (
         <LargeLinkStyled to="/home">
           <img
-            src="/images/logos/fts_wm.png"
+            // src="src/assets/logos/fts_wm.png"
+            src={logstrucn}
             alt="logo"
             className="h-16"
             priority
