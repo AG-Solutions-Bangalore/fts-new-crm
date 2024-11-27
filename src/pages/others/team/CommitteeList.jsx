@@ -5,10 +5,8 @@ import BASE_URL from "../../../base/BaseUrl";
 import { IconInfoCircle, IconPhotoPlus, IconTrash } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 import AddToImage from "./AddToImage";
-import {
-  Dialog,
-  DialogBody,
-} from "@material-tailwind/react";
+import { Dialog, DialogBody } from "@material-tailwind/react";
+import { Typography } from "@mui/material";
 
 const CommitteeList = () => {
   const [committeeData, setCommitteelist] = useState([]);
@@ -166,18 +164,16 @@ const CommitteeList = () => {
   });
   return (
     <>
-      <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
-        <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
-          <div className="flex  items-center gap-2">
-            <IconInfoCircle className="w-4 h-4" />
-            <span>Committee List</span>
-          </div>
+      <div className="relative">
+        <h2
+          className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
+           text-black"
+        >
+          Employee List
         </h2>
-      </div>
-      <hr />
-      <div className=" shadow-md">
         <MantineReactTable table={table} />
       </div>
+
       <Dialog open={openDialog} handler={handleCloseDialog}>
         <DialogBody>
           <AddToImage

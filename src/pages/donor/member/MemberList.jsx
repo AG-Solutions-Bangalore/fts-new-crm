@@ -35,7 +35,6 @@ const MemberList = () => {
     fetchDonorData();
     setLoading(false);
   }, []);
-  
 
   const sendEmail = (value) => {
     axios({
@@ -54,12 +53,12 @@ const MemberList = () => {
       {
         accessorKey: "indicomp_full_name",
         header: "Full Name",
-        size:50,
+        size: 50,
       },
       {
         accessorKey: "indicomp_type",
         header: "Type",
-        size:50,
+        size: 50,
       },
 
       {
@@ -75,7 +74,7 @@ const MemberList = () => {
       {
         accessorKey: "spouse_contact",
         header: "Spouse/Contact",
-        size:50,
+        size: 50,
         Cell: ({ value, row }) => {
           const indicompType = row.original.indicomp_type;
           const spouseRow = row.original?.indicomp_spouse_name;
@@ -90,18 +89,18 @@ const MemberList = () => {
       {
         accessorKey: "indicomp_mobile_phone",
         header: "Mobile",
-        size:50,
+        size: 50,
       },
 
       {
         accessorKey: "indicomp_email",
         header: "Email",
-        size:50,
+        size: 50,
       },
       {
         accessorKey: "receipt.m_ship_vailidity",
         header: "Validity",
-        size:50,
+        size: 50,
         Cell: ({ row }) => {
           const Validity = row.original.receipt.m_ship_vailidity;
           return <span>31-3-{Validity}</span>;
@@ -111,7 +110,7 @@ const MemberList = () => {
       {
         id: "id",
         header: "Action",
-        size:50,
+        size: 50,
         Cell: ({ row }) => {
           const email = row.original.indicomp_email;
 
@@ -123,7 +122,7 @@ const MemberList = () => {
                   title="Send Mail"
                   className="flex items-center space-x-2"
                 >
-                  <IconMail  className="h-5 w-5 text-blue-500 cursor-not-allowed  " />
+                  <IconMail className="h-5 w-5 text-blue-500 cursor-not-allowed  " />
                 </div>
               )}
             </div>
@@ -138,7 +137,7 @@ const MemberList = () => {
     data: memberData || [],
     enableFullScreenToggle: false,
     enableDensityToggle: false,
-    enableHiding:false,
+    enableHiding: false,
     enableColumnActions: false,
     state: { columnVisibility },
     onColumnVisibilityChange: setColumnVisibility,
@@ -146,12 +145,13 @@ const MemberList = () => {
   return (
     <Layout>
       <div className="max-w-screen">
-        <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
-          <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
+        <div className="relative">
+          <h2
+            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
+           text-black"
+          >
             Membership List
-          </h1>
-        </div>
-        <div className=" shadow-md">
+          </h2>
           <MantineReactTable table={table} />
         </div>
       </div>

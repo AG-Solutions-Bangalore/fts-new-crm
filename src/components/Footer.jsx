@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <>
 
-     <div className="bg-[#FFFFFF]  rounded-lg shadow-sm p-2   ">
+     <div className="bg-[#FFFFFF]  rounded-lg shadow-sm p-4   ">
      
        
        <div className=" flex flex-row items-center justify-between">
@@ -27,3 +27,15 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+
+
+
+
+
+
+
+
+
+

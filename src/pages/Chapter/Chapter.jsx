@@ -31,10 +31,6 @@ const UserDrop = [
     value: "1",
     label: "User",
   },
-  // {
-  //   value: "4",
-  //   label: "Viewer",
-  // },
 ];
 const status = [
   {
@@ -85,7 +81,7 @@ const Chapter = () => {
     password: "",
     confirm_password: "",
     user_type_id: "",
-    user_status:""
+    user_status: "",
   });
 
   const [selected_user_id, setSelectedUserId] = useState("");
@@ -140,7 +136,7 @@ const Chapter = () => {
       password: "",
       confirm_password: "",
       user_type_id: "",
-      user_status:""
+      user_status: "",
     });
   };
 
@@ -161,7 +157,7 @@ const Chapter = () => {
       password: "",
       confirm_password: "",
       user_type_id: "",
-      user_status:""
+      user_status: "",
     });
   };
   const fetchData = () => {
@@ -195,7 +191,8 @@ const Chapter = () => {
         setError("");
       }
     } else {
-      setError(""); // Clear error for other fields
+      setError("");
+      s;
     }
   };
 
@@ -276,7 +273,7 @@ const Chapter = () => {
       phone: user.phone,
       user_type: user.user_type_id,
       chapter_id: user.chapter_code,
-      user_status:user.user_status,
+      user_status: user.user_status,
     };
 
     try {
@@ -331,7 +328,7 @@ const Chapter = () => {
                 first_name: row.original.first_name,
                 last_name: row.original.last_name,
                 user_type_id: row.original.user_type_id,
-                user_status:row.original.user_status,
+                user_status: row.original.user_status,
               });
               setSelectedUserId(row.original.id);
               handleClickOpen1();
@@ -423,38 +420,37 @@ const Chapter = () => {
   return (
     <Layout>
       <div className=" bg-[#FFFFFF] p-2  rounded-lg  ">
-        <div className="sticky top-0 p-2   border-b-2 border-green-500 rounded-t-lg  bg-[#E1F5FA] mt-2 ">
-          <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
-            <div className="flex  items-center gap-2">
-              <IconInfoCircle className="cursor-pointer hover:text-red-600" />
-              <span>Chapters </span>
+        <div className="sticky top-0 p-2 border-b-2 border-green-500 bg-[#E1F5FA] mt-2 rounded-t-lg shadow-md">
+          <h2 className="flex flex-col gap-4 md:flex-row justify-between items-center px-4 py-3">
+            <div className="flex items-center gap-2 text-center md:text-left">
+              {chapter.chapter_name && (
+                <div>
+                  <h1 className="text-sm md:text-base lg:text-lg font-semibold text-gray-800">
+                    {chapter.chapter_name}{" "}
+                    <span className="text-gray-600 text-xs md:text-sm lg:text-base">
+                      {"( " +
+                        chapter.chapter_city +
+                        ", " +
+                        chapter.chapter_state +
+                        " - " +
+                        chapter.chapter_pin +
+                        " )"}
+                    </span>
+                  </h1>
+                </div>
+              )}
             </div>
 
             <button
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+              className="w-full md:w-auto text-sm font-medium bg-blue-600 hover:bg-green-700 text-white p-2 rounded-lg shadow-lg transition duration-200 ease-in-out"
               onClick={toggleIndividualDrawer(true)}
             >
-              Create New User
+              Add New User
             </button>
           </h2>
         </div>
+
         <div>
-          <div className="flex justify-center p-4 font-semibold ">
-            {chapter.chapter_name != "" && (
-              <div>
-                <h1>
-                  {chapter.chapter_name}{" "}
-                  {"( " +
-                    chapter.chapter_city +
-                    "," +
-                    chapter.chapter_state +
-                    "- " +
-                    chapter.chapter_pin +
-                    " )"}
-                </h1>
-              </div>
-            )}
-          </div>
           <form onSubmit={(e) => onSubmit(e)} autoComplete="off">
             <div className="p-6 space-y-1 ">
               <div>
@@ -551,7 +547,18 @@ const Chapter = () => {
             </div>
           </form>
         </div>
-        <MantineReactTable table={table} />
+
+        <div className="max-w-screen">
+          <div className="relative">
+            <h2
+              className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
+           text-black"
+            >
+              Chapter List
+            </h2>
+            <MantineReactTable table={table} />
+          </div>
+        </div>
 
         <SwipeableDrawer
           anchor="right"

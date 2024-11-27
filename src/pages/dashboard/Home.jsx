@@ -226,7 +226,7 @@ const Home = () => {
     <Layout>
       <div className="min-h-screen bg-gray-100 ">
         {/* Header Section */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+        {/* <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
               <LayoutDashboard className="text-blue-600 w-5 h-5" />
@@ -240,7 +240,7 @@ const Home = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
         {isLoading ? (
           <div className="flex justify-center items-center h-56">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -266,8 +266,8 @@ const Home = () => {
               {visiblePanels.notices && (
                 <div className="lg:col-span-2">
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                      <div className="flex items-center gap-3">
+                    <div className="p-3 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-1">
                         <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center">
                           <Bell className="w-5 h-5 text-indigo-600" />
                         </div>
@@ -289,7 +289,7 @@ const Home = () => {
                         </button>
                       </div>
                     </div>
-                    <div className="divide-y  h-[48.5rem]   overflow-y-auto custom-scroll divide-gray-100">
+                    <div className="divide-y  h-[31.5rem]   overflow-y-auto custom-scroll divide-gray-100">
                       {datanotification.length > 0 ? (
                         datanotification.map((notice) => (
                           <div key={notice.id} className="p-6">
@@ -346,8 +346,8 @@ const Home = () => {
                 {/* Donation Summary */}
                 {visiblePanels.totalDonation && (
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                      <div className="flex items-center gap-3">
+                    <div className="p-3 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-1">
                         <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center">
                           <BarChart3 className="w-5 h-5 text-emerald-600" />
                         </div>
@@ -369,7 +369,7 @@ const Home = () => {
                         </button>
                       </div>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-3 space-y-4">
                       <DonationTypeRow
                         title="OTS"
                         amount={result.total_ots_donation}
@@ -397,8 +397,8 @@ const Home = () => {
                 {/* Charts */}
                 {visiblePanels.receiptsPie && (
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                      <div className="flex items-center gap-3">
+                    <div className="p-3 border-b border-gray-100 flex justify-between items-center">
+                      <div className="flex items-center gap-1">
                         <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center">
                           <PieChart className="w-5 h-5 text-purple-600" />
                         </div>
@@ -434,7 +434,7 @@ const Home = () => {
                             },
                             cutout: "70%",
                           }}
-                          height={300}
+                          height={150}
                         />
                       )}
                     </div>
@@ -489,7 +489,7 @@ const Home = () => {
 };
 
 const DonationTypeRow = ({ title, amount, count, color, textColor }) => (
-  <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50">
+  <div className="flex items-center justify-between p-1 rounded-lg bg-gray-50">
     <div className="flex items-center gap-3">
       <div
         className={`w-10 h-10 rounded-full ${color} flex items-center justify-center`}

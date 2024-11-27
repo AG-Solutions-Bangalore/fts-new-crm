@@ -93,6 +93,8 @@ const App = () => {
         <Route path="/member-list" element={<MemberList />} />
         <Route path="/duplicate-list" element={<DuplicateList />} />
         <Route path="/duplicate-edit/:id" element={<DuplicateEdit />} />
+        <Route path="/donor-create/:id" element={<CreateReceipt />} />
+
         {/* receipt  */}
         <Route path="/receipt-list" element={<ReceiptList />} />
         <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />

@@ -171,11 +171,6 @@ const DuplicateList = () => {
   return (
     <Layout>
       <div className="max-w-screen">
-        <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
-          <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
-            Duplicate List
-          </h1>
-        </div>
         <div className="p-2 mb-4  rounded-lg bg-[#D0F6F2]">
           <p className="text-sm">
             Duplicate Criteria: If Mobile Number is Same or Donor Name is Same.
@@ -185,7 +180,13 @@ const DuplicateList = () => {
             very carefully. We advise you to make a note before removing.)
           </p>
         </div>
-        <div className=" shadow-md">
+        <div className="relative">
+          <h2
+            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
+           text-black"
+          >
+            Duplicate List
+          </h2>
           <MantineReactTable table={table} />
         </div>
       </div>

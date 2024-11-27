@@ -26,6 +26,7 @@ const Team = () => {
     indicomp_full_name: "",
     receipt_from_date: "",
     receipt_to_date: "",
+    indicomp_full_name_dummy: "",
   });
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -56,11 +57,13 @@ const Team = () => {
   };
   const handleOpenDialog = () => setOpenDialog((prev) => !prev);
 
-  const populateDonorName = (fts_id) => {
+  const populateDonorName = (fts_id, inname) => {
     setCommittee((prev) => ({
       ...prev,
       indicomp_full_name: fts_id,
+      indicomp_full_name_dummy: inname,
     }));
+
     setOpenDialog(false);
   };
 
@@ -125,6 +128,7 @@ const Team = () => {
       start_date: committes.committee_from,
       end_date: committes.committee_to,
       indicomp_fts_id: committee.indicomp_full_name,
+      indicomp_full_name_dummy: committee.indicomp_full_name_dummy,
     };
 
     try {
@@ -141,6 +145,7 @@ const Team = () => {
         indicomp_full_name: "",
         receipt_from_date: "",
         receipt_to_date: "",
+        indicomp_full_name_dummy: "",
       });
       //   fetchCommittees();
     } catch (error) {
@@ -152,7 +157,7 @@ const Team = () => {
   };
 
   const FormLabel = ({ children, required }) => (
-    <label className="block text-sm font-semibold text-black mb-1 ">
+    <label className="block text-xs font-semibold text-black mb-1 ">
       {children}
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>
@@ -168,14 +173,85 @@ const Team = () => {
         ""
       ) : (
         <div className="  bg-[#FFFFFF] p-2    rounded-lg  ">
-          <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
+          {/* <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
             <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
               <div className="flex  items-center gap-2">
                 <IconInfoCircle className="w-4 h-4" />
                 <span>Committee Summary</span>
               </div>
+
+              <div className="flex ">
+                <div>
+                  <FormLabel>Start Date</FormLabel>
+                  <input
+                    type="date"
+                    disabled
+                    name="receipt_from_date"
+                    required
+                    value={committes.committee_from}
+                    onChange={(e) =>
+                      onInputChange(e.target.name, e.target.value)
+                    }
+                    className="text-xs"
+                  />
+                </div>
+                <div className="text-xs">
+                  <FormLabel>End Date</FormLabel>
+                  <input
+                    type="date"
+                    name="receipt_to_date"
+                    disabled
+                    value={committes.committee_to}
+                    required
+                    className="text-xs"
+                  />
+                </div>
+              </div>
+            </h2>
+          </div> */}
+          <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
+            <h2 className="text-black text-lg flex flex-col md:flex-row justify-between items-center">
+              {/* Header Section */}
+              <div className="flex items-center gap-2 mb-4 md:mb-0">
+                <IconInfoCircle className="w-5 h-5 text-green-600" />
+                <span className="font-semibold">Add Committee Member</span>
+              </div>
+
+              {/* Date Inputs Section */}
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                <div className="flex flex-col text-sm">
+                  <FormLabel className="text-gray-600 text-sm mb-1">
+                    Start Date
+                  </FormLabel>
+                  <input
+                    type="date"
+                    name="receipt_from_date"
+                    disabled
+                    required
+                    value={committes.committee_from}
+                    onChange={(e) =>
+                      onInputChange(e.target.name, e.target.value)
+                    }
+                    className="text-xs"
+                  />
+                </div>
+                <div className="flex flex-col text-sm">
+                  <FormLabel className="text-gray-600 text-sm mb-1">
+                    End Date
+                  </FormLabel>
+                  <input
+                    type="date"
+                    name="receipt_to_date"
+                    disabled
+                    required
+                    value={committes.committee_to}
+                    className="text-xs"
+                  />
+                </div>
+              </div>
             </h2>
           </div>
+
           <hr />
 
           <form
@@ -184,7 +260,7 @@ const Team = () => {
             onSubmit={onSubmit}
             className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
           >
-            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div>
                 <FormLabel required>Committee Type</FormLabel>
                 <select
@@ -194,7 +270,7 @@ const Team = () => {
                   required
                   className={inputClassSelect}
                 >
-                  <option value="">Select Company Type</option>
+                  <option value="">Select Committee Type</option>
                   {commiteeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -219,8 +295,8 @@ const Team = () => {
                   ))}
                 </select>
               </div>
-              <div>
-                <FormLabel required>Member's Name</FormLabel>
+              {/* <div>
+                <FormLabel required>Member's Id</FormLabel>
                 <input
                   type="text"
                   name="indicomp_full_name"
@@ -230,60 +306,56 @@ const Team = () => {
                   className={inputClass}
                   required
                 />
-              </div>
+              </div> */}
               <div>
-                <FormLabel required>Start Date</FormLabel>
+                <FormLabel required>Member's Name</FormLabel>
                 <input
-                  type="date"
-                  disabled
-                  name="receipt_from_date"
-                  required
-                  value={committes.committee_from}
+                  type="text"
+                  name="indicomp_full_name_dummy"
+                  value={committee.indicomp_full_name_dummy}
+                  onClick={handleOpenDialog}
                   onChange={(e) => onInputChange(e.target.name, e.target.value)}
-                  className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed"
-                />
-              </div>
-              <div>
-                <FormLabel required>End Date</FormLabel>
-                <input
-                  type="date"
-                  name="receipt_to_date"
-                  disabled
-                  value={committes.committee_to}
+                  className={inputClass}
                   required
-                  className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 cursor-not-allowed"
                 />
               </div>
-            </div>
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                disabled={isButtonDisabled}
-                className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-              >
-                {isButtonDisabled ? "Updating..." : "Update"}
-              </button>
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  disabled={isButtonDisabled}
+                  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+                >
+                  {isButtonDisabled ? "Updating..." : "Update"}
+                </button>
+              </div>
             </div>
           </form>
         </div>
       )}
-      <div className="  bg-[#FFFFFF] p-2  mt-5   rounded-lg  ">
+      <div className="   p-2  mt-5   rounded-lg  ">
         <CommitteeList />
       </div>
 
       <Dialog open={openDialog} handler={handleOpenDialog}>
-        <DialogHeader> Add to Member</DialogHeader>
+        <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
+          <div className="flex justify-between items-center px-5">
+            <h2 className="text-black text-lg flex gap-2 items-center rounded-xl p-2">
+              <span>Select</span>
+            </h2>
+            <button
+              className="text-black cursor-pointer hover:text-red-600"
+              onClick={() => setOpenDialog(false)}
+            >
+              <IconArrowBack />
+            </button>
+          </div>
+        </div>
         <DialogBody>
-          <MemberSelect populateDonorName={populateDonorName} />
+          <MemberSelect
+            populateDonorName={populateDonorName}
+            setOpenDialog={setOpenDialog}
+          />
         </DialogBody>
-        <DialogFooter>
-          <button
-            onClick={() => setOpenDialog(false)}
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-24 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-          >
-            <span>Cancel</span>
-          </button>
-        </DialogFooter>
       </Dialog>
     </Layout>
   );

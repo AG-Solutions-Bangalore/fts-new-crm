@@ -231,7 +231,7 @@ const AddSchool = () => {
                       chapter.id.toString()
                     )}
                     onChange={handleClick}
-                    className="form-checkbox h-5 w-5"
+                    className="form-checkbox h-4 w-4"
                   />
                   <span>{chapter.chapter_name}</span>
                 </div>

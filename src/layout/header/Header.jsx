@@ -12,10 +12,8 @@ import PropTypes from "prop-types";
 
 // components
 import Profile from "./Profile";
-import {
-  IconMenu,
-  IconMenuDeep,
-} from "@tabler/icons-react";
+import { IconInfoOctagon, IconMenu, IconMenuDeep } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 // interface ItemType {
 //   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
@@ -24,6 +22,7 @@ import {
 const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
   // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   // const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
+  const navigate = useNavigate();
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -69,16 +68,21 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           <IconMenuDeep width="20" height="20" />
         </IconButton>
 
-    
         <Box flexGrow={1} />
-        <Stack
-          spacing={1}
-          direction="row"
-          alignItems="center"
-      
-        >
-    
 
+        <Stack spacing={1} direction="row" alignItems="center">
+          <Tooltip title="Help" arrow>
+            {" "}
+            <IconInfoOctagon
+              width={20}
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/manualguide-book");
+              }}
+            />
+          </Tooltip>
+        </Stack>
+        <Stack spacing={1} direction="row" alignItems="center">
           <Tooltip title="Profile" arrow>
             <Profile />
           </Tooltip>

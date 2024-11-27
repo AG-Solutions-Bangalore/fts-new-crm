@@ -101,7 +101,7 @@ const DonorView = ({ viewerId, onClose }) => {
   }
 
   return (
-    <div className="bg-[#F8FAFC] p-4 sm:w-[300px] md:w-[48rem] overflow-y-auto custom-scroll-add">
+    <div className="bg-[#F8FAFC] p-4 sm:w-[300px] md:w-[52rem] overflow-y-auto custom-scroll-add">
       {/* Header Section */}
       {/* <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
         <div className="bg-[#E1F5FA] p-4 rounded-t-xl border-b-2 border-green-500">
@@ -180,7 +180,7 @@ const DonorView = ({ viewerId, onClose }) => {
       </div> */}
 
       <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
-        <div className="bg-[#E1F5FA] p-4 sm:p-6 rounded-t-xl border-b-2 border-green-500">
+        {/* <div className="bg-[#E1F5FA] p-4 sm:p-6 rounded-t-xl border-b-2 border-green-500">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div className="flex items-center gap-3">
               <IconInfoCircle className="w-5 h-5 text-green-600" />
@@ -193,12 +193,128 @@ const DonorView = ({ viewerId, onClose }) => {
               className="cursor-pointer hover:text-red-600 transition-colors"
             />
           </div>
+
+
+
+
+        </div> */}
+
+        <div className="bg-[#E1F5FA] p-4 sm:p-6 rounded-t-xl border-b-2 border-green-500">
+          {/* Header Section */}
+          {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div className="flex items-center gap-3">
+              <IconInfoCircle className="w-5 h-5 text-green-600" />
+
+              {donor && (
+                <div className="flex justify-between gap-3">
+                  <h3 className="text-base sm:text-lg font-semibold text-black">
+                    {donor.indicomp_type === "Individual"
+                      ? `${donor.title} ${donor.indicomp_full_name}`
+                      : `M/s ${donor.indicomp_full_name}`}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm font-semibold text-black mt-2">
+                    FTS Id: {donor.indicomp_fts_id}
+                  </p>
+
+                  {famgroup.map((fam, key) => (
+                    <p
+                      key={key}
+                      className="text-xs sm:text-sm font-semibold text-black mt-2"
+                    >
+                      Family Group: {fam.indicomp_full_name}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <IconArrowBack
+              onClick={onClose}
+              className="cursor-pointer hover:text-red-600 transition-colors"
+            />
+          </div> */}
+
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
+            {/* Donor Information */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              {/* <IconInfoCircle className="w-5 h-5 text-green-600" /> */}
+              <IconArrowBack
+                onClick={onClose}
+                className="cursor-pointer hover:text-red-600 transition-colors"
+              />
+              {donor && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  {/* Donor Name */}
+                  <h3 className="text-base sm:text-lg font-semibold text-black">
+                    {donor.indicomp_type === "Individual"
+                      ? `${donor.title} ${donor.indicomp_full_name}`
+                      : `M/s ${donor.indicomp_full_name}`}
+                  </h3>
+
+                  {/* FTS Id */}
+                  <p className="text-xs sm:text-sm font-semibold text-black mt-1 sm:mt-0">
+                    FTS Id: {donor.indicomp_fts_id}
+                  </p>
+
+                  {/* Family Groups */}
+                  {famgroup.map((fam, key) => (
+                    <p
+                      key={key}
+                      className="text-xs sm:text-sm font-semibold text-black mt-1 sm:mt-0"
+                    >
+                      Family Group: {fam.indicomp_full_name}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+            {localStorage.getItem("user_type_id") != 4 && (
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={toggleOldReceiptDetailsDrawer(true)}
+                  className="text-center text-sm font-medium cursor-pointer hover:animate-pulse w-auto text-white bg-blue-600 hover:bg-green-700 px-3 py-1 rounded shadow"
+                >
+                  Old Rep
+                </button>
+                <SwipeableDrawer
+                  anchor="right"
+                  open={oldreceiptDetailsDrawer}
+                  onClose={toggleOldReceiptDetailsDrawer(false)}
+                  onOpen={toggleOldReceiptDetailsDrawer(true)}
+                >
+                  <OldReceipt
+                    onClose={toggleOldReceiptDetailsDrawer(false)}
+                    viewerId={viewerId}
+                  />
+                </SwipeableDrawer>
+                <button
+                  onClick={toggleReceiptDetailsDrawer(true)}
+                  className="text-center text-sm font-medium cursor-pointer hover:animate-pulse w-auto text-white bg-blue-600 hover:bg-green-700 px-3 py-1 rounded shadow"
+                >
+                  Family
+                </button>
+                <SwipeableDrawer
+                  anchor="right"
+                  open={receiptDetailsDrawer}
+                  onClose={toggleReceiptDetailsDrawer(false)}
+                  onOpen={toggleReceiptDetailsDrawer(true)}
+                >
+                  <ReceiptDetails
+                    onClose={toggleReceiptDetailsDrawer(false)}
+                    viewerId={viewerId}
+                  />
+                </SwipeableDrawer>
+              </div>
+            )}
+            {/* Close Icon */}
+          </div>
         </div>
 
-        {donor && (
+        {/* {donor && (
           <div className="p-4 sm:p-6 bg-white rounded-b-xl">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-              <div className="space-y-1">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4"> */}
+        {/* <div className="space-y-1">
                 <h3 className="text-base sm:text-lg font-semibold text-black">
                   {donor.indicomp_type === "Individual"
                     ? `${donor.title} ${donor.indicomp_full_name}`
@@ -215,9 +331,9 @@ const DonorView = ({ viewerId, onClose }) => {
                     Family Group: {fam.indicomp_full_name}
                   </p>
                 ))}
-              </div>
+              </div> */}
 
-              {localStorage.getItem("user_type_id") != 4 && (
+        {/* {localStorage.getItem("user_type_id") != 4 && (
                 <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     onClick={toggleOldReceiptDetailsDrawer(true)}
@@ -254,10 +370,10 @@ const DonorView = ({ viewerId, onClose }) => {
                     />
                   </SwipeableDrawer>
                 </div>
-              )}
-            </div>
+              )} */}
+        {/* </div>
           </div>
-        )}
+        )} */}
       </div>
 
       {donor && (
@@ -320,13 +436,17 @@ const DonorView = ({ viewerId, onClose }) => {
                           label="CSR Status"
                           value={donor.indicomp_csr}
                         />
+                        <InfoField
+                          label="Remarks"
+                          value={donor.indicomp_remarks}
+                        />
                       </>
                     )}
                   </div>
                 </div>
 
                 {/* Additional Details */}
-                <div className="xl:col-span-2 mt-3 ">
+                <div className="xl:col-span-2 ">
                   <SectionHeader
                     icon={
                       <IconInfoCircle className="text-purple-600 w-6 h-6" />
@@ -352,7 +472,6 @@ const DonorView = ({ viewerId, onClose }) => {
                       value={donor.indicomp_donor_type}
                     />
                     <InfoField label="Type" value={donor.indicomp_type} />
-                    <InfoField label="Remarks" value={donor.indicomp_remarks} />
                   </div>
                 </div>
               </div>
@@ -446,27 +565,44 @@ const DonorView = ({ viewerId, onClose }) => {
 const SectionHeader = ({ icon, title }) => (
   <div className="flex items-center gap-3 mb-4">
     <div className="bg-gray-100 p-2 rounded-lg">{icon}</div>
-    <h5 className="text-lg font-semibold text-black">{title}</h5>
+    <h5 className="text-[1.rem] font-semibold text-black">{title}</h5>
+    {/* <h5 className="text-lg font-semibold text-black">{title}</h5> */}
   </div>
 );
 
+// const InfoField = ({ label, value }) => (
+//   <div className="space-y-1">
+//     <p className="text-sm font-medium text-gray-600">{label}</p>
+//     <p className="text-sm text-gray-900">{value || "Not Available"}</p>
+//   </div>
+// );
+
+// const ContactItem = ({ icon, label, value }) => (
+//   <div className="flex items-center gap-4">
+//     {icon}
+//     <InfoField label={label} value={value} />
+//   </div>
+// );
+
 const InfoField = ({ label, value }) => (
-  <div className="space-y-1">
-    <p className="text-sm font-medium text-gray-600">{label}</p>
-    <p className="text-sm text-gray-900">{value || "Not Available"}</p>
+  <div className="flex items-center">
+    <span className="text-sm font-bold text-black">{label}:</span>
+    <span className="ml-2 text-sm text-gray-900">
+      {value || "Not Available"}
+    </span>
   </div>
 );
 
 const ContactItem = ({ icon, label, value }) => (
-  <div className="flex items-center gap-4">
-    {icon}
+  <div className="flex items-center gap-2">
+    <div>{icon}</div>
     <InfoField label={label} value={value} />
   </div>
 );
 
 const AddressDisplay = ({ title, address }) => (
   <div className="space-y-2">
-    <h6 className="text-sm font-medium text-gray-600">{title}</h6>
+    <h6 className="text-sm font-bold text-black">{title}</h6>
     <div className="text-sm text-gray-900 leading-relaxed">
       {address ? (
         <div className="space-y-1">

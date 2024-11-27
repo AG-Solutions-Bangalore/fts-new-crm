@@ -131,7 +131,7 @@ const ChaptersList = () => {
             <Spinner />
           </div>
         ) : (
-          <div className="w-full">
+          <div className="max-w-screen">
             {chapterList.length > 0 ? (
               <MantineReactTable table={table} />
             ) : (

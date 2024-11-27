@@ -145,12 +145,13 @@ const ReceiptList = () => {
   return (
     <Layout>
       <div className="max-w-screen">
-        <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
-          <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
+        <div className="relative">
+          <h2
+            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
+           text-black"
+          >
             Receipt List
-          </h1>
-        </div>
-        <div className=" shadow-md">
+          </h2>
           <MantineReactTable table={table} />
         </div>
       </div>

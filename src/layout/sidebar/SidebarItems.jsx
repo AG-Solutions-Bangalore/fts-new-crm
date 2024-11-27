@@ -10,7 +10,7 @@ const SidebarItems = ({ toggleMobileSidebar, isCollapsed }) => {
   const location = useLocation();
   const pathDirect = location.pathname;
   const userTypeId = localStorage.getItem("user_type_id");
-  console.log(userTypeId, "userTypeId");
+  // console.log(userTypeId, "userTypeId");
   const MenuData = Menuitems(userTypeId);
   //chnage mm
   return (

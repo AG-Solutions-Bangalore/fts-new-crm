@@ -214,7 +214,7 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText>Change Password</ListItemText>
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             navigate("/manualguide-book");
           }}
@@ -223,7 +223,7 @@ const Profile = () => {
             <IconInfoOctagon width={20} />
           </ListItemIcon>
           <ListItemText>Help</ListItemText>
-        </MenuItem>
+        </MenuItem> */}
 
         <Box mt={1} py={1} px={2}>
           <Button

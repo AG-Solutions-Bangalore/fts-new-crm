@@ -15,7 +15,7 @@ const MainWrapper = styled("div")(() => ({
 const PageWrapper = styled("div")(() => ({
   display: "flex",
   flexGrow: 1,
-  paddingBottom: "60px",
+  // paddingBottom: "60px",
   flexDirection: "column",
   // zIndex: 1,     i remove this because it occur problem for mantine drawer
   backgroundColor: "transparent",
@@ -64,7 +64,7 @@ const Layout = ({ children }) => {
           {/* End Page */}
           {/* ------------------------------------------- */}
         </Container>
-       <div className="p-4 md:p-7 lg:p-7"> <Footer /></div>
+       <div className="px-4 pt-4 md:px-7 md:pt-7  lg:px-7 lg:pt-7 "> <Footer /></div>
       </PageWrapper>
     </MainWrapper>
   );
