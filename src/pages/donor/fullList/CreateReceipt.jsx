@@ -5,7 +5,7 @@ import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import moment from "moment";
 import { toast } from "react-toastify";
-import { Button } from "@material-tailwind/react";
+import { Button, ButtonGroup } from "@material-tailwind/react";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { ContextPanel } from "../../../utils/ContextPanel";
 const exemption = [
@@ -59,7 +59,7 @@ const pay_mode_2 = [
 const donation_type = [
   {
     value: "One Teacher School",
-    label: "One Teacher School",
+    label: "OTS",
   },
   {
     value: "General",
@@ -73,7 +73,7 @@ const donation_type = [
 const donation_type_2 = [
   {
     value: "One Teacher School",
-    label: "One Teacher School",
+    label: "OTS",
   },
   {
     value: "General",
@@ -128,6 +128,13 @@ const CreateReceipt = ({ donorId, onClose }) => {
 
   const [states, setStates] = useState([]);
 
+  const handleButtonGroupChange = (stateName, value) => {
+    setDonor((prevDonor) => ({
+      ...prevDonor,
+      [stateName]: value,
+    }));
+  };
+
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("id");
     if (!isLoggedIn) {
@@ -136,7 +143,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
     }
   }, []);
 
-  const validateOnlyDigits = (inputtxt) => /^\d*$/.test(inputtxt); // Simplified validation
+  const validateOnlyDigits = (inputtxt) => /^\d*$/.test(inputtxt);
 
   const onInputChange = (e) => {
     const { name, value } = e.target;
@@ -307,6 +314,45 @@ const CreateReceipt = ({ donorId, onClose }) => {
       setIsButtonDisabled(false);
     }
   };
+
+  // const renderButtonGroup = (options, stateName, currentValue) => (
+  //   <ButtonGroup className="w-full h-9  flex flex-row gap-2  ">
+  //     {options.map((option) => (
+  //       <Button
+  //         key={option.value}
+  //         onClick={() => handleButtonGroupChange(stateName, option.value)}
+  //         className={` w-full  ${
+  //           currentValue === option.value
+  //             ? "bg-green-500 text-black"
+  //             : "bg-[#E1F5FA] text-blue-gray-700 hover:bg-blue-100"
+  //         } text-xs py-2 lg:py-0`}
+  //       >
+  //         {option.label}
+  //       </Button>
+  //     ))}
+  //   </ButtonGroup>
+  // );
+  const renderButtonGroup = (options, stateName, currentValue) => (
+    <ButtonGroup className="w-full h-9 flex flex-wrap  ">
+      {options.map((option) => (
+        <Button
+          key={option.value}
+          onClick={() => handleButtonGroupChange(stateName, option.value)}
+          className={`flex-grow ${
+            currentValue === option.value
+              ? "bg-green-500 text-black"
+              : "bg-[#E1F5FA] text-blue-gray-700 hover:bg-blue-100"
+          } text-[10px] lg:text-xs py-2 lg:py-0 
+          w-1/2 md:w-1/3 lg:w-auto rounded-none  mt-1 lg:mt-0   `}
+        >
+          {option.label}
+        </Button>
+      ))}
+    </ButtonGroup>
+  );
+  
+  
+  
   const FormLabel = ({ children, required }) => (
     <label className="block text-sm font-semibold text-black mb-1 ">
       {children}
@@ -397,7 +443,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
               <IconInfoCircle className="w-4 h-4" />
               <span>Receipt Details</span>
             </h2> */}
-            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 md:gap-8">
               {recepitcontrol.date_open === "Yes" ? (
                 <div>
                   <FormLabel required>Receipt Date</FormLabel>
@@ -420,8 +466,8 @@ const CreateReceipt = ({ donorId, onClose }) => {
                 ""
               )}
 
-              <div>
-                <FormLabel required>Category</FormLabel>
+              <div className=" col-span-0 lg:col-span-2">
+                {/* <FormLabel required>Category</FormLabel>
                 <select
                   name="receipt_exemption_type"
                   value={donor.receipt_exemption_type}
@@ -435,51 +481,44 @@ const CreateReceipt = ({ donorId, onClose }) => {
                       {option.label}
                     </option>
                   ))}
-                </select>
-              </div>
-              <div>
-                <FormLabel required>Total Amount</FormLabel>
-                <input
-                  type="text"
-                  maxLength={8}
-                  name="receipt_total_amount"
-                  value={donor.receipt_total_amount}
-                  onChange={(e) => onInputChange(e)}
-                  className={inputClass}
-                  required
-                />
-              </div>
+                </select> */}
 
+                <FormLabel required>Category</FormLabel>
+                {renderButtonGroup(
+                  exemption,
+                  "receipt_exemption_type",
+                  donor.receipt_exemption_type
+                )}
+                {/* {!donor.receipt_exemption_type && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Please select a category
+                  </p>
+                )} */}
+              </div>
+              
+              {/* 
               <div>
                 <FormLabel required>Transaction Type</FormLabel>
-                <select
-                  name="receipt_tran_pay_mode"
-                  value={donor.receipt_tran_pay_mode}
-                  onChange={(e) => onInputChange(e)}
-                  required
-                  className={inputClassSelect}
-                >
-                  <option value="">Select Transaction Type</option>
-                  {donor.receipt_exemption_type == "80G" &&
-                  donor.receipt_total_amount > 2000
-                    ? pay_mode_2.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))
-                    : pay_mode.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                </select>
-                <p className="text-gray-600 text-xs px-2 pt-1">
-                  Please select your Transaction Type
-                </p>
-              </div>
-              <div>
+                
+                {renderButtonGroup(
+                  donor.receipt_exemption_type == "80G" &&
+                    donor.receipt_total_amount > 2000
+                    ? pay_mode_2
+                    : pay_mode,
+                  "receipt_tran_pay_mode",
+                  donor.receipt_tran_pay_mode
+                )}
+                {!donor.receipt_tran_pay_mode && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Please select a transaction type
+                  </p>
+                )}
+               
+              </div> */}
+
+              <div className=" col-span-0 lg:col-span-2">
                 <FormLabel required>Purpose</FormLabel>
-                <select
+                {/* <select
                   name="receipt_donation_type"
                   value={donor.receipt_donation_type}
                   onChange={(e) => onInputChange(e)}
@@ -498,12 +537,36 @@ const CreateReceipt = ({ donorId, onClose }) => {
                           {option.label}
                         </option>
                       ))}
-                </select>
-                <p className="text-gray-600 text-xs px-2 pt-1">
-                  Please select your Donation Type
-                </p>
-              </div>
+                </select> */}
 
+                {renderButtonGroup(
+                  donor.receipt_exemption_type == "80G"
+                    ? donation_type_2
+                    : donation_type,
+                  "receipt_donation_type",
+                  donor.receipt_donation_type
+                )}
+                {/* {!donor.receipt_donation_type && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Please select a purpose
+                  </p>
+                )} */}
+                {/* <p className="text-gray-600 text-xs px-2 pt-1">
+                  Please select your Donation Type
+                </p> */}
+              </div>
+              <div>
+                <FormLabel required>Total Amount</FormLabel>
+                <input
+                  type="text"
+                  maxLength={8}
+                  name="receipt_total_amount"
+                  value={donor.receipt_total_amount}
+                  onChange={(e) => onInputChange(e)}
+                  className={inputClass}
+                  required
+                />
+              </div>
               <div>
                 <FormLabel>Realization Date</FormLabel>
                 <input
@@ -514,6 +577,23 @@ const CreateReceipt = ({ donorId, onClose }) => {
                   className={inputClass}
                   max={new Date().toISOString().split("T")[0]}
                 />
+              </div>
+              <div className=" col-span-0  md:col-span-2">
+                <FormLabel required>Transaction Type</FormLabel>
+
+                {renderButtonGroup(
+                  donor.receipt_exemption_type == "80G" &&
+                    donor.receipt_total_amount > 2000
+                    ? pay_mode_2
+                    : pay_mode,
+                  "receipt_tran_pay_mode",
+                  donor.receipt_tran_pay_mode
+                )}
+                {/* {!donor.receipt_tran_pay_mode && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Please select a transaction type
+                  </p>
+                )} */}
               </div>
 
               {donor.receipt_donation_type == "Membership" ? (
@@ -636,14 +716,39 @@ const CreateReceipt = ({ donorId, onClose }) => {
                   className={inputClass}
                 />
               </div>
+
+              {/* <div className=" col-span-0  lg:col-span-2">
+                <FormLabel required>Transaction Type</FormLabel>
+                
+                {renderButtonGroup(
+                  donor.receipt_exemption_type == "80G" &&
+                    donor.receipt_total_amount > 2000
+                    ? pay_mode_2
+                    : pay_mode,
+                  "receipt_tran_pay_mode",
+                  donor.receipt_tran_pay_mode
+                )}
+                {!donor.receipt_tran_pay_mode && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Please select a transaction type
+                  </p>
+                )}
+               
+              </div> */}
             </div>
           </div>
+
           {/* Form Actions */}
           <div className="flex gap-4 justify-start">
             <button
               type="submit"
               className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-              disabled={isButtonDisabled}
+              disabled={
+                isButtonDisabled ||
+                !donor.receipt_exemption_type ||
+                !donor.receipt_tran_pay_mode ||
+                !donor.receipt_donation_type
+              }
             >
               {isButtonDisabled ? "Submitting..." : "Submit"}
             </button>
