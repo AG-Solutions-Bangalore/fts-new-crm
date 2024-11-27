@@ -34,7 +34,7 @@ const ForgetPassword = () => {
   };
 
   const inputClass =
-    "w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+    "w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
 
   return (
     <>
@@ -47,8 +47,8 @@ const ForgetPassword = () => {
         reverseOrder={false}
       />
       <div className="min-h-screen bg-blue-400 flex items-center justify-center">
-        <div className="max-w-7xl w-full bg-white shadow-lg rounded-2xl overflow-hidden m-4">
-          <div className="flex flex-col lg:flex-row max-h-[682px]">
+        <div className="max-w-5xl w-full bg-white shadow-lg rounded-2xl overflow-hidden m-4">
+          <div className="flex flex-col lg:flex-row max-h-[582px]">
             {/* Left Side - Image */}
             <div className="lg:w-1/2 hidden lg:block">
               <img
@@ -67,7 +67,8 @@ const ForgetPassword = () => {
                 variant="h4"
                 className="text-center font-bold mb-6 text-blue-gray-800"
               >
-                Enter your email to reset your password.
+                {/* Enter your email to reset your password. */}
+                Enter to Reset Password
               </Typography>
               <form onSubmit={onResetPassword} className="space-y-6">
                 <div>
@@ -108,7 +109,7 @@ const ForgetPassword = () => {
                 </Link>
               </div>
 
-              <div>
+              {/* <div>
                 <h6 className="flex justify-center text-gray-600">
                   Follow with us
                 </h6>
@@ -120,7 +121,7 @@ const ForgetPassword = () => {
                   <FaInstagram className="text-black hover:bg-yellow-800 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
                   <FaPinterest className="text-black hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

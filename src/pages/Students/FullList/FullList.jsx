@@ -62,7 +62,6 @@ const FullList = () => {
 
   // Define columns for MantineReactTable
   const columns = [
-
     { accessorKey: "school_state", header: "State", size: 50 },
     { accessorKey: "district", header: "District", size: 50 },
     { accessorKey: "achal", header: "Achal", size: 50 },
@@ -70,7 +69,7 @@ const FullList = () => {
     { accessorKey: "sub_cluster", header: "Sub Cluster", size: 50 },
     { accessorKey: "village", header: "Village", size: 50 },
     { accessorKey: "school_code", header: "School Code", size: 50 },
-    { accessorKey: "status_label", header: "Status", size: 50, },
+    { accessorKey: "status_label", header: "Status", size: 50 },
     {
       accessorKey: "actions",
       header: "Actions",
@@ -99,27 +98,27 @@ const FullList = () => {
   });
   return (
     <Layout>
-      <div className="flex flex-col md:flex-row md:justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
-        <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-xl md:text-2xl sm:text-sm text-center md:text-left">
-          Schools List
-        </h1>
+      <div className="relative">
+        <h2
+          className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
+           text-black"
+        >
+          <div className="flex justify-between">
+            <h1>Schools List -</h1>
 
-        <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
-          {chapter.map((item, index) => (
-            <div key={index} className="flex items-center  space-x-1">
-              <h1 className="font-semibold text-blue-500 sm:text-xs md:text-sm">
-                {item.chapter_name} - {item.school_count}
-              </h1>
+            <div className="ml-2 mt-1">
+              {chapter.map((item, index) => (
+                <div key={index} className="flex items-center  space-x-1">
+                  <h1 className="font-semibold text-blue-500 sm:text-xs md:text-sm">
+                    {item.chapter_name} - {item.school_count}
+                  </h1>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-5">
-        <div className="w-full">
-          <MantineReactTable table={table} />
-        </div>
-      </div>
+          </div>
+        </h2>
+        <MantineReactTable table={table} />
+      </div>{" "}
     </Layout>
   );
 };

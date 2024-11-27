@@ -183,11 +183,6 @@ const DataSource = () => {
   };
 
   const columns = [
-    // {
-    //   accessorKey: "id",
-    //   header: "Sl No",
-    //   Cell: ({ row }) => row.index + 1,
-    // },
     {
       accessorKey: "data_source_type",
       header: "Data Source",
@@ -196,7 +191,6 @@ const DataSource = () => {
       accessorKey: "edit",
       header: "Edit",
       enableColumnFilter: false,
-
       Cell: ({ row }) => (
         <button
           onClick={() => handleClickOpen1(row.original.id)}
@@ -205,7 +199,7 @@ const DataSource = () => {
           <span
             className={`btn text-white px-4 py-2 rounded-lg shadow-md ${
               row.original.chapter_id !== 0
-                ? "bg-blue-600 hover:bg-blue-700 "
+                ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-blue-400 cursor-not-allowed"
             }`}
           >
@@ -214,6 +208,19 @@ const DataSource = () => {
         </button>
       ),
     },
+    // {
+    //   accessorKey: "create",
+    //   header: () => (
+    //     <div className="flex justify-end">
+    //       <button
+    //         onClick={handleClickOpen}
+    //         className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse md:text-right text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
+    //       >
+    //         Create Data Source
+    //       </button>
+    //     </div>
+    //   ),
+    // },
   ];
 
   const table = useMantineReactTable({
@@ -251,131 +258,147 @@ const DataSource = () => {
           </h2>
         </div>
         <hr />
-        <div className="grid grid-cols-1 gap-4">
-          <MantineReactTable table={table} />
 
-          <Dialog
-            open={open}
-            keepMounted
-            aria-describedby="alert-dialog-slide-description"
-            sx={{
-              backdropFilter: "blur(5px) sepia(5%)",
-              "& .MuiDialog-paper": {
-                borderRadius: "18px",
-              },
-            }}
-          >
-            <form onSubmit={createUser} autoComplete="off">
-              <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h1 className="text-slate-800 text-xl font-semibold">
-                      Create Data Source
-                    </h1>
-                    <div className="flex">
+        <div className="max-w-screen">
+          <div className="relative">
+            {/* <h2 className="absolute sm:top-3 md:top-3 left-2 z-50 text-lg px-4 font-bold">
+              Data Source
+            </h2>
+            <button
+              onClick={handleClickOpen}
+              className="absolute top-8 right-[9rem] sm:top-3 sm:right-20 z-50 px-4 w-20 text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+            >
+              Create
+            </button> */}
+
+            <MantineReactTable table={table} />
+
+            <Dialog
+              open={open}
+              keepMounted
+              aria-describedby="alert-dialog-slide-description"
+              sx={{
+                backdropFilter: "blur(5px) sepia(5%)",
+                "& .MuiDialog-paper": {
+                  borderRadius: "18px",
+                },
+              }}
+            >
+              <form onSubmit={createUser} autoComplete="off">
+                <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <h1 className="text-slate-800 text-xl font-semibold">
+                        Create Data Source
+                      </h1>
+                      <div className="flex">
+                        <Tooltip title="Close">
+                          <button
+                            type="button"
+                            className="ml-3 pl-2"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleClose();
+                            }}
+                          >
+                            <IconCircleX />
+                          </button>
+                        </Tooltip>
+                      </div>
+                    </div>
+
+                    <div className="mt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
+                        <div>
+                          <FormLabel required>Enter Data Source</FormLabel>
+                          <input
+                            name="data_source_type"
+                            value={user.data_source_type}
+                            onChange={(e) => onUserInputChange(e)}
+                            className={inputClass}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-5 flex justify-center">
+                        <button
+                          disabled={isButtonDisabled}
+                          type="submit"
+                          className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+                        >
+                          {isButtonDisabled ? "Submiting..." : "Submit"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </Dialog>
+
+            <Dialog
+              open={open1}
+              keepMounted
+              aria-describedby="alert-dialog-slide-description"
+              sx={{
+                backdropFilter: "blur(5px) sepia(5%)",
+                "& .MuiDialog-paper": {
+                  borderRadius: "18px",
+                },
+              }}
+            >
+              <form autoComplete="off" onSubmit={updateUser}>
+                <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <h1 className="text-slate-800 text-xl font-semibold">
+                        Edit Data Source
+                      </h1>
                       <Tooltip title="Close">
                         <button
                           type="button"
-                          className="ml-3 pl-2"
+                          className="ml-3 pl-2l"
                           onClick={(e) => {
                             e.preventDefault();
-                            handleClose();
+                            handleClose1();
                           }}
                         >
                           <IconCircleX />
                         </button>
                       </Tooltip>
                     </div>
-                  </div>
 
-                  <div className="mt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                      <div>
-                        <FormLabel required>Enter Data Source</FormLabel>
-                        <input
-                          name="data_source_type"
-                          value={user.data_source_type}
-                          onChange={(e) => onUserInputChange(e)}
-                          className={inputClass}
-                          required
-                        />
+                    <div className="mt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
+                        <div>
+                          <FormLabel required>Enter Data Source</FormLabel>
+                          <input
+                            name="data_source_type"
+                            value={user.data_source_type}
+                            onChange={onUserInputChange}
+                            className={inputClass}
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="mt-5 flex justify-center">
-                      <button
-                        disabled={isButtonDisabled}
-                        type="submit"
-                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-                      >
-                        {isButtonDisabled ? "Submiting..." : "Submit"}
-                      </button>
+                      <div className="mt-5 flex justify-center">
+                        <button
+                          type="submit"
+                          disabled={isButtonDisabled}
+                          className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+                        >
+                          Update
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </form>
-          </Dialog>
-
-          <Dialog
-            open={open1}
-            keepMounted
-            aria-describedby="alert-dialog-slide-description"
-            sx={{
-              backdropFilter: "blur(5px) sepia(5%)",
-              "& .MuiDialog-paper": {
-                borderRadius: "18px",
-              },
-            }}
-          >
-            <form autoComplete="off" onSubmit={updateUser}>
-              <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h1 className="text-slate-800 text-xl font-semibold">
-                      Edit Data Source
-                    </h1>
-                    <Tooltip title="Close">
-                      <button
-                        type="button"
-                        className="ml-3 pl-2l"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleClose1();
-                        }}
-                      >
-                        <IconCircleX />
-                      </button>
-                    </Tooltip>
-                  </div>
-
-                  <div className="mt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                      <div>
-                        <FormLabel required>Enter Data Source</FormLabel>
-                        <input
-                          name="data_source_type"
-                          value={user.data_source_type}
-                          onChange={onUserInputChange}
-                          className={inputClass}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-5 flex justify-center">
-                      <button
-                        type="submit"
-                        disabled={isButtonDisabled}
-                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-                      >
-                        Update 
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </Dialog>
+              </form>
+            </Dialog>
+          </div>
         </div>
+        {/* <div className="grid grid-cols-1 gap-4">
+          <MantineReactTable table={table} />
+        </div> */}
       </div>
     </Layout>
   );

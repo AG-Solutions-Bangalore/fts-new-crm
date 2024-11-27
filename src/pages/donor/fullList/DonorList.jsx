@@ -201,7 +201,7 @@ const DonorList = () => {
               </div>
               {userType == "1" ? (
                 <div
-                  onClick={toggleReceiptDrawer(true, id)}
+                  onClick={() => navigate(`/donor-create/${id}`)}
                   className="flex items-center space-x-2"
                   title="Create Reciept"
                 >
@@ -337,17 +337,17 @@ const DonorList = () => {
           </div>
         </div>
         {/* for receipt  */}
-        <SwipeableDrawer
+        {/* <SwipeableDrawer
           anchor="right"
           open={receiptDrawer}
           onClose={toggleReceiptDrawer(false)}
           onOpen={toggleReceiptDrawer(true)}
-        >
-          <CreateReceipt
+        > */}
+        {/* <CreateReceipt
             donorId={selectedDonorId}
             onClose={toggleReceiptDrawer(false)}
-          />
-        </SwipeableDrawer>
+          /> */}
+        {/* </SwipeableDrawer> */}
         {/* for donor view  */}
         <SwipeableDrawer
           anchor="right"

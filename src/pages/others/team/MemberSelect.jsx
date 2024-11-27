@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import BASE_URL from '../../../base/BaseUrl';
-import axios from 'axios';
-import { Button, Card, Spinner, Typography } from "@material-tailwind/react";
-import { FaPlus } from 'react-icons/fa';
-const TABLE_HEAD = ["Donor Name", "Mobile", "Actions"];
-const MemberSelect = ({populateDonorName}) => {
-    const [loader, setLoader] = useState(true);
+import React, { useEffect, useState } from "react";
+import { MantineReactTable } from "mantine-react-table";
+import BASE_URL from "../../../base/BaseUrl";
+import axios from "axios";
+import { FaPlus } from "react-icons/fa";
+
+const MemberSelect = ({ populateDonorName }) => {
+  const [loader, setLoader] = useState(true);
   const [donorData, setDonorData] = useState([]);
 
-  const addDonorToReceipt = (fts_id) => {
-    populateDonorName(fts_id);
+  const addDonorToReceipt = (fts_id, indicomp_full_name) => {
+    populateDonorName(fts_id, indicomp_full_name);
+    console.log("debug", fts_id);
+    console.log("debug1", indicomp_full_name);
   };
 
   const getData = async () => {
@@ -21,12 +23,8 @@ const MemberSelect = ({populateDonorName}) => {
         },
       });
       const response = res.data.individualCompanies || [];
-      const tempRows = response.map((donor) => ({
-        name: donor["indicomp_full_name"],
-        mobile: donor["indicomp_mobile_phone"],
-        fts_id: donor["indicomp_fts_id"],
-      }));
-      setDonorData(tempRows);
+
+      setDonorData(response);
     } catch (error) {
       console.error("Error fetching donor data:", error);
     } finally {
@@ -38,6 +36,37 @@ const MemberSelect = ({populateDonorName}) => {
     getData();
   }, []);
 
+  const columns = [
+    {
+      accessorKey: "indicomp_full_name",
+      header: "Donor Name",
+    },
+    {
+      accessorKey: "indicomp_mobile_phone",
+      header: "Mobile",
+    },
+    {
+      accessorKey: "actions",
+      header: "Actions",
+      enableColumnFilter: false,
+
+      Cell: ({ row }) => (
+        <button
+          onClick={() =>
+            addDonorToReceipt(
+              row.original.indicomp_fts_id,
+              row.original.indicomp_full_name
+            )
+          }
+          className="flex items-center text-sm gap-1 px-3 py-2 bg-blue-500 hover:bg-red-500 text-white rounded-lg transition-colors"
+        >
+          <FaPlus className="h-3 w-3" />
+          Select
+        </button>
+      ),
+    },
+  ];
+
   if (loader) {
     return (
       <div className="flex justify-center items-center h-56">
@@ -45,55 +74,25 @@ const MemberSelect = ({populateDonorName}) => {
       </div>
     );
   }
-  
+
   return (
     <div>
-            <Card className="h-56 w-full overflow-scroll custom-scroll">
-      <table className="w-full min-w-max table-auto text-left">
-        <thead>
-          <tr>
-            {TABLE_HEAD.map((head) => (
-              <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-2">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                >
-                  {head}
-                </Typography>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {donorData.map((donor, index) => (
-            <tr key={index} className="even:bg-blue-gray-50/50">
-              <td className="p-2">
-                <Typography variant="small" color="blue-gray" className="font-normal">
-                {donor.name}
-                </Typography>
-              </td>
-              <td className="p-2">
-                <Typography variant="small" color="blue-gray" className="font-normal">
-                {donor.mobile}
-                </Typography>
-              </td>
-              <td className="p-2">
-                <button
-                  onClick={() => addDonorToReceipt(donor.fts_id)}
-                  className="flex items-center text-sm gap-1 p-1 bg-blue-500 hover:bg-red-500 text-white rounded-lg  transition-colors"
-                >
-                  <FaPlus className="h-2 w-2" />
-                  Select
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Card>
+      <MantineReactTable
+        columns={columns}
+        data={donorData}
+        enableFullScreenToggle={false}
+        enableDensityToggle={false}
+        enableColumnActions={false}
+        enableHiding={false}
+        
+        mantineTableContainerProps={{
+          sx: { maxHeight: "400px" },
+        }}
+        // initialState={fil}
+        // initialState={(showGlobalFilter = true)}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default MemberSelect
+export default MemberSelect;

@@ -78,6 +78,7 @@ const AppProvider = ({ children }) => {
           "/duplicate-list",
           "/create-receipts",
           "/duplicate-edit",
+          "/donor-create",
           //master
           "/master/chapters",
           "/edit-chapter",
@@ -150,6 +151,7 @@ const AppProvider = ({ children }) => {
         );
         if (isAllowedPath) {
           navigate(currentPath + location.search);
+          console.log(currentPath);
         } else {
           navigate("/home");
         }

@@ -220,7 +220,7 @@ const EditViewer = () => {
   const inputClassSelect =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
   const inputClass =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
   return (
     <Layout>
       <div className="bg-[#FFFFFF] p-2    rounded-lg">
@@ -249,7 +249,7 @@ const EditViewer = () => {
               <span>Viewer Details</span>
             </h2>
 
-            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-5 gap-6">
               <div>
                 <FormLabel required>Full Name</FormLabel>
                 <input
@@ -388,7 +388,7 @@ const EditViewer = () => {
                       chapter.id.toString()
                     )}
                     onChange={handleClick}
-                    className="form-checkbox h-5 w-5"
+                    className="form-checkbox h-4 w-4"
                   />
                   <span>{chapter.chapter_name}</span>
                 </div>

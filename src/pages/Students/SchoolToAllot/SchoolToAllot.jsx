@@ -56,23 +56,19 @@ const SchoolToAllot = () => {
   }, [isPanelUp, navigate]);
 
   const columns = [
-    // {
-    //   header: "#",
-    //   Cell: ({ row }) => <span>{row.index + 1}</span>,
-    // },
-    { accessorKey: "donorName", header: "Donor Name",size:50, },
-    { accessorKey: "type", header: "Type" ,size:50,},
-    { accessorKey: "mobile", header: "Mobile",size:50, },
-    { accessorKey: "email", header: "Email",size:50, },
-    { accessorKey: "allotmentYear", header: "Allotment Year",size:50, },
-    { accessorKey: "otsReceived", header: "OTS Received",size:50, },
+    { accessorKey: "donorName", header: "Donor Name", size: 50 },
+    { accessorKey: "type", header: "Type", size: 50 },
+    { accessorKey: "mobile", header: "Mobile", size: 50 },
+    { accessorKey: "email", header: "Email", size: 50 },
+    { accessorKey: "allotmentYear", header: "Allotment Year", size: 50 },
+    { accessorKey: "otsReceived", header: "OTS Received", size: 50 },
     ...(localStorage.getItem("id") == 1
       ? [
           {
             enableColumnFilter: false,
 
             accessorKey: "allotmentAction",
-            size:50,
+            size: 50,
             header: "Allotment",
             Cell: ({ row }) => {
               const value = row.getValue("allotmentAction");
@@ -126,31 +122,36 @@ const SchoolToAllot = () => {
 
   return (
     <Layout>
-      <div className="flex  bg-white p-4 mb-4 rounded-lg shadow-md">
-        <h1 className="border-b-2 font-[400] border-dashed border-orange-800 text-lg md:text-lg sm:text-sm text-center md:text-left">
-          School To Allot
-        </h1>
-      </div>
-      <div className="mt-5">
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Spinner />
-          </div>
-        ) : (
-          <div className="w-full">
-            <MantineReactTable
-              columns={columns}
-              data={schoolToAllot}
-              enableDensityToggle={false}
-              enableColumnActions={false}
-              enableFullScreenToggle={false}
-              enableHiding={false}
-              initialState={{
-                columnVisibility: { index: false },
-              }}
-            />
-          </div>
-        )}
+      <div className="max-w-screen">
+        <div className="relative">
+          <h2
+            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
+           text-black"
+          >
+            School To Allot
+          </h2>
+          <div>
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <Spinner />
+              </div>
+            ) : (
+              <div className="w-full">
+                <MantineReactTable
+                  columns={columns}
+                  data={schoolToAllot}
+                  enableDensityToggle={false}
+                  enableColumnActions={false}
+                  enableFullScreenToggle={false}
+                  enableHiding={false}
+                  initialState={{
+                    columnVisibility: { index: false },
+                  }}
+                />
+              </div>
+            )}
+          </div>{" "}
+        </div>
       </div>
     </Layout>
   );

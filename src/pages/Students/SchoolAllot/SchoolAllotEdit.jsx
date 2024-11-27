@@ -156,7 +156,8 @@ const SchoolAllotEdit = () => {
     download: false,
     selectableRows: true,
     responsive: "standard",
-    rowsSelected: selectedSchoolIds, // Use persisted selected rows here
+    filter: false,
+    rowsSelected: selectedSchoolIds, 
     selectToolbarPlacement: "above",
     isRowSelectable: (dataIndex) =>
       schoolAllot[dataIndex]?.status_label !== "Allotted",
@@ -165,9 +166,8 @@ const SchoolAllotEdit = () => {
       const tempValue = allRowsSelected.map((row) => row.dataIndex);
       const newIds = tempValue.map((index) => schoolAllot[index]?.school_code);
 
-      // Convert array to a comma-separated string and store in localStorage
       const selectedIdsString = newIds.join(",");
-      setSelectedSchoolIds(tempValue); // to trigger UI selection
+      setSelectedSchoolIds(tempValue); 
       localStorage.setItem("selectedSchoolIds", selectedIdsString);
 
       console.log("Selected School IDs (string):", selectedIdsString);

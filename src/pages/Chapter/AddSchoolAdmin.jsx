@@ -95,24 +95,6 @@ const AddSchoolAdmin = () => {
     setEmail(e.target.value);
   };
 
-  // const handleClick = (e) => {
-  //   var targetName = e.target.name;
-  //   if (e.target.checked == true) {
-  //     var temparray = viewerChapterIds;
-  //     temparray.push(e.target.name);
-  //     setViewerChapterIds(temparray);
-  //   } else {
-  //     var temparray = viewerChapterIds;
-  //     temparray.splice(temparray.indexOf(targetName), 1);
-  //     setViewerChapterIds(temparray);
-  //   }
-
-  //   var schoolIds = "";
-  //   for (var i = 0; i < viewerChapterIds.length; i++) {
-  //     schoolIds = schoolIds + "," + viewerChapterIds[i];
-  //   }
-  //   setSchoolIds(schoolIds);
-  // };
 
   const handleClick = (e) => {
     const targetName = e.target.name;
@@ -252,7 +234,7 @@ const AddSchoolAdmin = () => {
                       chapter.id.toString()
                     )}
                     onChange={handleClick}
-                    className="form-checkbox h-5 w-5"
+                    className="form-checkbox h-4 w-4"
                   />
                   <span>{chapter.chapter_name}</span>
                 </div>
