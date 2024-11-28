@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, Tooltip, Dialog } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import numWords from "num-words";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
@@ -21,6 +21,7 @@ import ReactToPrint from "react-to-print";
 import { IoIosPrint } from "react-icons/io";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { IconArrowBack } from "@tabler/icons-react";
 const printStyles = `
   @media print {
 
@@ -31,10 +32,12 @@ const printStyles = `
     .print-content {
       margin: 10px !important; /* Apply 20px margin to the printed content */
   padding: 3px;
-
       }
 
-
+.page-break {
+      page-break-before: always;
+      margin-top: 10mm;
+    }
 
 
 
@@ -64,54 +67,11 @@ const ReceiptOne = () => {
     styleSheet.innerText = printStyles;
     document.head.appendChild(styleSheet);
 
-    // Cleanup on unmount
     return () => {
       document.head.removeChild(styleSheet);
     };
   }, []);
-  // const handleSavePDF = () => {
-  //   const input = tableRef.current;
-
-  //   html2canvas(input, { scale: 2 })
-  //     .then((canvas) => {
-  //       const imgData = canvas.toDataURL("image/png");
-
-  //       const pdf = new jsPDF("p", "mm", "a4");
-
-  //       const pdfWidth = pdf.internal.pageSize.getWidth();
-  //       const pdfHeight = pdf.internal.pageSize.getHeight();
-
-  //       const imgWidth = canvas.width;
-  //       const imgHeight = canvas.height;
-
-  //       const margin = 5;
-
-  //       const availableWidth = pdfWidth - 2 * margin;
-
-  //       const ratio = Math.min(
-  //         availableWidth / imgWidth,
-  //         pdfHeight / imgHeight
-  //       );
-
-  //       const imgX = margin;
-  //       const imgY = margin;
-
-  //       pdf.addImage(
-  //         imgData,
-  //         "PNG",
-  //         imgX,
-  //         imgY,
-  //         imgWidth * ratio,
-  //         imgHeight * ratio
-  //       );
-
-  //       pdf.save("Recepit.pdf");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error generating PDF: ", error);
-  //     });
-  // };
-
+  const navigate = useNavigate();
   const handleSavePDF = () => {
     const input = tableRef.current;
 
@@ -310,9 +270,14 @@ const ReceiptOne = () => {
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
-        <h1 className="border-b-2 font-[400] border-dashed border-orange-800">
+        <h1 className="border-b-2 font-[400] border-dashed border-orange-800 flex items-center">
+          <IconArrowBack
+            onClick={() => navigate("/receipt-list")}
+            className="cursor-pointer hover:text-red-600 mr-2"
+          />
           Receipt View
         </h1>
+
         {recepitcontrol.download_open === "Yes" && (
           <>
             {localStorage.getItem("user_type_id") != 4 && (
@@ -445,7 +410,6 @@ const ReceiptOne = () => {
 
                   <div className="text-center flex justify-center items-center border-x border-b border-black -mt-9  p-5">
                     <p className="text-[10px]">
-                    
                       {`${chapter.chapter_address}, ${chapter.chapter_city} - ${chapter.chapter_pin}, ${chapter.chapter_state}`}
                     </p>
                     <p className="text-[11px]">
@@ -799,25 +763,31 @@ const ReceiptOne = () => {
         <div className=" flex justify-center">
           <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">
             {/* <hr className="border-b border-blue-gray-400" /> */}
-            <div ref={componentRef1} className="p-10" style={{ margin: "5px" }}>
+            <div
+              ref={componentRef1}
+              // className="p-10"
+              style={{ margin: "5px" }}
+              className="page-break "
+            >
               <div
                 className="flex justify-between"
                 style={{
-                  marginTop: "3.5cm",
+                  marginTop: "2cm",
                   fontSize: "21px",
+                  padding: "40px",
                 }}
               >
                 <div className="text-[#464D69] md:text-xl text-sm">
-                  <label className="!my-4">
+                  <p className=" font-serif text-[20px]">
                     Date: {moment(receipts.receipt_date).format("DD-MM-YYYY")}
-                  </label>
+                  </p>
 
                   {Object.keys(receipts).length !== 0 && (
                     <div className="mt-2 ">
                       {receipts.receipt_donation_type !== "Membership" &&
                         receipts.individual_company.indicomp_type !==
                           "Individual" && (
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {receipts.individual_company.title}{" "}
                             {
                               receipts.individual_company
@@ -828,14 +798,14 @@ const ReceiptOne = () => {
 
                       {receipts.individual_company.indicomp_type !==
                         "Individual" && (
-                        <p className="mb-0 text-xl">
+                        <p className=" font-serif text-[20px]">
                           M/s {receipts.individual_company.indicomp_full_name}
                         </p>
                       )}
 
                       {receipts.individual_company.indicomp_type ===
                         "Individual" && (
-                        <p className="mb-0 text-xl">
+                        <p className=" font-serif text-[20px]">
                           {receipts.individual_company.title}{" "}
                           {receipts.individual_company.indicomp_full_name}
                         </p>
@@ -844,13 +814,13 @@ const ReceiptOne = () => {
                       {receipts.individual_company
                         .indicomp_off_branch_address && (
                         <div>
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_off_branch_address
                             }
                           </p>
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_off_branch_area
@@ -862,7 +832,7 @@ const ReceiptOne = () => {
                                 .indicomp_off_branch_ladmark
                             }
                           </p>
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_off_branch_city
@@ -883,22 +853,22 @@ const ReceiptOne = () => {
 
                       {receipts.individual_company.indicomp_res_reg_address && (
                         <div>
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_res_reg_address
                             }
                           </p>
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {receipts.individual_company.indicomp_res_reg_area}
                           </p>
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_res_reg_ladmark
                             }
                           </p>
-                          <p className="mb-0 text-xl">
+                          <p className=" font-serif text-[20px]">
                             {receipts.individual_company.indicomp_res_reg_city}{" "}
                             -{" "}
                             {
@@ -913,92 +883,142 @@ const ReceiptOne = () => {
                     </div>
                   )}
 
-                  <label className="block mt-2">
+                  <p className=" my-6 font-serif text-[20px] text-justify ">
                     {receipts.individual_company?.indicomp_gender ===
                       "Female" && "Respected Madam,"}
                     {receipts.individual_company?.indicomp_gender === "Male" &&
                       "Respected Sir,"}
                     {receipts.individual_company?.indicomp_gender === null &&
                       "Respected Sir,"}
-                  </label>
+                  </p>
 
                   {receipts.receipt_donation_type === "One Teacher School" && (
-                    <div className="mt-3 ">
-                      <label className="block my-2 text-center font-semibold">
+                    <div className="mt-2 text-justify">
+                      <p className=" font-serif text-[20px] flex justify-center my-6">
                         Sub: Adoption of One Teacher School
-                      </label>
-                      <label className="block my-2 text-justify leading-snug">
+                      </p>
+                      <p className=" font-serif text-[20px] text-justify">
                         We acknowledge with thanks the receipt of Rs.
                         {receipts.receipt_total_amount}/- Rupees {amountInWords}{" "}
                         Only via{" "}
-                        {receipts.receipt_tran_pay_mode === "Cash"
-                          ? "Cash"
-                          : receipts.receipt_tran_pay_details}
-                        for your contribution and adoption of{" "}
-                        {receipts.receipt_no_of_ots} OTS.
-                      </label>
+                        {receipts.receipt_tran_pay_mode == "Cash" && (
+                          <>
+                            {" "}
+                            Cash for your contribution and adoption of{" "}
+                            {receipts.receipt_no_of_ots} OTS.
+                          </>
+                        )}
+                        {receipts.receipt_tran_pay_mode != "Cash" && (
+                          <>
+                            {" "}
+                            {receipts.receipt_tran_pay_details} being for your
+                            contribution and adoption of{" "}
+                            {receipts.receipt_no_of_ots} OTS.
+                          </>
+                        )}
+                      </p>
+
+                      <p className="my-4 font-serif text-[20px] text-justify">
+                        We convey our sincere thanks and gratitude for your kind
+                        support towards the need of our tribals and also the
+                        efforts being made by our Society for achieving
+                        comprehensive development of our tribals brethren
+                        particularly the literacy of their children and health &
+                        economic welfare.
+                      </p>
+                      <p className=" font-serif text-[20px] text-justify">
+                        We would like to state that our efforts are not only for
+                        mitigating the hardship and problems of our tribals but
+                        we are also trying to inculcate national character among
+                        them.
+                      </p>
+                      <p className="my-4 font-serif text-[20px] text-justify">
+                        We are pleased to enclose herewith our money receipt no.{" "}
+                        {receipts.receipt_ref_no} dated{" "}
+                        {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
+                        the said amount together with a certificate U/sec. 80(G)
+                        of the I.T.Act. 1961.
+                      </p>
                     </div>
                   )}
 
                   {receipts.receipt_donation_type === "General" && (
                     <div className="mt-2">
-                      <label className="block my-2 text-justify leading-snug">
+                      <p className=" font-serif text-[20px] text-justify my-5">
                         We thankfully acknowledge the receipt of Rs.
                         {receipts.receipt_total_amount}/- via your{" "}
                         {receipts.receipt_tran_pay_mode === "Cash"
                           ? "Cash"
                           : receipts.receipt_tran_pay_details}{" "}
                         being Donation for Education.
-                      </label>
+                      </p>
+
+                      <p className=" font-serif text-[20px] text-justify">
+                        We are pleased to enclose herewith our money receipt no.{" "}
+                        {receipts.receipt_ref_no} dated{" "}
+                        {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
+                        the said amount.
+                      </p>
                     </div>
                   )}
 
                   {receipts.receipt_donation_type === "Membership" && (
                     <div>
-                      <label className="block my-2 text-justify leading-snug">
+                      <p className=" font-serif text-[20px] text-justify my-5">
                         We acknowledge with thanks receipt of your membership
                         subscription for the Year. Our receipt for the same is
                         enclosed herewith.
-                      </label>
+                      </p>
                     </div>
                   )}
 
                   {receipts.receipt_donation_type !== "Membership" && (
                     <div>
-                      <label className="block">Thanking you once again</label>
-                      <label className="block">Yours faithfully,</label>
-                      <label className="block">
+                      <p className="my-3 font-serif text-[20px]">
+                        Thanking you once again
+                      </p>
+                      <p className=" font-serif text-[20px]">
+                        Yours faithfully,{" "}
+                      </p>
+                      <p className="my-3 font-serif text-[20px]">
                         For Friends of Tribal Society
-                      </label>
-                      <br />
-                      <label className="block">
+                      </p>
+                      <p className=" font-serif text-[20px]">
                         {authsign.length > 0 &&
                           authsign.map((sig, key) => (
                             <span key={key}>{sig.indicomp_full_name}</span>
                           ))}
-                      </label>
-                      <label className="block">{chapter.auth_sign}</label>
-                      <label className="block mb-5">
+                      </p>
+                      <p className=" font-serif text-[20px]">
+                        {chapter.auth_sign}{" "}
+                      </p>
+                      <p className="my-2 font-serif text-[20px]">
                         Encl: As stated above
-                      </label>
+                      </p>
                     </div>
                   )}
 
                   {receipts.receipt_donation_type === "Membership" && (
                     <div>
-                      <label className="block">With Best regards</label>
-                      <label className="block">Yours sincerely</label>
-                      <br />
-                      <label className="block">
+                      <p className=" font-serif text-[20px] text-justify my-5">
+                        With Best regards{" "}
+                      </p>
+                      <p className=" font-serif text-[20px] text-justify my-5">
+                        Yours sincerely{" "}
+                      </p>
+
+                      <p className=" font-serif text-[20px] text-justify my-5">
                         {authsign.length > 0 &&
                           authsign.map((sig, key) => (
                             <span key={key}>{sig.indicomp_full_name}</span>
                           ))}
-                      </label>
-                      <label className="block">{chapter.auth_sign}</label>
-                      <label className="block mb-5">
-                        Encl: As stated above 
-                      </label>
+                      </p>
+                      <p className=" font-serif text-[20px] text-justify my-5">
+                        {chapter.auth_sign}{" "}
+                      </p>
+                      <p className=" font-serif text-[20px] text-justify my-5">
+                        Encl: As stated above
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1014,7 +1034,7 @@ const ReceiptOne = () => {
               ref={componentRefp}
               // className="p-2"
               style={{ margin: "5px" }}
-              className="print-content"
+              className=" page-break"
             >
               <div className="flex justify-between items-center ">
                 {/* Left Logo */}
@@ -1065,7 +1085,7 @@ const ReceiptOne = () => {
               {/* Date and Recipient Details */}
               <div className="flex justify-between md:mx-20 md:text-xl text-sm my-4 text-[#464D69]">
                 <div>
-                  <p className="mb-2">
+                  <p className=" font-serif text-[20px] my-2">
                     Date: {moment(receipts.receipt_date).format("DD-MM-YYYY")}
                   </p>
                   {/* Conditional Details */}
@@ -1074,7 +1094,7 @@ const ReceiptOne = () => {
                       {receipts.receipt_donation_type !== "Membership" &&
                         receipts.individual_company.indicomp_type !==
                           "Individual" && (
-                          <p className="mb-2">
+                          <p className=" font-serif text-[20px]">
                             {receipts.individual_company.title}{" "}
                             {
                               receipts.individual_company
@@ -1084,11 +1104,11 @@ const ReceiptOne = () => {
                         )}
                       {receipts.individual_company.indicomp_type !==
                       "Individual" ? (
-                        <p className="mb-2 text-[#464D69] text-xl">
+                        <p className=" font-serif text-[20px] ">
                           M/s {receipts.individual_company.indicomp_full_name}
                         </p>
                       ) : (
-                        <p className="mb-2">
+                        <p className=" font-serif text-[20px] ">
                           {receipts.individual_company.title}{" "}
                           {receipts.individual_company.indicomp_full_name}
                         </p>
@@ -1098,25 +1118,25 @@ const ReceiptOne = () => {
                       {receipts.individual_company
                         .indicomp_off_branch_address && (
                         <div className="space-y-1 text-[#464D69] text-xl">
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_off_branch_address
                             }
                           </p>
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_off_branch_area
                             }
                           </p>
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_off_branch_ladmark
                             }
                           </p>
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_off_branch_city
@@ -1136,22 +1156,22 @@ const ReceiptOne = () => {
                       )}
                       {receipts.individual_company.indicomp_res_reg_address && (
                         <div className="space-y-1 text-[#464D69] text-xl">
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_res_reg_address
                             }
                           </p>
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {receipts.individual_company.indicomp_res_reg_area}
                           </p>
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {
                               receipts.individual_company
                                 .indicomp_res_reg_ladmark
                             }
                           </p>
-                          <p>
+                          <p className=" font-serif text-[20px]">
                             {receipts.individual_company.indicomp_res_reg_city}{" "}
                             -{" "}
                             {
@@ -1166,7 +1186,7 @@ const ReceiptOne = () => {
                     </>
                   )}
 
-                  <p className="my-2 text-xl text-[#464D69]">
+                  <p className=" font-serif text-[20px] mt-4">
                     {receipts.individual_company?.indicomp_gender === "Female"
                       ? "Respected Madam,"
                       : receipts.individual_company?.indicomp_gender === "Male"
@@ -1177,13 +1197,13 @@ const ReceiptOne = () => {
               </div>
 
               {/* Donation Types */}
-              <div className="space-y-4 md:mx-20  md:text-xl text-sm text-[#464D69]">
+              <div className="space-y-2 md:mx-20  md:text-xl text-[20px]  text-[#464D69]">
                 {receipts.receipt_donation_type === "One Teacher School" && (
                   <>
-                    <p className="text-center my-4 font-semibold">
+                    <p className=" font-serif text-[20px]">
                       Sub: Adoption of One Teacher School
                     </p>
-                    <p>
+                    <p className=" font-serif text-[20px] text-justify">
                       We acknowledge with thanks the receipt of Rs.
                       {receipts.receipt_total_amount}/- Rupees {amountInWords}{" "}
                       Only vide{" "}
@@ -1193,7 +1213,7 @@ const ReceiptOne = () => {
                       being for your contribution and adoption of{" "}
                       {receipts.receipt_no_of_ots} OTS.
                     </p>
-                    <p>
+                    <p className=" font-serif text-[20px] text-justify">
                       We convey our sincere thanks and gratitude for your kind
                       support towards the need of our tribals and also the
                       efforts being made by our Society for achieving
@@ -1201,12 +1221,25 @@ const ReceiptOne = () => {
                       particularly the literacy of their children and health &
                       economic welfare.
                     </p>
+                    <p className=" font-serif text-[20px] text-justify">
+                      We would like to state that our efforts are not only for
+                      mitigating the hardship and problems of our tribals but we
+                      are also trying to inculcate national character among
+                      them.
+                    </p>
+                    <p className=" font-serif text-[20px] text-justify">
+                      We are pleased to enclose herewith our money receipt no.{" "}
+                      {receipts.receipt_ref_no} dated{" "}
+                      {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
+                      the said amount together with a certificate U/sec. 80(G)
+                      of the I.T.Act. 1961.
+                    </p>
                   </>
                 )}
-                <div className="flex  md:text-xl text-sm my-4 text-[#464D69]">
+                <div>
                   {receipts.receipt_donation_type === "General" && (
                     <>
-                      <p>
+                      <p className=" font-serif text-[20px] text-justify my-3">
                         We thankfully acknowledge the receipt of Rs.
                         {receipts.receipt_total_amount}/- vide your{" "}
                         {receipts.receipt_tran_pay_mode === "Cash"
@@ -1214,11 +1247,18 @@ const ReceiptOne = () => {
                           : receipts.receipt_tran_pay_details}{" "}
                         being Donation for Education.
                       </p>
+
+                      <p className=" font-serif text-[20px] text-justify">
+                        We are pleased to enclose herewith our money receipt no.{" "}
+                        {receipts.receipt_ref_no} dated{" "}
+                        {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
+                        the said amount.
+                      </p>
                     </>
                   )}
                   {receipts.receipt_donation_type === "Membership" && (
                     <>
-                      <p>
+                      <p className=" font-serif text-[20px] text-justify">
                         We acknowledge with thanks receipt of your membership
                         subscription for the Year. Our receipt for the same is
                         enclosed herewith.
@@ -1231,26 +1271,44 @@ const ReceiptOne = () => {
                 <div className="text-justify md:text-xl text-sm text-[#464D69] mt-8">
                   {receipts.receipt_donation_type !== "Membership" ? (
                     <>
-                      <p>Thanking you once again</p>
-                      <p>Yours faithfully,</p>
-                      <p>For Friends of Tribal Society</p>
+                      <p className=" font-serif text-[20px] my-2">
+                        Thanking you once again
+                      </p>
+                      <p className=" font-serif text-[20px]">
+                        Yours faithfully,
+                      </p>
+                      <p className=" font-serif text-[20px] my-2">
+                        For Friends of Tribal Society
+                      </p>
                       {authsign.length > 0 &&
                         authsign.map((sig, key) => (
                           <p key={key}>{sig.indicomp_full_name}</p>
                         ))}
-                      <p>{chapter.auth_sign}</p>
-                      <p>Encl: As stated above</p>
+                      <p className=" font-serif text-[20px]">
+                        {chapter.auth_sign}
+                      </p>
+                      <p className=" font-serif text-[20px] my-3">
+                        Encl: As stated above
+                      </p>
                     </>
                   ) : (
                     <>
-                      <p>With Best regards</p>
-                      <p>Yours sincerely</p>
+                      <p className=" font-serif text-[20px] my-3">
+                        With Best regards
+                      </p>
+                      <p className=" font-serif text-[20px] ">
+                        Yours sincerely
+                      </p>
                       {authsign.length > 0 &&
                         authsign.map((sig, key) => (
                           <p key={key}>{sig.indicomp_full_name}</p>
                         ))}
-                      <p>{chapter.auth_sign}</p>
-                      <p>Encl: As stated above</p>
+                      <p className=" font-serif text-[20px] mb-3 mt-14">
+                        {chapter.auth_sign}
+                      </p>
+                      <p className=" font-serif text-[20px] ">
+                        Encl: As stated above
+                      </p>
                     </>
                   )}
                 </div>
