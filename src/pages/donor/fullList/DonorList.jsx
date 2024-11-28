@@ -307,6 +307,7 @@ const DonorList = () => {
                     <AddIndivisual
                       onClose={toggleIndividualDrawer(false)}
                       fetchDonorData={fetchDonorData}
+                      isOpen ={individualDrawer}
                     />
                   </SwipeableDrawer>
 
@@ -325,6 +326,7 @@ const DonorList = () => {
                     <AddCompany
                       onClose={toggleCompanyDrawer(false)}
                       fetchDonorData={fetchDonorData}
+                      isOpen={companyDrawer}
                     />
                   </SwipeableDrawer>
                 </div>

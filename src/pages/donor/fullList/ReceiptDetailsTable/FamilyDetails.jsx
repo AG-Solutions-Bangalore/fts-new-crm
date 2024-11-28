@@ -7,20 +7,38 @@ import moment from 'moment';
 
 const FamilyDetails = ({viewerId}) => {
     const [donorfam, setDonorFam] = useState([]);
-    useEffect(() => {
-        axios
-          .get(`${BASE_URL}/api/fetch-donor-by-id/${viewerId}`, {
+    const [loader, setLoader] = useState(false);
+
+    const fetchFamilyDetails = async () => {
+      try {
+        setLoader(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${BASE_URL}/api/fetch-donor-by-id/${viewerId}`,
+          {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
-          })
-          .then((res) => {
-           
-            setDonorFam(res.data.family_details);
-         
-        
-          });
+          }
+        );
+  
+        setDonorFam(response.data.family_details);
+      } catch (error) {
+        console.error("Error fetching Family details list data", error);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+    useEffect(() => {
+      if(viewerId){
+        fetchFamilyDetails()
+      }
+     
+          
       }, [viewerId]);
+  
+    
       const columns = useMemo(
         () => [
           {

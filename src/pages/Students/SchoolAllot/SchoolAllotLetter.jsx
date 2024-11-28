@@ -11,10 +11,14 @@ import { LuDownload } from "react-icons/lu";
 import { IoIosPrint } from "react-icons/io";
 import { Button } from "@mui/material";
 import ReactToPrint from "react-to-print";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const SchoolAllotLetter = () => {
   const navigate = useNavigate();
   const componentRef = useRef();
+  
+  
   const [SchoolAlotReceipt, setSchoolAlotReceipt] = useState({});
   const [chapter, setChapter] = useState({});
   const [SchoolAlotView, setSchoolAlotView] = useState([]);
@@ -42,6 +46,88 @@ const SchoolAllotLetter = () => {
     }
   }, [isLoggedIn]);
 
+  const handleSavePDF = () => {
+    const input = componentRef.current;
+    html2canvas(input, { 
+      scale: 2,  // Increase scale for better resolution
+      useCORS: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      height: input.scrollHeight  // Capture the full height of the content
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      // A4 dimensions
+      const pdfWidth = 210;  // Width of A4 in mm
+      const pdfHeight = 297; // Height of A4 in mm
+      
+      // Calculate image dimensions while maintaining aspect ratio
+      const imgWidth = pdfWidth - 20;  // Leave 10mm margin on each side
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Add first page
+      pdf.addImage(
+        imgData, 
+        'PNG', 
+        10, 
+        10, 
+        imgWidth, 
+        imgHeight,
+        '', 
+        'FAST'
+      );
+      
+      // If content is taller than one page, add additional pages
+      if (imgHeight > pdfHeight) {
+        const totalPages = Math.ceil(imgHeight / pdfHeight);
+        for (let page = 1; page < totalPages; page++) {
+          pdf.addPage();
+          pdf.addImage(
+            imgData, 
+            'PNG', 
+            10, 
+            -page * pdfHeight + 10, 
+            imgWidth, 
+            imgHeight,
+            '', 
+            'FAST'
+          );
+        }
+      }
+      
+      pdf.save('allotment-letter.pdf');
+    }).catch((error) => {
+      console.error('Error generating PDF:', error);
+    });
+  };
+
+ 
+
+  const printStyles = `
+  @page {
+    size: A4;
+    margin: 10mm 5mm;
+  }
+  @media print {
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    .print-container {
+      width: 100%;
+      margin: 0;
+      padding: 5mm;
+      box-sizing: border-box;
+    }
+    .page-break {
+      page-break-before: always;
+      margin-top: 10mm;
+    }
+  }
+`;
+
   return (
     <Layout>
       <div className="invoice-wrapper overflow-x-auto grid md:grid-cols-1 1fr">
@@ -56,7 +142,9 @@ const SchoolAllotLetter = () => {
           <div className="sm:w-[90%] md:w-[90%] lg:w-[70%] mx-auto ">
             <div className="bg-white shadow-md rounded-lg px-16 pb-16 pt-6 ">
               <div className="flex flex-row justify-end items-center sm:space-x-4 space-y-2 sm:space-y-0 mb-2">
-                <Button variant="text" className="flex items-center space-x-2">
+                <Button
+                    onClick={handleSavePDF}
+                variant="text" className="flex items-center space-x-2">
                   <LuDownload className="text-lg" />
                   <span>PDF</span>
                 </Button>
@@ -68,12 +156,13 @@ const SchoolAllotLetter = () => {
                       </Button>
                       )}
                       content={() => componentRef.current}
+                      pageStyle={printStyles}
                     />
                 
               </div>
 
               <hr className="mb-6" />
-              <div ref={componentRef}>
+              <div ref={componentRef}  className="print-container">
               <div className="flex justify-between items-center mb-4 ">
                 <div className="invoice-logo">
                   <img src={Logo1} alt="session-logo" width="80" height="80" />
@@ -263,7 +352,7 @@ const SchoolAllotLetter = () => {
                   <label className="flex my-4">(Secretary)</label>
                 </div>
               </div>
-
+                          
               <div>
                 <div className="invoice-logo">
                   <div className="flex justify-center">
@@ -286,7 +375,9 @@ const SchoolAllotLetter = () => {
                   </label>
                 </div>
               </div>
-              <div>
+                          {/* page break from here  */}
+
+              <div className="page-break">
                 <div className="flex justify-between items-center mb-4  mt-12">
                   <div className="invoice-logo">
                     <img
@@ -364,7 +455,7 @@ const SchoolAllotLetter = () => {
                         ].map((header) => (
                           <th
                             key={header}
-                            className="border border-black px-2 py-2 text-center text-xs"
+                            className="border border-black px-1 py-1 text-center text-[10px]"
                           >
                             {header}
                           </th>
@@ -375,31 +466,31 @@ const SchoolAllotLetter = () => {
                       {Array.isArray(SchoolAlotView) &&
                         SchoolAlotView.map((dataSumm) => (
                           <tr key={dataSumm.id}>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.school_state}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.achal}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.cluster}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.sub_cluster}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.village}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.teacher}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.boys}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.girls}
                             </td>
-                            <td className="border border-black px-4 py-2 text-xs">
+                            <td className="border border-black px-2 py-2 text-xs">
                               {dataSumm.total}
                             </td>
                           </tr>

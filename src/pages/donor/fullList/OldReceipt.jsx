@@ -16,7 +16,7 @@ const OldReceipt = ({ viewerId, onClose }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+ 
     const fetchReceiptData = async () => {
       try {
         setLoading(true);
@@ -37,8 +37,11 @@ const OldReceipt = ({ viewerId, onClose }) => {
         setLoading(false);
       }
     };
-    fetchReceiptData();
-    setLoading(false);
+    useEffect(() => {
+    if (viewerId) {
+      fetchReceiptData();
+    }
+   
   }, [viewerId]);
 
   const columns = useMemo(

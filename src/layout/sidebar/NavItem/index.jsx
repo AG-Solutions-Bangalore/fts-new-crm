@@ -30,14 +30,22 @@ export default function NavItem({
     }
     return false;
   });
+  
   React.useEffect(() => {
     if (item?.subItems) {
+      // Clear previous menu states
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("menu-") && key !== `menu-${item.id}`) {
+          localStorage.removeItem(key);
+        }
+      });
+      // Save the new state
       localStorage.setItem(`menu-${item.id}`, isExpanded);
     }
   }, [isExpanded, item?.id]);
-
+  
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    setIsExpanded((prev) => !prev);
   };
 
   const ListItemStyled = styled(ListItemButton)(() => ({
@@ -172,7 +180,7 @@ export default function NavItem({
 
   return (
     <List component="li" disablePadding key={item?.id && item.title}>
-      <Link href={item.href} style={{ textDecoration: "none" }}>
+      <Link to={item.href} style={{ textDecoration: "none" }}>
         <ListItemStyled
           {...listItemProps}
           disabled={item?.disabled}

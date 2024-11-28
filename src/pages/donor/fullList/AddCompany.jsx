@@ -56,7 +56,7 @@ const corrpreffer = [
   },
 ];
 
-const AddCompany = ({ onClose, fetchDonorData }) => {
+const AddCompany = ({ onClose, fetchDonorData,isOpen }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
@@ -205,10 +205,13 @@ const AddCompany = ({ onClose, fetchDonorData }) => {
   };
 
   useEffect(() => {
-    fetchStateData();
+    if(isOpen){
+      fetchStateData();
     fetchDataSource();
     fetchPromoter();
-  }, []);
+    }
+    
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

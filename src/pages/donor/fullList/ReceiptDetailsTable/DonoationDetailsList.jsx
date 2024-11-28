@@ -8,20 +8,35 @@ import { IconInfoCircle } from '@tabler/icons-react';
 const DonoationDetailsList = ({viewerId}) => {
     const [loader, setLoader] = useState(false);
     const [donation, setDonation] = useState([]);
-    useEffect(() => {
-        axios
-          .get(`${BASE_URL}/api/fetch-donor-receipt-by-id/${viewerId}`, {
+
+    const fetchDonationDetails = async () => {
+      try {
+        setLoader(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${BASE_URL}/api/fetch-donor-receipt-by-id/${viewerId}`,
+          {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
-          })
-          .then((res) => {
-            setDonation(res.data.donor_receipts);
+          }
+        );
+
+        setDonation(response.data.donor_receipts);
+      } catch (error) {
+        console.error("Error fetching donation details list data", error);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+
+    useEffect(() => {
+      if(viewerId){
+ fetchDonationDetails()
+      }
+     
           
-          
-            setLoader(false);
-         
-          });
       }, [viewerId]);
 
       const columns = useMemo(

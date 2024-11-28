@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Menuitems from "./MenuItems";
 import { Box, List } from "@mui/material";
 
@@ -11,6 +11,7 @@ const SidebarItems = ({ toggleMobileSidebar, isCollapsed }) => {
   const pathDirect = location.pathname;
   const userTypeId = localStorage.getItem("user_type_id");
   // console.log(userTypeId, "userTypeId");
+  // const MenuData = useMemo(() => Menuitems(userTypeId), [userTypeId]);
   const MenuData = Menuitems(userTypeId);
   //chnage mm
   return (

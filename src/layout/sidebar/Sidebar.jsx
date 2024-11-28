@@ -2,6 +2,8 @@ import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 import { Upgrade } from "./Upgrade";
 import Logo from "../shared/logo/Logo";
+import { useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
 
 
 
@@ -12,7 +14,8 @@ const Sidebar = ({
   isCollapsed
 }) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
-  
+
+ 
   // const sidebarWidth = "270px"; 
   const sidebarWidth = isCollapsed ? "100px" : "270px";
 
@@ -22,6 +25,7 @@ const Sidebar = ({
   if (lgUp) {
     return (
       <Box
+      
         sx={{
           width: sidebarWidth,
           flexShrink: 0,
@@ -54,7 +58,9 @@ const Sidebar = ({
           {/* Sidebar Box */}
           {/* ------------------------------------------- */}
           <Box
+        
           className="custom-scroll"
+       
             sx={{
              
               overflowY: "auto",height: "calc(100vh - 70px)" 

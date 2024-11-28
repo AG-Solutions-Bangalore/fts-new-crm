@@ -33,7 +33,9 @@ const corrpreffer = [
     label: "Digital",
   },
 ];
-const AddIndivisual = ({ onClose, fetchDonorData }) => {
+const AddIndivisual = ({ onClose, fetchDonorData ,isOpen}) => {
+
+
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -181,10 +183,13 @@ const AddIndivisual = ({ onClose, fetchDonorData }) => {
   };
 
   useEffect(() => {
-    fetchStateData();
-    fetchDataSource();
-    fetchPromoter();
-  }, []);
+    if (isOpen) {
+      fetchStateData();
+      fetchDataSource();
+      fetchPromoter();
+    }
+    
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

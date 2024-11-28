@@ -7,20 +7,37 @@ import moment from 'moment';
 
 const CompanyDetailsList = ({viewerId}) => {
     const [company, setCompany] = useState([]);
-    useEffect(() => {
-        axios
-          .get(`${BASE_URL}/api/fetch-donor-by-id/${viewerId}`, {
+    const [loader, setLoader] = useState(false);
+    const fetchCompanyDetails = async () => {
+      try {
+        setLoader(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${BASE_URL}/api/fetch-donor-by-id/${viewerId}`,
+          {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
-          })
-          .then((res) => {
-           
-            
-            setCompany(res.data.company_details);
-   
-          });
+          }
+        );
+  
+        setCompany(response.data.company_details);
+      } catch (error) {
+        console.error("Error fetching Company details list data", error);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+    useEffect(() => {
+      if(viewerId){
+        fetchCompanyDetails()
+      }
+     
+          
       }, [viewerId]);
+  
+    
       const columns = useMemo(
         () => [
           {

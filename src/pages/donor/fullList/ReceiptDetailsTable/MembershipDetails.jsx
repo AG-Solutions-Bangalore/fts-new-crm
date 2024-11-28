@@ -8,20 +8,37 @@ import moment from "moment";
 const MembershipDetails = ({ viewerId }) => {
   const [loader, setLoader] = useState(false);
   const [membership, setMembership] = useState([]);
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/fetch-donor-receipt-by-id/${viewerId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setMembership(res.data.membership_details);
 
-        setLoader(false);
-     
-      });
-  }, [viewerId]);
+  const fetchMemberShipDetails = async () => {
+    try {
+      setLoader(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/fetch-donor-receipt-by-id/${viewerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMembership(response.data.membership_details);
+    } catch (error) {
+      console.error("Error fetching Membership details list data", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  
+  useEffect(() => {
+    if(viewerId){
+      fetchMemberShipDetails()
+    }   
+    }, [viewerId]);
+
+
+  
 
   const columns = useMemo(
     () => [
