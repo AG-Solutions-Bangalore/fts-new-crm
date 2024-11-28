@@ -149,7 +149,6 @@ const SchoolAllotEdit = () => {
 
   const options = {
     filterType: "checkbox",
-    filter: true,
     search: true,
     print: false,
     viewColumns: false,
@@ -157,7 +156,7 @@ const SchoolAllotEdit = () => {
     selectableRows: true,
     responsive: "standard",
     filter: false,
-    rowsSelected: selectedSchoolIds, 
+    rowsSelected: selectedSchoolIds,
     selectToolbarPlacement: "above",
     isRowSelectable: (dataIndex) =>
       schoolAllot[dataIndex]?.status_label !== "Allotted",
@@ -167,7 +166,7 @@ const SchoolAllotEdit = () => {
       const newIds = tempValue.map((index) => schoolAllot[index]?.school_code);
 
       const selectedIdsString = newIds.join(",");
-      setSelectedSchoolIds(tempValue); 
+      setSelectedSchoolIds(tempValue);
       localStorage.setItem("selectedSchoolIds", selectedIdsString);
 
       console.log("Selected School IDs (string):", selectedIdsString);

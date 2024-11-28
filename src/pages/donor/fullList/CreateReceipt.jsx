@@ -81,7 +81,7 @@ const donation_type_2 = [
   },
 ];
 
-const CreateReceipt = ({ donorId, onClose }) => {
+const CreateReceipt = () => {
   const { id } = useParams();
   const today = new Date();
   const navigate = useNavigate();
@@ -231,7 +231,6 @@ const CreateReceipt = ({ donorId, onClose }) => {
       })
       .then((res) => {
         setRecepitControl(res.data.receipt_control);
-        console.log("data", res.data.receipt_control);
       });
   };
   useEffect(() => {
@@ -295,9 +294,10 @@ const CreateReceipt = ({ donorId, onClose }) => {
         }
       );
 
-      if (response.status == "200") {
+      if (response.data.receipts == "400") {
         toast.success("Receipt Created Successfully");
-        onClose();
+        navigate(`/view-receipts/${response.data.r_id}`);
+        console.log(response.data.r_id);
       } else {
         if (response.status == "401") {
           toast.error("Receipt Duplicate Entry");
@@ -350,9 +350,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
       ))}
     </ButtonGroup>
   );
-  
-  
-  
+
   const FormLabel = ({ children, required }) => (
     <label className="block text-sm font-semibold text-black mb-1 ">
       {children}
@@ -377,7 +375,10 @@ const CreateReceipt = ({ donorId, onClose }) => {
                 </h2>
               </div>
               <IconArrowBack
-                onClick={onClose}
+                onClick={() => {
+                  navigate("/donor-list");
+                }}
+                // onClick={onClose}
                 className="cursor-pointer hover:text-red-600 transition-colors"
               />
             </div>
@@ -495,7 +496,7 @@ const CreateReceipt = ({ donorId, onClose }) => {
                   </p>
                 )} */}
               </div>
-              
+
               {/* 
               <div>
                 <FormLabel required>Transaction Type</FormLabel>
