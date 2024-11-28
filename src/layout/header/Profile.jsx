@@ -12,7 +12,7 @@ import {
   Dialog,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import profile from "../../../public/user-1.jpg";
 import { IconMail, IconUser, IconCircleX } from "@tabler/icons-react";
 import Logout from "../../components/Logout";
 import axios from "axios";
@@ -177,7 +177,7 @@ const Profile = () => {
         onClick={handleClick2}
       >
         <Avatar
-          src="/src/assets/profile/user-1.jpg"
+          src={profile}
           alt="image"
           sx={{
             width: 35,
