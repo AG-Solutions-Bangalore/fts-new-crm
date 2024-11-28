@@ -1,6 +1,6 @@
 import Layout from "../../layout/Layout";
 import Logo from "../../assets/receipt/fts1.png";
-import Action from "../../assets/help/action.png";
+import Action from "../../assets/help/action.jpg";
 import Add_Group from "../../assets/help/add group.png";
 import Add_Group2 from "../../assets/help/add group-2.png";
 import Company_donor from "../../assets/help/company donor.png";
@@ -8,7 +8,7 @@ import Create_receipt from "../../assets/help/create receipt.png";
 import Dashboard from "../../assets/help/dashboard.png";
 import Dashboard2 from "../../assets/help/dashboard-2.png";
 import Donor_detail from "../../assets/help/donor detail.png";
-import Donor_detail2 from "../../assets/help/donor detail-2.png";
+// import Donor_detail2 from "../../assets/help/donor detail-2.png";
 import Donor_group from "../../assets/help/donor group.png";
 import Donor from "../../assets/help/donor.png";
 import Duplicate from "../../assets/help/duplicate.png";
@@ -794,11 +794,11 @@ function ManualGuideBook() {
                         Scrolling further in the donor details page reveals
                         family and company details of the donors.
                       </li>
-                      <img
+                      {/* <img
                         src={Donor_detail2}
                         alt="donor Screenshot"
                         className="donor-img-5 mx-auto my-4"
-                      />
+                      /> */}
                       <li id="Member">
                         <b>Members:</b> This list includes donors who have paid
                         for membership during the Receipt Creation process. The
@@ -882,11 +882,11 @@ function ManualGuideBook() {
                         donor. These details will also be visible in the donors
                         list.
                       </li>
-                      <img
+                      {/* <img
                         src={Donor_detail2}
                         alt="donor Screenshot"
                         className="donor-detail-2 mx-auto my-4"
-                      />
+                      /> */}
                       <li>
                         If there already exists a donor or a company who should
                         be added as a family member or company of another donor,
@@ -1126,7 +1126,7 @@ function ManualGuideBook() {
                         />
                       </ul>
                     </li>
-                    <li id="Edit list">
+                    {/* <li id="Edit list">
                       <b>Edit list:</b>
                       <ul className="list-disc pl-5 space-y-2">
                         <li>
@@ -1135,8 +1135,8 @@ function ManualGuideBook() {
                           request the secretary for the same.
                         </li>
                       </ul>
-                    </li>
-                    <li id="Suspense list">
+                    </li> */}
+                    {/* <li id="Suspense list">
                       <b>Suspense List:</b>
                       <ul className="list-disc pl-5 space-y-4">
                         <li>
@@ -1167,7 +1167,7 @@ function ManualGuideBook() {
                           className="suspense-img"
                         />
                       </ul>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
 
@@ -1398,7 +1398,7 @@ function ManualGuideBook() {
                         />
                       </ul>
                     </li>
-                    <li id="Suspense Summary">
+                    {/* <li id="Suspense Summary">
                       <b>Suspense Summary:</b>
                       <ul className="list-disc pl-5 space-y-4">
                         <li>
@@ -1411,8 +1411,8 @@ function ManualGuideBook() {
                           className="suspense-summary"
                         />
                       </ul>
-                    </li>
-                    <li id="Payment Summary">
+                    </li> */}
+                    {/* <li id="Payment Summary">
                       <b>Payment Summary:</b>
                       <ul className="list-disc pl-5 space-y-4">
                         <li>
@@ -1426,7 +1426,7 @@ function ManualGuideBook() {
                           className="payment-summary"
                         />
                       </ul>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
 
