@@ -101,7 +101,7 @@ const DonorView = ({ viewerId, onClose }) => {
   }
 
   return (
-    <div className="bg-[#F8FAFC] p-4 sm:w-[300px] md:w-[52rem] overflow-y-auto custom-scroll-add">
+    <div className="bg-[#F8FAFC] p-4 sm:w-[300px] md:w-[57rem] overflow-y-auto custom-scroll-add">
       {/* Header Section */}
       {/* <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
         <div className="bg-[#E1F5FA] p-4 rounded-t-xl border-b-2 border-green-500">
@@ -425,7 +425,7 @@ const DonorView = ({ viewerId, onClose }) => {
                     ) : (
                       <>
                         <InfoField
-                          label="Contact Person"
+                          label="Contact Person "
                           value={donor.indicomp_com_contact_name}
                         />
                         <InfoField
@@ -435,10 +435,6 @@ const DonorView = ({ viewerId, onClose }) => {
                         <InfoField
                           label="CSR Status"
                           value={donor.indicomp_csr}
-                        />
-                        <InfoField
-                          label="Remarks"
-                          value={donor.indicomp_remarks}
                         />
                       </>
                     )}
@@ -453,7 +449,7 @@ const DonorView = ({ viewerId, onClose }) => {
                     }
                     title="Additional Details"
                   />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <InfoField
                       label="Belongs To"
                       value={donor.indicomp_belongs_to}
@@ -472,6 +468,7 @@ const DonorView = ({ viewerId, onClose }) => {
                       value={donor.indicomp_donor_type}
                     />
                     <InfoField label="Type" value={donor.indicomp_type} />
+                    <InfoField label="Remarks" value={donor.indicomp_remarks} />
                   </div>
                 </div>
               </div>

@@ -10,6 +10,7 @@ import {
   DialogBody,
   DialogHeader,
   DialogFooter,
+  Spinner,
 } from "@material-tailwind/react";
 import DonorSelect from "./DonorSelect";
 import { toast } from "react-toastify";
@@ -19,6 +20,7 @@ const DuplicateEdit = () => {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
   const [donorName, setDonorName] = useState("");
+  const [donorNames, setDonorNames] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -58,8 +60,9 @@ const DuplicateEdit = () => {
 
   const handleOpenDialog = () => setShowModal((prev) => !prev);
 
-  const populateDonorName = (donorName) => {
+  const populateDonorName = (donorName, donorNames) => {
     setDonorName(donorName);
+    setDonorNames(donorNames);
     setShowModal(false);
   };
   const onSubmit = (e) => {
@@ -88,6 +91,10 @@ const DuplicateEdit = () => {
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>
   );
+
+  const inputClass =
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
+
   return (
     <Layout>
       <div className="  bg-[#FFFFFF] p-2    rounded-lg  ">
@@ -117,7 +124,7 @@ const DuplicateEdit = () => {
         <div>
           {loader ? (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+              <Spinner />
             </div>
           ) : (
             <div className="p-6 space-y-6 border-2 border-gray-300 rounded-lg">
@@ -158,18 +165,14 @@ const DuplicateEdit = () => {
 
               {/* Form */}
               <form onSubmit={onSubmit}>
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-semibold mb-1">
-                    Donor Name <span className="text-red-500">*</span>
-                  </label>
+                <div>
+                  <FormLabel required>Donor Name</FormLabel>
                   <input
-                    type="text"
-                    name="indicomp_fts_id"
-                    className="w-full p-2 border rounded-lg "
-                    value={donorName}
+                    required
+                    value={donorNames}
                     onChange={onInputChange}
                     onClick={() => setShowModal(true)}
-                    required
+                    className={inputClass}
                   />
                 </div>
                 <p className="text-sm text-red-600 mb-4">
@@ -198,20 +201,14 @@ const DuplicateEdit = () => {
       </div>
 
       <Dialog open={showModal} handler={handleOpenDialog}>
-        <DialogHeader> Add to Member</DialogHeader>
         <DialogBody>
-          <DonorSelect populateDonorName={populateDonorName} />
+          <div className="overflow-y-auto ">
+            <DonorSelect
+              populateDonorName={populateDonorName}
+              setShowModal={setShowModal}
+            />
+          </div>{" "}
         </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={() => setShowModal(false)}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
     </Layout>
   );

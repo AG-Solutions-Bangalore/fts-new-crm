@@ -4,7 +4,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-const AddToGroup = ({ id }) => {
+import { Spinner } from "@material-tailwind/react";
+import { IconArrowBack } from "@tabler/icons-react";
+const AddToGroup = ({ id, closegroupModal }) => {
   const [loading, setLoading] = useState(true);
   const [donorData, setDonorData] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -105,13 +107,23 @@ const AddToGroup = ({ id }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-56">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <Spinner />
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="relative">
+      <h2 className="absolute top-3 left-2 z-50 flex items-center space-x-2 text-lg px-4 font-bold text-black">
+        <IconArrowBack
+          onClick={() => {
+            closegroupModal(false);
+          }}
+          className="cursor-pointer hover:text-red-600"
+        />
+        <span>Add to Group</span>
+      </h2>
+
       <MantineReactTable table={table} />
     </div>
   );

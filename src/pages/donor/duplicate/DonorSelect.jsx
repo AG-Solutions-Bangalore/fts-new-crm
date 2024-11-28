@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
-import BASE_URL from "../../../base/BaseUrl";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { Center, Button } from "@mantine/core";
 import axios from "axios";
+import BASE_URL from "../../../base/BaseUrl";
+import { Spinner } from "@material-tailwind/react";
+import { IconArrowBack } from "@tabler/icons-react";
 
-const DonorSelect = ({ populateDonorName }) => {
+const DonorSelect = ({ populateDonorName, setShowModal }) => {
   const [donors, setDonors] = useState([]);
   const [loader, setLoader] = useState(true);
 
@@ -18,57 +22,75 @@ const DonorSelect = ({ populateDonorName }) => {
       })
       .catch(() => setLoader(false));
   }, []);
+
+  // Define table columns
+  const columns = [
+    {
+      accessorKey: "indicomp_fts_id",
+      header: "FTS ID",
+      size: 20,
+    },
+    {
+      accessorKey: "indicomp_full_name",
+      header: "Donor Name",
+      size: 20,
+    },
+    {
+      accessorKey: "indicomp_mobile_phone",
+      header: "Mobile",
+      size: 20,
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      size: 20,
+      Cell: ({ row }) => (
+        <button
+          size="xs"
+          className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-blue-400 p-2 rounded-lg shadow-md mr-2"
+          onClick={() =>
+            populateDonorName(
+              row.original.indicomp_fts_id,
+              row.original.indicomp_full_name
+            )
+          }
+        >
+          Select
+        </button>
+      ),
+    },
+  ];
+  const table = useMantineReactTable({
+    columns,
+    data: donors,
+    enableFullScreenToggle: false,
+    enableDensityToggle: false,
+    enableColumnActions: false,
+    enableHiding: false,
+    enableStickyHeader: true,
+    enableStickyFooter: true,
+    mantineTableContainerProps: { sx: { maxHeight: "400px" } },
+  });
+  if (loader) {
+    return (
+      <div className="flex justify-center items-center h-56">
+        <Spinner />
+      </div>
+    );
+  }
   return (
-    <div className=" h-72 overflow-y-auto border rounded-lg  ">
-      {loader ? (
-        <div className="flex justify-center items-center h-32">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
-        </div>
-      ) : donors.length > 0 ? (
-        <table className="table-auto w-full   border-collapse border-2 border-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                FTS ID
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Donor Name
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Mobile
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-center">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {donors.map((donor) => (
-              <tr key={donor.indicomp_fts_id} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4 py-2">
-                  {donor.indicomp_fts_id}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {donor.indicomp_full_name}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {donor.indicomp_mobile_phone}
-                </td>
-                <td className="border border-gray-300 px-4 py-2 text-center">
-                  <button
-                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-                    onClick={() => populateDonorName(donor.indicomp_fts_id)}
-                  >
-                    Select
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <div className="text-center text-gray-600">No donors found.</div>
-      )}
+    <div className="relative">
+      <h2 className="absolute top-3 left-2 z-50 flex items-center space-x-2 text-lg px-4 font-bold text-black">
+        <IconArrowBack
+          onClick={() => {
+            setShowModal(false);
+          }}
+          className="cursor-pointer hover:text-red-600"
+        />
+        <span>Add a Donor</span>
+      </h2>
+
+      <MantineReactTable table={table} />
     </div>
   );
 };
