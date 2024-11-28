@@ -5,21 +5,24 @@ import { useParams } from "react-router-dom";
 import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
+import { Spinner } from "@material-tailwind/react";
 
 const DonorEdit = () => {
   const { id } = useParams();
   const [usertype, setUsertype] = useState("");
   const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
     const fetchDonorData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/fetch-donor-for-edit/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `${BASE_URL}/api/fetch-donor-for-edit/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         const donType = response.data.individualCompany.indicomp_type;
         localStorage.setItem("donType", donType);
         setUsertype(donType);
@@ -36,7 +39,9 @@ const DonorEdit = () => {
   if (loading) {
     return (
       <Layout>
-        <div>Loading...</div>
+     <div className="flex items-center justify-center min-h-screen">
+      <Spinner />
+    </div>
       </Layout>
     );
   }

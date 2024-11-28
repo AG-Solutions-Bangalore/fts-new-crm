@@ -891,27 +891,12 @@ const DonorEditIndv = ({ id }) => {
           </button>
         </div>
       </form>
-      <div className="flex gap-4 justify-end"></div>
+      {/* <div className="flex gap-4 justify-end"></div> */}
 
       <Dialog open={showmodal} toggle={() => closegroupModal()}>
-        <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
-          <div className="flex justify-between items-center px-5">
-            <h2 className="text-black text-lg flex gap-2 items-center rounded-xl p-2">
-              <span>Add To Group</span>
-            </h2>
-            <button
-              className="text-black cursor-pointer hover:text-red-600"
-              onClick={() => closegroupModal()}
-            >
-              <IconArrowBack />
-            </button>
-          </div>
-        </div>
-        <hr />
-
         <DialogBody>
-          <div className="overflow-y-auto">
-            <AddToGroup id={donor.id} />
+          <div className="overflow-y-auto p-0">
+            <AddToGroup id={donor.id} closegroupModal={closegroupModal} />
           </div>{" "}
         </DialogBody>
       </Dialog>

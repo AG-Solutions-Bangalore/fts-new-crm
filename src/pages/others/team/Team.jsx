@@ -113,7 +113,6 @@ const Team = () => {
       toast.error("Error fetching designations");
     }
   };
-  console.log(committes);
   useEffect(() => {
     fetchDesignations();
     fetchCommiteDate();
@@ -173,42 +172,6 @@ const Team = () => {
         ""
       ) : (
         <div className="  bg-[#FFFFFF] p-2    rounded-lg  ">
-          {/* <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
-            <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
-              <div className="flex  items-center gap-2">
-                <IconInfoCircle className="w-4 h-4" />
-                <span>Committee Summary</span>
-              </div>
-
-              <div className="flex ">
-                <div>
-                  <FormLabel>Start Date</FormLabel>
-                  <input
-                    type="date"
-                    disabled
-                    name="receipt_from_date"
-                    required
-                    value={committes.committee_from}
-                    onChange={(e) =>
-                      onInputChange(e.target.name, e.target.value)
-                    }
-                    className="text-xs"
-                  />
-                </div>
-                <div className="text-xs">
-                  <FormLabel>End Date</FormLabel>
-                  <input
-                    type="date"
-                    name="receipt_to_date"
-                    disabled
-                    value={committes.committee_to}
-                    required
-                    className="text-xs"
-                  />
-                </div>
-              </div>
-            </h2>
-          </div> */}
           <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
             <h2 className="text-black text-lg flex flex-col md:flex-row justify-between items-center">
               {/* Header Section */}
@@ -295,18 +258,7 @@ const Team = () => {
                   ))}
                 </select>
               </div>
-              {/* <div>
-                <FormLabel required>Member's Id</FormLabel>
-                <input
-                  type="text"
-                  name="indicomp_full_name"
-                  value={committee.indicomp_full_name}
-                  onClick={handleOpenDialog}
-                  onChange={(e) => onInputChange(e.target.name, e.target.value)}
-                  className={inputClass}
-                  required
-                />
-              </div> */}
+
               <div>
                 <FormLabel required>Member's Name</FormLabel>
                 <input
@@ -337,19 +289,6 @@ const Team = () => {
       </div>
 
       <Dialog open={openDialog} handler={handleOpenDialog}>
-        <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
-          <div className="flex justify-between items-center px-5">
-            <h2 className="text-black text-lg flex gap-2 items-center rounded-xl p-2">
-              <span>Select</span>
-            </h2>
-            <button
-              className="text-black cursor-pointer hover:text-red-600"
-              onClick={() => setOpenDialog(false)}
-            >
-              <IconArrowBack />
-            </button>
-          </div>
-        </div>
         <DialogBody>
           <MemberSelect
             populateDonorName={populateDonorName}

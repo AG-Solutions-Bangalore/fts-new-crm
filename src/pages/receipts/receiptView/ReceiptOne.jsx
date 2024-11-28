@@ -445,7 +445,7 @@ const ReceiptOne = () => {
 
                   <div className="text-center flex justify-center items-center border-x border-b border-black -mt-9  p-5">
                     <p className="text-[10px]">
-                      dfd
+                    
                       {`${chapter.chapter_address}, ${chapter.chapter_city} - ${chapter.chapter_pin}, ${chapter.chapter_state}`}
                     </p>
                     <p className="text-[11px]">

@@ -142,21 +142,6 @@ const DonorSummary = () => {
         </div>
 
         <Dialog open={openDialog} handler={handleOpenDialog}>
-          <div className="sticky top-0 p-4 mb-4 border-b-2 border-green-500 rounded-lg bg-[#E1F5FA]">
-            <div className="flex justify-between items-center px-5">
-              <h2 className="text-black text-lg flex gap-2 items-center rounded-xl p-2">
-                <span>Choose Donors</span>
-              </h2>
-              <button
-                className="text-black cursor-pointer hover:text-red-600"
-                onClick={handleOpenDialog}
-              >
-                <IconArrowBack />
-              </button>
-            </div>
-          </div>
-          <hr />
-
           <DialogBody divider>
             <div className="max-h-[500px] overflow-y-auto">
               <AddToGroup

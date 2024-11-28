@@ -3,6 +3,7 @@ import { Button, Spinner } from "@material-tailwind/react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const AddToGroup = ({ populateDonorName, handleClose }) => {
   const [loader, setLoader] = useState(true);
@@ -74,19 +75,24 @@ const AddToGroup = ({ populateDonorName, handleClose }) => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
-
   });
   return (
     <div className="data-table-wrapper">
       {loader ? (
-        <div className="flex justify-center items-center h-screen">
-          <div className="flex justify-center items-center h-screen">
-            <Spinner />
-          </div>{" "}
+        <div className="flex justify-center items-center min-h-screen">
+          <Spinner />
         </div>
       ) : (
-        <div className="w-full">
-          {donorData.length > 0 && <MantineReactTable table={table} />}
+        <div className="relative">
+          <h2 className="absolute top-3 left-2 z-50 flex items-center space-x-2 text-lg px-4 font-bold text-black">
+            <IconArrowBack
+              onClick={handleClose}
+              className="cursor-pointer hover:text-red-600"
+            />
+            <span>Add Donor</span>
+          </h2>
+
+          <MantineReactTable table={table} />
         </div>
       )}
     </div>
