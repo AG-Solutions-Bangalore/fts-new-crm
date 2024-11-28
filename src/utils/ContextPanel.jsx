@@ -151,7 +151,7 @@ const AppProvider = ({ children }) => {
         );
         if (isAllowedPath) {
           navigate(currentPath + location.search);
-          console.log(currentPath);
+          // console.log(currentPath);
         } else {
           navigate("/home");
         }

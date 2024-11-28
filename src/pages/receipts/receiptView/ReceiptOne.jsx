@@ -252,7 +252,7 @@ const ReceiptOne = () => {
       url: `${BASE_URL}/api/send-receipt?id=${theId}`,
       method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("login")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then(() => {
       // Assuming you have a notification system
@@ -997,7 +997,7 @@ const ReceiptOne = () => {
                       </label>
                       <label className="block">{chapter.auth_sign}</label>
                       <label className="block mb-5">
-                        Encl: As stated above
+                        Encl: As stated above 
                       </label>
                     </div>
                   )}
