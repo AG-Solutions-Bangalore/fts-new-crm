@@ -80,7 +80,7 @@ function Downloadots() {
         <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">
           <h2 className=" px-5 text-[black] text-lg   flex flex-row gap-2 items-center  rounded-xl p-2 ">
             {/* <IconInfoCircle className="w-4 h-4" /> */}
-            <span>Download Purchase</span>
+            <span>Download OTS</span>
           </h2>
         </div>
         <hr />
