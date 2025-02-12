@@ -71,9 +71,9 @@ const Sidebar = ({
               {/* Sidebar Items */}
               {/* ------------------------------------------- */}
               <SidebarItems isCollapsed={isCollapsed} />
-              <Upgrade isCollapsed={isCollapsed} />
             </Box>
           </Box>
+          <Upgrade isCollapsed={isCollapsed} />
         </Drawer>
       </Box>
     );

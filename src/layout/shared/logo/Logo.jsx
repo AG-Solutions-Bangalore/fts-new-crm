@@ -21,11 +21,11 @@ const Logo = ({ isCollapsed }) => {
     <>
       {!isCollapsed ? (
         <LinkStyled to="/home">
-          <img src={logosmall} alt="logo" className="h-16" priority />
+          <img src={logosmall} alt="logo" className="h-16" />
         </LinkStyled>
       ) : (
         <LargeLinkStyled to="/home">
-          <img src={logstrucn} alt="logo" className="h-16" priority />
+          <img src={logstrucn} alt="logo" className="h-16" />
         </LargeLinkStyled>
       )}
     </>
