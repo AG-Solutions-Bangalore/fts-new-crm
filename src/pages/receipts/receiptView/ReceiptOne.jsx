@@ -22,6 +22,7 @@ import { IoIosPrint } from "react-icons/io";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { IconArrowBack } from "@tabler/icons-react";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 const printStyles = `
   @media print {
 
@@ -58,6 +59,8 @@ const ReceiptOne = () => {
   const [country, setCountry] = useState({});
   const [showmodal, setShowmodal] = useState(false);
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const amountInWords = numWords(receipts.receipt_total_amount);
   useEffect(() => {
@@ -172,7 +175,7 @@ const ReceiptOne = () => {
 
   const fetchDataReceipt = async () => {
     await axios({
-      url: `${BASE_URL}/api/fetch-receipt-by-id/${id}`,
+      url: `${BASE_URL}/api/fetch-receipt-by-id/${decryptedId}`,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

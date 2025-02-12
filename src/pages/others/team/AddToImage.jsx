@@ -34,8 +34,16 @@ const AddToImage = ({ selectDonorId, setOpenDialog, handleCloseDialog }) => {
         }
       );
 
-      toast.success("Image Inserted Successfully");
-      setOpenDialog(false);
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        setOpenDialog(false);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setOpenDialog(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setOpenDialog(false);
+      }
     } catch (error) {
       toast.error("Error creating committee");
       console.error(error);

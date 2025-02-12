@@ -88,7 +88,7 @@ const DesignationList = () => {
       designation_type: user.designation_type,
     };
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${BASE_URL}/api/create-designation`,
         formData,
         {
@@ -98,14 +98,18 @@ const DesignationList = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Designation is Created Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         setUser({ designation_type: "" });
         handleClose(e);
 
         fetchData();
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Designation Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Designation:", error);
@@ -125,7 +129,7 @@ const DesignationList = () => {
     };
 
     try {
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-designation/${selected_user_id}`,
         formData,
         {
@@ -135,12 +139,16 @@ const DesignationList = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Designation Updated Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         handleClose1(e);
         fetchData();
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Designation Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating designation:", error);

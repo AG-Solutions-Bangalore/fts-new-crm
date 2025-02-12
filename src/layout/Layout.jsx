@@ -4,7 +4,6 @@ import Header from "./header/Header";
 import React from "react";
 import Footer from "../components/Footer";
 
-
 const MainWrapper = styled("div")(() => ({
   display: "flex",
   minHeight: "100vh",
@@ -48,14 +47,22 @@ const Layout = ({ children }) => {
         {/* PageContent */}
         {/* ------------------------------------------- */}
         <Container
+          // sx={{
+          //   maxWidth: "max-w-screen !important",
+          // }}
           sx={{
-            maxWidth: "max-w-screen !important",
+            maxWidth: "100% !important",
+            px: "10px !important",
+            mx: "10px !important",
           }}
         >
           {/* ------------------------------------------- */}
           {/* Header */}
           {/* ------------------------------------------- */}
-          <Header toggleSidebar={toggleSidebar} toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
+          <Header
+            toggleSidebar={toggleSidebar}
+            toggleMobileSidebar={() => setMobileSidebarOpen(true)}
+          />
           {/* ------------------------------------------- */}
           {/* Page Route */}
           {/* ------------------------------------------- */}
@@ -64,7 +71,10 @@ const Layout = ({ children }) => {
           {/* End Page */}
           {/* ------------------------------------------- */}
         </Container>
-       <div className="px-4 pt-4 md:px-7 md:pt-7  lg:px-7 lg:pt-7 "> <Footer /></div>
+        <div className="px-4 pt-4 md:px-7 md:pt-7  lg:px-7 lg:pt-7 ">
+          {" "}
+          <Footer />
+        </div>
       </PageWrapper>
     </MainWrapper>
   );

@@ -12,6 +12,7 @@ import AddIndivisual from "./AddIndivisual";
 import AddCompany from "./AddCompany";
 import CreateReceipt from "./CreateReceipt";
 import DonorView from "./DonorView";
+import { encryptId } from "../../../utils/encyrption/Encyrption";
 
 const DonorList = () => {
   const [donorData, setDonorData] = useState(null);
@@ -183,7 +184,11 @@ const DonorList = () => {
             <div className="flex gap-2">
               {userType == "1" || userType == "2" ? (
                 <div
-                  onClick={() => navigate(`/donor-edit/${id}`)}
+                  // onClick={() => navigate(`/donor-edit/${id}`)}
+                  onClick={() => {
+                    const encryptedId = encryptId(id);
+                    navigate(`/donor-edit/${encodeURIComponent(encryptedId)}`);
+                  }}
                   className="flex items-center space-x-2"
                   title="Edit"
                 >
@@ -201,7 +206,13 @@ const DonorList = () => {
               </div>
               {userType == "1" ? (
                 <div
-                  onClick={() => navigate(`/donor-create/${id}`)}
+                  // onClick={() => navigate(`/donor-create/${id}`)}
+                  onClick={() => {
+                    const encryptedId = encryptId(id);
+                    navigate(
+                      `/donor-create/${encodeURIComponent(encryptedId)}`
+                    );
+                  }}
                   className="flex items-center space-x-2"
                   title="Create Reciept"
                 >
@@ -307,7 +318,7 @@ const DonorList = () => {
                     <AddIndivisual
                       onClose={toggleIndividualDrawer(false)}
                       fetchDonorData={fetchDonorData}
-                      isOpen ={individualDrawer}
+                      isOpen={individualDrawer}
                     />
                   </SwipeableDrawer>
 

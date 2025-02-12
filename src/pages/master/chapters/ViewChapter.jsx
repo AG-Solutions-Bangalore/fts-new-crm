@@ -12,6 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import SelectInput from "../../../components/common/SelectInput";
+import { decryptId, encryptId } from "../../../utils/encyrption/Encyrption";
 const UserDrop = [
   {
     value: "1",
@@ -31,6 +32,8 @@ const ViewChapter = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [student, setStudent] = useState({});
   const [individualDrawer, setIndividualDrawer] = useState(false);
@@ -80,7 +83,7 @@ const ViewChapter = () => {
   };
   const fetchData = () => {
     axios
-      .get(`${BASE_URL}/api/fetch-chapter-by-id/${id}`, {
+      .get(`${BASE_URL}/api/fetch-chapter-by-id/${decryptedId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -136,22 +139,17 @@ const ViewChapter = () => {
     };
     console.log("data", formData);
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/create-user`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/create-user`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-      if (response.status === 200) {
-        // setUsers(response.data.users);
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchData();
 
         handleClose();
-        toast.success("User is Created Successfully");
         setUser({
           name: "",
           email: "",
@@ -162,8 +160,12 @@ const ViewChapter = () => {
           confirm_password: "",
           user_type_id: "",
         });
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("User Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating User:", error);
@@ -196,7 +198,7 @@ const ViewChapter = () => {
 
     try {
       // Send PUT request
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-user/${selected_user_id}`,
         formData,
         {
@@ -206,12 +208,15 @@ const ViewChapter = () => {
         }
       );
 
-      if (response.status === 200) {
-        console.log(response.data.users);
-        toast.success("User is Updated Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         handleClose1(e);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("User Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating User:", error);
@@ -264,8 +269,9 @@ const ViewChapter = () => {
             className=" text-center  w-20 text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
             onClick={() => {
               localStorage.setItem("schoolId", id);
-
-              navigate(`/view-school/${row.original.id}`);
+              const encryptedId = encryptId(row.original.id);
+              navigate(`/view-school/${encodeURIComponent(encryptedId)}`);
+              // navigate(`/view-school/${row.original.id}`);
             }}
           >
             School

@@ -6,6 +6,7 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import SelectInput from "../../../components/common/SelectInput";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 
 const committee_type = [
   {
@@ -30,6 +31,7 @@ const EditChapter = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  const decryptedId = decryptId(id);
   const [states, setStates] = useState([]);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -80,7 +82,7 @@ const EditChapter = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-chapter-by-id/${id}`, {
+      .get(`${BASE_URL}/api/fetch-chapter-by-id/${decryptedId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -88,7 +90,7 @@ const EditChapter = () => {
       .then((res) => {
         setChapter(res.data?.chapter);
       });
-  }, [id]);
+  }, [decryptedId]);
 
   useEffect(() => {
     axios
@@ -126,8 +128,8 @@ const EditChapter = () => {
       auth_sign: chapter.auth_sign,
     };
     try {
-      const response = await axios.put(
-        `${BASE_URL}/api/update-chapter/${id}`,
+      const res = await axios.put(
+        `${BASE_URL}/api/update-chapter/${decryptedId}`,
         formData,
         {
           headers: {
@@ -136,14 +138,17 @@ const EditChapter = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Chapter is Updated Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         navigate("/master/chapters");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Failed to update chapter");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
-      console.error("Error updating Chapter:", error);
       toast.error("Error  updating Brand");
     } finally {
       setIsButtonDisabled(false);
@@ -230,7 +235,6 @@ const EditChapter = () => {
                     label: item.state_name,
                   }))}
                   onChange={onInputChange}
-                  
                   placeholder="Select State"
                 />
               </div>

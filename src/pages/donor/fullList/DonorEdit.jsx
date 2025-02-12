@@ -6,9 +6,12 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
 import { Spinner } from "@material-tailwind/react";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 
 const DonorEdit = () => {
   const { id } = useParams();
+
+  const decryptedId = decryptId(id);
   const [usertype, setUsertype] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +19,7 @@ const DonorEdit = () => {
     const fetchDonorData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-donor-for-edit/${id}`,
+          `${BASE_URL}/api/fetch-donor-for-edit/${decryptedId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -39,9 +42,9 @@ const DonorEdit = () => {
   if (loading) {
     return (
       <Layout>
-     <div className="flex items-center justify-center min-h-screen">
-      <Spinner />
-    </div>
+        <div className="flex items-center justify-center min-h-screen">
+          <Spinner />
+        </div>
       </Layout>
     );
   }
@@ -51,13 +54,13 @@ const DonorEdit = () => {
   if (type == "Individual") {
     return (
       <Layout>
-        <DonorEditIndv id={id} />
+        <DonorEditIndv id={decryptedId} />
       </Layout>
     );
   }
   return (
     <Layout>
-      <DonorEditComp id={id} />
+      <DonorEditComp id={decryptedId} />
     </Layout>
   );
 };

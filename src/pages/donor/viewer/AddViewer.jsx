@@ -132,10 +132,12 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = document.getElementById("addIndiv");
+
     if (!form.checkValidity()) {
-      toast.error("Fill all required");
+      toast.error("Fill all required fields");
       return;
     }
+
     const data = {
       first_name: firstName,
       last_name: lastName,
@@ -153,32 +155,47 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
     setIsButtonDisabled(true);
     const token = localStorage.getItem("token");
 
-    const res = await axios.post(
-      `${BASE_URL}/api/superadmin-add-a-viewer`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/api/superadmin-add-a-viewer`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        fetchViewerData();
+        onClose();
 
-    toast.success("Viwer Added Successfully");
-    fetchViewerData();
-    onClose();
-    setFirstName("");
-    setLastName("");
-    setUserName("");
-    setContact("");
-    setEmail("");
-    setStartDate("");
-    setEndDate("");
-    setPassword("");
-    setViewerChapterIds([]);
-    setChapterIds("");
-    setchapter_id("");
-    setuser_position("");
-    setIsButtonDisabled(false);
+        // Reset form fields
+        setFirstName("");
+        setLastName("");
+        setUserName("");
+        setContact("");
+        setEmail("");
+        setStartDate("");
+        setEndDate("");
+        setPassword("");
+        setViewerChapterIds([]);
+        setChapterIds("");
+        setchapter_id("");
+        setuser_position("");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
+    } catch (error) {
+      console.error("Error adding viewer:", error);
+      toast.error(error.res?.data?.message || "Something went wrong");
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
 
   const FormLabel = ({ children, required }) => (

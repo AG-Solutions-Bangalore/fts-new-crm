@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { Button, ButtonGroup } from "@material-tailwind/react";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { ContextPanel } from "../../../utils/ContextPanel";
+import { decryptId, encryptId } from "../../../utils/encyrption/Encyrption";
 const exemption = [
   {
     value: "80G",
@@ -83,6 +84,8 @@ const donation_type_2 = [
 
 const CreateReceipt = () => {
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const today = new Date();
   const navigate = useNavigate();
   const dd = String(today.getDate()).padStart(2, "0");
@@ -168,7 +171,7 @@ const CreateReceipt = () => {
     const fetchDonorData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-donor-by-id/${id}`,
+          `${BASE_URL}/api/fetch-donor-by-id/${decryptedId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -284,28 +287,23 @@ const CreateReceipt = () => {
     formData.append("donor_promoter", userdata.indicomp_promoter);
     formData.append("donor_source", donor.donor_source);
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/create-receipt`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/create-receipt`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-      if (response.data.receipts == "400") {
-        toast.success("Receipt Created Successfully");
-        navigate(`/view-receipts/${response.data.r_id}`);
-        console.log(response.data.r_id);
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        // navigate(`/view-receipts/${res.data.r_id}`);
+        const encryptedId = encryptId(res?.data?.r_id);
+        navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        if (response.status == "401") {
-          toast.error("Receipt Duplicate Entry");
-        } else if (response.status == "402") {
-          toast.error("Receipt Duplicate Entry");
-        } else {
-          toast.error("An unknown error occurred");
-        }
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Receipt:", error);
@@ -315,23 +313,6 @@ const CreateReceipt = () => {
     }
   };
 
-  // const renderButtonGroup = (options, stateName, currentValue) => (
-  //   <ButtonGroup className="w-full h-9  flex flex-row gap-2  ">
-  //     {options.map((option) => (
-  //       <Button
-  //         key={option.value}
-  //         onClick={() => handleButtonGroupChange(stateName, option.value)}
-  //         className={` w-full  ${
-  //           currentValue === option.value
-  //             ? "bg-green-500 text-black"
-  //             : "bg-[#E1F5FA] text-blue-gray-700 hover:bg-blue-100"
-  //         } text-xs py-2 lg:py-0`}
-  //       >
-  //         {option.label}
-  //       </Button>
-  //     ))}
-  //   </ButtonGroup>
-  // );
   const renderButtonGroup = (options, stateName, currentValue) => (
     <ButtonGroup className="w-full h-9 flex flex-wrap  ">
       {options.map((option) => (

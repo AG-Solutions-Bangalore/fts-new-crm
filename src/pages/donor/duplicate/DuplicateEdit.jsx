@@ -14,9 +14,12 @@ import {
 } from "@material-tailwind/react";
 import DonorSelect from "./DonorSelect";
 import { toast } from "react-toastify";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 
 const DuplicateEdit = () => {
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
   const [donorName, setDonorName] = useState("");
@@ -38,14 +41,14 @@ const DuplicateEdit = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-donors-duplicate-by-id/${id}`, {
+      .get(`${BASE_URL}/api/fetch-donors-duplicate-by-id/${decryptedId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {
         setDonor(res.data.individualCompanies);
         setLoader(false);
       });
-  }, [id]);
+  }, [decryptedId]);
 
   const onInputChange = (e) => {
     setDonor({
@@ -65,8 +68,14 @@ const DuplicateEdit = () => {
     setDonorNames(donorNames);
     setShowModal(false);
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+
+    if (!donor?.indicomp_fts_id || !donorName) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
     const data = {
       indicomp_fts_id: donor.indicomp_fts_id,
       new_indicomp_fts_id: donorName,
@@ -74,15 +83,27 @@ const DuplicateEdit = () => {
     };
 
     setIsButtonDisabled(true);
-    axios
-      .put(`${BASE_URL}/api/update-donors-duplicate/${id}`, data, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then(() => {
-        toast.success("Duplicate Updated Successfully");
-        setIsButtonDisabled(false);
+
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/api/update-donors-duplicate/${decryptedId}`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      if (response.data.code === 200) {
+        toast.success(response.data.msg);
         navigate("/duplicate-list");
-      });
+      } else {
+        toast.error(response.data.msg);
+        setIsButtonDisabled(false);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.msg || "Network error occurred.");
+      setIsButtonDisabled(false);
+    }
   };
 
   const FormLabel = ({ children, required }) => (
@@ -102,7 +123,7 @@ const DuplicateEdit = () => {
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
             <div className="flex  items-center gap-2">
               <IconInfoCircle className="w-4 h-4" />
-              <span>DuplicateEdit{id}</span>
+              <span>DuplicateEdit{decryptedId}</span>
             </div>
             <IconArrowBack
               onClick={() => navigate("/duplicate-list")}

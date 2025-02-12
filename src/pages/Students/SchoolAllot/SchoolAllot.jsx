@@ -9,6 +9,7 @@ import moment from "moment";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Tooltip } from "@mui/material";
+import { encryptId } from "../../../utils/encyrption/Encyrption";
 const SchoolAllot = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -105,7 +106,12 @@ const SchoolAllot = () => {
               const handleedit = () => {
                 // navigate("/students-allotedit");
                 // console.log("this");
-                navigate(`/students-allotedit/${newValue}`);
+                // navigate(`/students-allotedit/${newValue}`);
+                const encryptedId = encryptId(newValue);
+                navigate(
+                  `/students-allotedit/${encodeURIComponent(encryptedId)}`
+                );
+
                 // localStorage.setItem("sclaltid", newValue);
                 localStorage.setItem("sclaltyear", newYear);
               };

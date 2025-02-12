@@ -5,31 +5,27 @@ import Logo from "../shared/logo/Logo";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
-
-
 const Sidebar = ({
   isMobileSidebarOpen,
   onSidebarClose,
   isSidebarOpen,
-  isCollapsed
+  isCollapsed,
 }) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
- 
-  // const sidebarWidth = "270px"; 
+  // const sidebarWidth = "270px";
   const sidebarWidth = isCollapsed ? "100px" : "270px";
 
-  const sidebarWidthMobile = '270px'
-
+  const sidebarWidthMobile = "270px";
 
   if (lgUp) {
     return (
       <Box
-      
         sx={{
           width: sidebarWidth,
           flexShrink: 0,
           borderRadius: "13px",
+          transition: "width 0.3s ease-in-out",
         }}
       >
         {/* ------------------------------------------- */}
@@ -41,7 +37,7 @@ const Sidebar = ({
           variant="permanent"
           PaperProps={{
             sx: {
-              boxShadow:  "0 9px 17.5px rgb(0,0,0,0.05)",
+              boxShadow: "0 9px 17.5px rgb(0,0,0,0.05)",
               width: sidebarWidth,
               boxSizing: "border-box",
               borderRight: 0,
@@ -58,21 +54,17 @@ const Sidebar = ({
           {/* Sidebar Box */}
           {/* ------------------------------------------- */}
           <Box
-        
-          className="custom-scroll"
-       
+            className="custom-scroll"
             sx={{
-             
-              overflowY: "auto",height: "calc(100vh - 70px)" 
-              
+              overflowY: "auto",
+              height: "calc(100vh - 70px)",
             }}
           >
             {/* ------------------------------------------- */}
             {/* Logo */}
             {/* ------------------------------------------- */}
-            <Box px={2} pt={2}  >
-
-              <Logo isCollapsed = {isCollapsed} />
+            <Box px={2} pt={2}>
+              <Logo isCollapsed={isCollapsed} />
             </Box>
             <Box>
               {/* ------------------------------------------- */}

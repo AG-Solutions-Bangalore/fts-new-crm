@@ -10,38 +10,37 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BASE_URL from "../../../base/BaseUrl";
 import moment from "moment";
+import { encryptId } from "../../../components/common/EncryptionDecryption";
 
 const OldReceipt = ({ viewerId, onClose }) => {
   const [receiptData, setReceiptData] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
- 
-    const fetchReceiptData = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${BASE_URL}/api/fetch-receipts-by-old-id/${viewerId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  const fetchReceiptData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${BASE_URL}/api/fetch-receipts-by-old-id/${viewerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-        setReceiptData(response.data?.receipts);
-      } catch (error) {
-        console.error("Error fetching receipt list data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    useEffect(() => {
+      setReceiptData(response.data?.receipts);
+    } catch (error) {
+      console.error("Error fetching receipt list data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     if (viewerId) {
       fetchReceiptData();
     }
-   
   }, [viewerId]);
 
   const columns = useMemo(
@@ -97,7 +96,11 @@ const OldReceipt = ({ viewerId, onClose }) => {
             <div className="flex gap-2">
               <div
                 title="Receipt View"
-                onClick={() => navigate(`/view-receipts/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id);
+                  navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
+                }}
+                // onClick={() => navigate(`/view-receipts/${id}`)}
                 className="flex items-center space-x-2"
               >
                 <IconEye

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SwipeableDrawer, Button, Tooltip } from "@mui/material";
 import { Spinner } from "@material-tailwind/react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
@@ -8,12 +8,13 @@ import { IconEdit, IconEye, IconReceipt } from "@tabler/icons-react";
 import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import AddChapter from "./AddChapter";
+import { encryptId } from "../../../utils/encyrption/Encyrption";
 
 const ChaptersList = () => {
   const [chapterList, setChapterList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [chapterDrawer, setChapterDrawer] = useState(false);
-
+const navigate =useNavigate()
   const toggleIndividualDrawer = (open) => (event) => {
     if (
       event &&
@@ -67,21 +68,39 @@ const ChaptersList = () => {
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <Tooltip title="View" arrow>
-            <Link to={`/view-chapter/${row.original.id}`}>
+            <div
+              // to={`/view-chapter/${row.original.id}`}
+              onClick={() => {
+                const encryptedId = encryptId(row.original.id);
+                navigate(`/view-chapter/${encodeURIComponent(encryptedId)}`);
+              }}
+            >
               <IconEye className="h-5 w-5 cursor-pointer text-blue-500" />
-            </Link>
+            </div>
           </Tooltip>
 
           <Tooltip title="Edit" arrow>
-            <Link to={`/edit-chapter/${row.original.id}`}>
+            <div
+              // to={`/edit-chapter/${row.original.id}`}
+              onClick={() => {
+                const encryptedId = encryptId(row.original.id);
+                navigate(`/edit-chapter/${encodeURIComponent(encryptedId)}`);
+              }}
+            >
               <IconEdit className="h-5 w-5 cursor-pointer text-blue-500" />
-            </Link>
+            </div>
           </Tooltip>
 
           <Tooltip title="Datasource" arrow>
-            <Link to={`/edit-datasource/${row.original.id}`}>
+            <div
+              // to={`/edit-datasource/${row.original.id}`}
+              onClick={() => {
+                const encryptedId = encryptId(row.original.id);
+                navigate(`/edit-datasource/${encodeURIComponent(encryptedId)}`);
+              }}
+            >
               <IconReceipt className="h-5 w-5 cursor-pointer text-blue-500" />
-            </Link>
+            </div>
           </Tooltip>
         </div>
       ),

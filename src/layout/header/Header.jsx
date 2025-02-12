@@ -86,7 +86,15 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res) => {
-      toast.success("Chapter Updated Sucessfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
     });
   };
   return (

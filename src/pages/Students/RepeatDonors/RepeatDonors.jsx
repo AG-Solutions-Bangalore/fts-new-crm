@@ -6,6 +6,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { encryptId } from "../../../utils/encyrption/Encyrption";
 
 const RepeatDonors = () => {
   const [repeatDonor, setRepeatDonor] = useState([]);
@@ -94,7 +95,13 @@ const RepeatDonors = () => {
           return (
             <div className="flex gap-2">
               <div
-                onClick={() => navigate(`/repeat-donor-allot/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id);
+                  navigate(
+                    `/repeat-donor-allot/${encodeURIComponent(encryptedId)}`
+                  );
+                }}
+                // onClick={() => navigate(`/repeat-donor-allot/${id}`)}
                 className="flex items-center space-x-2"
                 title="Edit"
                 style={{

@@ -8,10 +8,13 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconArrowBack, IconCircleX } from "@tabler/icons-react";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 
 const EditDataSource = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const [users, setUsers] = useState([]);
@@ -50,7 +53,7 @@ const EditDataSource = () => {
   const fetchDataSources = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-data-sources-by-id/${id}`,
+        `${BASE_URL}/api/fetch-data-sources-by-id/${decryptedId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -364,7 +367,7 @@ const EditDataSource = () => {
                         disabled={isButtonDisabled}
                         className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
                       >
-                        Update 
+                        Update
                       </button>
                     </div>
                   </div>

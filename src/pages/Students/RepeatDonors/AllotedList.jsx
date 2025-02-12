@@ -8,26 +8,25 @@ import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconArrowBack, IconEdit } from "@tabler/icons-react";
 import { toast } from "react-toastify";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 
 const AllotedList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp, currentYear } = useContext(ContextPanel);
+  const { currentYear } = useContext(ContextPanel);
   const navigate = useNavigate();
   const { id } = useParams();
+  const decryptedId = decryptId(id);
+
   const userId = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
   // Fetch school allotment data
   const fetchSchoolAllotData = async () => {
-    if (!isPanelUp) {
-      navigate("/maintenance");
-      return;
-    }
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-school-allot-repeat/${id}`,
+        `${BASE_URL}/api/fetch-school-allot-repeat/${decryptedId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -47,13 +46,20 @@ const AllotedList = () => {
       return;
     }
     try {
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-schoolsallot-repeat/${allotId}`,
         { schoolalot_financial_year: currentYear },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success("Donor allotment updated successfully.");
-      navigate("/home");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        toast.success("Donor allotment updated successfully.");
+        navigate("/home");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+      } else {
+        toast.error("Unexcepted Error");
+      }
     } catch (error) {
       console.error("Error updating allotment:", error);
     }
@@ -61,7 +67,7 @@ const AllotedList = () => {
 
   useEffect(() => {
     fetchSchoolAllotData();
-  }, [id]);
+  }, [decryptedId]);
 
   const columns = useMemo(
     () => [

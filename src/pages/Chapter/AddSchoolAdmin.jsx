@@ -7,11 +7,13 @@ import BASE_URL from "../../base/BaseUrl";
 import { FormLabel } from "@mui/material";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { IconArrowBack } from "@tabler/icons-react";
+import { decryptId } from "../../utils/encyrption/Encyrption";
 
 const AddSchoolAdmin = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+  const decryptedId = decryptId(id);
 
   const [viewerId, setID] = useState(0);
   const [firstName, setFirstName] = useState("");
@@ -48,7 +50,7 @@ const AddSchoolAdmin = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-viewer-by-id/${id}`, {
+      .get(`${BASE_URL}/api/fetch-viewer-by-id/${decryptedId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -95,7 +97,6 @@ const AddSchoolAdmin = () => {
     setEmail(e.target.value);
   };
 
-
   const handleClick = (e) => {
     const targetName = e.target.name;
     setCurrentViewerChapterIds((prevState) => {
@@ -135,21 +136,21 @@ const AddSchoolAdmin = () => {
       chapter_ids_comma_separated: schoolIds,
     };
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/update-school`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/update-school`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-      if (response.status === 200) {
-        toast.success("Data Updated Sucessfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         navigate("/chapter");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("An unknown error occurred");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Data:", error);

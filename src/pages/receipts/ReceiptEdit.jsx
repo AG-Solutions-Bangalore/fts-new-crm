@@ -225,7 +225,7 @@ const ReceiptEdit = () => {
       donor_source: donor.donor_source,
     };
     try {
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-receipt/${decryptedId}`,
         formData,
         {
@@ -235,16 +235,22 @@ const ReceiptEdit = () => {
         }
       );
 
-      if (response.status == "200") {
-        toast.success("Receipt Updated Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         navigate("/receipt-list");
       } else {
-        if (response.status == "401") {
-          toast.error("Receipt Duplicate Entry");
+        if (response.status == "400") {
+          toast.error(res.data.msg);
+          setIsButtonDisabled(false);
+        } else if (response.status == "401") {
+          toast.error(res.data.msg);
+          setIsButtonDisabled(false);
         } else if (response.status == "402") {
-          toast.error("Receipt Duplicate Entry");
+          toast.error(res.data.msg);
+          setIsButtonDisabled(false);
         } else {
-          toast.error("An unknown error occurred");
+          toast.error("Unexcepted Error");
+          setIsButtonDisabled(false);
         }
       }
     } catch (error) {

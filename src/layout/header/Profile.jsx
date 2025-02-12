@@ -78,13 +78,16 @@ const Profile = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      if (res.status === 200) {
-        console.log(res.status, "satus");
-        console.log("start");
-        toast.success("Profile Updated Successfully!");
-        console.log("end");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
 
         handleClose();
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Profile update failed:", error);
@@ -113,16 +116,25 @@ const Profile = () => {
     };
 
     try {
-      await axios.post(`${BASE_URL}/api/change-password`, data, {
+      const res = await axios.post(`${BASE_URL}/api/change-password`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      toast.success("Password Updated Successfully!");
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setOpenDialog1(false);
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        toast.success("Password Updated Successfully!");
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setOpenDialog1(false);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
     } catch (error) {
       console.error("Password change failed:", error);
       toast.error("Please enter valid old password");

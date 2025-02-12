@@ -12,6 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import SelectInput from "../../components/common/SelectInput";
+import { encryptId } from "../../utils/encyrption/Encyrption";
 const committee_type = [
   {
     value: "President",
@@ -233,7 +234,7 @@ const Chapter = () => {
       if (response.status === 200) {
         fetchData();
         handleClose();
-        toast.success("User is Created Successfully");
+        toast.success(response.data.msg);
         setUser({
           name: "",
           email: "",
@@ -244,8 +245,12 @@ const Chapter = () => {
           confirm_password: "",
           user_type_id: "",
         });
+      } else if (response.data.code === 400) {
+        toast.error(response.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("User Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating User:", error);
@@ -288,11 +293,15 @@ const Chapter = () => {
       );
 
       if (response.status === 200) {
-        toast.success("User is Updated Successfully");
+        toast.success(response.data.msg);
         handleClose1(e);
         fetchData();
+      } else if (response.data.code === 400) {
+        toast.error(response.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("User Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating User:", error);
@@ -347,7 +356,13 @@ const Chapter = () => {
         <div className="flex items-center space-x-2">
           <button
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-            onClick={() => navigate(`/chapter/view-shool/${row.original.id}`)}
+            // onClick={() => navigate(`/chapter/view-shool/${row.original.id}`)}
+            onClick={() => {
+              const encryptedId = encryptId(row.original.id);
+              navigate(
+                `/chapter/view-shool/${encodeURIComponent(encryptedId)}`
+              );
+            }}
           >
             School
           </button>
@@ -399,8 +414,16 @@ const Chapter = () => {
       },
     })
       .then((res) => {
-        toast.success("User is Updated Successfully");
-        fetchData();
+        if (res.data.code === 200) {
+          toast.success(res.data.msg);
+          fetchData();
+        } else if (res.data.code === 400) {
+          toast.error(res.data.msg);
+          setIsButtonDisabled(false);
+        } else {
+          toast.error("Unexcepted Error");
+          setIsButtonDisabled(false);
+        }
       })
       .catch((error) => {
         console.error("Error updating user:", error);
