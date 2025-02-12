@@ -33,9 +33,7 @@ const corrpreffer = [
     label: "Digital",
   },
 ];
-const AddIndivisual = ({ onClose, fetchDonorData ,isOpen}) => {
-
-
+const AddIndivisual = ({ onClose, fetchDonorData, isOpen }) => {
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -188,7 +186,6 @@ const AddIndivisual = ({ onClose, fetchDonorData ,isOpen}) => {
       fetchDataSource();
       fetchPromoter();
     }
-    
   }, [isOpen]);
 
   const handleSubmit = async (e) => {
@@ -250,45 +247,53 @@ const AddIndivisual = ({ onClose, fetchDonorData ,isOpen}) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res) => {
-      toast.success("DonorCreated Sucessfully");
-      fetchDonorData();
-      onClose();
-      setDonor({
-        indicomp_full_name: "",
-        title: "",
-        indicomp_father_name: "",
-        indicomp_mother_name: "",
-        indicomp_gender: "",
-        indicomp_spouse_name: "",
-        indicomp_dob_annualday: "",
-        indicomp_doa: "",
-        indicomp_pan_no: "",
-        indicomp_image_logo: "",
-        indicomp_remarks: "",
-        indicomp_promoter: "",
-        indicomp_newpromoter: "",
-        indicomp_belongs_to: "",
-        indicomp_source: "",
-        indicomp_donor_type: "",
-        indicomp_type: "Individual",
-        indicomp_mobile_phone: "",
-        indicomp_mobile_whatsapp: "",
-        indicomp_email: "",
-        indicomp_website: "",
-        indicomp_res_reg_address: "",
-        indicomp_res_reg_area: "",
-        indicomp_res_reg_ladmark: "",
-        indicomp_res_reg_city: "",
-        indicomp_res_reg_state: "",
-        indicomp_res_reg_pin_code: "",
-        indicomp_off_branch_address: "",
-        indicomp_off_branch_area: "",
-        indicomp_off_branch_ladmark: "",
-        indicomp_off_branch_city: "",
-        indicomp_off_branch_state: "",
-        indicomp_off_branch_pin_code: "",
-        indicomp_corr_preffer: "Residence",
-      });
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        fetchDonorData();
+        onClose();
+        setDonor({
+          indicomp_full_name: "",
+          title: "",
+          indicomp_father_name: "",
+          indicomp_mother_name: "",
+          indicomp_gender: "",
+          indicomp_spouse_name: "",
+          indicomp_dob_annualday: "",
+          indicomp_doa: "",
+          indicomp_pan_no: "",
+          indicomp_image_logo: "",
+          indicomp_remarks: "",
+          indicomp_promoter: "",
+          indicomp_newpromoter: "",
+          indicomp_belongs_to: "",
+          indicomp_source: "",
+          indicomp_donor_type: "",
+          indicomp_type: "Individual",
+          indicomp_mobile_phone: "",
+          indicomp_mobile_whatsapp: "",
+          indicomp_email: "",
+          indicomp_website: "",
+          indicomp_res_reg_address: "",
+          indicomp_res_reg_area: "",
+          indicomp_res_reg_ladmark: "",
+          indicomp_res_reg_city: "",
+          indicomp_res_reg_state: "",
+          indicomp_res_reg_pin_code: "",
+          indicomp_off_branch_address: "",
+          indicomp_off_branch_area: "",
+          indicomp_off_branch_ladmark: "",
+          indicomp_off_branch_city: "",
+          indicomp_off_branch_state: "",
+          indicomp_off_branch_pin_code: "",
+          indicomp_corr_preffer: "Residence",
+        });
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
     });
   };
 

@@ -306,9 +306,17 @@ const DonorEditIndv = ({ id }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res) => {
-      setDonor(res.data.individualCompany);
-      toast.success("Data Update Sucessfully");
-      navigate("/donor-list");
+      if (res.data.code === 200) {
+        setDonor(res.data.individualCompany);
+        toast.success(res.data.msg);
+        navigate("/donor-list");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
     });
   };
 

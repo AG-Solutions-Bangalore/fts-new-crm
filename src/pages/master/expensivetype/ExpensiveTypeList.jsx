@@ -81,7 +81,7 @@ const ExpensiveTypeList = () => {
       ots_exp_type: user.ots_exp_type,
     };
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${BASE_URL}/api/create-ots-exptypes`,
         formData,
         {
@@ -91,13 +91,17 @@ const ExpensiveTypeList = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Expensive Type is Created Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchData();
         setUser({ ots_exp_type: "" });
         handleClose(e);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Expensive Type Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Expensive Type:", error);
@@ -120,7 +124,7 @@ const ExpensiveTypeList = () => {
       ots_exp_type: user1.ots_exp_type1,
     };
     try {
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-ots-exptypes/${selected_user_id}`,
         formData,
         {
@@ -130,12 +134,16 @@ const ExpensiveTypeList = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchData();
-        toast.success("Expensive Type is Updated Successfully");
         handleClose1(e);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Expensive Type Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Expensive Type:", error);

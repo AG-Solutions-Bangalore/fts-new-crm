@@ -131,22 +131,29 @@ const Team = () => {
     };
 
     try {
-      await axios.post(`${BASE_URL}/api/create-committee`, data, {
+      const res = await axios.post(`${BASE_URL}/api/create-committee`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      toast.success("Committee is Created Successfully");
-      setCommittee({
-        committee_type: "",
-        designation: "",
-        indicomp_fts_id: "",
-        indicomp_full_name: "",
-        receipt_from_date: "",
-        receipt_to_date: "",
-        indicomp_full_name_dummy: "",
-      });
-      //   fetchCommittees();
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        setCommittee({
+          committee_type: "",
+          designation: "",
+          indicomp_fts_id: "",
+          indicomp_full_name: "",
+          receipt_from_date: "",
+          receipt_to_date: "",
+          indicomp_full_name_dummy: "",
+        });
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
     } catch (error) {
       toast.error("Error creating committee");
       console.error(error);

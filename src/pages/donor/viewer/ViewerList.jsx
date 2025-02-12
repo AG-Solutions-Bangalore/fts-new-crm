@@ -8,6 +8,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import AddViewer from "./AddViewer";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import moment from "moment";
+import { encryptId } from "../../../utils/encyrption/Encyrption";
 
 const ViewerList = () => {
   const [viewerData, setViewerData] = useState(null);
@@ -115,10 +116,13 @@ const ViewerList = () => {
           return (
             <div className="flex gap-2">
               <div
-                onClick={() => navigate(`/edit-viewer/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id);
+                  navigate(`/edit-viewer/${encodeURIComponent(encryptedId)}`);
+                }}
+                // onClick={() => navigate(`/edit-viewer/${id}`)}
                 className="flex items-center space-x-2"
                 title="Edit"
-
               >
                 <IconEdit
                   title="Edit"

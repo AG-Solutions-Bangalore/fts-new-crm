@@ -108,7 +108,7 @@ const DataSource = () => {
       chapter_id: id,
     };
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${BASE_URL}/api/create-datasource`,
         formData,
         {
@@ -118,8 +118,8 @@ const DataSource = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Data Source is Created Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         handleClose();
         fetchDataSources();
         setUser({
@@ -127,8 +127,12 @@ const DataSource = () => {
           chapter_id: "",
         });
         // navigate("/master/chapters");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Failed to update Data Source");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Data Source:", error);
@@ -152,7 +156,7 @@ const DataSource = () => {
       chapter_id: id,
     };
     try {
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-datasource/${selected_user_id}`,
         formData,
         {
@@ -162,8 +166,8 @@ const DataSource = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Data Source is Updated Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         handleClose1();
         fetchDataSources();
         setUser({
@@ -171,8 +175,12 @@ const DataSource = () => {
           chapter_id: "",
         });
         // navigate("/master/chapters");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Failed to update Data Source");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Data Source:", error);

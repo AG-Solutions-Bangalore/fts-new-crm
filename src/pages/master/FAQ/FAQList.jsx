@@ -91,23 +91,22 @@ const FAQList = () => {
       text: user.text,
     };
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/create-faqs`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.success("FAQ is Created Successfully");
+      const res = await axios.post(`${BASE_URL}/api/create-faqs`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchData();
         setUser({ header1: "", text1: "" });
         handleClose(e);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("FAQ Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating FAQ:", error);
@@ -131,7 +130,7 @@ const FAQList = () => {
       text: user1.text1,
     };
     try {
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-faqs/${selected_user_id}`,
         formData,
         {
@@ -141,12 +140,16 @@ const FAQList = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("FAQ is Updated Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchData();
         handleClose1(e);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("FAQ Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating FAQ:", error);

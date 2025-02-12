@@ -102,7 +102,11 @@ const ReceiptList = () => {
           return (
             <div className="flex gap-2">
               <div
-                onClick={() => navigate(`/view-receipts/${id}`)}
+                onClick={() => {
+                  const encryptedId = encryptId(id);
+                  navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
+                }}
+                // onClick={() => navigate(`/view-receipts/${id}`)}
                 title="Receipt View"
                 className="flex items-center space-x-2"
               >

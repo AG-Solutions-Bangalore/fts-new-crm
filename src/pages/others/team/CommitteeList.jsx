@@ -42,8 +42,14 @@ const CommitteeList = () => {
       },
     })
       .then((res) => {
-        toast.success("Data deleted successfully");
-        fetchCommitteeData();
+        if (res.data.code === 200) {
+          toast.success(res.data.msg);
+          fetchCommitteeData();
+        } else if (res.data.code === 400) {
+          toast.error(res.data.msg);
+        } else {
+          toast.error("Unexcepted Error");
+        }
       })
       .catch((error) => {
         console.error("There was an error deleting the data!", error);

@@ -188,11 +188,19 @@ const DonorEditComp = ({ id }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res) => {
-      toast.success("Data Sucessfully Removed From the Group");
-      setDonor(res.data.individualCompany);
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        setDonor(res.data.individualCompany);
 
-      setShowmodal(false);
-      navigate("/donor-list");
+        setShowmodal(false);
+        navigate("/donor-list");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
     });
   };
 

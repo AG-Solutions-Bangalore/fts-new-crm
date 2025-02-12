@@ -9,6 +9,7 @@ import { MenuItem, TextField } from "@mui/material";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 import SelectInput from "../../../components/common/SelectInput";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 const status1 = [
   {
     value: "Active",
@@ -21,6 +22,7 @@ const status1 = [
 ];
 const EditViewer = () => {
   const { id } = useParams();
+  const decryptedId = decryptId(id);
 
   const navigate = useNavigate();
   const [viewerId, setID] = useState(0);
@@ -134,7 +136,7 @@ const EditViewer = () => {
     const fetchViewer = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-viewer-by-id/${id}`,
+          `${BASE_URL}/api/fetch-viewer-by-id/${decryptedId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -149,7 +151,7 @@ const EditViewer = () => {
     };
 
     fetchViewer();
-  }, [id]);
+  }, [decryptedId]);
 
   const setTheViewer = (users) => {
     setID(users.id);
@@ -204,10 +206,16 @@ const EditViewer = () => {
       },
     });
 
-    toast.success("Viewer Edited Succesfully");
-    navigate("/viewer-list");
-
-    setIsButtonDisabled(false);
+    if (res.data.code === 200) {
+      toast.success(res.data.msg);
+      navigate("/viewer-list");
+    } else if (res.data.code === 400) {
+      toast.error(res.data.msg);
+      setIsButtonDisabled(false);
+    } else {
+      toast.error("Unexcepted Error");
+      setIsButtonDisabled(false);
+    }
   };
 
   const FormLabel = ({ children, required }) => (

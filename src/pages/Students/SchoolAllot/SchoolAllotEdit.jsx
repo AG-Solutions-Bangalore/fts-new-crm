@@ -8,6 +8,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 import MUIDataTable from "mui-datatables";
+import { decryptId } from "../../../utils/encyrption/Encyrption";
 
 const SchoolAllotEdit = () => {
   const year = localStorage.getItem("sclaltyear");
@@ -20,6 +21,7 @@ const SchoolAllotEdit = () => {
 
   // const id = localStorage.getItem("sclaltid");
   const { id } = useParams();
+  const decryptedId = decryptId(id);
 
   const [schoolalot, setSchoolalot] = useState({
     schoolalot_financial_year: "",
@@ -52,7 +54,7 @@ const SchoolAllotEdit = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-schoolsallot-by-id/${id}`,
+          `${BASE_URL}/api/fetch-schoolsallot-by-id/${decryptedId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -66,7 +68,7 @@ const SchoolAllotEdit = () => {
         );
 
         const schoolsResponse = await axios.get(
-          `${BASE_URL}/api/fetch-school-alloted-list-by-id/${id}/${year}`,
+          `${BASE_URL}/api/fetch-school-alloted-list-by-id/${decryptedId}/${year}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -109,14 +111,14 @@ const SchoolAllotEdit = () => {
     };
 
     fetchData();
-  }, [id, year]);
+  }, [decryptedId, year]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     const selectedIds = localStorage.getItem("selectedSchoolIds") || "";
     const data = {
-      donor_related_id: id,
+      donor_related_id: decryptedId,
       schoolalot_financial_year: schoolalot.schoolalot_financial_year,
       schoolalot_to_date: schoolalot.schoolalot_to_date,
       schoolalot_from_date: schoolalot.schoolalot_from_date,
@@ -125,11 +127,21 @@ const SchoolAllotEdit = () => {
     };
 
     try {
-      await axios.put(`${BASE_URL}/api/update-schoolsallot/${id}`, data, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      toast.success("Data updated successfully");
-      navigate("/students-schoolallot");
+      const res = await axios.put(
+        `${BASE_URL}/api/update-schoolsallot/${decryptedId}`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        navigate("/students-schoolallot");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+      } else {
+        toast.error("Unexcepted Error");
+      }
     } catch (error) {
       console.error("Error updating data:", error);
     } finally {

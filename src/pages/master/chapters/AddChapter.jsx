@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import BASE_URL from "../../../base/BaseUrl";
@@ -93,18 +93,14 @@ const AddChapter = ({ onClose, fetchChapter }) => {
       chapter_region_code: chapter.chapter_region_code,
     };
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/create-chapter`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/create-chapter`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-      if (response.status == 200) {
-        toast.success("Chapter is Created Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchChapter();
         onClose();
         setChapter({
@@ -121,8 +117,12 @@ const AddChapter = ({ onClose, fetchChapter }) => {
           chapter_date_of_incorporation: "",
           chapter_region_code: "",
         });
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("An unknown error occurred");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Chapter:", error);

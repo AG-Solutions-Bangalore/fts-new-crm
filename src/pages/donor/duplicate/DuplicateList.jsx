@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
+import { encryptId } from "../../../utils/encyrption/Encyrption";
 
 const DuplicateList = () => {
   const [duplicateData, setDuplicateData] = useState(null);
@@ -53,10 +54,13 @@ const DuplicateList = () => {
       });
 
       if (response.status === 200) {
-        toast.success("Duplicate Deleted Successfully");
+        toast.success(res.data.msg);
         fetchDuplicateData();
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("Data Update Error");
+        toast.error("Unexcepted Error");
       }
     } catch (error) {
       toast.error("An error occurred: " + error.message);
@@ -136,7 +140,13 @@ const DuplicateList = () => {
               {receiptCount > 0 ? (
                 <div
                   title="Edit"
-                  onClick={() => navigate(`/duplicate-edit/${id}`)}
+                  // onClick={() => navigate(`/duplicate-edit/${id}`)}
+                  onClick={() => {
+                    const encryptedId = encryptId(id);
+                    navigate(
+                      `/duplicate-edit/${encodeURIComponent(encryptedId)}`
+                    );
+                  }}
                   className="flex items-center space-x-2"
                 >
                   <IconEdit className="h-5 w-5 text-blue-500 hover:text-green-500 cursor-pointer" />

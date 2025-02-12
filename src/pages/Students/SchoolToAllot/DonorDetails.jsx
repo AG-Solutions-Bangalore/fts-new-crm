@@ -123,11 +123,20 @@ const DonorDetails = () => {
     };
 
     try {
-      await axios.post(`${BASE_URL}/api/create-school-alot`, data, {
+      const res = await axios.post(`${BASE_URL}/api/create-school-alot`, data, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      toast.success("Data Inserted Successfully");
-      navigate("/students-schoolallot");
+
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        navigate("/students-schoolallot");
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
+      } else {
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
+      }
     } catch (error) {
       console.error("Error submitting data:", error);
     }

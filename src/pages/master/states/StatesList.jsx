@@ -96,23 +96,23 @@ const StatesList = () => {
       state_zone: user.state_zone,
     };
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/create-states`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/api/create-states`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-      if (response.status === 200) {
-        toast.success("State is Created Successfully");
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchStates();
 
         handleClose(e);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("State Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating State:", error);
@@ -137,7 +137,7 @@ const StatesList = () => {
       state_zone: user.state_zone,
     };
     try {
-      const response = await axios.put(
+      const res = await axios.put(
         `${BASE_URL}/api/update-states/${selected_user_id}`,
         formData,
         {
@@ -147,14 +147,17 @@ const StatesList = () => {
         }
       );
 
-      if (response.status === 200) {
-        // setUsers(response.data.states);
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
         fetchStates();
 
-        toast.success("State is Updated Successfully");
         handleClose1(e);
+      } else if (res.data.code === 400) {
+        toast.error(res.data.msg);
+        setIsButtonDisabled(false);
       } else {
-        toast.error("State Duplicate Entry");
+        toast.error("Unexcepted Error");
+        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating State:", error);

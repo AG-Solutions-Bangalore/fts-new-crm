@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEye } from "@tabler/icons-react";
 import { ContextPanel } from "../../../utils/ContextPanel";
+import { encryptId } from "../../../utils/encyrption/Encyrption";
 
 const FullList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const { currentYear } = useContext(ContextPanel);
   const [chapter, setChapter] = useState([]);
 
@@ -77,12 +78,20 @@ const FullList = () => {
       size: 50,
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
-          <Link to={`/students-full-list-view/${row.original.id}`}>
+          <div
+            // to={`/students-full-list-view/${row.original.id}`}
+            onClick={() => {
+              const encryptedId = encryptId(row.original.id);
+              navigate(
+                `/students-full-list-view/${encodeURIComponent(encryptedId)}`
+              );
+            }}
+          >
             <IconEye
               title="Allotment"
               className="h-5 w-5 cursor-pointer text-blue-500"
             />
-          </Link>
+          </div>
         </div>
       ),
     },
