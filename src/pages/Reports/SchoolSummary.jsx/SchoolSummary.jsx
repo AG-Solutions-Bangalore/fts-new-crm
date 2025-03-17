@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import SelectInput from "../../../components/common/SelectInput";
 import { useNavigate } from "react-router-dom";
+import { SUMMARY_DOWNLOAD, SUMMARY_SOURCE_DROPDOWN } from "../../../api";
 
 function SchoolSummary() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ function SchoolSummary() {
       },
     };
 
-    fetch(BASE_URL + "/api/fetch-school-allot-year-donor", requestOptions)
+    fetch(SUMMARY_SOURCE_DROPDOWN, requestOptions)
       .then((response) => response.json())
       .then((data) => setIndividuals(data.schoolallot));
   }, []);
@@ -58,7 +59,7 @@ function SchoolSummary() {
 
     if (v) {
       axios({
-        url: BASE_URL + "/api/download-school-summary",
+        url: SUMMARY_DOWNLOAD,
         method: "POST",
         data,
         headers: {

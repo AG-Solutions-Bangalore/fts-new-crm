@@ -5,6 +5,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import SelectInput from "../../../components/common/SelectInput";
+import { DOWNLOAD_ALL_RECEIPT, DOWNLOAD_DROPDOWN_CHAPTER, DOWNLOAD_DROPDOWN_DATASOURCE, DOWNLOAD_DROPDOWN_PROMOTER } from "../../../api";
 
 function DowloadAllRecepit() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -228,7 +229,7 @@ function DowloadAllRecepit() {
       setIsButtonDisabled(true);
 
       axios({
-        url: BASE_URL + "/api/download-receipt-all",
+        url: DOWNLOAD_ALL_RECEIPT,
         method: "POST",
         data,
         headers: {
@@ -279,21 +280,21 @@ function DowloadAllRecepit() {
     };
 
     const fetchDatasource = fetch(
-      BASE_URL + "/api/fetch-datasource",
+      DOWNLOAD_DROPDOWN_DATASOURCE,
       requestOptions
     )
       .then((response) => response.json())
       .then((data) => data.datasource);
 
     const fetchChapters = fetch(
-      BASE_URL + "/api/fetch-chapters",
+      DOWNLOAD_DROPDOWN_CHAPTER,
       requestOptions
     )
       .then((response) => response.json())
       .then((data) => data.chapters);
 
     const fetchPromoters = fetch(
-      BASE_URL + "/api/fetch-promoter",
+      DOWNLOAD_DROPDOWN_PROMOTER,
       requestOptions
     )
       .then((response) => response.json())

@@ -15,6 +15,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { SUMMARY_VIEW } from "../../../api";
 
 const printStyles = `
   @media print {
@@ -47,7 +48,7 @@ const SchoolSumaryView = (props) => {
       const id = localStorage.getItem("schl_sum_viw");
       try {
         const res = await axios.get(
-          `${BASE_URL}/api/fetch-schoolsallot-receipt-by-id/${id}`,
+          `${SUMMARY_VIEW}/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

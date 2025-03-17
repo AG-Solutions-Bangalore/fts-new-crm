@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { FormLabel } from "@mui/material";
 import SelectField from "../../../components/common/SelectInput";
+import { PROMOTER_SUMMARY_DOWNLOAD, PROMOTER_SUMMARY_DROPDOWN } from "../../../api";
 
 const PromterSummary = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ const PromterSummary = () => {
       },
     };
 
-    fetch(BASE_URL + "/api/fetch-promoter", requestOptions)
+    fetch(PROMOTER_SUMMARY_DROPDOWN, requestOptions)
       .then((response) => response.json())
       .then((data) => setPromoters(data.promoter));
   }, []);
@@ -75,7 +76,7 @@ const PromterSummary = () => {
 
     if (document.getElementById("dowRecp").reportValidity()) {
       axios({
-        url: BASE_URL + "/api/download-promoter-summary",
+        url: PROMOTER_SUMMARY_DOWNLOAD,
         method: "POST",
         data,
         headers: {

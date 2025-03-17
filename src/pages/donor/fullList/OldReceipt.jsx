@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import BASE_URL from "../../../base/BaseUrl";
 import moment from "moment";
 import { encryptId } from "../../../components/common/EncryptionDecryption";
+import { DONOR_VIEW_OLD_RECEIPT_LIST, navigateToViewReceiptFromOldReceipt } from "../../../api";
 
 const OldReceipt = ({ viewerId, onClose }) => {
   const [receiptData, setReceiptData] = useState(null);
@@ -22,7 +23,7 @@ const OldReceipt = ({ viewerId, onClose }) => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-receipts-by-old-id/${viewerId}`,
+        `${DONOR_VIEW_OLD_RECEIPT_LIST}/${viewerId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -96,10 +97,13 @@ const OldReceipt = ({ viewerId, onClose }) => {
             <div className="flex gap-2">
               <div
                 title="Receipt View"
-                onClick={() => {
-                  const encryptedId = encryptId(id);
-                  navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
-                }}
+                // onClick={() => {
+                //   const encryptedId = encryptId(id);
+                //   navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
+                // }}
+                   onClick={() => {
+                    navigateToViewReceiptFromOldReceipt(navigate,id)
+                                            }}
                 // onClick={() => navigate(`/view-receipts/${id}`)}
                 className="flex items-center space-x-2"
               >

@@ -8,7 +8,12 @@ import { Button } from "@material-tailwind/react";
 import moment from "moment";
 import CryptoJS from "crypto-js";
 import { toast } from "react-toastify";
-import { decryptId } from "../../utils/encyrption/Encyrption";
+// import { decryptId } from "../../utils/encyrption/Encyrption";
+import {
+  fetchReceiptEditById,
+  fetchReceiptEditByIdDonorData,
+  fetchReceiptEditByIdUpdate,
+} from "../../api";
 
 const pay_mode = [
   {
@@ -71,13 +76,8 @@ const donation_type_2 = [
 const ReceiptEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const decryptedId = useMemo(() => decryptId(id), [id]);
-  useEffect(() => {
-    if (!decryptedId) {
-      toast.error("Invalid receipt ID");
-      navigate("/receipt-list");
-    }
-  }, [decryptedId, navigate]);
+  // const decryptedId = useMemo(() => decryptId(id), [id]);
+ 
 
   const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -156,36 +156,41 @@ const ReceiptEdit = () => {
         setSchoolAllotYear(res.data.schoolallotyear);
       });
   };
-  const DonorData = () => {
-    axios
-      .get(`${BASE_URL}/api/fetch-donor-by-id/${decryptedId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setUserdata(res.data.individualCompany);
+ 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchReceiptEditByIdDonorData(id);
+        setUserdata(data.individualCompany);
         setLoader(false);
-      });
-  };
+      } catch (error) {
+        toast.error("Failed to fetch receipt edit donor details");
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
   useEffect(() => {
     FetchSchoolAllotYear();
-    DonorData();
+    // DonorData()
     FetchMemeberShipYear();
   }, []);
+ 
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/fetch-receipt-by-id/${decryptedId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setDonor(res.data.receipt);
+    const fetchData = async () => {
+      try {
+        const data = await fetchReceiptEditById(id);
+        setDonor(data.receipt);
         setLoader(false);
-      });
-  }, []);
+      } catch (error) {
+        toast.error("Failed to fetch receipt edit details");
+      }
+    };
 
+    fetchData();
+  }, [id]);
   const [datasource, setDatasource] = useState([]);
   useEffect(() => {
     axios
@@ -225,16 +230,7 @@ const ReceiptEdit = () => {
       donor_source: donor.donor_source,
     };
     try {
-      const res = await axios.put(
-        `${BASE_URL}/api/update-receipt/${decryptedId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
+      const res = await fetchReceiptEditByIdUpdate(id, formData);
       if (res.data.code === 200) {
         toast.success(res.data.msg);
         navigate("/receipt-list");

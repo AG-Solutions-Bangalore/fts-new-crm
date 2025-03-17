@@ -4,6 +4,7 @@ import axios from 'axios';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import moment from 'moment';
+import { FAMILY_DETAILS_LIST } from '../../../../api';
 
 const FamilyDetails = ({viewerId}) => {
     const [donorfam, setDonorFam] = useState([]);
@@ -14,7 +15,7 @@ const FamilyDetails = ({viewerId}) => {
         setLoader(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-donor-by-id/${viewerId}`,
+          `${FAMILY_DETAILS_LIST}/${viewerId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

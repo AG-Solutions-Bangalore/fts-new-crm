@@ -7,6 +7,7 @@ import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
+import { DUPLICATE_DELETE, DUPLICATE_LIST, navigateToDuplicateEdit } from "../../../api";
 
 const DuplicateList = () => {
   const [duplicateData, setDuplicateData] = useState(null);
@@ -23,7 +24,7 @@ const DuplicateList = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-donors-duplicate`,
+        `${DUPLICATE_LIST}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -46,7 +47,7 @@ const DuplicateList = () => {
     e.preventDefault();
     try {
       const response = await axios({
-        url: BASE_URL + "/api/update-donors-duplicate-by-id/" + id,
+        url: DUPLICATE_DELETE  + id,
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -141,12 +142,16 @@ const DuplicateList = () => {
                 <div
                   title="Edit"
                   // onClick={() => navigate(`/duplicate-edit/${id}`)}
+                  // onClick={() => {
+                  //   const encryptedId = encryptId(id);
+                  //   navigate(
+                  //     `/duplicate-edit/${encodeURIComponent(encryptedId)}`
+                  //   );
+                  // }}
                   onClick={() => {
-                    const encryptedId = encryptId(id);
-                    navigate(
-                      `/duplicate-edit/${encodeURIComponent(encryptedId)}`
-                    );
-                  }}
+                    navigateToDuplicateEdit(navigate,id)
+                                                }}
+                
                   className="flex items-center space-x-2"
                 >
                   <IconEdit className="h-5 w-5 text-blue-500 hover:text-green-500 cursor-pointer" />

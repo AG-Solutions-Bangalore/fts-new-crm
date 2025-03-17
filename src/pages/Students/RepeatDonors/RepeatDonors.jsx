@@ -7,6 +7,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
+import { navigateToRepeatDonorEdit, REAPEAT_DONOR_LIST } from "../../../api";
 
 const RepeatDonors = () => {
   const [repeatDonor, setRepeatDonor] = useState([]);
@@ -25,7 +26,7 @@ const RepeatDonors = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-receipt-duplicate/${currentYear}`,
+        `${REAPEAT_DONOR_LIST}/${currentYear}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -90,18 +91,20 @@ const RepeatDonors = () => {
         enableHiding: false,
         Cell: ({ row }) => {
           const id = row.original.indicomp_fts_id;
-          console.log("id", id);
+          
 
           return (
             <div className="flex gap-2">
               <div
-                onClick={() => {
-                  const encryptedId = encryptId(id);
-                  navigate(
-                    `/repeat-donor-allot/${encodeURIComponent(encryptedId)}`
-                  );
-                }}
-                // onClick={() => navigate(`/repeat-donor-allot/${id}`)}
+                // onClick={() => {
+                //   const encryptedId = encryptId(id);
+                //   navigate(
+                //     `/repeat-donor-allot/${encodeURIComponent(encryptedId)}`
+                //   );
+                // }}
+             onClick={() => {
+              navigateToRepeatDonorEdit(navigate,id)
+                                           }}
                 className="flex items-center space-x-2"
                 title="Edit"
                 style={{

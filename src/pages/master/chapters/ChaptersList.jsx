@@ -9,6 +9,7 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import AddChapter from "./AddChapter";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
+import { CHAPTER_LIST, navigateToChapterDatasource, navigateToChapterEdit, navigateToChapterView } from "../../../api";
 
 const ChaptersList = () => {
   const [chapterList, setChapterList] = useState([]);
@@ -30,7 +31,7 @@ const navigate =useNavigate()
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/fetch-chapters`, {
+      const response = await axios.get(`${CHAPTER_LIST}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,9 +71,12 @@ const navigate =useNavigate()
           <Tooltip title="View" arrow>
             <div
               // to={`/view-chapter/${row.original.id}`}
+              // onClick={() => {
+              //   const encryptedId = encryptId(row.original.id);
+              //   navigate(`/view-chapter/${encodeURIComponent(encryptedId)}`);
+              // }}
               onClick={() => {
-                const encryptedId = encryptId(row.original.id);
-                navigate(`/view-chapter/${encodeURIComponent(encryptedId)}`);
+                navigateToChapterView(navigate,row.original.id)
               }}
             >
               <IconEye className="h-5 w-5 cursor-pointer text-blue-500" />
@@ -82,9 +86,12 @@ const navigate =useNavigate()
           <Tooltip title="Edit" arrow>
             <div
               // to={`/edit-chapter/${row.original.id}`}
+              // onClick={() => {
+              //   const encryptedId = encryptId(row.original.id);
+              //   navigate(`/edit-chapter/${encodeURIComponent(encryptedId)}`);
+              // }}
               onClick={() => {
-                const encryptedId = encryptId(row.original.id);
-                navigate(`/edit-chapter/${encodeURIComponent(encryptedId)}`);
+                navigateToChapterEdit(navigate,row.original.id)
               }}
             >
               <IconEdit className="h-5 w-5 cursor-pointer text-blue-500" />
@@ -94,9 +101,12 @@ const navigate =useNavigate()
           <Tooltip title="Datasource" arrow>
             <div
               // to={`/edit-datasource/${row.original.id}`}
+              // onClick={() => {
+              //   const encryptedId = encryptId(row.original.id);
+              //   navigate(`/edit-datasource/${encodeURIComponent(encryptedId)}`);
+              // }}
               onClick={() => {
-                const encryptedId = encryptId(row.original.id);
-                navigate(`/edit-datasource/${encodeURIComponent(encryptedId)}`);
+                navigateToChapterDatasource(navigate,row.original.id)
               }}
             >
               <IconReceipt className="h-5 w-5 cursor-pointer text-blue-500" />

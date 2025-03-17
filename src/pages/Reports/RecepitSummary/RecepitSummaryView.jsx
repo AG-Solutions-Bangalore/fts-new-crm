@@ -15,6 +15,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { RECEIPT_SUMMARY_VIEW } from "../../../api";
 
 const printStyles = `
   @media print {
@@ -57,7 +58,7 @@ const RecepitSummaryView = (props) => {
       const receiptToDate = localStorage.getItem("receipt_to_date_recp");
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-receiptsummary-by-id/${receiptFromDate}/${receiptToDate}`,
+          `${RECEIPT_SUMMARY_VIEW}/${receiptFromDate}/${receiptToDate}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

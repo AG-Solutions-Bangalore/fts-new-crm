@@ -13,6 +13,7 @@ import {
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import SelectInput from "../../components/common/SelectInput";
 import { encryptId } from "../../utils/encyrption/Encyrption";
+import { ADMIN_CHAPTER_CREATE, ADMIN_CHAPTER_DATA_CHAPTER_LIST, ADMIN_CHAPTER_EDIT_UPDATE, ADMIN_CHAPTER_UPDATE, navigateToAdminSchoolView } from "../../api";
 const committee_type = [
   {
     value: "President",
@@ -163,7 +164,7 @@ const Chapter = () => {
   };
   const fetchData = () => {
     axios
-      .get(`${BASE_URL}/api/fetch-chapter-by-id/${id}`, {
+      .get(`${ADMIN_CHAPTER_DATA_CHAPTER_LIST}/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -222,7 +223,7 @@ const Chapter = () => {
     console.log(formData, "formdata");
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/create-user`,
+        `${ADMIN_CHAPTER_CREATE}`,
         formData,
         {
           headers: {
@@ -283,7 +284,7 @@ const Chapter = () => {
 
     try {
       const response = await axios.put(
-        `${BASE_URL}/api/update-user/${selected_user_id}`,
+        `${ADMIN_CHAPTER_EDIT_UPDATE}/${selected_user_id}`,
         formData,
         {
           headers: {
@@ -357,11 +358,14 @@ const Chapter = () => {
           <button
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
             // onClick={() => navigate(`/chapter/view-shool/${row.original.id}`)}
+            // onClick={() => {
+            //   const encryptedId = encryptId(row.original.id);
+            //   navigate(
+            //     `/chapter/view-shool/${encodeURIComponent(encryptedId)}`
+            //   );
+            // }}
             onClick={() => {
-              const encryptedId = encryptId(row.original.id);
-              navigate(
-                `/chapter/view-shool/${encodeURIComponent(encryptedId)}`
-              );
+              navigateToAdminSchoolView(navigate,row.original.id)
             }}
           >
             School
@@ -406,7 +410,7 @@ const Chapter = () => {
     setIsButtonDisabled(true);
     axios({
       url:
-        BASE_URL + "/api/update-chapter/" + localStorage.getItem("chapter_id"),
+      ADMIN_CHAPTER_UPDATE  + localStorage.getItem("chapter_id"),
       method: "PUT",
       data,
       headers: {

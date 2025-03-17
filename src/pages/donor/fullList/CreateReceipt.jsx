@@ -9,6 +9,7 @@ import { Button, ButtonGroup } from "@material-tailwind/react";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { ContextPanel } from "../../../utils/ContextPanel";
 import { decryptId, encryptId } from "../../../utils/encyrption/Encyrption";
+import { DONOR_LIST_CREATE_RECEIPT, fetchDonorDataInCreateReceiptById, navigateToViewReceiptFromCreateReceipt } from "../../../api";
 const exemption = [
   {
     value: "80G",
@@ -84,7 +85,7 @@ const donation_type_2 = [
 
 const CreateReceipt = () => {
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  // const decryptedId = decryptId(id);
 
   const today = new Date();
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ const CreateReceipt = () => {
     receipt_date: "",
     receipt_old_no: "",
     receipt_exemption_type: "",
-    receipt_financial_year: "",
+    receipt_financial_year: currentYear,
     schoolalot_year: "",
     receipt_total_amount: "",
     receipt_realization_date: "",
@@ -167,26 +168,20 @@ const CreateReceipt = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchDonorData = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/api/fetch-donor-by-id/${decryptedId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        setUserdata(response.data.individualCompany);
-        setLoader(false);
-      } catch (error) {
-        console.error("Error fetching donor data:", error);
-      }
-    };
-
-    fetchDonorData();
-  }, []);
+ 
+   useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchDonorDataInCreateReceiptById(id);
+          setUserdata(data.individualCompany);
+                setLoader(false);
+        } catch (error) {
+          toast.error("Failed to fetch donor data  details");
+        }
+      };
+      
+      fetchData();
+    }, [id]);
 
   const [datasource, setDatasource] = useState([]);
   useEffect(() => {
@@ -287,7 +282,7 @@ const CreateReceipt = () => {
     formData.append("donor_promoter", userdata.indicomp_promoter);
     formData.append("donor_source", donor.donor_source);
     try {
-      const res = await axios.post(`${BASE_URL}/api/create-receipt`, formData, {
+      const res = await axios.post(`${DONOR_LIST_CREATE_RECEIPT}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -296,8 +291,11 @@ const CreateReceipt = () => {
       if (res.data.code === 200) {
         toast.success(res.data.msg);
         // navigate(`/view-receipts/${res.data.r_id}`);
-        const encryptedId = encryptId(res?.data?.r_id);
-        navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
+        // const encryptedId = encryptId(res?.data?.r_id);
+        // navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
+      
+        navigateToViewReceiptFromCreateReceipt(navigate,res.data.r_id)
+                                 
       } else if (res.data.code === 400) {
         toast.error(res.data.msg);
         setIsButtonDisabled(false);

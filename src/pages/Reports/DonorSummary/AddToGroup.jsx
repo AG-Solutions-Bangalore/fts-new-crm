@@ -4,6 +4,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { IconArrowBack } from "@tabler/icons-react";
+import { DONOR_SUMMARY_FETCH_DONOR } from "../../../api";
 
 const AddToGroup = ({ populateDonorName, handleClose }) => {
   const [loader, setLoader] = useState(true);
@@ -16,7 +17,7 @@ const AddToGroup = ({ populateDonorName, handleClose }) => {
   const getData = async () => {
     setLoader(true);
     try {
-      const res = await axios.get(`${BASE_URL}/api/fetch-donors`, {
+      const res = await axios.get(`${DONOR_SUMMARY_FETCH_DONOR}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

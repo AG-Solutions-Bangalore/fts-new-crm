@@ -17,6 +17,7 @@ import ReactToPrint from "react-to-print";
 
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { DONOR_SUMMARY_GROUP_DOWNLOAD, DONOR_SUMMARY_GROUP_VIEW } from "../../../api";
 const printStyles = `
   @media print {
 
@@ -54,7 +55,7 @@ const DonorGroupView = (props) => {
 
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-donorgroupsummary-by-id/${indicompFullName}/${receiptFromDate}/${receiptToDate}`,
+          `${DONOR_SUMMARY_GROUP_VIEW}/${indicompFullName}/${receiptFromDate}/${receiptToDate}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -88,7 +89,7 @@ const DonorGroupView = (props) => {
     };
 
     axios({
-      url: BASE_URL + "/api/download-donor-groupsummary",
+      url: DONOR_SUMMARY_GROUP_DOWNLOAD,
       method: "POST",
       data,
       headers: {

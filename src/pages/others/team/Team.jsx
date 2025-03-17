@@ -17,6 +17,7 @@ import MemberSelect from "./MemberSelect";
 import { toast } from "react-toastify";
 import CommitteeList from "./CommitteeList";
 import moment from "moment/moment";
+import { OTHER_TEAM_COMMITTEE_DROPDOWN, OTHER_TEAM_CREATE, OTHER_TEAM_DESIGNATION_DROPDOWN } from "../../../api";
 
 const Team = () => {
   const [committee, setCommittee] = useState({
@@ -79,7 +80,7 @@ const Team = () => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}/api/fetch-designation`,
+        `${OTHER_TEAM_DESIGNATION_DROPDOWN}`,
         requestOptions
       );
       const data = await response.json();
@@ -103,7 +104,7 @@ const Team = () => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}/api/fetch-committee-date`,
+        `${OTHER_TEAM_COMMITTEE_DROPDOWN}`,
         requestOptions
       );
       const data = await response.json();
@@ -131,7 +132,7 @@ const Team = () => {
     };
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/create-committee`, data, {
+      const res = await axios.post(`${OTHER_TEAM_CREATE}`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -9,6 +9,7 @@ import Logo2 from "../../../assets/receipt/top.png";
 import Logo3 from "../../../assets/receipt/ekal.png";
 import ReactToPrint from "react-to-print";
 import { IoIosPrint } from "react-icons/io";
+import { RECEIPT_VIEW_THREE_BY_ID } from "../../../api";
 
 const ReceiptThree = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const ReceiptThree = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-receipt-by-id/${id}`, {
+      .get(`${RECEIPT_VIEW_THREE_BY_ID}/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

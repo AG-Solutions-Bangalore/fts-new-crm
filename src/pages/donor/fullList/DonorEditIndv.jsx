@@ -10,6 +10,7 @@ import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
 import donor_type from "../../../utils/DonorType";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { DONOR_INDIVISUAL_EDIT_FETCH, DONOR_INDIVISUAL_FAMILY_GROUP_UPDATE, DONOR_INDIVISUAL_UPDATE_SUMBIT } from "../../../api";
 const gender = [
   {
     value: "Male",
@@ -145,7 +146,7 @@ const DonorEditIndv = ({ id }) => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-donor-for-edit/${id}`,
+        `${DONOR_INDIVISUAL_EDIT_FETCH}/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -230,7 +231,7 @@ const DonorEditIndv = ({ id }) => {
     }
 
     axios({
-      url: BASE_URL + "/api/update-donor/" + id,
+      url: DONOR_INDIVISUAL_FAMILY_GROUP_UPDATE  + id,
       method: "PUT",
       data,
       headers: {
@@ -299,7 +300,7 @@ const DonorEditIndv = ({ id }) => {
 
     setIsButtonDisabled(true);
     axios({
-      url: BASE_URL + `/api/update-donor/${id}`,
+      url: DONOR_INDIVISUAL_UPDATE_SUMBIT + `${id}`,
       method: "PUT",
       data,
       headers: {

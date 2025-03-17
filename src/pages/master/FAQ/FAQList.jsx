@@ -7,6 +7,7 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { IconCircleX } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { CREATE_FAQ, FAQ_LIST, UPDATES_FAQ } from "../../../api";
 
 const FAQList = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const FAQList = () => {
   };
   const fetchData = () => {
     axios
-      .get(`${BASE_URL}/api/fetch-faqs`, {
+      .get(`${FAQ_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -91,7 +92,7 @@ const FAQList = () => {
       text: user.text,
     };
     try {
-      const res = await axios.post(`${BASE_URL}/api/create-faqs`, formData, {
+      const res = await axios.post(`${CREATE_FAQ}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -131,7 +132,7 @@ const FAQList = () => {
     };
     try {
       const res = await axios.put(
-        `${BASE_URL}/api/update-faqs/${selected_user_id}`,
+        `${UPDATES_FAQ}/${selected_user_id}`,
         formData,
         {
           headers: {

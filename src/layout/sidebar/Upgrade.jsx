@@ -40,7 +40,7 @@ export const Upgrade = ({ isCollapsed }) => {
           damping: 10,
         }}
       >
-        Updated On: 12-02-2025
+        Updated On: 17-03-2025
       </motion.h2>
     </Box>
   );

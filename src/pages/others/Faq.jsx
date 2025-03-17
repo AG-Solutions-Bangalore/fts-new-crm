@@ -11,6 +11,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import BASE_URL from "../../base/BaseUrl";
 import { toast } from "react-toastify";
 import { IconArrowBack, IconDownload, IconInfoCircle } from "@tabler/icons-react";
+import { OTHER_FAQ, OTHER_FAQ_DOWNLOAD } from "../../api";
 
 
 
@@ -33,7 +34,7 @@ const Faq = () => {
   
     const getData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/fetch-faqs`, {
+        const res = await axios.get(`${OTHER_FAQ}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -53,7 +54,7 @@ const Faq = () => {
     const handleDownload = async () => {
       try {
         const res = await axios.post(
-          `${BASE_URL}/api/download-faq`,
+          `${OTHER_FAQ_DOWNLOAD}`,
           {},
           {
             headers: {

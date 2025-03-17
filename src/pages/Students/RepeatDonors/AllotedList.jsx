@@ -9,6 +9,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconArrowBack, IconEdit } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+import { fetchRepeatDonorEditList, REAPEAT_DONOR_Edit_UPDATE_NEXT } from "../../../api";
 
 const AllotedList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
@@ -16,28 +17,40 @@ const AllotedList = () => {
   const { currentYear } = useContext(ContextPanel);
   const navigate = useNavigate();
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  // const decryptedId = decryptId(id);
 
   const userId = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
   // Fetch school allotment data
-  const fetchSchoolAllotData = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/fetch-school-allot-repeat/${decryptedId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+  // const fetchSchoolAllotData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await axios.get(
+  //       `${BASE_URL}/api/fetch-school-allot-repeat/${decryptedId}`,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     setSchoolAllot(response.data?.schoolAllot || []);
+  //   } catch (error) {
+  //     console.error("Error fetching school allot data:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+   useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchRepeatDonorEditList(id);
+          setSchoolAllot(data?.schoolAllot || []);
+        } catch (error) {
+          toast.error("Failed to fetch school allot details");
         }
-      );
-      setSchoolAllot(response.data?.schoolAllot || []);
-    } catch (error) {
-      console.error("Error fetching school allot data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      };
+      
+      fetchData();
+    }, [id]);
   const updateNext = async (e, allotId) => {
     e.preventDefault();
     console.log("current year", currentYear);
@@ -47,7 +60,7 @@ const AllotedList = () => {
     }
     try {
       const res = await axios.put(
-        `${BASE_URL}/api/update-schoolsallot-repeat/${allotId}`,
+        `${REAPEAT_DONOR_Edit_UPDATE_NEXT}/${allotId}`,
         { schoolalot_financial_year: currentYear },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -65,10 +78,7 @@ const AllotedList = () => {
     }
   };
 
-  useEffect(() => {
-    fetchSchoolAllotData();
-  }, [decryptedId]);
-
+ 
   const columns = useMemo(
     () => [
       { accessorKey: "indicomp_full_name", header: "Donor Name", size: 50 },

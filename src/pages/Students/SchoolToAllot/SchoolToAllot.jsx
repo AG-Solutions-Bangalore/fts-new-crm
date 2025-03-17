@@ -7,6 +7,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { MdConfirmationNumber } from "react-icons/md";
 import { Spinner } from "@material-tailwind/react";
 import { MantineReactTable } from "mantine-react-table";
+import { SCHOOL_TO_ALOT_LIST } from "../../../api";
 
 const SchoolToAllot = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
@@ -20,7 +21,7 @@ const SchoolToAllot = () => {
 
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${BASE_URL}/api/fetch-ots`, {
+        const response = await axios.get(`${SCHOOL_TO_ALOT_LIST}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

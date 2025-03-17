@@ -8,6 +8,7 @@ import MUIDataTable from "mui-datatables";
 import toast from "react-hot-toast";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { FormLabel } from "@mui/material";
+import { DONOR_DETAILS_SUMBIT, SCHOOL_ALLOT_YEAR_BY_YEAR, SCHOOL_DATA_BY_ID, SCHOOL_DONOR_DETAILS_ALLOTED_LIST } from "../../../api";
 
 const DonorDetails = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
@@ -33,9 +34,10 @@ const DonorDetails = () => {
   });
   console.log("date", schoolalot);
   const [userdata, setUserdata] = useState("");
+
   const FetchSchool = () => {
     axios({
-      url: BASE_URL + "/api/fetch-schoolsallotdonor-by-id/" + id,
+      url: SCHOOL_DATA_BY_ID + id,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -48,7 +50,7 @@ const DonorDetails = () => {
 
   const FetchDate = () => {
     axios({
-      url: `${BASE_URL}/api/fetch-school-allot-year-by-year/${schoolalot.schoolalot_financial_year}`,
+      url: `${SCHOOL_ALLOT_YEAR_BY_YEAR}/${schoolalot.schoolalot_financial_year}`,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -74,7 +76,7 @@ const DonorDetails = () => {
 
         try {
           const response = await axios.get(
-            `${BASE_URL}/api/fetch-school-alloted-list/${year}`,
+            `${SCHOOL_DONOR_DETAILS_ALLOTED_LIST}/${year}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -123,7 +125,7 @@ const DonorDetails = () => {
     };
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/create-school-alot`, data, {
+      const res = await axios.post(`${DONOR_DETAILS_SUMBIT}`, data, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 

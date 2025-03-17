@@ -13,6 +13,7 @@ import { NumericFormat } from "react-number-format";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
 import { IconArrowBack } from "@tabler/icons-react";
+import { PAYMENT_SUMMARY_VIEW } from "../../../api";
 
 const PaymentView = (props) => {
   const componentRef = useRef();
@@ -26,7 +27,7 @@ const PaymentView = (props) => {
       const receiptToDate = localStorage.getItem("receipt_to_date_pay");
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-teacher-payment-summary-by-date/${receiptFromDate}/${receiptToDate}`,
+          `${PAYMENT_SUMMARY_VIEW}/${receiptFromDate}/${receiptToDate}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

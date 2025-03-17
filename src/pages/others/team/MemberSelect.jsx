@@ -5,6 +5,7 @@ import axios from "axios";
 import { FaPlus } from "react-icons/fa";
 import { Spinner } from "@material-tailwind/react";
 import { IconArrowBack } from "@tabler/icons-react";
+import { OTHER_TEAM_MEMBER_SELECT_LIST } from "../../../api";
 
 const MemberSelect = ({ populateDonorName, setOpenDialog }) => {
   const [loader, setLoader] = useState(true);
@@ -17,7 +18,7 @@ const MemberSelect = ({ populateDonorName, setOpenDialog }) => {
   const getData = async () => {
     setLoader(true);
     try {
-      const res = await axios.get(`${BASE_URL}/api/fetch-ind-donors`, {
+      const res = await axios.get(`${OTHER_TEAM_MEMBER_SELECT_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

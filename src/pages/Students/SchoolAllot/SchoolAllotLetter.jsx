@@ -13,6 +13,8 @@ import { Button } from "@mui/material";
 import ReactToPrint from "react-to-print";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { SCHOOL_ALLOT_LETTER } from "../../../api";
+import { IconArrowBack } from "@tabler/icons-react";
 
 const SchoolAllotLetter = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const SchoolAllotLetter = () => {
   useEffect(() => {
     if (isLoggedIn) {
       axios
-        .get(`${BASE_URL}/api/fetch-schoolsallot-receipt-by-id/${isLoggedIn}`, {
+        .get(`${SCHOOL_ALLOT_LETTER}/${isLoggedIn}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -122,9 +124,14 @@ const SchoolAllotLetter = () => {
     <Layout>
       <div className="invoice-wrapper overflow-x-auto grid md:grid-cols-1 1fr">
         <div className=" flex justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
-          <h1 className="border-b-2  font-[400] border-dashed border-orange-800">
-            Allotment Letter
-          </h1>
+          
+          <h1 className=" border-b-2 flex flex-row items-center   font-[400] border-dashed border-orange-800">
+                      <IconArrowBack
+                        onClick={() => navigate("/students-schoolallot")}
+                        className="cursor-pointer hover:text-red-600 mr-2"
+                      />
+                      Allotment Letter
+                    </h1>
         </div>
         <div className="flex flex-col items-center">
           <div className="sm:w-[90%] md:w-[90%] lg:w-[70%] mx-auto ">

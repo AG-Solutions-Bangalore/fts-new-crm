@@ -16,6 +16,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { PROMOTER_SUMMARY_VIEW } from "../../../api";
 const printStyles = `
   @media print {
 
@@ -51,7 +52,7 @@ const PromoterSummaryView = (props) => {
       const indicompFullName = localStorage.getItem("indicomp_full_name_prm");
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-promotersummary-by-id/${indicompFullName}/${receiptFromDate}/${receiptToDate}`,
+          `${PROMOTER_SUMMARY_VIEW}/${indicompFullName}/${receiptFromDate}/${receiptToDate}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

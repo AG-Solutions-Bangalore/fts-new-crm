@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import AddToImage from "./AddToImage";
 import { Dialog, DialogBody } from "@material-tailwind/react";
 import { Typography } from "@mui/material";
+import { OTHER_TEAM_COMMITTEE_DELETE, OTHER_TEAM_COMMITTEE_LIST } from "../../../api";
 
 const CommitteeList = () => {
   const [committeeData, setCommitteelist] = useState([]);
@@ -16,7 +17,7 @@ const CommitteeList = () => {
   const fetchCommitteeData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/fetch-commitee`, {
+      const response = await axios.get(`${OTHER_TEAM_COMMITTEE_LIST}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -35,7 +36,7 @@ const CommitteeList = () => {
   const deleteData = async (e, value) => {
     e.preventDefault();
     await axios({
-      url: `${BASE_URL}/api/delete-commitee/${value}`,
+      url: `${OTHER_TEAM_COMMITTEE_DELETE}/${value}`,
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

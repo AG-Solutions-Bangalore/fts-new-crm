@@ -7,6 +7,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import SelectInput from "../../../components/common/SelectInput";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+import { CHAPTER_EDIT_STATES_DROPDOWN, fetchChapterEditById, fetchChapterUpdateEditById } from "../../../api";
 
 const committee_type = [
   {
@@ -31,7 +32,7 @@ const EditChapter = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  // const decryptedId = decryptId(id);
   const [states, setStates] = useState([]);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -80,21 +81,32 @@ const EditChapter = () => {
     }
   };
 
+  // useEffect(() => {
+  //   axios
+  //     .get(`${BASE_URL}/api/fetch-chapter-by-id/${decryptedId}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       setChapter(res.data?.chapter);
+  //     });
+  // }, [decryptedId]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchChapterEditById(id);
+        setChapter(data?.chapter);
+      } catch (error) {
+        toast.error("Failed to fetch edit chapter details");
+      }
+    };
+    
+    fetchData();
+  }, [id]);
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-chapter-by-id/${decryptedId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setChapter(res.data?.chapter);
-      });
-  }, [decryptedId]);
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/fetch-states`, {
+      .get(`${CHAPTER_EDIT_STATES_DROPDOWN}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -128,15 +140,7 @@ const EditChapter = () => {
       auth_sign: chapter.auth_sign,
     };
     try {
-      const res = await axios.put(
-        `${BASE_URL}/api/update-chapter/${decryptedId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await fetchChapterUpdateEditById(id,formData);
 
       if (res.data.code === 200) {
         toast.success(res.data.msg);

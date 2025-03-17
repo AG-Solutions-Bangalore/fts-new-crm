@@ -18,6 +18,7 @@ import belongs_to from "../../../utils/BelongTo";
 import donor_type from "../../../utils/DonorType";
 import company_type from "../../../utils/CompanyType";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { DONOR_COMPANY_CREATE_SUMBIT } from "../../../api";
 
 const gender = [
   {
@@ -264,7 +265,7 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen }) => {
     setIsButtonDisabled(true);
 
     axios({
-      url: BASE_URL + "/api/create-donor",
+      url: DONOR_COMPANY_CREATE_SUMBIT,
       method: "POST",
       data,
       headers: {

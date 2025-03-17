@@ -9,6 +9,7 @@ import BASE_URL from "../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconArrowBack, IconCircleX } from "@tabler/icons-react";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { ADMIN_DATASOURCE_CREATE, ADMIN_DATASOURCE_LIST, ADMIN_DATASOURCE_UPDATE } from "../../api";
 
 const DataSource = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const DataSource = () => {
 
   const fetchDataSources = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/fetch-datasource`, {
+      const response = await axios.get(`${ADMIN_DATASOURCE_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -109,7 +110,7 @@ const DataSource = () => {
     };
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/create-datasource`,
+        `${ADMIN_DATASOURCE_CREATE}`,
         formData,
         {
           headers: {
@@ -157,7 +158,7 @@ const DataSource = () => {
     };
     try {
       const res = await axios.put(
-        `${BASE_URL}/api/update-datasource/${selected_user_id}`,
+        `${ADMIN_DATASOURCE_UPDATE}/${selected_user_id}`,
         formData,
         {
           headers: {

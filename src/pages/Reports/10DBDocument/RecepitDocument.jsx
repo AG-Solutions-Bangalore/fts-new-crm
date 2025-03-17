@@ -8,6 +8,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FormLabel } from "@mui/material";
+import { DB_DOCUMENT_DOWNLOAD, DB_DOCUMENT_DOWNLOAD_GROUP, DB_DOCUMENT_DOWNLOAD_NO_PAN } from "../../../api";
 
 const RecepitDocument = () => {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ const RecepitDocument = () => {
 
     if (v) {
       axios({
-        url: BASE_URL + "/api/download-receipt-year",
+        url: DB_DOCUMENT_DOWNLOAD,
         method: "POST",
         data,
         headers: {
@@ -116,7 +117,7 @@ const RecepitDocument = () => {
 
     if (v) {
       axios({
-        url: BASE_URL + "/api/download-receipt-year-no-pan",
+        url: DB_DOCUMENT_DOWNLOAD_NO_PAN,
         method: "POST",
         data,
         headers: {
@@ -151,7 +152,7 @@ const RecepitDocument = () => {
 
     if (v) {
       axios({
-        url: BASE_URL + "/api/download-receipt-year-group",
+        url: DB_DOCUMENT_DOWNLOAD_GROUP,
         method: "POST",
         data,
         headers: {

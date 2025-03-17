@@ -5,6 +5,7 @@ import { IconMail } from "@tabler/icons-react";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
+import { MEMBERS_LIST, SEND_EMAIL } from "../../../api";
 
 const MemberList = () => {
   const [memberData, setMemberData] = useState(null);
@@ -19,7 +20,7 @@ const MemberList = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${BASE_URL}/api/fetch-members`, {
+        const response = await axios.get(`${MEMBERS_LIST}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -38,7 +39,7 @@ const MemberList = () => {
 
   const sendEmail = (value) => {
     axios({
-      url: BASE_URL + "/api/send-membership-renew?id=" + value,
+      url: SEND_EMAIL + value,
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

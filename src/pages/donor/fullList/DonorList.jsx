@@ -13,6 +13,7 @@ import AddCompany from "./AddCompany";
 import CreateReceipt from "./CreateReceipt";
 import DonorView from "./DonorView";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
+import { DONOR_LIST, navigateToCreateReceipt, navigateToDonorEdit, navigateToReceiptEdit } from "../../../api";
 
 const DonorList = () => {
   const [donorData, setDonorData] = useState(null);
@@ -84,7 +85,7 @@ const DonorList = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/fetch-donors`, {
+      const response = await axios.get(`${DONOR_LIST}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -185,10 +186,13 @@ const DonorList = () => {
               {userType == "1" || userType == "2" ? (
                 <div
                   // onClick={() => navigate(`/donor-edit/${id}`)}
+                  // onClick={() => {
+                  //   const encryptedId = encryptId(id);
+                  //   navigate(`/donor-edit/${encodeURIComponent(encryptedId)}`);
+                  // }}
                   onClick={() => {
-                    const encryptedId = encryptId(id);
-                    navigate(`/donor-edit/${encodeURIComponent(encryptedId)}`);
-                  }}
+                    navigateToDonorEdit(navigate,id)
+                            }}
                   className="flex items-center space-x-2"
                   title="Edit"
                 >
@@ -207,12 +211,15 @@ const DonorList = () => {
               {userType == "1" ? (
                 <div
                   // onClick={() => navigate(`/donor-create/${id}`)}
+                  // onClick={() => {
+                  //   const encryptedId = encryptId(id);
+                  //   navigate(
+                  //     `/donor-create/${encodeURIComponent(encryptedId)}`
+                  //   );
+                  // }}
                   onClick={() => {
-                    const encryptedId = encryptId(id);
-                    navigate(
-                      `/donor-create/${encodeURIComponent(encryptedId)}`
-                    );
-                  }}
+                    navigateToCreateReceipt(navigate,id)
+                            }}
                   className="flex items-center space-x-2"
                   title="Create Reciept"
                 >

@@ -5,6 +5,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FormLabel } from "@mui/material";
+import { DOWNLOAD_TEAM } from "../../../api";
 
 function DownloadTeam() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -40,7 +41,7 @@ function DownloadTeam() {
       setIsButtonDisabled(true);
 
       axios({
-        url: BASE_URL + "/api/download-team-summary",
+        url: DOWNLOAD_TEAM,
         method: "POST",
         data,
         headers: {

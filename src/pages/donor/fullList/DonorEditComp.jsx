@@ -27,6 +27,7 @@ import belongs_to from "../../../utils/BelongTo";
 import company_type from "../../../utils/CompanyType";
 import { IconArrowBack } from "@tabler/icons-react";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { DONOR_COMPANY_EDIT_FETCH, DONOR_COMPANY_FAMILY_GROUP_UPDATE, DONOR_COMPANY_UPDATE_SUMBIT } from "../../../api";
 const gender = [
   {
     value: "Male",
@@ -181,7 +182,7 @@ const DonorEditComp = ({ id }) => {
     }
 
     axios({
-      url: BASE_URL + "/api/update-donor/" + id,
+      url: DONOR_COMPANY_FAMILY_GROUP_UPDATE + id,
       method: "PUT",
       data,
       headers: {
@@ -209,7 +210,7 @@ const DonorEditComp = ({ id }) => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-donor-for-edit/${id}`,
+        `${DONOR_COMPANY_EDIT_FETCH}/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -333,7 +334,7 @@ const DonorEditComp = ({ id }) => {
     }
 
     axios({
-      url: BASE_URL + `/api/update-donor/${id}`,
+      url: DONOR_COMPANY_UPDATE_SUMBIT + `${id}`,
       method: "PUT",
       data,
       headers: {

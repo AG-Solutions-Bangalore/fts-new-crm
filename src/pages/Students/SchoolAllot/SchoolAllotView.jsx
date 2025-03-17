@@ -8,6 +8,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { ContextPanel } from "../../../utils/ContextPanel";
 import BASE_URL from "../../../base/BaseUrl";
 import { IconArrowBack } from "@tabler/icons-react";
+import { SCHOOL_ALLOT_VIEW_LIST } from "../../../api";
 
 const SchoolAllotView = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
@@ -18,7 +19,7 @@ const SchoolAllotView = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-schoolsallotview-by-id/${id}`,
+          `${SCHOOL_ALLOT_VIEW_LIST}/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

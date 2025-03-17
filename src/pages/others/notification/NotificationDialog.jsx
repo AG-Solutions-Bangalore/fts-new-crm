@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import BASE_URL from "../../../base/BaseUrl";
+import { OTHER_NOTIFICATION_SUMBIT_NOTICE } from "../../../api";
 
 const NotificationDialog = ({ fetchNotices, handleOpenDialog }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -26,7 +27,7 @@ const NotificationDialog = ({ fetchNotices, handleOpenDialog }) => {
     setIsButtonDisabled;
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/superadmin-add-notice`,
+        `${OTHER_NOTIFICATION_SUMBIT_NOTICE}`,
         {
           notice_name: noticeName,
           notice_detail: noticeDetail,

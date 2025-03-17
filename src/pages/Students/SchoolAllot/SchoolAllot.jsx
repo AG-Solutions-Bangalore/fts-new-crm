@@ -10,6 +10,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import { Tooltip } from "@mui/material";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
+import {  navigateToSchoolAllotEdit, SCHOOL_ALLOT_LIST } from "../../../api";
 const SchoolAllot = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ const SchoolAllot = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get(`${BASE_URL}/api/fetch-school-allot`, {
+      const response = await axios.get(`${SCHOOL_ALLOT_LIST}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -104,13 +105,12 @@ const SchoolAllot = () => {
               const newYear = row.original.schoolalot_financial_year;
 
               const handleedit = () => {
-                // navigate("/students-allotedit");
-                // console.log("this");
-                // navigate(`/students-allotedit/${newValue}`);
-                const encryptedId = encryptId(newValue);
-                navigate(
-                  `/students-allotedit/${encodeURIComponent(encryptedId)}`
-                );
+               
+                // const encryptedId = encryptId(newValue);
+                // navigate(
+                //   `/students-allotedit/${encodeURIComponent(encryptedId)}`
+                // );
+                navigateToSchoolAllotEdit(navigate,newValue)
 
                 // localStorage.setItem("sclaltid", newValue);
                 localStorage.setItem("sclaltyear", newYear);
