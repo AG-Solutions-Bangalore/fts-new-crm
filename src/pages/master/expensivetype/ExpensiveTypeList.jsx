@@ -6,6 +6,7 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconCircleX } from "@tabler/icons-react";
+import { CREATE_EXPENSIVE_TYPE, EXPENSIVE_TYPE_LIST, UPDATES_EXPENSIVE_TYPE } from "../../../api";
 
 const ExpensiveTypeList = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -43,7 +44,7 @@ const ExpensiveTypeList = () => {
   };
   const fetchData = () => {
     axios
-      .get(`${BASE_URL}/api/fetch-ots-exptypes`, {
+      .get(`${EXPENSIVE_TYPE_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -82,7 +83,7 @@ const ExpensiveTypeList = () => {
     };
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/create-ots-exptypes`,
+        `${CREATE_EXPENSIVE_TYPE}`,
         formData,
         {
           headers: {
@@ -125,7 +126,7 @@ const ExpensiveTypeList = () => {
     };
     try {
       const res = await axios.put(
-        `${BASE_URL}/api/update-ots-exptypes/${selected_user_id}`,
+        `${UPDATES_EXPENSIVE_TYPE}/${selected_user_id}`,
         formData,
         {
           headers: {

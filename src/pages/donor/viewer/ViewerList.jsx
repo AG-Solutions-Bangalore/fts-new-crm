@@ -9,6 +9,7 @@ import AddViewer from "./AddViewer";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import moment from "moment";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
+import { navigateToViewerEdit, VIEWVER_LIST } from "../../../api";
 
 const ViewerList = () => {
   const [viewerData, setViewerData] = useState(null);
@@ -33,7 +34,7 @@ const ViewerList = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${BASE_URL}/api/superadmin-get-all-viewers`,
+        `${VIEWVER_LIST}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -116,11 +117,14 @@ const ViewerList = () => {
           return (
             <div className="flex gap-2">
               <div
-                onClick={() => {
-                  const encryptedId = encryptId(id);
-                  navigate(`/edit-viewer/${encodeURIComponent(encryptedId)}`);
-                }}
-                // onClick={() => navigate(`/edit-viewer/${id}`)}
+                // onClick={() => {
+                //   const encryptedId = encryptId(id);
+                //   navigate(`/edit-viewer/${encodeURIComponent(encryptedId)}`);
+                // }}
+                 onClick={() => {
+                  navigateToViewerEdit(navigate,id)
+                                              }}
+              
                 className="flex items-center space-x-2"
                 title="Edit"
               >

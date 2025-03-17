@@ -16,6 +16,7 @@ import ReactToPrint from "react-to-print";
 
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { DB_DOCUMENT_VIEW_GROUP } from "../../../../api";
 
 const printStyles = `
   @media print {
@@ -49,7 +50,7 @@ const GroupView = (props) => {
     };
 
     axios({
-      url: BASE_URL + "/api/fetch-donor-receipt-group-by-year",
+      url: DB_DOCUMENT_VIEW_GROUP,
       method: "POST",
       data,
       headers: {

@@ -9,6 +9,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconArrowBack, IconCircleX } from "@tabler/icons-react";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+import { CHAPTER_DATASOURCE_CREATE, CHAPTER_DATASOURCE_UPDATE_BY_ID, fetchChapterDatasourceById } from "../../../api";
 
 const EditDataSource = () => {
   const navigate = useNavigate();
@@ -50,25 +51,38 @@ const EditDataSource = () => {
     });
   };
 
-  const fetchDataSources = async () => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/fetch-data-sources-by-id/${decryptedId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      setUsers(response.data.datasource);
-    } catch (error) {
-      console.error("Error fetching data sources:", error);
-    }
-  };
+  // const fetchDataSources = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${BASE_URL}/api/fetch-data-sources-by-id/${decryptedId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+  //     setUsers(response.data.datasource);
+  //   } catch (error) {
+  //     console.error("Error fetching data sources:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchDataSources();
-  }, [id]);
+  // useEffect(() => {
+  //   fetchDataSources();
+  // }, [id]);
+
+   
+      const fetchDataSources = async () => {
+        try {
+          const data = await fetchChapterDatasourceById(id);
+          setUsers(data.datasource);
+        } catch (error) {
+          toast.error("Failed to fetch datasource details");
+        }
+      };
+      useEffect(() => {
+      fetchDataSources();
+    }, [id]);
 
   const validateOnlyDigits = (inputtxt) => /^\d*$/.test(inputtxt);
   const onUserInputChange = (e) => {
@@ -110,11 +124,11 @@ const EditDataSource = () => {
     setIsButtonDisabled(true);
     const formData = {
       data_source_type: user.data_source_type,
-      chapter_id: id,
+      chapter_id: decryptedId,
     };
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/create-datasources`,
+        `${CHAPTER_DATASOURCE_CREATE}`,
         formData,
         {
           headers: {
@@ -123,8 +137,8 @@ const EditDataSource = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Data Source is Created Successfully");
+      if (response.data.code == 200) {
+        toast.success(response.data.msg);
         handleClose();
         fetchDataSources();
         setUser({
@@ -132,7 +146,7 @@ const EditDataSource = () => {
           chapter_id: "",
         });
       } else {
-        toast.error("Failed to update Data Source");
+        toast.error(response.data.msg);
       }
     } catch (error) {
       console.error("Error updating Data Source:", error);
@@ -153,11 +167,11 @@ const EditDataSource = () => {
     setIsButtonDisabled(true);
     const formData = {
       data_source_type: user.data_source_type,
-      chapter_id: id,
+      chapter_id: decryptedId,
     };
     try {
       const response = await axios.put(
-        `${BASE_URL}/api/update-datasources/${selected_user_id}`,
+        `${CHAPTER_DATASOURCE_UPDATE_BY_ID}/${selected_user_id}`,
         formData,
         {
           headers: {
@@ -166,8 +180,8 @@ const EditDataSource = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Data Source is Updated Successfully");
+      if (response.data.code == 200) {
+        toast.success(response.data.msg);
         handleClose1();
         fetchDataSources();
         setUser({
@@ -175,7 +189,7 @@ const EditDataSource = () => {
           chapter_id: "",
         });
       } else {
-        toast.error("Failed to update Data Source");
+        toast.error(response.data.msg);
       }
     } catch (error) {
       console.error("Error updating Data Source:", error);

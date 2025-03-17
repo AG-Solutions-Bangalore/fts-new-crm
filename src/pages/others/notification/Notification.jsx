@@ -18,6 +18,7 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import ReactToPrint from "react-to-print";
+import { OTHER_NOTIFICATION_MARK_AS_READ, OTHER_NOTIFICATION_SUPERADMIN, OTHER_NOTIFICATION_USER } from "../../../api";
 
 const Notification = () => {
   const [datanotification, setNotification] = useState([]);
@@ -37,8 +38,8 @@ const Notification = () => {
     try {
       const url =
         userTypeId === "3"
-          ? `${BASE_URL}/api/superadmin-fetch-notices`
-          : `${BASE_URL}/api/user-fetch-notices`;
+          ? `${OTHER_NOTIFICATION_SUPERADMIN}`
+          : `${OTHER_NOTIFICATION_USER}`;
 
       const response = await axios.get(url, {
         headers: {
@@ -84,7 +85,7 @@ const Notification = () => {
     };
 
     fetch(
-      `${BASE_URL}/api/user-mark-a-notice-as-read?notice_id=${noticeId}`,
+      `${OTHER_NOTIFICATION_MARK_AS_READ}${noticeId}`,
       requestOptions
     ).then((response) => response.json());
     toast.success("Acknowledgment successfully updated");

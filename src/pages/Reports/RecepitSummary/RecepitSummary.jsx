@@ -7,6 +7,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FormLabel } from "@mui/material";
+import { RECEIPT_SUMMARY_DOWNLOAD } from "../../../api";
 
 const RecepitSummary = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const RecepitSummary = () => {
 
     if (v) {
       axios({
-        url: BASE_URL + "/api/download-receipt-summary",
+        url: RECEIPT_SUMMARY_DOWNLOAD,
         method: "POST",
         data,
         headers: {

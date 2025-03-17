@@ -7,6 +7,7 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconCircleX } from "@tabler/icons-react";
+import { CREATE_STATES, STATES_LIST, UPDATES_STATES } from "../../../api";
 
 const StatesList = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const StatesList = () => {
 
   const fetchStates = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/fetch-states`, {
+      const response = await axios.get(`${STATES_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -96,7 +97,7 @@ const StatesList = () => {
       state_zone: user.state_zone,
     };
     try {
-      const res = await axios.post(`${BASE_URL}/api/create-states`, formData, {
+      const res = await axios.post(`${CREATE_STATES}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -138,7 +139,7 @@ const StatesList = () => {
     };
     try {
       const res = await axios.put(
-        `${BASE_URL}/api/update-states/${selected_user_id}`,
+        `${UPDATES_STATES}/${selected_user_id}`,
         formData,
         {
           headers: {

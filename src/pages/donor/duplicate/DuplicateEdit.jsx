@@ -15,6 +15,7 @@ import {
 import DonorSelect from "./DonorSelect";
 import { toast } from "react-toastify";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+import { fetchDuplicateEditById, fetchDuplicateEditByIdUpdate } from "../../../api";
 
 const DuplicateEdit = () => {
   const { id } = useParams();
@@ -39,16 +40,30 @@ const DuplicateEdit = () => {
     indicomp_related_id: "",
   });
 
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/fetch-donors-duplicate-by-id/${decryptedId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((res) => {
-        setDonor(res.data.individualCompanies);
-        setLoader(false);
-      });
-  }, [decryptedId]);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${BASE_URL}/api/fetch-donors-duplicate-by-id/${decryptedId}`, {
+  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //     })
+  //     .then((res) => {
+  //       setDonor(res.data.individualCompanies);
+  //       setLoader(false);
+  //     });
+  // }, [decryptedId]);
+ 
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const data = await fetchDuplicateEditById(id);
+            setDonor(data.individualCompanies);
+            setLoader(false);
+          } catch (error) {
+            toast.error("Failed to fetch edit duplicate details");
+          }
+        };
+        
+        fetchData();
+      }, [id]);
 
   const onInputChange = (e) => {
     setDonor({
@@ -85,13 +100,16 @@ const DuplicateEdit = () => {
     setIsButtonDisabled(true);
 
     try {
-      const response = await axios.put(
-        `${BASE_URL}/api/update-donors-duplicate/${decryptedId}`,
-        data,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      // const response = await axios.put(
+      //   `${BASE_URL}/api/update-donors-duplicate/${decryptedId}`,
+      //   data,
+      //   {
+      //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      //   }
+      // );
+const response = await fetchDuplicateEditByIdUpdate(id,data);
+
+
 
       if (response.data.code === 200) {
         toast.success(response.data.msg);
@@ -123,7 +141,7 @@ const DuplicateEdit = () => {
           <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
             <div className="flex  items-center gap-2">
               <IconInfoCircle className="w-4 h-4" />
-              <span>DuplicateEdit{decryptedId}</span>
+              <span>DuplicateEdit</span>
             </div>
             <IconArrowBack
               onClick={() => navigate("/duplicate-list")}

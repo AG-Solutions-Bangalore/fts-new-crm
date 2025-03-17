@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import BASE_URL from "../../../base/BaseUrl";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import SelectInput from "../../../components/common/SelectInput";
+import { ADD_CHAPTER_SUMBIT } from "../../../api";
 const AddChapter = ({ onClose, fetchChapter }) => {
   const navigate = useNavigate();
 
@@ -93,7 +94,7 @@ const AddChapter = ({ onClose, fetchChapter }) => {
       chapter_region_code: chapter.chapter_region_code,
     };
     try {
-      const res = await axios.post(`${BASE_URL}/api/create-chapter`, formData, {
+      const res = await axios.post(`${ADD_CHAPTER_SUMBIT}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

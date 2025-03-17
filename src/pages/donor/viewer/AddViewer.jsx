@@ -8,6 +8,7 @@ import { MenuItem, TextField } from "@mui/material";
 import { IconArrowBack } from "@tabler/icons-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { toast } from "react-toastify";
+import { VIEWVER_CREATE } from "../../../api";
 
 const AddViewer = ({ onClose, fetchViewerData }) => {
   const { id } = useParams();
@@ -157,7 +158,7 @@ const AddViewer = ({ onClose, fetchViewerData }) => {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/superadmin-add-a-viewer`,
+        `${VIEWVER_CREATE}`,
         data,
         {
           headers: {

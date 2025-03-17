@@ -5,6 +5,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import SelectInput from "../../../components/common/SelectInput";
+import { DOWNLOAD_RECEIPT, DOWNLOAD_RECEIPT_DROPDOWN_DATASOURCE } from "../../../api";
 
 function DowloadRecpit() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -85,7 +86,7 @@ function DowloadRecpit() {
       setIsButtonDisabled(true);
 
       axios({
-        url: BASE_URL + "/api/download-receipt",
+        url: DOWNLOAD_RECEIPT,
         method: "POST",
         data,
         headers: {
@@ -128,7 +129,7 @@ function DowloadRecpit() {
       },
     };
 
-    fetch(BASE_URL + "/api/fetch-datasource", requestOptions)
+    fetch(DOWNLOAD_RECEIPT_DROPDOWN_DATASOURCE, requestOptions)
       .then((response) => response.json())
       .then((data) => setDatasource(data.datasource));
   }, []);

@@ -10,6 +10,7 @@ import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { toast } from "react-toastify";
 import SelectInput from "../../../components/common/SelectInput";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+import { fetchViewerEditById, VIEWVER_EDIT_UPDATE } from "../../../api";
 const status1 = [
   {
     value: "Active",
@@ -132,26 +133,40 @@ const EditViewer = () => {
     fetchChapters();
   }, []);
 
-  useEffect(() => {
-    const fetchViewer = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/api/fetch-viewer-by-id/${decryptedId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        setTheViewer(response.data.users);
-        setLoader(false);
-      } catch (error) {
-        toast.error("Failed to fetch viewer details.");
-      }
-    };
+  // useEffect(() => {
+  //   const fetchViewer = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${BASE_URL}/api/fetch-viewer-by-id/${decryptedId}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //           },
+  //         }
+  //       );
+  //       setTheViewer(response.data.users);
+  //       setLoader(false);
+  //     } catch (error) {
+  //       toast.error("Failed to fetch viewer details.");
+  //     }
+  //   };
 
-    fetchViewer();
-  }, [decryptedId]);
+  //   fetchViewer();
+  // }, [decryptedId]);
+
+   useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchViewerEditById(id);
+          setTheViewer(data.users);
+        setLoader(false);
+        } catch (error) {
+          toast.error("Failed to fetch viewer edit by id details");
+        }
+      };
+      
+      fetchData();
+    }, [id]);
 
   const setTheViewer = (users) => {
     setID(users.id);
@@ -200,7 +215,7 @@ const EditViewer = () => {
     setIsButtonDisabled(true);
     const token = localStorage.getItem("token");
 
-    const res = await axios.post(`${BASE_URL}/api/update-viewer`, data, {
+    const res = await axios.post(`${VIEWVER_EDIT_UPDATE}`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -7,6 +7,7 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEye } from "@tabler/icons-react";
 import { ContextPanel } from "../../../utils/ContextPanel";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
+import { navigateToSchoolFullListView, SCHOOL_ALLOTED_LIST, SCHOOL_COUNT_CHAPTERWISE_LIST } from "../../../api";
 
 const FullList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
@@ -23,7 +24,7 @@ const FullList = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `${BASE_URL}/api/fetch-school-alloted-list/${currentYear}`,
+            `${SCHOOL_ALLOTED_LIST}/${currentYear}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -46,7 +47,7 @@ const FullList = () => {
     const fetchChapterData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-school-count-chapterwise`,
+          `${SCHOOL_COUNT_CHAPTERWISE_LIST}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -80,12 +81,15 @@ const FullList = () => {
         <div className="flex items-center space-x-2">
           <div
             // to={`/students-full-list-view/${row.original.id}`}
+            // onClick={() => {
+            //   const encryptedId = encryptId(row.original.id);
+            //   navigate(
+            //     `/students-full-list-view/${encodeURIComponent(encryptedId)}`
+            //   );
+            // }}
             onClick={() => {
-              const encryptedId = encryptId(row.original.id);
-              navigate(
-                `/students-full-list-view/${encodeURIComponent(encryptedId)}`
-              );
-            }}
+              navigateToSchoolFullListView(navigate,row.original.id)
+                      }}
           >
             <IconEye
               title="Allotment"

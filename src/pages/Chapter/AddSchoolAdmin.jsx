@@ -8,12 +8,13 @@ import { FormLabel } from "@mui/material";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { IconArrowBack } from "@tabler/icons-react";
 import { decryptId } from "../../utils/encyrption/Encyrption";
+import { ADMIN_CHAPTER_SCHOOL_UPDATE, ADMIN_CHAPTER_SCHOOL_VIEW_CHAPTER, fetchAdminSchoolViewById } from "../../api";
 
 const AddSchoolAdmin = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  // const decryptedId = decryptId(id);
 
   const [viewerId, setID] = useState(0);
   const [firstName, setFirstName] = useState("");
@@ -38,7 +39,7 @@ const AddSchoolAdmin = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/fetch-chapters`, {
+      .get(`${ADMIN_CHAPTER_SCHOOL_VIEW_CHAPTER}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -48,17 +49,32 @@ const AddSchoolAdmin = () => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/fetch-viewer-by-id/${decryptedId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setTheViewer(res.data.users);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${BASE_URL}/api/fetch-viewer-by-id/${decryptedId}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       setTheViewer(res.data.users);
+  //     });
+  // }, []);
+    useEffect(() => {
+      const fetchData = async () => {
+     
+        try {
+          const data = await fetchAdminSchoolViewById(id);
+          
+          setTheViewer(data.users);
+        } catch (error) {
+          toast.error("Failed to fetch viewer details");
+          console.error("Failed to fetch viewer details",error);
+        }
+      };
+      
+      fetchData();
+    }, [id]);
 
   const setTheViewer = (users) => {
     setID(users.id);
@@ -136,7 +152,7 @@ const AddSchoolAdmin = () => {
       chapter_ids_comma_separated: schoolIds,
     };
     try {
-      const res = await axios.post(`${BASE_URL}/api/update-school`, formData, {
+      const res = await axios.post(`${ADMIN_CHAPTER_SCHOOL_UPDATE}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

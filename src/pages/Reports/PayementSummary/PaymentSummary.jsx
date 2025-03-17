@@ -7,6 +7,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import PageTitle from "../../../components/common/PageTitle";
+import { PAYMENT_SUMMARY_DOWNLOAD } from "../../../api";
 
 const PaymentSummary = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const PaymentSummary = () => {
 
     if (v) {
       axios({
-        url: BASE_URL + "/api/download-teacher-payment-summary-by-date",
+        url: PAYMENT_SUMMARY_DOWNLOAD,
         method: "POST",
         data,
         headers: {

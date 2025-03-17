@@ -15,6 +15,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { DB_DOCUMENT_VIEW_NO_PAN } from "../../../../api";
 
 const printStyles = `
   @media print {
@@ -48,7 +49,7 @@ const NopanView = (props) => {
     };
 
     axios({
-      url: BASE_URL + "/api/fetch-donor-receipt-by-year-no-pan",
+      url: DB_DOCUMENT_VIEW_NO_PAN,
       method: "POST",
       data,
       headers: {

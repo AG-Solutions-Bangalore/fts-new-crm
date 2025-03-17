@@ -14,6 +14,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { DB_DOCUMENT_VIEW } from "../../../../api";
 
 const printStyles = `
   @media print {
@@ -46,7 +47,7 @@ const ReceiptAllView = (props) => {
     };
 
     axios({
-      url: BASE_URL + "/api/fetch-donor-receipt-by-year",
+      url: DB_DOCUMENT_VIEW,
       method: "POST",
       data,
       headers: {

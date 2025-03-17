@@ -8,6 +8,7 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconCircleX } from "@tabler/icons-react";
+import { CREATE_DESIGNATION, DESIGNATION_LIST, UPDATES_DESIGNATION } from "../../../api";
 
 const DesignationList = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const DesignationList = () => {
 
   const fetchData = () => {
     axios
-      .get(`${BASE_URL}/api/fetch-designation`, {
+      .get(`${DESIGNATION_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -89,7 +90,7 @@ const DesignationList = () => {
     };
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/create-designation`,
+        `${CREATE_DESIGNATION}`,
         formData,
         {
           headers: {
@@ -130,7 +131,7 @@ const DesignationList = () => {
 
     try {
       const res = await axios.put(
-        `${BASE_URL}/api/update-designation/${selected_user_id}`,
+        `${UPDATES_DESIGNATION}/${selected_user_id}`,
         formData,
         {
           headers: {

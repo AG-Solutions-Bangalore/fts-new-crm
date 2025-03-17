@@ -27,6 +27,7 @@ import {
   DialogFooter,
   Spinner,
 } from "@material-tailwind/react";
+import { DASHBOARD_DATA, DASHBOARD_MARK_NOTICE_AS_READ, DASHBOARD_SUPERADMIN_NOTICE, DASHBOARD_USER_NOTICE, DASHBOARD_YEAR } from "../../api";
 
 // import { ContextPanel } from "../../utils/ContextPanel";
 
@@ -79,7 +80,7 @@ const Home = () => {
   });
   const fetchYearData = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
+      const response = await axios.get(`${DASHBOARD_YEAR}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -98,8 +99,8 @@ const Home = () => {
     try {
       const url =
         userTypeId == "3"
-          ? `${BASE_URL}/api/superadmin-fetch-notices`
-          : `${BASE_URL}/api/user-fetch-notices`;
+          ? `${DASHBOARD_SUPERADMIN_NOTICE}`
+          : `${DASHBOARD_USER_NOTICE}`;
 
       const response = await axios.get(url, {
         headers: {
@@ -119,7 +120,7 @@ const Home = () => {
 
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/fetch-dashboard-data-by/${currentYear}`,
+        `${DASHBOARD_DATA}/${currentYear}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -178,7 +179,7 @@ const Home = () => {
   const markNoticeAsRead = async (noticeId) => {
     try {
       const response = await fetch(
-        `${BASE_URL}/api/user-mark-a-notice-as-read?notice_id=${noticeId}`,
+        `${DASHBOARD_MARK_NOTICE_AS_READ}${noticeId}`,
         {
           method: "POST",
           headers: {

@@ -7,7 +7,9 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import moment from "moment";
 import CryptoJS from "crypto-js";
+import { CgTally } from "react-icons/cg";
 import { encryptId } from "../../utils/encyrption/Encyrption";
+import { navigateToReceiptEdit, navigateToReceiptView, RECEIPT_LIST } from "../../api";
 
 const ReceiptList = () => {
   const [receiptList, setReceiptList] = useState([]);
@@ -20,7 +22,7 @@ const ReceiptList = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${BASE_URL}/api/fetch-receipts`, {
+        const response = await axios.get(`${RECEIPT_LIST}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,6 +45,17 @@ const ReceiptList = () => {
         header: "Receipt No",
         enableHiding: false,
         size: 20,
+      },
+      {
+        accessorKey: "tally_status",
+        header: "Tally",
+        enableHiding: false,
+        size: 20,
+        Cell:({row})=>{
+          const tally = row.original.tally_status
+          return tally == 'True' ? <> <CgTally className="w-4 h-4" />
+ </> : ""
+        }
       },
       {
         accessorKey: "individual_company.indicomp_full_name",
@@ -102,10 +115,13 @@ const ReceiptList = () => {
           return (
             <div className="flex gap-2">
               <div
-                onClick={() => {
-                  const encryptedId = encryptId(id);
-                  navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
-                }}
+                // onClick={() => {
+                //   const encryptedId = encryptId(id);
+                //   navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
+                // }}
+                     onClick={() => {
+                      navigateToReceiptView(navigate,id)
+                              }}
                 // onClick={() => navigate(`/view-receipts/${id}`)}
                 title="Receipt View"
                 className="flex items-center space-x-2"
@@ -115,12 +131,15 @@ const ReceiptList = () => {
               {userType === "2" && (
                 <div
                   title="Receipt Edit"
+                  // onClick={() => {
+                  //   const encryptedId = encryptId(id);
+                  //   if (encryptedId) {
+                  //     navigate(`/receipt-edit/${encryptedId}`);
+                  //   }
+                  // }}
                   onClick={() => {
-                    const encryptedId = encryptId(id);
-                    if (encryptedId) {
-                      navigate(`/receipt-edit/${encryptedId}`);
-                    }
-                  }}
+                    navigateToReceiptEdit(navigate,id)
+                            }}
                   className="flex items-center space-x-2"
                 >
                   <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />

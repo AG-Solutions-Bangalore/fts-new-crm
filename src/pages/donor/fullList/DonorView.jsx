@@ -16,6 +16,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
 import ReceiptDetails from "./ReceiptDetails";
 import OldReceipt from "./OldReceipt";
+import { DONOR_VIEW_DATA } from "../../../api";
 const DonorView = ({ viewerId, onClose }) => {
   // States
   const [loader, setLoader] = useState(false);
@@ -60,7 +61,7 @@ const DonorView = ({ viewerId, onClose }) => {
     const fetchViewerData = async () => {
       try {
         axios
-          .get(`${BASE_URL}/api/fetch-donor-by-id/${viewerId}`, {
+          .get(`${DONOR_VIEW_DATA}/${viewerId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },

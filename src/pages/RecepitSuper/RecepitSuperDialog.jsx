@@ -5,13 +5,14 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconCheckbox } from "@tabler/icons-react";
 import { IconSquareRoundedX } from "@tabler/icons-react";
+import { RECEIPT_SUPER_DIALOG_LIST } from "../../api";
 
 const RecepitSuperDialog = ({ onSelect, handleClose }) => {
   const [receipt, setRecepit] = useState([]);
 
   const fetchData = () => {
     axios
-      .get(`${BASE_URL}/api/fetch-receipts-zero`, {
+      .get(`${RECEIPT_SUPER_DIALOG_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

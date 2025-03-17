@@ -8,6 +8,7 @@ import donor_type from "../../../utils/DonorType";
 import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { DONOR_INDIVISUAL_CREATE_SUMBIT } from "../../../api";
 const gender = [
   {
     value: "Male",
@@ -240,7 +241,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen }) => {
 
     setIsButtonDisabled(true);
     axios({
-      url: BASE_URL + "/api/create-donor",
+      url: DONOR_INDIVISUAL_CREATE_SUMBIT,
       method: "POST",
       data,
       headers: {

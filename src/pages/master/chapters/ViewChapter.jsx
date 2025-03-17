@@ -13,6 +13,7 @@ import {
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import SelectInput from "../../../components/common/SelectInput";
 import { decryptId, encryptId } from "../../../utils/encyrption/Encyrption";
+import { CHAPTER_VIEW_CREATE_USER, CHAPTER_VIEW_UPDATE_USER, fetchChapterViewById } from "../../../api";
 const UserDrop = [
   {
     value: "1",
@@ -32,7 +33,7 @@ const ViewChapter = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  // const decryptedId = decryptId(id);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [student, setStudent] = useState({});
@@ -81,21 +82,34 @@ const ViewChapter = () => {
       user_type_id: "",
     });
   };
-  const fetchData = () => {
-    axios
-      .get(`${BASE_URL}/api/fetch-chapter-by-id/${decryptedId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setChapter(res.data.chapter);
-        setUsers(res.data.users);
-      });
-  };
-  useEffect(() => {
-    fetchData();
-  }, [id]);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchChapterViewById(id);
+          setChapter(data.chapter);
+        setUsers(data.users);
+        } catch (error) {
+          toast.error("Failed to fetch chapter viewer details");
+        }
+      };
+      
+      fetchData();
+    }, [id]);
+  // const fetchData = () => {
+  //   axios
+  //     .get(`${BASE_URL}/api/fetch-chapter-by-id/${decryptedId}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       setChapter(res.data.chapter);
+  //       setUsers(res.data.users);
+  //     });
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, [id]);
 
   const onUserInputChange = (e) => {
     const { name, value } = e.target;
@@ -139,7 +153,7 @@ const ViewChapter = () => {
     };
     console.log("data", formData);
     try {
-      const res = await axios.post(`${BASE_URL}/api/create-user`, formData, {
+      const res = await axios.post(`${CHAPTER_VIEW_CREATE_USER}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -199,7 +213,7 @@ const ViewChapter = () => {
     try {
       // Send PUT request
       const res = await axios.put(
-        `${BASE_URL}/api/update-user/${selected_user_id}`,
+        `${CHAPTER_VIEW_UPDATE_USER}/${selected_user_id}`,
         formData,
         {
           headers: {
@@ -267,12 +281,16 @@ const ViewChapter = () => {
         <div className="flex items-center space-x-2">
           <button
             className=" text-center  w-20 text-sm font-[400 ] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md ml-4"
-            onClick={() => {
-              localStorage.setItem("schoolId", id);
-              const encryptedId = encryptId(row.original.id);
-              navigate(`/view-school/${encodeURIComponent(encryptedId)}`);
-              // navigate(`/view-school/${row.original.id}`);
-            }}
+            // onClick={() => {
+            //   localStorage.setItem("schoolId", id);
+            //   const encryptedId = encryptId(row.original.id);
+            //   navigate(`/view-school/${encodeURIComponent(encryptedId)}`);
+            //   navigate(`/view-school/${row.original.id}`);
+            // }}
+              onClick={() => {
+                localStorage.setItem("schoolId", id);
+                            navigateToChapterView(navigate,row.original.id)
+                          }}
           >
             School
           </button>

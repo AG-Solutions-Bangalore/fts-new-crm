@@ -7,6 +7,7 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import { IconArrowBack } from "@tabler/icons-react";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+import { fetchSchoolFullListViewById } from "../../../api";
 
 // Reusable Components
 const SectionHeader = ({ title }) => (
@@ -24,33 +25,26 @@ const InfoField = ({ label, value }) => (
 
 const FullListView = () => {
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  // const decryptedId = decryptId(id);
 
   const navigate = useNavigate();
   const [school, setSchool] = useState({});
   const [schoolAdoption, setSchoolAdoption] = useState([]);
 
-  useEffect(() => {
-    const fetchSchoolData = async () => {
+ 
+ useEffect(() => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/api/fetch-schools-by-id/${decryptedId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        setSchool(response.data.schools);
-        setSchoolAdoption(response.data.schoolsadoption);
+        const data = await fetchSchoolFullListViewById(id);
+        setSchool(data.schools);
+        setSchoolAdoption(data.schoolsadoption);
       } catch (error) {
-        console.error("Error fetching school data:", error);
+        toast.error("Failed to fetch school full list view by id details");
       }
     };
-
-    fetchSchoolData();
-  }, [decryptedId]);
-
+    
+    fetchData();
+  }, [id]);
   return (
     <Layout>
       <div className="max-w-screen">

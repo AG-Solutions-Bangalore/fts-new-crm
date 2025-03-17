@@ -11,6 +11,7 @@ import image3 from "../../../assets/receipt/ekal.png";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoIosPrint } from "react-icons/io";
 import { LuDownload } from "react-icons/lu";
+import { SUSPENSE_SUMMARY_DOWNLOAD, SUSPENSE_SUMMARY_VIEW } from "../../../api";
 
 const SuspenseSummary = (props) => {
   const componentRef = useRef();
@@ -22,7 +23,7 @@ const SuspenseSummary = (props) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-receipt-suspense-summary`,
+          `${SUSPENSE_SUMMARY_VIEW}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -45,7 +46,7 @@ const SuspenseSummary = (props) => {
     let data = {};
 
     axios({
-      url: BASE_URL + "/api/download-receipt-suspense-summary",
+      url: SUSPENSE_SUMMARY_DOWNLOAD,
       method: "POST",
       data,
       headers: {

@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import PageTitle from "../../../components/common/PageTitle";
 import { FormLabel } from "@mui/material";
+import { DONATION_SUMMARY_DOWNLOAD } from "../../../api";
 
 const DonationSummary = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const DonationSummary = () => {
 
     if (v) {
       axios({
-        url: BASE_URL + "/api/download-donation-summary",
+        url: DONATION_SUMMARY_DOWNLOAD,
         method: "POST",
         data,
         headers: {

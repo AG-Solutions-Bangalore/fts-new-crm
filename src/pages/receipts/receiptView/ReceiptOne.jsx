@@ -23,6 +23,9 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { IconArrowBack } from "@tabler/icons-react";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+
+import { CgTally } from "react-icons/cg";
+import { fetchReceiptViewById, RECEIPT_VIEW_SEND_EMAIL, RECEIPT_VIEW_SUMBIT } from "../../../api";
 const printStyles = `
   @media print {
 
@@ -59,10 +62,11 @@ const ReceiptOne = () => {
   const [country, setCountry] = useState({});
   const [showmodal, setShowmodal] = useState(false);
   const { id } = useParams();
-  const decryptedId = decryptId(id);
+  // const decryptedId = decryptId(id);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const amountInWords = numWords(receipts.receipt_total_amount);
+  
   useEffect(() => {
     // Add print styles to document head
     const styleSheet = document.createElement("style");
@@ -173,23 +177,39 @@ const ReceiptOne = () => {
     })
     .replace(/\//g, "-");
 
-  const fetchDataReceipt = async () => {
-    await axios({
-      url: `${BASE_URL}/api/fetch-receipt-by-id/${decryptedId}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      setReceipts(res.data.receipt);
-      setChapter(res.data.chapter);
-      setSign(res.data.auth_sign);
-      setSign1(res.data.auth_sign);
-      setCountry(res.data.country);
+  // const fetchDataReceipt = async () => {
+  //   await axios({
+  //     url: `${BASE_URL}/api/fetch-receipt-by-idD/${decryptedId}`,
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     },
+  //   }).then((res) => {
+  //     setReceipts(res.data.receipt);
+  //     setChapter(res.data.chapter);
+  //     setSign(res.data.auth_sign);
+  //     setSign1(res.data.auth_sign);
+  //     setCountry(res.data.country);
+  //     setLoader(false);
+  //   });
+  // };
+ useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchReceiptViewById(id);
+        setReceipts(data.receipt);
+      setChapter(data.chapter);
+      setSign(data.auth_sign);
+      setSign1(data.auth_sign);
+      setCountry(data.country);
       setLoader(false);
-    });
-  };
-
+      } catch (error) {
+        toast.error("Failed to fetch viewer details");
+      }
+    };
+    
+    fetchData();
+  }, [id]);
   const [recepitcontrol, setRecepitControl] = useState({});
   const FetchRecepitYear = () => {
     axios
@@ -206,13 +226,12 @@ const ReceiptOne = () => {
   useEffect(() => {
     setTheId(id);
     FetchRecepitYear();
-    fetchDataReceipt();
   }, []);
 
   const sendEmail = (e) => {
     e.preventDefault();
     axios({
-      url: `${BASE_URL}/api/send-receipt?id=${theId}`,
+      url: `${RECEIPT_VIEW_SEND_EMAIL}${theId}`,
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -237,7 +256,7 @@ const ReceiptOne = () => {
     console.log("formdata", formData);
     try {
       const response = await axios.put(
-        `${BASE_URL}/api/update-donor-email/${localStorage.getItem("ftsid")}`,
+        `${RECEIPT_VIEW_SUMBIT}/${localStorage.getItem("ftsid")}`,
         formData,
         {
           headers: {
@@ -260,7 +279,7 @@ const ReceiptOne = () => {
       setIsButtonDisabled(false);
     }
   };
-
+  const tallyReceipt = receipts?.tally_status;
   const FormLabel = ({ children, required }) => (
     <label className="block text-sm font-semibold text-black mb-1 ">
       {children}
@@ -278,9 +297,9 @@ const ReceiptOne = () => {
             onClick={() => navigate("/receipt-list")}
             className="cursor-pointer hover:text-red-600 mr-2"
           />
-          Receipt View
+         <p className="flex flex-row items-center gap-2"> <span>Receipt View </span>{tallyReceipt == 'True' ? <>  <CgTally className="w-4 h-4" /> </> : ""}</p>
         </h1>
-
+        
         {recepitcontrol.download_open === "Yes" && (
           <>
             {localStorage.getItem("user_type_id") != 4 && (
@@ -411,7 +430,7 @@ const ReceiptOne = () => {
                     />
                   </div>
 
-                  <div className="text-center flex justify-center items-center border-x border-b border-black -mt-9  p-5">
+                  <div className="text-center flex justify-center items-center border-x border-b border-black -mt-[2.40rem]  p-5">
                     <p className="text-[10px]">
                       {`${chapter.chapter_address}, ${chapter.chapter_city} - ${chapter.chapter_pin}, ${chapter.chapter_state}`}
                     </p>
@@ -424,7 +443,7 @@ const ReceiptOne = () => {
                     <p className="text-xs">
                       Head Office: Harish Mukherjee Road, Kolkata-26. Web:
                       www.ftsindia.com Ph: 033 - 2454 4510/11/12/13 PAN:
-                      AAAAF0290L
+                      AAAAF0290L 
                     </p>
                   </div>
 

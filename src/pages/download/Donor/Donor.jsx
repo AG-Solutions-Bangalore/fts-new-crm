@@ -4,6 +4,7 @@ import SelectInput from "../../../components/common/SelectInput";
 import { toast } from "react-toastify";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
+import { DOWNLOAD_DONOR } from "../../../api";
 
 function Donor() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -83,7 +84,7 @@ function Donor() {
       setIsButtonDisabled(true);
 
       axios({
-        url: BASE_URL + "/api/download-donor",
+        url: DOWNLOAD_DONOR,
         method: "POST",
         data,
         headers: {

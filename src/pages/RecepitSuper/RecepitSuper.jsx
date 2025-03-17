@@ -8,6 +8,7 @@ import moment from "moment/moment";
 import RecepitSuperDialog from "./RecepitSuperDialog";
 import { Dialog } from "@material-tailwind/react";
 import { toast } from "react-toastify";
+import { RECEIPT_SUPER_LIST, RECEIPT_SUPER_SUMBIT } from "../../api";
 
 const RecepitSuper = () => {
   const [receipt, setRecepit] = useState({});
@@ -18,7 +19,7 @@ const RecepitSuper = () => {
   };
   const fetchData = () => {
     axios
-      .get(`${BASE_URL}/api/fetch-receipts-zero-list`, {
+      .get(`${RECEIPT_SUPER_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -39,7 +40,7 @@ const RecepitSuper = () => {
     };
 
     axios({
-      url: `${BASE_URL}/api/update-receipts-zero-by-id/${localStorage.getItem(
+      url: `${RECEIPT_SUPER_SUMBIT}/${localStorage.getItem(
         "Ref"
       )}`,
       method: "PUT",

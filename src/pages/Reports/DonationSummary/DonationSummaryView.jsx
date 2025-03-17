@@ -15,6 +15,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { DONATION_SUMMARY_VIEW } from "../../../api";
 
 const printStyles = `
   @media print {
@@ -54,7 +55,7 @@ const DonationSummaryView = (props) => {
 
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-donationsummary-by-id/${from_date}/${to_date}`,
+          `${DONATION_SUMMARY_VIEW}/${from_date}/${to_date}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

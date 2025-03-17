@@ -5,6 +5,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FormLabel } from "@mui/material";
+import { DOWNLOAD_PURCHASE_OTS } from "../../../api";
 
 function Downloadots() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -41,7 +42,7 @@ function Downloadots() {
       setIsButtonDisabled(true);
 
       axios({
-        url: BASE_URL + "/api/download-ots",
+        url: DOWNLOAD_PURCHASE_OTS,
         method: "POST",
         data,
         headers: {

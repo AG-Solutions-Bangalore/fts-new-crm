@@ -19,6 +19,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 import ReactToPrint from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { DONOR_SUMMARY_DOWNLOAD, DONOR_SUMMARY_VIEW } from "../../../api";
 const printStyles = `
   @media print {
 
@@ -56,7 +57,7 @@ const DonorSummaryView = (props) => {
 
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-donorsummary-by-id/${indicompFullName}/${receiptFromDate}/${receiptToDate}`,
+          `${DONOR_SUMMARY_VIEW}/${indicompFullName}/${receiptFromDate}/${receiptToDate}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -90,7 +91,7 @@ const DonorSummaryView = (props) => {
     };
 
     axios({
-      url: BASE_URL + "/api/download-donor-summary",
+      url: DONOR_SUMMARY_DOWNLOAD,
       method: "POST",
       data,
       headers: {

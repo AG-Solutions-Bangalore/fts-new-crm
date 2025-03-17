@@ -5,6 +5,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FormLabel } from "@mui/material";
+import { DOWNLOAD_SCHOOL_ALLOTED, DOWNLOAD_SCHOOL_UNALLOTED } from "../../../api";
 
 function DownloadSchool() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -41,7 +42,7 @@ function DownloadSchool() {
       setIsButtonDisabled(true);
 
       axios({
-        url: BASE_URL + "/api/download-school-alloted",
+        url: DOWNLOAD_SCHOOL_ALLOTED,
         method: "POST",
         data,
         headers: {
@@ -82,7 +83,7 @@ function DownloadSchool() {
       setIsButtonDisableds(true);
 
       axios({
-        url: BASE_URL + "/api/download-school-unalloted",
+        url: DOWNLOAD_SCHOOL_UNALLOTED,
         method: "POST",
         data,
         headers: {

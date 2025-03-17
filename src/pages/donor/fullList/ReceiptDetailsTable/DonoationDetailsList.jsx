@@ -4,6 +4,7 @@ import axios from 'axios';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import moment from 'moment';
 import { IconInfoCircle } from '@tabler/icons-react';
+import { DONATION_DETAILS_LIST } from '../../../../api';
 
 const DonoationDetailsList = ({viewerId}) => {
     const [loader, setLoader] = useState(false);
@@ -14,7 +15,7 @@ const DonoationDetailsList = ({viewerId}) => {
         setLoader(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${BASE_URL}/api/fetch-donor-receipt-by-id/${viewerId}`,
+          `${DONATION_DETAILS_LIST}/${viewerId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

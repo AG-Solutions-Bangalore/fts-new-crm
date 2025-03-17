@@ -5,7 +5,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@material-tailwind/react";
-
+import { OTHER_TEAM_COMMITTEE_CREATE_IMAGE } from "../../../api";
 const AddToImage = ({ selectDonorId, setOpenDialog, handleCloseDialog }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -25,7 +25,7 @@ const AddToImage = ({ selectDonorId, setOpenDialog, handleCloseDialog }) => {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/create-committee-image`,
+        `${OTHER_TEAM_COMMITTEE_CREATE_IMAGE}`,
         data,
         {
           headers: {
