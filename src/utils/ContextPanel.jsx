@@ -28,7 +28,7 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
+ 
     const fetchYearData = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/api/fetch-year`, {
@@ -37,12 +37,14 @@ const AppProvider = ({ children }) => {
           },
         });
         setCurrentYear(response.data?.year?.current_year || "");
+        localStorage.setItem("currentYear",response.data?.year?.current_year)
       } catch (error) {
         console.error("Error fetching year data:", error);
       }
     };
-    fetchYearData();
-  }, []);
+  //   useEffect(() => {
+  //   fetchYearData();
+  // }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -178,7 +180,7 @@ const AppProvider = ({ children }) => {
 
   return (
     <ContextPanel.Provider
-      value={{ isPanelUp, setIsPanelUp, userTypeId, currentYear }}
+      value={{ isPanelUp, setIsPanelUp, userTypeId, currentYear ,fetchYearData}}
     >
       {children}
     </ContextPanel.Provider>

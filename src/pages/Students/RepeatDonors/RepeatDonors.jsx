@@ -12,17 +12,14 @@ import { navigateToRepeatDonorEdit, REAPEAT_DONOR_LIST } from "../../../api";
 const RepeatDonors = () => {
   const [repeatDonor, setRepeatDonor] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp, currentYear } = useContext(ContextPanel);
+  const {  currentYear } = useContext(ContextPanel);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("id");
 
   // Fetch repeat donor data
   const fetchRepeatDonorData = async () => {
-    if (!isPanelUp) {
-      navigate("/maintenance");
-      return;
-    }
+   
     setLoading(true);
     try {
       const response = await axios.get(

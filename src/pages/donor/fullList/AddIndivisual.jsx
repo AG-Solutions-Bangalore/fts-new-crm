@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -9,6 +9,7 @@ import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { DONOR_INDIVISUAL_CREATE_SUMBIT } from "../../../api";
+import { ContextPanel } from "../../../utils/ContextPanel";
 const gender = [
   {
     value: "Male",
@@ -34,7 +35,8 @@ const corrpreffer = [
     label: "Digital",
   },
 ];
-const AddIndivisual = ({ onClose, fetchDonorData, isOpen }) => {
+const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
+  const { id } = useParams();
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -74,7 +76,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
+ 
 
   const validateOnlyDigits = (inputtxt) => {
     var phoneno = /^\d+$/;
@@ -189,6 +191,24 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen }) => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    let intervalId;
+ 
+  
+    if (isOpen) {
+      intervalId = setInterval(() => {
+       
+        if (isPanelUp?.error === "Maintenance") {
+          localStorage.clear();
+          navigate("/maintenance");
+        }
+      }, 10000); 
+    }
+  
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isOpen, isPanelUp, navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = document.getElementById("addIndiv");
@@ -310,6 +330,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen }) => {
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
 
+
+
+ 
   return (
     <div className="  bg-[#FFFFFF] p-2 sm:w-[200px] md:w-[48rem]  overflow-y-auto custom-scroll-add ">
       <div className="sticky top-0 p-2  mb-4 border-b-2 border-green-500 rounded-lg  bg-[#E1F5FA] ">

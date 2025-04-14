@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { ContextPanel } from "../../../utils/ContextPanel";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
@@ -14,7 +13,6 @@ const DonorDetails = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
-  const { isPanelUp } = useContext(ContextPanel);
   const [schoolAllot, setSchoolAllot] = useState([]);
   const navigate = useNavigate();
   const id = localStorage.getItem("idstl");
@@ -109,7 +107,7 @@ const DonorDetails = () => {
     };
 
     fetchApprovedRData();
-  }, [isPanelUp, navigate, schoolalot.schoolalot_financial_year]);
+  }, [ navigate, schoolalot.schoolalot_financial_year]);
 
   const onSubmit = async (e) => {
     e.preventDefault();

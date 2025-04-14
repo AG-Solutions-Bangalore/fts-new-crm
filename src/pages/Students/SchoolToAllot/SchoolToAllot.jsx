@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { ContextPanel } from "../../../utils/ContextPanel";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
@@ -12,7 +11,6 @@ import { SCHOOL_TO_ALOT_LIST } from "../../../api";
 const SchoolToAllot = () => {
   const [schoolToAllot, setSchoolToAllot] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,7 +52,7 @@ const SchoolToAllot = () => {
     };
 
     fetchApprovedRData();
-  }, [isPanelUp, navigate]);
+  }, [ navigate]);
 
   const columns = [
     { accessorKey: "donorName", header: "Donor Name", size: 50 },
