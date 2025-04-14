@@ -175,8 +175,27 @@ const Menuitems = (userTypeId) => [
           id: uniqueId(),
           title: "Receipts",
           icon: IconReceipt,
-          href: "/receipt-list",
+          subItems: [
+            {
+              id: uniqueId(),
+              title: "Current Receipts",
+              icon: IconReceipt,
+              href: "/receipt-list",
+            },
+            {
+              id: uniqueId(),
+              title: "Old Receipts",
+              icon: IconReceipt,
+              href: "/receipt-old-list",
+            },
+          ],
         },
+        // {
+        //   id: uniqueId(),
+        //   title: "Receipts",
+        //   icon: IconReceipt,
+        //   href: "/receipt-list",
+        // },
         {
           id: uniqueId(),
           title: "Schools",

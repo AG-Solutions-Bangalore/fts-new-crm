@@ -79,7 +79,7 @@ const ReceiptEdit = () => {
   // const decryptedId = useMemo(() => decryptId(id), [id]);
  
 
-  const [userdata, setUserdata] = useState("");
+  // const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loader, setLoader] = useState(true);
   const [donor, setDonor] = useState({
@@ -158,19 +158,19 @@ const ReceiptEdit = () => {
   };
  
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchReceiptEditByIdDonorData(id);
-        setUserdata(data.individualCompany);
-        setLoader(false);
-      } catch (error) {
-        toast.error("Failed to fetch receipt edit donor details");
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = await fetchReceiptEditByIdDonorData(id);
+  //       setUserdata(data.individualCompany);
+  //       setLoader(false);
+  //     } catch (error) {
+  //       toast.error("Failed to fetch receipt edit donor details");
+  //     }
+  //   };
 
-    fetchData();
-  }, [id]);
+  //   fetchData();
+  // }, [id]);
 
   useEffect(() => {
     FetchSchoolAllotYear();
@@ -204,7 +204,7 @@ const ReceiptEdit = () => {
       });
   }, []);
 
-  const pan = userdata.indicomp_pan_no == "" ? "NA" : userdata.indicomp_pan_no;
+  // const pan = userdata.indicomp_pan_no == "" ? "NA" : userdata.indicomp_pan_no;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -304,7 +304,7 @@ const ReceiptEdit = () => {
               <p className="   text-sm font-semibold text-black">
                 {moment(donor.receipt_date).format("DD-MM-YYYY")}
               </p>
-              <p className="text-xs font-semibold text-black">Pan : {pan}</p>
+              <p className="text-xs font-semibold text-black">Pan :   {donor.individual_company.indicomp_pan_no}</p>
               <p className="   text-xs font-semibold text-black">
                 Exemption Type: {donor.receipt_exemption_type}
               </p>
