@@ -6,29 +6,23 @@ import BASE_URL from "../../base/BaseUrl";
 import { ContextPanel } from "../../utils/ContextPanel";
 import toast, { Toaster } from "react-hot-toast";
 import Logo from "../../assets/receipt/sigin.jpg";
-import Logo1 from "../../assets/receipt/fts_logo.png";
-import { FaInstagram, FaPinterest, FaTwitter } from "react-icons/fa";
-import { TiSocialLinkedin, TiSocialYoutubeCircular } from "react-icons/ti";
-import { CgFacebook } from "react-icons/cg";
-import { FormLabel } from "@mui/material";
+import Logo1 from "../../assets/logos/fts_logo1.jpeg";
+
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
+  const { isPanelUp,fetchYearData } = useContext(ContextPanel);
   const navigate = useNavigate();
+  
   const handleForgetPasswordClick = () => {
     navigate("/forget-password");
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isPanelUp) {
-      navigate("/maintenance");
-      return;
-    }
-
     setLoading(true);
 
     const formData = new FormData();
@@ -40,7 +34,7 @@ const SignIn = () => {
 
       if (res.status === 200) {
         const token = res.data.UserInfo?.token;
-
+        localStorage.setItem("token", token);
         localStorage.setItem("id", res.data.UserInfo.user.user_type_id);
         localStorage.setItem("name", res.data.UserInfo.user.first_name);
         localStorage.setItem("username", res.data.UserInfo.user.name);
@@ -49,9 +43,10 @@ const SignIn = () => {
           "user_type_id",
           res.data.UserInfo.user.user_type_id
         );
-
+        localStorage.setItem("token-expire-time", res.data.UserInfo?.token_expires_at);
         if (token) {
-          localStorage.setItem("token", token);
+          await fetchYearData()
+       
           navigate("/home");
         } else {
           toast.error("Login Failed, Token not received.");
@@ -66,14 +61,15 @@ const SignIn = () => {
     setLoading(false);
   };
 
-  const inputClass =
-    "w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
+  const inputClass = "w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
+  
   const FormLabel = ({ children, required }) => (
-    <label className="block text-sm font-semibold text-black mb-1 ">
+    <label className="block text-sm font-semibold text-black mb-1">
       {children}
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>
   );
+
   return (
     <>
       <Toaster
@@ -93,7 +89,7 @@ const SignIn = () => {
         reverseOrder={false}
       />
       <div className="min-h-screen bg-blue-400 flex items-center justify-center">
-        <div className="max-w-5xl w-full bg-white shadow-lg rounded-2xl overflow-hidden  m-4 ">
+        <div className="max-w-5xl w-full bg-white shadow-lg rounded-2xl overflow-hidden m-4">
           <div className="flex flex-col lg:flex-row max-h-[582px]">
             {/* Left Side - Image */}
             <div className="lg:w-1/2 hidden lg:block">
@@ -104,73 +100,103 @@ const SignIn = () => {
               />
             </div>
 
-            {/* Right Side - Form */}
+            {/* Right Side - Content */}
             <div className="flex-1 p-4 sm:px-0 md:px-16 flex flex-col mt-8 max-h-[682px]">
               <div className="flex items-center justify-center mb-8">
-                <img src={Logo1} alt="Company Logo" className="w-32 h-32" />
+                <img src={Logo1} alt="Company Logo" className="h-32" />
               </div>
-              <Typography
-                variant="h4"
-                className="text-center font-bold mb-6 text-blue-gray-800"
-              >
-                Sign into your account
-              </Typography>
-              <form onSubmit={handleSubmit} method="POST" className="space-y-6">
-                <div>
-                  <FormLabel required>Username</FormLabel>
-                  <input
-                    type="text"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputClass}
-                    required
-                  />
-                </div>
-                <div>
-                  <FormLabel required>Password</FormLabel>
-                  <input
-                    type="password"
-                    name="email"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={inputClass}
-                    required
-                  />
-                </div>
+              
+          
+              {isPanelUp.error == "Maintenance" && (
 
-                <div className="flex justify-center ">
-                  <button
-                    className=" text-center text-sm font-[400 ] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                    type="submit"
-                    disabled={loading}
+<div className="text-center py-8">
+                   <Typography
+                     variant="h4"
+                     className="font-bold mb-4 text-blue-gray-800"
+                   >
+                     We'll Be Back Soon!
+                   </Typography>
+                   <Typography className="text-gray-600 mb-6">
+                     Our website is currently undergoing maintenance.
+                     <br />
+                     We apologize for the inconvenience and appreciate your patience.
+                   </Typography>
+                   <div className="animate-pulse">
+                     <svg
+                       className="w-16 h-16 mx-auto text-blue-500"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24"
+                       xmlns="http://www.w3.org/2000/svg"
+                     >
+                       <path
+                         strokeLinecap="round"
+                         strokeLinejoin="round"
+                         strokeWidth={2}
+                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                       />
+                     </svg>
+                   </div>
+                 </div>
+              )}
+
+
+{isPanelUp.success == "ok" && (      
+        
+
+
+                <>
+                  <Typography
+                    variant="h4"
+                    className="text-center font-bold mb-6 text-blue-gray-800"
                   >
-                    {" "}
-                    {loading ? "Checking..." : "Sign In"}
-                  </button>
-                </div>
-              </form>
-              <div
-                className="text-end mt-4"
-                onClick={handleForgetPasswordClick}
-              >
-                <Link className="text-sm text-gray-700 hover:text-blue-600">
-                  Forgot password?
-                </Link>
-              </div>
-              {/* <div>
-                <h6 className="flex justify-center text-gray-600">
-                  Follow with us
-                </h6>
-                <div className="grid grid-cols-6 text-black">
-                  <CgFacebook className="text-black hover:bg-blue-700 cursor-pointer hover:text-white transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
-                  <TiSocialYoutubeCircular className="text-black hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
-                  <FaTwitter className="text-black hover:bg-blue-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
-                  <TiSocialLinkedin className="text-black hover:bg-blue-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
-                  <FaInstagram className="text-black hover:bg-yellow-800 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
-                  <FaPinterest className="text-black hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-300 p-4 rounded-full w-14 h-14 flex items-center justify-center" />
-                </div>
-              </div> */}
+                    Sign into your account
+                  </Typography>
+                  <form onSubmit={handleSubmit} method="POST" className="space-y-6">
+                    <div>
+                      <FormLabel required>Username</FormLabel>
+                      <input
+                        type="text"
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <FormLabel required>Password</FormLabel>
+                      <input
+                        type="password"
+                        name="email"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div className="flex justify-center">
+                      <button
+                        className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+                        type="submit"
+                        disabled={loading}
+                      >
+                        {loading ? "Checking..." : "Sign In"}
+                      </button>
+                    </div>
+                  </form>
+                  <div
+                    className="text-end mt-4"
+                    onClick={handleForgetPasswordClick}
+                  >
+                    <Link className="text-sm text-gray-700 hover:text-blue-600">
+                      Forgot password?
+                    </Link>
+                  </div>
+                </>
+)}
+         
             </div>
           </div>
         </div>

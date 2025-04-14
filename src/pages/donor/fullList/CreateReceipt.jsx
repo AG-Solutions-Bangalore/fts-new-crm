@@ -101,7 +101,7 @@ const CreateReceipt = () => {
   const preyear = todayyear;
   const finyear = +twoDigitYear + 1;
   const finalyear = preyear + "-" + finyear;
-  const { currentYear } = useContext(ContextPanel);
+  const {isPanelUp, currentYear } = useContext(ContextPanel);
 
   const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -236,6 +236,21 @@ const CreateReceipt = () => {
     FetchMemeberShipYear();
     FetchRecepitYear();
   }, []);
+useEffect(() => {
+    let timeoutId;
+      timeoutId = setTimeout(() => {
+        if (isPanelUp.error == "Maintenance") {
+          localStorage.clear();
+          navigate("/maintenance");
+        }
+      }, 5000); 
+
+
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [ isPanelUp, navigate]);
 
   const pan = userdata.indicomp_pan_no == "" ? "NA" : userdata.indicomp_pan_no;
 

@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/dashboard/Home";
 import SignIn from "./pages/auth/SignIn";
 import SIgnUp from "./pages/auth/SIgnUp";
@@ -9,7 +9,7 @@ import Profile from "./pages/profile/Profile";
 import ChangePassword from "./pages/profile/ChangePassword";
 import DonorList from "./pages/donor/fullList/DonorList";
 import AddIndivisual from "./pages/donor/fullList/AddIndivisual";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DowloadRecpit from "./pages/download/DownloadReceipts/DownloadReceipts";
 import Donor from "./pages/download/Donor/Donor";
@@ -69,10 +69,34 @@ import SchoolAllotLetter from "./pages/Students/SchoolAllot/SchoolAllotLetter";
 import RepeatDonors from "./pages/Students/RepeatDonors/RepeatDonors";
 import AllotedList from "./pages/Students/RepeatDonors/AllotedList";
 import RecepitSuper from "./pages/RecepitSuper/RecepitSuper";
+import SessionTimeoutTracker from "./components/sessionTimeout/SessionTimeoutTracker";
+import BASE_URL from "./base/BaseUrl";
+import axios from "axios";
 const App = () => {
+  const navigate = useNavigate();
+  const time = localStorage.getItem("token-expire-time");
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(`${BASE_URL}/api/panel-logout`,{}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (res.data.code === 200) {
+        toast.success(res.data.msg);
+        localStorage.clear();
+        navigate("/");
+      } else {
+        toast.error(res.data.msg);
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   return (
     <>
       <ToastContainer />
+      <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/register" element={<SIgnUp />} />

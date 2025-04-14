@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import BASE_URL from "../../base/BaseUrl";
 import { useState } from "react";
 import Logo2 from "../../assets/receipt/sigin.jpg";
-import Logo1 from "../../assets/receipt/fts_logo.png";
+import Logo1 from "../../assets/logos/fts_logo1.jpeg";
 import { FaInstagram, FaPinterest, FaTwitter } from "react-icons/fa";
 import { TiSocialLinkedin, TiSocialYoutubeCircular } from "react-icons/ti";
 import { CgFacebook } from "react-icons/cg";
@@ -66,7 +66,7 @@ const ForgetPassword = () => {
             {/* Right Side - Form */}
             <div className="flex-1 p-4 sm:px-0 md:px-16 flex flex-col mt-8 max-h-[682px]">
               <div className="flex items-center justify-center mb-8">
-                <img src={Logo1} alt="Company Logo" className="w-32 h-32" />
+                <img src={Logo1} alt="Company Logo" className=" h-32" />
               </div>
               <Typography
                 variant="h4"

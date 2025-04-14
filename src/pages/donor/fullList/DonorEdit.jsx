@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DonorEditIndv from "./DonorEditIndv";
 import DonorEditComp from "./DonorEditComp";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
 import { Spinner } from "@material-tailwind/react";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
+import { ContextPanel } from "../../../utils/ContextPanel";
 
 const DonorEdit = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const DonorEdit = () => {
   const decryptedId = decryptId(id);
   const [usertype, setUsertype] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const { isPanelUp } = useContext(ContextPanel);
   useEffect(() => {
     const fetchDonorData = async () => {
       try {
@@ -54,13 +55,13 @@ const DonorEdit = () => {
   if (type == "Individual") {
     return (
       <Layout>
-        <DonorEditIndv id={decryptedId} />
+        <DonorEditIndv id={decryptedId} isPanelUp={isPanelUp}/>
       </Layout>
     );
   }
   return (
     <Layout>
-      <DonorEditComp id={decryptedId} />
+      <DonorEditComp id={decryptedId} isPanelUp={isPanelUp} />
     </Layout>
   );
 };

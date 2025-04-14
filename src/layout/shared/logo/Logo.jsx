@@ -1,8 +1,8 @@
 import { styled } from "@mui/material";
 
 import { Link } from "react-router-dom";
-import logosmall from "../../../assets/logos/fts1.png";
-import logstrucn from "../../../assets/logos/fts_wm.png";
+import logosmall from "../../../assets/logos/fts_logo1.jpeg"
+import logstrucn from "../../../assets/logos/fts_logo_small.jpeg";
 const LinkStyled = styled(Link)(() => ({
   height: "63px",
   width: "180px",

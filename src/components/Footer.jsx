@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { ContextPanel } from "../utils/ContextPanel";
 
 const Footer = () => {
- const {currentYear} = useContext(ContextPanel)
+//  const {currentYear} = useContext(ContextPanel)
+ const currentYear = localStorage.getItem("currentYear")
 
  
   return (

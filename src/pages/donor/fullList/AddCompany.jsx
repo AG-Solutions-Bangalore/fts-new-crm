@@ -57,7 +57,8 @@ const corrpreffer = [
   },
 ];
 
-const AddCompany = ({ onClose, fetchDonorData, isOpen }) => {
+const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
+  const { id } = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
@@ -96,7 +97,7 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen }) => {
   });
 
   const navigate = useNavigate();
-  const { id } = useParams();
+
 
   const [loading, setLoading] = useState(false);
 
@@ -212,7 +213,24 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen }) => {
       fetchPromoter();
     }
   }, [isOpen]);
-
+   useEffect(() => {
+     let intervalId;
+  
+   
+     if (isOpen) {
+       intervalId = setInterval(() => {
+         
+         if (isPanelUp?.error === "Maintenance") {
+           localStorage.clear();
+           navigate("/maintenance");
+         }
+       }, 10000); 
+     }
+   
+     return () => {
+       if (intervalId) clearInterval(intervalId);
+     };
+   }, [isOpen, isPanelUp, navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     // const form = document.getElementById("addIndiv");

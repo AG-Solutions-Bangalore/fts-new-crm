@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Layout from "../../../layout/Layout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,12 +14,14 @@ import CreateReceipt from "./CreateReceipt";
 import DonorView from "./DonorView";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
 import { DONOR_LIST, navigateToCreateReceipt, navigateToDonorEdit, navigateToReceiptEdit } from "../../../api";
+import { ContextPanel } from "../../../utils/ContextPanel";
 
 const DonorList = () => {
   const [donorData, setDonorData] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const userType = localStorage.getItem("user_type_id");
+  const { isPanelUp } = useContext(ContextPanel);
   const [columnVisibility, setColumnVisibility] = useState({
     indicomp_spouse_name: false,
     indicomp_com_contact_name: false,
@@ -326,6 +328,7 @@ const DonorList = () => {
                       onClose={toggleIndividualDrawer(false)}
                       fetchDonorData={fetchDonorData}
                       isOpen={individualDrawer}
+                      isPanelUp={isPanelUp}
                     />
                   </SwipeableDrawer>
 
@@ -345,6 +348,7 @@ const DonorList = () => {
                       onClose={toggleCompanyDrawer(false)}
                       fetchDonorData={fetchDonorData}
                       isOpen={companyDrawer}
+                      isPanelUp={isPanelUp}
                     />
                   </SwipeableDrawer>
                 </div>

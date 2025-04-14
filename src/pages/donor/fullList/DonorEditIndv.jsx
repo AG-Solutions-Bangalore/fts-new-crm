@@ -37,7 +37,8 @@ const corrpreffer = [
   },
 ];
 
-const DonorEditIndv = ({ id }) => {
+const DonorEditIndv = ({ id ,isPanelUp}) => {
+  console.log("khds",id)
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -117,6 +118,15 @@ const DonorEditIndv = ({ id }) => {
         setDonor({
           ...donor,
           [e.target.name]: e.target.value,
+        });
+      }
+    } else  if (e.target.name === "indicomp_image_logo") {
+      const file = e.target.files[0];
+      if (file) {
+       
+        setDonor({
+          ...donor,
+          indicomp_image_logo: file.name 
         });
       }
     } else {
@@ -252,7 +262,19 @@ const DonorEditIndv = ({ id }) => {
     fetchPromoter();
     fetchDonorByEdit();
   }, []);
+  useEffect(() => {
+    let timeoutId;
+      timeoutId = setTimeout(() => {
+        if (isPanelUp.error == "Maintenance") {
+          localStorage.clear();
+          navigate("/maintenance");
+        }
+      }, 5000); 
 
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [ isPanelUp, navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -483,14 +505,21 @@ const DonorEditIndv = ({ id }) => {
             </div>
             <div>
               <FormLabel>Upload Image</FormLabel>
-              <input
+              {/* <input
                 type="file"
                 name="indicomp_image_logo"
                 value={donor.indicomp_image_logo}
                 disabled
                 onChange={(e) => onInputChange(e)}
                 className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs  file:bg-[#E1F5FA] file:text-black cursor-not-allowed  "
-              />
+              /> */}
+              <input
+  type="file"
+  name="indicomp_image_logo"
+  disabled
+  onChange={(e) => onInputChange(e)}
+  className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs  file:bg-[#E1F5FA] file:text-black cursor-not-allowed"
+/>
             </div>
 
             <div>

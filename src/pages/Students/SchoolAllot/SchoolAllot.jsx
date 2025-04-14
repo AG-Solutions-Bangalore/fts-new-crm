@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../../layout/Layout";
-import { ContextPanel } from "../../../utils/ContextPanel";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
@@ -14,15 +13,12 @@ import {  navigateToSchoolAllotEdit, SCHOOL_ALLOT_LIST } from "../../../api";
 const SchoolAllot = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { isPanelUp } = useContext(ContextPanel);
+
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const fetchApprovedRData = async () => {
-    if (!isPanelUp) {
-      navigate("/maintenance");
-      return;
-    }
+  
 
     setLoading(true);
 

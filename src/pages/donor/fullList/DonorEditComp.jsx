@@ -65,7 +65,7 @@ const corrpreffer = [
   },
 ];
 
-const DonorEditComp = ({ id }) => {
+const DonorEditComp = ({ id ,isPanelUp }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
@@ -287,7 +287,21 @@ const DonorEditComp = ({ id }) => {
     fetchPromoter();
     fetchEditComp();
   }, []);
+  useEffect(() => {
+    let timeoutId;
+      timeoutId = setTimeout(() => {
+        if (isPanelUp.error == "Maintenance") {
+          localStorage.clear();
+          navigate("/maintenance");
+        }
+      }, 5000); 
 
+
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [ isPanelUp, navigate]);
   const handleUpdate = (e) => {
     e.preventDefault();
     setIsButtonDisabled(true);
