@@ -2,3 +2,5 @@
 const BASE_URL = "https://ftschamp.com/crmapi/public";
 
 export default BASE_URL;
+
+// this is base url package
