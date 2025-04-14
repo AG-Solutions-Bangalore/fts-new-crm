@@ -72,6 +72,8 @@ import RecepitSuper from "./pages/RecepitSuper/RecepitSuper";
 import SessionTimeoutTracker from "./components/sessionTimeout/SessionTimeoutTracker";
 import BASE_URL from "./base/BaseUrl";
 import axios from "axios";
+import ReceiptOldList from "./pages/receipts/ReceiptOldList";
+import DisableRightClick from "./components/disableRightClick/DisableRightClick";
 const App = () => {
   const navigate = useNavigate();
   const time = localStorage.getItem("token-expire-time");
@@ -96,6 +98,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
+      <DisableRightClick/>
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<SignIn />} />
@@ -121,6 +124,7 @@ const App = () => {
 
         {/* receipt  */}
         <Route path="/receipt-list" element={<ReceiptList />} />
+        <Route path="/receipt-old-list" element={<ReceiptOldList />} />
         <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />
         <Route path="/view-receipts/:id" element={<ReceiptViewIndex />} />
         {/* school  */}

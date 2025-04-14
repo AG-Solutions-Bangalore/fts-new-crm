@@ -173,7 +173,7 @@ const ReceiptList = () => {
             className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
            text-black"
           >
-            Receipt List
+            Current Receipt List
           </h2>
           <MantineReactTable table={table} />
         </div>
