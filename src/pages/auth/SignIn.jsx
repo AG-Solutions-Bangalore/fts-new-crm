@@ -15,7 +15,7 @@ const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const { isPanelUp,fetchYearData } = useContext(ContextPanel);
   const navigate = useNavigate();
-  
+ 
   const handleForgetPasswordClick = () => {
     navigate("/forget-password");
   };
@@ -34,7 +34,9 @@ const SignIn = () => {
 
       if (res.status === 200) {
         const token = res.data.UserInfo?.token;
+        const ver_con = res.data?.version?.version_panel
         localStorage.setItem("token", token);
+        localStorage.setItem("ver_con", ver_con);
         localStorage.setItem("id", res.data.UserInfo.user.user_type_id);
         localStorage.setItem("name", res.data.UserInfo.user.first_name);
         localStorage.setItem("username", res.data.UserInfo.user.name);

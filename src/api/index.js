@@ -107,6 +107,9 @@ export const RECEIPT_EDIT_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
 export const RECEIPT_EDIT_BY_ID_UPDATE = `${BASE_URL}/api/update-receipt`;
 // (view) 
 export const RECEIPT_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
+
+export const RECEIPT_OLD_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-by-old-id`;
+
 export const RECEIPT_VIEW_THREE_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
 export const RECEIPT_VIEW_SEND_EMAIL = `${BASE_URL}/api/send-receipt?id=`;
 export const RECEIPT_VIEW_SUMBIT = `${BASE_URL}/api/update-donor-email`;
@@ -330,6 +333,7 @@ export const ROUTES = {
     CHAPTER_DATASOURCE: (id) => `/edit-datasource/${encryptId(id)}`,
     CHAPTER_VIEW_SCHOOL: (id) => `/view-school/${encryptId(id)}`,
     RECEIPT_VIEW: (id) => `/view-receipts/${encryptId(id)}`,
+    RECEIPT_OLD_VIEW: (id) => `/view-old-receipts/${encryptId(id)}`,
     RECEIPT_EDIT: (id) => `/receipt-edit/${encryptId(id)}`,
     SCHOOL_FULL_LIST_VIEW: (id) => `/students-full-list-view/${encryptId(id)}`,
     REPEAT_DONOR_EDIT: (id) => `/repeat-donor-allot/${encryptId(id)}`,
@@ -361,6 +365,10 @@ export const navigateToChapterViewSchool = (navigate, viewId) => {
   };
 export const navigateToReceiptView = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_VIEW(viewId));
+  };
+  
+export const navigateToOldReceiptView = (navigate, viewId) => {
+    navigate(ROUTES.RECEIPT_OLD_VIEW(viewId));
   };
 export const navigateToReceiptEdit = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_EDIT(viewId));
@@ -579,6 +587,26 @@ export const navigateToDonorEdit = (navigate, viewId) => {
     
       const id = decryptId(encryptedId);
       const response = await axios.get(`${RECEIPT_VIEW_BY_ID}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+     
+      return response.data;
+     
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch purchase details"
+      );
+    }
+  };
+  export const fetchReceiptOldViewById = async (encryptedId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+    
+      const id = decryptId(encryptedId);
+      const response = await axios.get(`${RECEIPT_OLD_VIEW_BY_ID}/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
