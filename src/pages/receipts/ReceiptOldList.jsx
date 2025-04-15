@@ -9,7 +9,7 @@ import moment from "moment";
 import CryptoJS from "crypto-js";
 import { CgTally } from "react-icons/cg";
 import { encryptId } from "../../utils/encyrption/Encyrption";
-import {  navigateToReceiptView, RECEIPT_OLD_LIST } from "../../api";
+import {  navigateToOldReceiptView, RECEIPT_OLD_LIST } from "../../api";
 
 const ReceiptOldList = () => {
   const [receiptList, setReceiptList] = useState([]);
@@ -107,7 +107,7 @@ const ReceiptOldList = () => {
               <div
                
                      onClick={() => {
-                      navigateToReceiptView(navigate,id)
+                      navigateToOldReceiptView(navigate,id)
                               }}
                
                 title="Receipt View"

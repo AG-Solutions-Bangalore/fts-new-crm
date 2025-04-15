@@ -101,6 +101,7 @@ const AppProvider = ({ children }) => {
           "/receipt-edit",
           "/view-receipts",
           "/receipt-old-list",
+          "/view-old-receipts",
           ///downloads
           "/download/receipts",
           "/download/donor",
@@ -175,7 +176,7 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     checkPanelStatus();
-    const intervalId = setInterval(checkPanelStatus, 60000);
+    const intervalId = setInterval(checkPanelStatus, 30000);
     return () => clearInterval(intervalId);
   }, []);
 
