@@ -92,7 +92,7 @@ const CreateReceipt = () => {
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0");
   const yyyy = today.getFullYear();
-
+  const currentYear = localStorage.getItem("currentYear")
   //   today = mm + "/" + dd + "/" + yyyy;
   const todayback = yyyy + "-" + mm + "-" + dd;
 
@@ -101,7 +101,7 @@ const CreateReceipt = () => {
   const preyear = todayyear;
   const finyear = +twoDigitYear + 1;
   const finalyear = preyear + "-" + finyear;
-  const {isPanelUp, currentYear } = useContext(ContextPanel);
+  const {isPanelUp } = useContext(ContextPanel);
 
   const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -260,6 +260,10 @@ useEffect(() => {
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
+    }
+    if(!currentYear){
+      toast.error("current year is not defined")
+      return
     }
 
     setIsButtonDisabled(true);
