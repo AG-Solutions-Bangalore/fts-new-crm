@@ -210,22 +210,10 @@ const ReceiptOldOne = () => {
     
     fetchData();
   }, [id]);
-  const [recepitcontrol, setRecepitControl] = useState({});
-  const FetchRecepitYear = () => {
-    axios
-      .get(`${BASE_URL}/api/fetch-receipt-control`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setRecepitControl(res.data.receipt_control);
-        console.log("data", res.data.receipt_control);
-      });
-  };
+
   useEffect(() => {
     setTheId(id);
-    FetchRecepitYear();
+ 
   }, []);
 
   const sendEmail = (e) => {
@@ -286,7 +274,7 @@ const ReceiptOldOne = () => {
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>
   );
-
+console.log("moment",moment(receipts.receipt_date))
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
@@ -294,13 +282,13 @@ const ReceiptOldOne = () => {
       <div className="flex flex-col md:flex-row justify-between gap-2 bg-white p-4 mb-4 rounded-lg shadow-md">
         <h1 className="border-b-2 font-[400] border-dashed border-orange-800 flex items-center">
           <IconArrowBack
-            onClick={() => navigate("/receipt-list")}
+            onClick={() => navigate("/receipt-old-list")}
             className="cursor-pointer hover:text-red-600 mr-2"
           />
          <p className="flex flex-row items-center gap-2"> Receipt View </p>
         </h1>
         
-        {recepitcontrol.download_open === "Yes" && (
+        {moment(receipts.receipt_date).isSameOrBefore(moment('2025-03-31')) && (
           <>
             {localStorage.getItem("user_type_id") != 4 && (
               <div className="flex flex-col md:flex-row justify-end gap-4  sm:space-y-0 space-y-2">
