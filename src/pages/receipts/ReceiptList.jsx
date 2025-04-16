@@ -131,12 +131,7 @@ const ReceiptList = () => {
               {userType === "2" && (
                 <div
                   title="Receipt Edit"
-                  // onClick={() => {
-                  //   const encryptedId = encryptId(id);
-                  //   if (encryptedId) {
-                  //     navigate(`/receipt-edit/${encryptedId}`);
-                  //   }
-                  // }}
+                  
                   onClick={() => {
                     navigateToReceiptEdit(navigate,id)
                             }}

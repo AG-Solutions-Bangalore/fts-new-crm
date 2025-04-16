@@ -9,7 +9,7 @@ import moment from "moment";
 import CryptoJS from "crypto-js";
 import { CgTally } from "react-icons/cg";
 import { encryptId } from "../../utils/encyrption/Encyrption";
-import {  navigateToOldReceiptView, RECEIPT_OLD_LIST } from "../../api";
+import {  navigateToOldReceiptEdit, navigateToOldReceiptView, RECEIPT_OLD_LIST } from "../../api";
 
 const ReceiptOldList = () => {
   const [receiptList, setReceiptList] = useState([]);
@@ -110,12 +110,23 @@ const ReceiptOldList = () => {
                       navigateToOldReceiptView(navigate,id)
                               }}
                
-                title="Receipt View"
+                title="Receipt Old View"
                 className="flex items-center space-x-2"
               >
                 <IconEye className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
-              
+               {userType === "2" && (
+                              <div
+                                title="Receipt Old Edit"
+                               
+                                onClick={() => {
+                                  navigateToOldReceiptEdit(navigate,id)
+                                          }}
+                                className="flex items-center space-x-2"
+                              >
+                                <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
+                              </div>
+                            )}
             </div>
           );
         },

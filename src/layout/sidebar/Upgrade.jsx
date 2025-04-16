@@ -40,6 +40,7 @@ export const Upgrade = ({ isCollapsed }) => {
         toast.success(res.data.msg);
         localStorage.clear();
         navigate("/");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Update failed:", error);
@@ -75,7 +76,7 @@ export const Upgrade = ({ isCollapsed }) => {
           )}
         </div>
         <div className="text-[12px] font-medium text-white/90 mt-0">
-       Updated: 15-04-2025
+       Updated: 16-04-2025
         </div>
       </motion.div>
          

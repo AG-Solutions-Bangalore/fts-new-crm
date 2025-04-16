@@ -103,8 +103,14 @@ export const RECEIPT_LIST = `${BASE_URL}/api/fetch-receipts`;
 export const RECEIPT_OLD_LIST = `${BASE_URL}/api/fetch-receipts-old`;
 // (edit)
 export const RECEIPT_EDIT_BY_ID_DONOR_DATA = `${BASE_URL}/api/fetch-donor-by-id`;
+
 export const RECEIPT_EDIT_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
+export const RECEIPT_EDIT_OLD_BY_ID = `${BASE_URL}/api/fetch-receipt-by-old-id`;
+
+
+
 export const RECEIPT_EDIT_BY_ID_UPDATE = `${BASE_URL}/api/update-receipt`;
+export const RECEIPT_EDIT_BY_ID_OLD_UPDATE = `${BASE_URL}/api/update-receipt-old`;
 // (view) 
 export const RECEIPT_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
 
@@ -334,7 +340,11 @@ export const ROUTES = {
     CHAPTER_VIEW_SCHOOL: (id) => `/view-school/${encryptId(id)}`,
     RECEIPT_VIEW: (id) => `/view-receipts/${encryptId(id)}`,
     RECEIPT_OLD_VIEW: (id) => `/view-old-receipts/${encryptId(id)}`,
+
     RECEIPT_EDIT: (id) => `/receipt-edit/${encryptId(id)}`,
+    RECEIPT_OLD_EDIT: (id) => `/receipt-old-edit/${encryptId(id)}`,
+
+
     SCHOOL_FULL_LIST_VIEW: (id) => `/students-full-list-view/${encryptId(id)}`,
     REPEAT_DONOR_EDIT: (id) => `/repeat-donor-allot/${encryptId(id)}`,
     SCHOOL_ALLOT_EDIT: (id) => `/students-allotedit/${encryptId(id)}`,
@@ -370,9 +380,20 @@ export const navigateToReceiptView = (navigate, viewId) => {
 export const navigateToOldReceiptView = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_OLD_VIEW(viewId));
   };
+
+
+  
 export const navigateToReceiptEdit = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_EDIT(viewId));
   };
+
+export const navigateToOldReceiptEdit = (navigate, viewId) => {
+    navigate(ROUTES.RECEIPT_OLD_EDIT(viewId));
+  };
+
+
+
+
 export const navigateToSchoolFullListView = (navigate, viewId) => {
     navigate(ROUTES.SCHOOL_FULL_LIST_VIEW(viewId));
   };
@@ -537,6 +558,29 @@ export const navigateToDonorEdit = (navigate, viewId) => {
       );
     }
   };
+  export const fetchReceiptEditOldById = async (encryptedId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+    
+      const id = decryptId(encryptedId);
+      const response = await axios.get(`${RECEIPT_EDIT_OLD_BY_ID}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+     
+      return response.data;
+     
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch purchase details"
+      );
+    }
+  };
+
+
+
   export const fetchReceiptEditByIdDonorData = async (encryptedId) => {
     try {
       const token = localStorage.getItem("token");
@@ -566,6 +610,26 @@ export const navigateToDonorEdit = (navigate, viewId) => {
       const id = decryptId(encryptedId);
       const response = await axios.put(
         `${RECEIPT_EDIT_BY_ID_UPDATE}/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  };
+  export const fetchReceiptEditByIdOldUpdate = async (encryptedId,formData) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+      const id = decryptId(encryptedId);
+      const response = await axios.put(
+        `${RECEIPT_EDIT_BY_ID_OLD_UPDATE}/${id}`,
         formData,
         {
           headers: {

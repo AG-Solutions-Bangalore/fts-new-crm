@@ -102,6 +102,7 @@ const AppProvider = ({ children }) => {
           "/view-receipts",
           "/receipt-old-list",
           "/view-old-receipts",
+          "/receipt-old-edit",
           ///downloads
           "/download/receipts",
           "/download/donor",

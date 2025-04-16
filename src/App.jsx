@@ -75,6 +75,7 @@ import axios from "axios";
 import ReceiptOldList from "./pages/receipts/ReceiptOldList";
 import DisableRightClick from "./components/disableRightClick/DisableRightClick";
 import ReceiptOldViewIndex from "./pages/receipts/receiptOldView/ReceiptOldViewIndex";
+import ReceiptOldEdit from "./pages/receipts/ReceiptOldEdit";
 const App = () => {
   const navigate = useNavigate();
   const time = localStorage.getItem("token-expire-time");
@@ -127,6 +128,10 @@ const App = () => {
         <Route path="/receipt-list" element={<ReceiptList />} />
         <Route path="/receipt-old-list" element={<ReceiptOldList />} />
         <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />
+
+
+        <Route path="/receipt-old-edit/:id" element={<ReceiptOldEdit />} />
+
         <Route path="/view-receipts/:id" element={<ReceiptViewIndex />} />
 
         <Route path="/view-old-receipts/:id" element={<ReceiptOldViewIndex />} />
