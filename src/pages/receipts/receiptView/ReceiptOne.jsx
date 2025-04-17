@@ -79,56 +79,61 @@ const ReceiptOne = () => {
     };
   }, []);
   const navigate = useNavigate();
+
+
   const handleSavePDF = () => {
     const input = tableRef.current;
-
-    html2canvas(input, { scale: 2 })
-      .then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
-
-        const margin = 5; // Outer margin for the image
-
-        const availableWidth = pdfWidth - 2 * margin;
-
-        const ratio = Math.min(
-          availableWidth / imgWidth,
-          pdfHeight / imgHeight
-        );
-
-        const imgX = margin;
-        const imgY = margin;
-
-        // Add the image to the PDF
-        pdf.addImage(
-          imgData,
-          "PNG",
-          imgX,
-          imgY,
-          imgWidth * ratio,
-          imgHeight * ratio
-        );
-
-        // Add paragraph text with bottom padding
-        pdf.setFontSize(12);
-        const text = "";
-
-        // Add text after the image, applying bottom padding to the Y-position
-        const textYPosition = imgY + canvas.height * ratio;
-        pdf.text(text, margin, textYPosition);
-
-        pdf.save("Receipt.pdf");
+    
+    // Apply temporary styles for pdf generation
+    if (input) {
+      const originalStyle = input.style.cssText;
+      // Force desktop width for capture
+      input.style.width = "1024px";
+      input.style.minWidth = "1024px";
+      input.style.transform = "none";
+      
+      // Capture at a higher scale for better quality
+      html2canvas(input, { 
+        scale: 2,
+        width: 1024,
+        windowWidth: 1024,
+        imageTimeout: 0,
+        useCORS: true
       })
-      .catch((error) => {
-        console.error("Error generating PDF: ", error);
-      });
+        .then((canvas) => {
+          // Restore original styling
+          input.style.cssText = originalStyle;
+          
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("p", "mm", "a4");
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          const imgWidth = canvas.width;
+          const imgHeight = canvas.height;
+          const margin = 5; // Outer margin
+          const availableWidth = pdfWidth - 2 * margin;
+          const ratio = Math.min(availableWidth / imgWidth, pdfHeight / imgHeight);
+          const imgX = margin;
+          const imgY = margin;
+
+          // Add the image to the PDF
+          pdf.addImage(
+            imgData,
+            "PNG",
+            imgX,
+            imgY,
+            imgWidth * ratio,
+            imgHeight * ratio
+          );
+
+          pdf.save("Receipt.pdf");
+        })
+        .catch((error) => {
+          console.error("Error generating PDF: ", error);
+          // Restore original styling on error too
+          input.style.cssText = originalStyle;
+        });
+    }
   };
 
   const mergeRefs =
@@ -392,342 +397,347 @@ const ReceiptOne = () => {
       <div className="overflow-x-auto  grid md:grid-cols-1 1fr">
         {"2022-04-01" <= receipts.receipt_date && (
           <div className="flex justify-center">
-            <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
-              <div
-                // className="p-4"
-                ref={mergeRefs(componentRef, tableRef)}
-                className="print-content"
-              >
-                <div className="relative ">
-                  <img
-                    src={Logo1}
-                    alt="water mark"
-                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-30"
-                  />
-
-                  <div className="flex justify-between items-center border border-black">
-                    <img
-                      src={Logo1}
-                      alt="FTS logo"
-                      className="m-5 ml-12 w-20 h-20"
-                    />
-
-                    <div className="text-center">
-                      <img
-                        src={Logo2}
-                        alt="Top banner"
-                        className="mx-auto mb-2 w-80"
-                      />
-                      <h2 className="text-xl font-bold">
-                        {chapter.chapter_name}
-                      </h2>
-                    </div>
-
-                    <img
-                      src={Logo3}
-                      alt="Ekal logo"
-                      className="m-5 mr-12 w-20 h-20"
-                    />
-                  </div>
-
-                  <div className="text-center flex justify-center items-center border-x border-b border-black -mt-[2.40rem]  p-5">
-                    <p className="text-[10px]">
-                      {`${chapter.chapter_address}, ${chapter.chapter_city} - ${chapter.chapter_pin}, ${chapter.chapter_state}`}
-                    </p>
-                    <p className="text-[11px]">
-                      {`Email: ${chapter.chapter_email} | ${chapter.chapter_website} | Ph: ${chapter.chapter_phone} | Mob: ${chapter.chapter_whatsapp}`}
-                    </p>
-                  </div>
-
-                  <div className="text-center border-x -mt-6 border-black p-1">
-                    <p className="text-xs">
-                      Head Office: Harish Mukherjee Road, Kolkata-26. Web:
-                      www.ftsindia.com Ph: 033 - 2454 4510/11/12/13 PAN:
-                      AAAAF0290L 
-                    </p>
-                  </div>
-
-                  <table className="w-full border-collapse">
-                    <tbody>
-                      <tr>
-                        <td className="border-l border-black p-2">
-                          Received with thanks from :
-                        </td>
-                        <td className="border-l  border-black p-2">
-                          Receipt No.
-                        </td>
-                        <td className="p-2">:</td>
-                        <td className="border-r border-black p-2">
-                          <span className="font-bold">
-                            {receipts.receipt_ref_no}
-                          </span>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="border-l border-black p-2" rowSpan="2">
-                          {Object.keys(receipts).length !== 0 && (
-                            <div className="-mt-6 ml-6  font-bold">
-                              <p className="text-sm leading-tight">
-                                {receipts.individual_company.indicomp_type !==
-                                  "Individual" && "M/s"}
-                                {receipts.individual_company.indicomp_type ===
-                                  "Individual" &&
-                                  receipts.individual_company.title}{" "}
-                                {receipts.individual_company.indicomp_full_name}
-                              </p>
-
-                              {receipts.individual_company.hasOwnProperty(
-                                "indicomp_off_branch_address"
-                              ) && (
-                                <div>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_off_branch_address
-                                    }
-                                  </p>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_off_branch_area
-                                    }
-                                  </p>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_off_branch_ladmark
-                                    }
-                                  </p>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_off_branch_city
-                                    }
-                                    -{" "}
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_off_branch_pin_code
-                                    }
-                                    ,
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_off_branch_state
-                                    }
-                                  </p>
-                                </div>
-                              )}
-
-                              {receipts.individual_company.hasOwnProperty(
-                                "indicomp_res_reg_address"
-                              ) && (
-                                <div>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_res_reg_address
-                                    }
-                                  </p>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_res_reg_area
-                                    }
-                                  </p>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_res_reg_ladmark
-                                    }
-                                  </p>
-                                  <p className="text-sm leading-tight">
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_res_reg_city
-                                    }
-                                    -{" "}
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_res_reg_pin_code
-                                    }
-                                    ,
-                                    {
-                                      receipts.individual_company
-                                        .indicomp_res_reg_state
-                                    }
-                                  </p>
-                                </div>
-                              )}
+                    <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
+                      <div
+                        // className="p-4"
+                        ref={mergeRefs(componentRef, tableRef)}
+                        className="print-content"
+                      >
+                        <div className="relative ">
+                          <img
+                            src={Logo1}
+                            alt="water mark"
+                            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-30"
+                          />
+        
+                          <div className="flex justify-between items-center border-t border-r border-l border-black">
+                            <img
+                              src={Logo1}
+                              alt="FTS logo"
+                              className="m-5 ml-12 w-20 h-20  "
+                            />
+        
+                            <div className="text-center  ">
+                              <img
+                                src={Logo2}
+                                alt="Top banner"
+                                className="mx-auto mb-0 w-80  "
+                              />
+                              <h2 className="text-xl font-bold  ">
+                                {chapter.chapter_name}
+                              </h2>
                             </div>
-                          )}
-                        </td>
-                        <td className="border-l border-t border-black p-2">
-                          Date
-                        </td>
-                        <td className="p-2 border-t border-black">:</td>
-                        <td className="border-r border-t border-black p-2">
-                          <span className="font-bold">
-                            {moment(receipts.receipt_date).format("DD-MM-YYYY")}
-                          </span>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="border-l border-t border-black p-2">
-                          On account of
-                        </td>
-                        <td className="p-2 border-t border-black">:</td>
-                        <td className="border-r border-t border-black p-2">
-                          <span className="font-bold">
-                            {receipts.receipt_donation_type}
-                          </span>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="border-l border-black p-2">
-                          <div className="flex items-center">
-                            <span>
-                              {country.map(
-                                (coustate, key) =>
-                                  coustate.state_country === "India" &&
-                                  "PAN No :"
-                              )}
-                            </span>
-                            <span className="font-bold ml-2">
-                              {Object.keys(receipts).length !== 0 &&
-                                country.map(
-                                  (coustate1, key) =>
-                                    coustate1.state_country === "India" && (
-                                      <span key={key}>
-                                        {
-                                          receipts.individual_company
-                                            .indicomp_pan_no
-                                        }
-                                      </span>
-                                    )
-                                )}
-                            </span>
+        
+                            <img
+                              src={Logo3}
+                              alt="Ekal logo"
+                              className="m-5 mr-12 w-20 h-20 "
+                            />
                           </div>
-                        </td>
-
-                        <td className="border-l border-t border-black p-2">
-                          Pay Mode
-                        </td>
-                        <td className="p-2  border-t border-black">:</td>
-                        <td className="border-r border-t border-black p-2">
-                          <span className="font-bold">
-                            {receipts.receipt_tran_pay_mode}
-                          </span>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="border-l border-t border-b border-black p-2">
-                          Amount in words :
-                          <span className="font-bold capitalize">
-                            {amountInWords} Only
-                          </span>
-                        </td>
-                        <td className="border-l border-b border-t border-black p-2">
-                          Amount
-                        </td>
-                        <td className="p-2 border-b border-t border-black">
-                          :
-                        </td>
-                        <td className="border-r border-b border-t border-black p-2">
-                          Rs.{" "}
-                          <span className="font-bold ">
-                            {receipts.receipt_total_amount}
-                          </span>{" "}
-                          /-
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td
-                          className="border-l border-b border-r border-black p-2"
-                          colSpan="4"
-                        >
-                          Reference :
-                          <span className="font-bold text-sm">
-                            {receipts.receipt_tran_pay_details}
-                          </span>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td
-                          className="border-l border-b border-black p-2"
-                          colSpan="1"
-                        >
-                          {receipts.receipt_exemption_type === "80G" && (
-                            <div className="text-sm">
-                              {receipts.receipt_date > "2021-05-27" ? (
-                                <>
-                                  Donation is exempt U/Sec.80G of the
-                                  <br />
-                                  Income Tax Act 1961 vide Order No.
-                                  AAAAF0290LF20214 Dt. 28-05-2021.
-                                </>
-                              ) : (
-                                <>
-                                  This donation is eligible for deduction U/S
-                                  80(G) of the
-                                  <br />
-                                  Income Tax Act 1961 vide order
-                                  NO:DIT(E)/3260/8E/73/89-90 Dt. 13-12-2011.
-                                </>
-                              )}
-                            </div>
-                          )}
-                        </td>
-                        <td
-                          className="border-b border-r border-black p-2 text-right text-sm"
-                          colSpan="3"
-                        >
-                          For Friends of Tribals Society
-                          <br />
-                          <br />
-                          {authsign.length > 0 && (
-                            <div className="signature-section">
-                              {/* Signature row */}
-                              <div className="flex flex-col items-end">
-                                {authsign.map((sig, key) => (
-                                  <div key={key} className="text-center">
-                                    {sig.signature_image && (
-                                      <img
-                                        src={sig.signature_image}
-                                        alt={`${sig.indicomp_full_name}'s signature`}
-                                        className="h-12 mb-1"
-                                      />
-                                    )}
-                                    <span className="font-semibold">
-                                      {sig.indicomp_full_name}
+        
+                          <div className="text-center border-x border-b border-black p-1   h-14">
+                            <p className="text-sm font-semibold mx-auto max-w-[80%]">
+                              {`${chapter?.chapter_address || ""}, ${
+                                chapter?.chapter_city || ""
+                              } - ${chapter?.chapter_pin || ""}, ${
+                                chapter?.chapter_state || ""
+                              } 
+            ${chapter?.chapter_email ? `Email: ${chapter.chapter_email} |` : ""} 
+            ${chapter?.chapter_website ? `${chapter.chapter_website} |` : ""} 
+            ${chapter?.chapter_phone ? `Ph: ${chapter.chapter_phone} |` : ""} 
+            ${chapter?.chapter_whatsapp ? `Mob: ${chapter.chapter_whatsapp}` : ""}`}
+                            </p>
+                          </div>
+        
+                          <div className="text-center border-x h-8 border-black p-1">
+                            <p className="text-[13px] font-medium mx-auto ">
+                              Head Office: Harish Mukherjee Road, Kolkata-26. Web:
+                              www.ftsindia.com Ph: 033 - 2454 4510/11/12/13 PAN:
+                              AAAAF0290L
+                            </p>
+                          </div>
+        
+                          <table className="w-full border-t border-black border-collapse">
+                            <tbody>
+                              <tr>
+                                <td className="border-l border-black p-2">
+                                  Received with thanks from :
+                                </td>
+                                <td className="border-l  border-black p-2">
+                                  Receipt No.
+                                </td>
+                                <td className="p-2">:</td>
+                                <td className="border-r border-black p-2">
+                                  <span className="font-bold">
+                                    {receipts.receipt_ref_no}
+                                  </span>
+                                </td>
+                              </tr>
+        
+                              <tr>
+                                <td className="border-l border-black p-2" rowSpan="2">
+                                  {Object.keys(receipts).length !== 0 && (
+                                    <div className="-mt-6 ml-6  font-bold">
+                                      <p className="text-sm leading-tight">
+                                        {receipts.individual_company.indicomp_type !==
+                                          "Individual" && "M/s"}
+                                        {receipts.individual_company.indicomp_type ===
+                                          "Individual" &&
+                                          receipts.individual_company.title}{" "}
+                                        {receipts.individual_company.indicomp_full_name}
+                                      </p>
+        
+                                      {receipts.individual_company.hasOwnProperty(
+                                        "indicomp_off_branch_address"
+                                      ) && (
+                                        <div>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_off_branch_address
+                                            }
+                                          </p>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_off_branch_area
+                                            }
+                                          </p>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_off_branch_ladmark
+                                            }
+                                          </p>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_off_branch_city
+                                            }
+                                            -{" "}
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_off_branch_pin_code
+                                            }
+                                            ,
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_off_branch_state
+                                            }
+                                          </p>
+                                        </div>
+                                      )}
+        
+                                      {receipts.individual_company.hasOwnProperty(
+                                        "indicomp_res_reg_address"
+                                      ) && (
+                                        <div>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_res_reg_address
+                                            }
+                                          </p>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_res_reg_area
+                                            }
+                                          </p>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_res_reg_ladmark
+                                            }
+                                          </p>
+                                          <p className="text-sm leading-tight">
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_res_reg_city
+                                            }
+                                            -{" "}
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_res_reg_pin_code
+                                            }
+                                            ,
+                                            {
+                                              receipts.individual_company
+                                                .indicomp_res_reg_state
+                                            }
+                                          </p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="border-l border-t border-black p-2">
+                                  Date
+                                </td>
+                                <td className="p-2 border-t border-black">:</td>
+                                <td className="border-r border-t border-black p-2">
+                                  <span className="font-bold">
+                                    {moment(receipts.receipt_date).format("DD-MM-YYYY")}
+                                  </span>
+                                </td>
+                              </tr>
+        
+                              <tr>
+                                <td className="border-l border-t border-black p-2">
+                                  On account of
+                                </td>
+                                <td className="p-2 border-t border-black">:</td>
+                                <td className="border-r border-t border-black p-2">
+                                  <span className="font-bold">
+                                    {receipts.receipt_donation_type}
+                                  </span>
+                                </td>
+                              </tr>
+        
+                              <tr>
+                                <td className="border-l border-black p-2">
+                                  <div className="flex items-center">
+                                    <span>
+                                      {country.map(
+                                        (coustate, key) =>
+                                          coustate.state_country === "India" &&
+                                          "PAN No :"
+                                      )}
                                     </span>
-                                    {sig.designation && (
-                                      <div className="text-sm text-gray-600">
-                                        {sig.designation}
-                                      </div>
-                                    )}
+                                    <span className="font-bold ml-2">
+                                      {Object.keys(receipts).length !== 0 &&
+                                        country.map(
+                                          (coustate1, key) =>
+                                            coustate1.state_country === "India" && (
+                                              <span key={key}>
+                                                {
+                                                  receipts.individual_company
+                                                    .indicomp_pan_no
+                                                }
+                                              </span>
+                                            )
+                                        )}
+                                    </span>
                                   </div>
-                                ))}
-                              </div>
-
-                              {/* Optional: Add authorized signatory text */}
-                              <div className="text-sm text-gray-500 mt-2">
-                                Authorized Signatory
-                              </div>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+                                </td>
+        
+                                <td className="border-l border-t border-black p-2">
+                                  Pay Mode
+                                </td>
+                                <td className="p-2  border-t border-black">:</td>
+                                <td className="border-r border-t border-black p-2">
+                                  <span className="font-bold">
+                                    {receipts.receipt_tran_pay_mode}
+                                  </span>
+                                </td>
+                              </tr>
+        
+                              <tr>
+                                <td className="border-l border-t border-b border-black p-2">
+                                  Amount in words :
+                                  <span className="font-bold capitalize">
+                                    {amountInWords} Only
+                                  </span>
+                                </td>
+                                <td className="border-l border-b border-t border-black p-2">
+                                  Amount
+                                </td>
+                                <td className="p-2 border-b border-t border-black">
+                                  :
+                                </td>
+                                <td className="border-r border-b border-t border-black p-2">
+                                  Rs.{" "}
+                                  <span className="font-bold ">
+                                    {receipts.receipt_total_amount}
+                                  </span>{" "}
+                                  /-
+                                </td>
+                              </tr>
+        
+                              <tr>
+                                <td
+                                  className="border-l border-b border-r border-black p-2"
+                                  colSpan="4"
+                                >
+                                  Reference :
+                                  <span className="font-bold text-sm">
+                                    {receipts.receipt_tran_pay_details}
+                                  </span>
+                                </td>
+                              </tr>
+        
+                              <tr>
+                                <td
+                                  className="border-l border-b border-black p-2"
+                                  colSpan="1"
+                                >
+                                  {receipts.receipt_exemption_type === "80G" && (
+                                    <div className="text-sm">
+                                      {receipts.receipt_date > "2021-05-27" ? (
+                                        <>
+                                          Donation is exempt U/Sec.80G of the
+                                          <br />
+                                          Income Tax Act 1961 vide Order No.
+                                          AAAAF0290LF20214 Dt. 28-05-2021.
+                                        </>
+                                      ) : (
+                                        <>
+                                          This donation is eligible for deduction U/S
+                                          80(G) of the
+                                          <br />
+                                          Income Tax Act 1961 vide order
+                                          NO:DIT(E)/3260/8E/73/89-90 Dt. 13-12-2011.
+                                        </>
+                                      )}
+                                    </div>
+                                  )}
+                                </td>
+                                <td
+                                  className="border-b border-r border-black p-2 text-right text-sm"
+                                  colSpan="3"
+                                >
+                                  For Friends of Tribals Society
+                                  <br />
+                                  <br />
+                                  {authsign.length > 0 && (
+                                    <div className="signature-section">
+                                      {/* Signature row */}
+                                      <div className="flex flex-col items-end">
+                                        {authsign.map((sig, key) => (
+                                          <div key={key} className="text-center">
+                                            {sig.signature_image && (
+                                              <img
+                                                src={sig.signature_image}
+                                                alt={`${sig.indicomp_full_name}'s signature`}
+                                                className="h-12 mb-1"
+                                              />
+                                            )}
+                                            <span className="font-semibold">
+                                              {sig.indicomp_full_name}
+                                            </span>
+                                            {sig.designation && (
+                                              <div className="text-sm text-gray-600">
+                                                {sig.designation}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+        
+                                      {/* Optional: Add authorized signatory text */}
+                                      <div className="text-sm text-gray-500 mt-2">
+                                        Authorized Signatory
+                                      </div>
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
         )}
         <Dialog
           open={open}

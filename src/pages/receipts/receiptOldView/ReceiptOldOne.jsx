@@ -25,7 +25,11 @@ import { IconArrowBack } from "@tabler/icons-react";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
 
 import { CgTally } from "react-icons/cg";
-import { fetchReceiptOldViewById, RECEIPT_VIEW_SEND_EMAIL, RECEIPT_VIEW_SUMBIT } from "../../../api";
+import {
+  fetchReceiptOldViewById,
+  RECEIPT_VIEW_SEND_EMAIL,
+  RECEIPT_VIEW_SUMBIT,
+} from "../../../api";
 const printStyles = `
   @media print {
 
@@ -66,7 +70,7 @@ const ReceiptOldOne = () => {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const amountInWords = numWords(receipts.receipt_total_amount);
-  
+
   useEffect(() => {
     // Add print styles to document head
     const styleSheet = document.createElement("style");
@@ -81,54 +85,57 @@ const ReceiptOldOne = () => {
   const navigate = useNavigate();
   const handleSavePDF = () => {
     const input = tableRef.current;
-
-    html2canvas(input, { scale: 2 })
-      .then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
-
-        const margin = 5; // Outer margin for the image
-
-        const availableWidth = pdfWidth - 2 * margin;
-
-        const ratio = Math.min(
-          availableWidth / imgWidth,
-          pdfHeight / imgHeight
-        );
-
-        const imgX = margin;
-        const imgY = margin;
-
-        // Add the image to the PDF
-        pdf.addImage(
-          imgData,
-          "PNG",
-          imgX,
-          imgY,
-          imgWidth * ratio,
-          imgHeight * ratio
-        );
-
-        // Add paragraph text with bottom padding
-        pdf.setFontSize(12);
-        const text = "";
-
-        // Add text after the image, applying bottom padding to the Y-position
-        const textYPosition = imgY + canvas.height * ratio;
-        pdf.text(text, margin, textYPosition);
-
-        pdf.save("Receipt.pdf");
+    
+    // Apply temporary styles for pdf generation
+    if (input) {
+      const originalStyle = input.style.cssText;
+      // Force desktop width for capture
+      input.style.width = "1024px";
+      input.style.minWidth = "1024px";
+      input.style.transform = "none";
+      
+      // Capture at a higher scale for better quality
+      html2canvas(input, { 
+        scale: 2,
+        width: 1024,
+        windowWidth: 1024,
+        imageTimeout: 0,
+        useCORS: true
       })
-      .catch((error) => {
-        console.error("Error generating PDF: ", error);
-      });
+        .then((canvas) => {
+          // Restore original styling
+          input.style.cssText = originalStyle;
+          
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("p", "mm", "a4");
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          const imgWidth = canvas.width;
+          const imgHeight = canvas.height;
+          const margin = 5; // Outer margin
+          const availableWidth = pdfWidth - 2 * margin;
+          const ratio = Math.min(availableWidth / imgWidth, pdfHeight / imgHeight);
+          const imgX = margin;
+          const imgY = margin;
+
+          // Add the image to the PDF
+          pdf.addImage(
+            imgData,
+            "PNG",
+            imgX,
+            imgY,
+            imgWidth * ratio,
+            imgHeight * ratio
+          );
+
+          pdf.save("Receipt.pdf");
+        })
+        .catch((error) => {
+          console.error("Error generating PDF: ", error);
+          // Restore original styling on error too
+          input.style.cssText = originalStyle;
+        });
+    }
   };
 
   const mergeRefs =
@@ -193,27 +200,26 @@ const ReceiptOldOne = () => {
   //     setLoader(false);
   //   });
   // };fetch-receipt-by-old-id
- useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchReceiptOldViewById(id);
         setReceipts(data.receipt);
-      setChapter(data.chapter);
-      setSign(data.auth_sign);
-      setSign1(data.auth_sign);
-      setCountry(data.country);
-      setLoader(false);
+        setChapter(data.chapter);
+        setSign(data.auth_sign);
+        setSign1(data.auth_sign);
+        setCountry(data.country);
+        setLoader(false);
       } catch (error) {
         toast.error("Failed to fetch viewer details");
       }
     };
-    
+
     fetchData();
   }, [id]);
 
   useEffect(() => {
     setTheId(id);
- 
   }, []);
 
   const sendEmail = (e) => {
@@ -274,7 +280,7 @@ const ReceiptOldOne = () => {
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>
   );
-console.log("moment",moment(receipts.receipt_date))
+  console.log("moment", moment(receipts.receipt_date));
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
@@ -285,10 +291,10 @@ console.log("moment",moment(receipts.receipt_date))
             onClick={() => navigate("/receipt-old-list")}
             className="cursor-pointer hover:text-red-600 mr-2"
           />
-         <p className="flex flex-row items-center gap-2"> Receipt View </p>
+          <p className="flex flex-row items-center gap-2"> Receipt View </p>
         </h1>
-        
-        {moment(receipts.receipt_date).isSameOrBefore(moment('2025-03-31')) && (
+
+        {moment(receipts.receipt_date).isSameOrBefore(moment("2025-03-31")) && (
           <>
             {localStorage.getItem("user_type_id") != 4 && (
               <div className="flex flex-col md:flex-row justify-end gap-4  sm:space-y-0 space-y-2">
@@ -393,20 +399,20 @@ console.log("moment",moment(receipts.receipt_date))
                     className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-30"
                   />
 
-                  <div className="flex justify-between items-center border border-black">
+                  <div className="flex justify-between items-center border-t border-r border-l border-black">
                     <img
                       src={Logo1}
                       alt="FTS logo"
-                      className="m-5 ml-12 w-20 h-20"
+                      className="m-5 ml-12 w-20 h-20  "
                     />
 
-                    <div className="text-center">
+                    <div className="text-center  ">
                       <img
                         src={Logo2}
                         alt="Top banner"
-                        className="mx-auto mb-2 w-80"
+                        className="mx-auto mb-0 w-80  "
                       />
-                      <h2 className="text-xl font-bold">
+                      <h2 className="text-xl font-bold  ">
                         {chapter.chapter_name}
                       </h2>
                     </div>
@@ -414,28 +420,33 @@ console.log("moment",moment(receipts.receipt_date))
                     <img
                       src={Logo3}
                       alt="Ekal logo"
-                      className="m-5 mr-12 w-20 h-20"
+                      className="m-5 mr-12 w-20 h-20 "
                     />
                   </div>
 
-                  <div className="text-center flex justify-center items-center border-x border-b border-black -mt-[2.40rem]  p-5">
-                    <p className="text-[10px]">
-                      {`${chapter.chapter_address}, ${chapter.chapter_city} - ${chapter.chapter_pin}, ${chapter.chapter_state}`}
-                    </p>
-                    <p className="text-[11px]">
-                      {`Email: ${chapter.chapter_email} | ${chapter.chapter_website} | Ph: ${chapter.chapter_phone} | Mob: ${chapter.chapter_whatsapp}`}
+                  <div className="text-center border-x border-b border-black p-1   h-14">
+                    <p className="text-sm font-semibold mx-auto max-w-[80%]">
+                      {`${chapter?.chapter_address || ""}, ${
+                        chapter?.chapter_city || ""
+                      } - ${chapter?.chapter_pin || ""}, ${
+                        chapter?.chapter_state || ""
+                      } 
+    ${chapter?.chapter_email ? `Email: ${chapter.chapter_email} |` : ""} 
+    ${chapter?.chapter_website ? `${chapter.chapter_website} |` : ""} 
+    ${chapter?.chapter_phone ? `Ph: ${chapter.chapter_phone} |` : ""} 
+    ${chapter?.chapter_whatsapp ? `Mob: ${chapter.chapter_whatsapp}` : ""}`}
                     </p>
                   </div>
 
-                  <div className="text-center border-x -mt-6 border-black p-1">
-                    <p className="text-xs">
+                  <div className="text-center border-x h-8 border-black p-1">
+                    <p className="text-[13px] font-medium mx-auto ">
                       Head Office: Harish Mukherjee Road, Kolkata-26. Web:
                       www.ftsindia.com Ph: 033 - 2454 4510/11/12/13 PAN:
-                      AAAAF0290L 
+                      AAAAF0290L
                     </p>
                   </div>
 
-                  <table className="w-full border-collapse">
+                  <table className="w-full border-t border-black border-collapse">
                     <tbody>
                       <tr>
                         <td className="border-l border-black p-2">

@@ -63,7 +63,7 @@ export const Upgrade = ({ isCollapsed }) => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-indigo-500 to-blue-500 rounded-lg p-3  shadow-md  flex items-center justify-between"
+        className="bg-gradient-to-r from-indigo-500 to-blue-500 rounded-b-lg p-3  shadow-md  flex items-center justify-between"
   
         layout
       >
@@ -85,7 +85,7 @@ export const Upgrade = ({ isCollapsed }) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-2 shadow-md cursor-pointer"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-b-lg p-2 shadow-md cursor-pointer"
           onClick={() => setOpenDialog(true)}
           layout
         >
