@@ -918,7 +918,7 @@ const ReceiptOldOne = () => {
                       <p className=" font-serif text-[20px] flex justify-center my-6">
                         Sub: Adoption of One Teacher School
                       </p>
-                      <p className=" font-serif text-[20px] text-justify">
+                      <p className=" font-serif text-[20px] text-justify leading-tight">
                         We acknowledge with thanks the receipt of Rs.
                         {receipts.receipt_total_amount}/- Rupees {amountInWords}{" "}
                         Only via{" "}
@@ -939,7 +939,7 @@ const ReceiptOldOne = () => {
                         )}
                       </p>
 
-                      <p className="my-4 font-serif text-[20px] text-justify">
+                      <p className="my-4 font-serif text-[20px] text-justify leading-tight">
                         We convey our sincere thanks and gratitude for your kind
                         support towards the need of our tribals and also the
                         efforts being made by our Society for achieving
@@ -947,13 +947,13 @@ const ReceiptOldOne = () => {
                         particularly the literacy of their children and health &
                         economic welfare.
                       </p>
-                      <p className=" font-serif text-[20px] text-justify">
+                      <p className=" font-serif text-[20px] text-justify leading-tight">
                         We would like to state that our efforts are not only for
                         mitigating the hardship and problems of our tribals but
                         we are also trying to inculcate national character among
                         them.
                       </p>
-                      <p className="my-4 font-serif text-[20px] text-justify">
+                      <p className="my-4 font-serif text-[20px] text-justify leading-tight">
                         We are pleased to enclose herewith our money receipt no.{" "}
                         {receipts.receipt_ref_no} dated{" "}
                         {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
@@ -965,7 +965,7 @@ const ReceiptOldOne = () => {
 
                   {receipts.receipt_donation_type === "General" && (
                     <div className="mt-2">
-                      <p className=" font-serif text-[20px] text-justify my-5">
+                      <p className=" font-serif text-[20px] text-justify my-5 leading-tight">
                         We thankfully acknowledge the receipt of Rs.
                         {receipts.receipt_total_amount}/- via your{" "}
                         {receipts.receipt_tran_pay_mode === "Cash"
@@ -974,7 +974,7 @@ const ReceiptOldOne = () => {
                         being Donation for Education.
                       </p>
 
-                      <p className=" font-serif text-[20px] text-justify">
+                      <p className=" font-serif text-[20px] text-justify leading-tight">
                         We are pleased to enclose herewith our money receipt no.{" "}
                         {receipts.receipt_ref_no} dated{" "}
                         {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
@@ -985,7 +985,7 @@ const ReceiptOldOne = () => {
 
                   {receipts.receipt_donation_type === "Membership" && (
                     <div>
-                      <p className=" font-serif text-[20px] text-justify my-5">
+                      <p className=" font-serif text-[20px] text-justify my-5 leading-tight">
                         We acknowledge with thanks receipt of your membership
                         subscription for the Year. Our receipt for the same is
                         enclosed herewith.
@@ -1001,10 +1001,10 @@ const ReceiptOldOne = () => {
                       <p className=" font-serif text-[20px]">
                         Yours faithfully,{" "}
                       </p>
-                      <p className="my-3 font-serif text-[20px]">
+                      <p className="my-3 font-serif text-[20px] ">
                         For Friends of Tribal Society
                       </p>
-                      <p className=" font-serif text-[20px]">
+                      <p className=" font-serif text-[20px] mt-10">
                         {authsign.length > 0 &&
                           authsign.map((sig, key) => (
                             <span key={key}>{sig.indicomp_full_name}</span>
@@ -1080,9 +1080,9 @@ const ReceiptOldOne = () => {
               </div>
 
               {/* Address Information */}
-              <div className="text-justify md:mx-20 mt-[10px] ">
+              <div className="text-justify md:mx-20 mt-[40px] ">
                 <div className="md:text-xs text-[9px] space-y-1">
-                  <div className="flex text-[0.5rem] justify-between">
+                  <div className="flex text-[0.55rem] justify-between">
                     <span>
                       {chapter.chapter_address}, {chapter.chapter_city} -{" "}
                       {chapter.chapter_pin}, {chapter.chapter_state}
@@ -1218,13 +1218,13 @@ const ReceiptOldOne = () => {
               </div>
 
               {/* Donation Types */}
-              <div className="space-y-2 md:mx-20  md:text-xl text-[20px]  text-[#464D69]">
+              <div className="space-y-2 md:mx-20  md:text-xl text-[20px]  text-[#464D69]"> 
                 {receipts.receipt_donation_type === "One Teacher School" && (
                   <>
                     <p className=" font-serif text-[20px]">
                       Sub: Adoption of One Teacher School
                     </p>
-                    <p className=" font-serif text-[20px] text-justify">
+                    <p className=" font-serif text-[20px] text-justify leading-tight">
                       We acknowledge with thanks the receipt of Rs.
                       {receipts.receipt_total_amount}/- Rupees {amountInWords}{" "}
                       Only vide{" "}
@@ -1234,7 +1234,7 @@ const ReceiptOldOne = () => {
                       being for your contribution and adoption of{" "}
                       {receipts.receipt_no_of_ots} OTS.
                     </p>
-                    <p className=" font-serif text-[20px] text-justify">
+                    <p className="  font-serif text-[20px] text-justify  leading-tight">
                       We convey our sincere thanks and gratitude for your kind
                       support towards the need of our tribals and also the
                       efforts being made by our Society for achieving
@@ -1242,13 +1242,13 @@ const ReceiptOldOne = () => {
                       particularly the literacy of their children and health &
                       economic welfare.
                     </p>
-                    <p className=" font-serif text-[20px] text-justify">
+                    <p className=" font-serif text-[20px] text-justify leading-tight">
                       We would like to state that our efforts are not only for
                       mitigating the hardship and problems of our tribals but we
                       are also trying to inculcate national character among
                       them.
                     </p>
-                    <p className=" font-serif text-[20px] text-justify">
+                    <p className=" font-serif text-[20px] text-justify leading-tight">
                       We are pleased to enclose herewith our money receipt no.{" "}
                       {receipts.receipt_ref_no} dated{" "}
                       {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
@@ -1260,7 +1260,7 @@ const ReceiptOldOne = () => {
                 <div>
                   {receipts.receipt_donation_type === "General" && (
                     <>
-                      <p className=" font-serif text-[20px] text-justify my-3">
+                      <p className=" font-serif text-[20px] text-justify my-3 leading-tight">
                         We thankfully acknowledge the receipt of Rs.
                         {receipts.receipt_total_amount}/- vide your{" "}
                         {receipts.receipt_tran_pay_mode === "Cash"
@@ -1269,7 +1269,7 @@ const ReceiptOldOne = () => {
                         being Donation for Education.
                       </p>
 
-                      <p className=" font-serif text-[20px] text-justify">
+                      <p className=" font-serif text-[20px] text-justify leading-tight">
                         We are pleased to enclose herewith our money receipt no.{" "}
                         {receipts.receipt_ref_no} dated{" "}
                         {moment(receipts.receipt_date).format("DD-MM-YYYY")} for
@@ -1279,7 +1279,7 @@ const ReceiptOldOne = () => {
                   )}
                   {receipts.receipt_donation_type === "Membership" && (
                     <>
-                      <p className=" font-serif text-[20px] text-justify">
+                      <p className=" font-serif text-[20px] text-justify leading-tight">
                         We acknowledge with thanks receipt of your membership
                         subscription for the Year. Our receipt for the same is
                         enclosed herewith.
@@ -1301,10 +1301,12 @@ const ReceiptOldOne = () => {
                       <p className=" font-serif text-[20px] my-2">
                         For Friends of Tribal Society
                       </p>
+                      <p className="mt-10">
                       {authsign.length > 0 &&
                         authsign.map((sig, key) => (
-                          <p key={key}>{sig.indicomp_full_name}</p>
+                          <span key={key}>{sig.indicomp_full_name}</span>
                         ))}
+                        </p>
                       <p className=" font-serif text-[20px]">
                         {chapter.auth_sign}
                       </p>
