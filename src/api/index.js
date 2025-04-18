@@ -101,6 +101,8 @@ export const DUPLICATE_EDIT_BY_ID_UPDATE = `${BASE_URL}/api/update-donors-duplic
 /*--------------------------Reciept-start----------------------------------- */
 export const RECEIPT_LIST = `${BASE_URL}/api/fetch-receipts`;
 export const RECEIPT_OLD_LIST = `${BASE_URL}/api/fetch-receipts-old`;
+export const RECEIPT_SUSPENSE_LIST = `${BASE_URL}/api/fetch-suspense-list`;
+export const RECEIPT_SUSPENSE_UPDATE = `${BASE_URL}/api/update-suspense-receipt`;
 // (edit)
 export const RECEIPT_EDIT_BY_ID_DONOR_DATA = `${BASE_URL}/api/fetch-donor-by-id`;
 

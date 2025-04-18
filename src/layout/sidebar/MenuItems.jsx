@@ -188,6 +188,12 @@ const Menuitems = (userTypeId) => [
               icon: IconReceipt,
               href: "/receipt-old-list",
             },
+            {
+              id: uniqueId(),
+              title: "Suspense Receipts",
+              icon: IconReceipt,
+              href: "/suspense-list",
+            },
           ],
         },
         // {
@@ -275,6 +281,18 @@ const Menuitems = (userTypeId) => [
               title: "10BD Statement",
               icon: IconCopy,
               href: "/report/otg",
+            },
+            {
+              id: uniqueId(),
+              title: "Suspense Summary",
+              icon: IconCopy,
+              href: "/report/suspense",
+            },
+            {
+              id: uniqueId(),
+              title: "Payment Summary",
+              icon: IconCopy,
+              href: "/report/payment",
             },
           ],
         },
