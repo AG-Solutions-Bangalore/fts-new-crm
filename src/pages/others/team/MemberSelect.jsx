@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import BASE_URL from "../../../base/BaseUrl";
 import axios from "axios";
 import { FaPlus } from "react-icons/fa";
 import { Spinner } from "@material-tailwind/react";

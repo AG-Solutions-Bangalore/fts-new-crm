@@ -76,6 +76,10 @@ import ReceiptOldList from "./pages/receipts/ReceiptOldList";
 import DisableRightClick from "./components/disableRightClick/DisableRightClick";
 import ReceiptOldViewIndex from "./pages/receipts/receiptOldView/ReceiptOldViewIndex";
 import ReceiptOldEdit from "./pages/receipts/ReceiptOldEdit";
+import SuspenseSummary from "./pages/Reports/SuspenseSummary/SuspenseSummary";
+import PaymentSummary from "./pages/Reports/PayementSummary/PaymentSummary";
+import PaymentView from "./pages/Reports/PayementSummary/PaymentView";
+import SuspenseList from "./pages/receipts/suspense/SuspenseList";
 const App = () => {
   const navigate = useNavigate();
   const time = localStorage.getItem("token-expire-time");
@@ -126,6 +130,7 @@ const App = () => {
 
         {/* receipt  */}
         <Route path="/receipt-list" element={<ReceiptList />} />
+        <Route path="/suspense-list" element={<SuspenseList />} />
         <Route path="/receipt-old-list" element={<ReceiptOldList />} />
         <Route path="/receipt-edit/:id" element={<ReceiptEdit />} />
 
@@ -187,6 +192,12 @@ const App = () => {
         <Route path="/report/otg" element={<RecepitDocument />} />
         <Route path="/recepit-otg-view" element={<ReceiptAllView />} />
         <Route path="/recepit-nopan-view" element={<NopanView />} />
+        <Route path="/report/suspense" element={<SuspenseSummary />} />
+        <Route path="/report/payment" element={<PaymentSummary />} />
+        <Route path="/report/payment-view" element={<PaymentView />} />
+
+
+
         <Route path="/recepit-group-view" element={<GroupView />} />
         {/* //SUDENTS */}
         <Route path="/students-full-list" element={<FullList />} />

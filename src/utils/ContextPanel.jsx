@@ -98,6 +98,7 @@ const AppProvider = ({ children }) => {
           "/datasource",
           // receipt
           "/receipt-list",
+          "/suspense-list",
           "/receipt-edit",
           "/view-receipts",
           "/receipt-old-list",

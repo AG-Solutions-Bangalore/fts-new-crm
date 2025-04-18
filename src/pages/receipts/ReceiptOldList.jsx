@@ -6,9 +6,6 @@ import BASE_URL from "../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import moment from "moment";
-import CryptoJS from "crypto-js";
-import { CgTally } from "react-icons/cg";
-import { encryptId } from "../../utils/encyrption/Encyrption";
 import {  navigateToOldReceiptEdit, navigateToOldReceiptView, RECEIPT_OLD_LIST } from "../../api";
 
 const ReceiptOldList = () => {
