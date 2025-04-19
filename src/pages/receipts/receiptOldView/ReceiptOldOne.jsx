@@ -1054,7 +1054,7 @@ const ReceiptOldOne = () => {
             <div
               ref={componentRefp}
               // className="p-2"
-              style={{ margin: "5px" }}
+              style={{ margin: "15px" }}
               className=" page-break"
             >
               <div className="flex justify-between items-center ">
