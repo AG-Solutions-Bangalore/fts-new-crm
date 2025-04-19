@@ -288,12 +288,12 @@ const Menuitems = (userTypeId) => [
               icon: IconCopy,
               href: "/report/suspense",
             },
-            {
-              id: uniqueId(),
-              title: "Payment Summary",
-              icon: IconCopy,
-              href: "/report/payment",
-            },
+            // {
+            //   id: uniqueId(),
+            //   title: "Payment Summary",
+            //   icon: IconCopy,
+            //   href: "/report/payment",
+            // },
           ],
         },
         {

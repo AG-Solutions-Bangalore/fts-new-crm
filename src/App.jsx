@@ -77,17 +77,18 @@ import DisableRightClick from "./components/disableRightClick/DisableRightClick"
 import ReceiptOldViewIndex from "./pages/receipts/receiptOldView/ReceiptOldViewIndex";
 import ReceiptOldEdit from "./pages/receipts/ReceiptOldEdit";
 import SuspenseSummary from "./pages/Reports/SuspenseSummary/SuspenseSummary";
-import PaymentSummary from "./pages/Reports/PayementSummary/PaymentSummary";
-import PaymentView from "./pages/Reports/PayementSummary/PaymentView";
+// import PaymentSummary from "./pages/Reports/PayementSummary/PaymentSummary";
+// import PaymentView from "./pages/Reports/PayementSummary/PaymentView";
 import SuspenseList from "./pages/receipts/suspense/SuspenseList";
 const App = () => {
   const navigate = useNavigate();
   const time = localStorage.getItem("token-expire-time");
+  const token = localStorage.getItem("token")
   const handleLogout = async () => {
     try {
       const res = await axios.post(`${BASE_URL}/api/panel-logout`,{}, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.data.code === 200) {
@@ -104,7 +105,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      <DisableRightClick/> 
+      <DisableRightClick/>  
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<SignIn />} />
@@ -193,8 +194,10 @@ const App = () => {
         <Route path="/recepit-otg-view" element={<ReceiptAllView />} />
         <Route path="/recepit-nopan-view" element={<NopanView />} />
         <Route path="/report/suspense" element={<SuspenseSummary />} />
-        <Route path="/report/payment" element={<PaymentSummary />} />
-        <Route path="/report/payment-view" element={<PaymentView />} />
+
+
+        {/* <Route path="/report/payment" element={<PaymentSummary />} />
+        <Route path="/report/payment-view" element={<PaymentView />} /> */}
 
 
 
