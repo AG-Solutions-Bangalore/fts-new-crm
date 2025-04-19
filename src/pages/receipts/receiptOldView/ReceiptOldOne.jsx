@@ -36,9 +36,9 @@ const printStyles = `
 
 
 
-    /* Print content with 20px margin */
+    
     .print-content {
-      margin: 10px !important; /* Apply 20px margin to the printed content */
+      margin: 10px !important; 
   padding: 3px;
       }
 
@@ -1082,7 +1082,7 @@ const ReceiptOldOne = () => {
               {/* Address Information */}
               <div className="text-justify md:mx-20 mt-[40px] ">
                 <div className="md:text-xs text-[9px] space-y-1">
-                  <div className="flex text-[0.55rem] justify-between">
+                  <div className="flex text-[0.5rem] justify-between">
                     <span>
                       {chapter.chapter_address}, {chapter.chapter_city} -{" "}
                       {chapter.chapter_pin}, {chapter.chapter_state}
