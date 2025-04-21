@@ -161,6 +161,23 @@ const SuspenseList = () => {
   const updateColumns = useMemo(
     () => [
       {
+        id: 'select',
+        header: 'Select',
+        size: 80,
+        Cell: ({ row }) => (
+          <button
+            onClick={() => setSelectedDonor(row.original)}
+            className={`px-3 py-1 text-xs rounded-md ${
+              selectedDonor?.indicomp_fts_id === row.original.indicomp_fts_id
+                ? 'bg-blue-100 text-blue-700 font-medium'
+                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+            }`}
+          >
+            {selectedDonor?.indicomp_fts_id === row.original.indicomp_fts_id ? 'Selected' : 'Select'}
+          </button>
+        ),
+      },
+      {
         accessorKey: 'indicomp_full_name',
         header: 'Donor Name',
         size: 150,
@@ -186,23 +203,7 @@ const SuspenseList = () => {
         ),
       },
   
-      {
-        id: 'select',
-        header: 'Select',
-        size: 80,
-        Cell: ({ row }) => (
-          <button
-            onClick={() => setSelectedDonor(row.original)}
-            className={`px-3 py-1 text-xs rounded-md ${
-              selectedDonor?.indicomp_fts_id === row.original.indicomp_fts_id
-                ? 'bg-blue-100 text-blue-700 font-medium'
-                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-            }`}
-          >
-            {selectedDonor?.indicomp_fts_id === row.original.indicomp_fts_id ? 'Selected' : 'Select'}
-          </button>
-        ),
-      },
+     
     ],
     [selectedDonor]
   );
@@ -247,7 +248,7 @@ const SuspenseList = () => {
          disableEnforceFocus
          disableAutoFocus
       >
-        <div className="p-4 space-y-2  md:w-[500px] bg-white rounded-lg shadow-md">
+        <div className="p-4 space-y-2  container bg-white rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-2">
   <div className="flex-1 min-w-0">
 
