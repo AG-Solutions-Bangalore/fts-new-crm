@@ -80,6 +80,7 @@ import SuspenseSummary from "./pages/Reports/SuspenseSummary/SuspenseSummary";
 // import PaymentSummary from "./pages/Reports/PayementSummary/PaymentSummary";
 // import PaymentView from "./pages/Reports/PayementSummary/PaymentView";
 import SuspenseList from "./pages/receipts/suspense/SuspenseList";
+import ChangePromoter from "./pages/donor/changePromoter/ChangePromoter";
 const App = () => {
   const navigate = useNavigate();
   const time = localStorage.getItem("token-expire-time");
@@ -105,7 +106,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      <DisableRightClick/>  
+      <DisableRightClick/>   
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<SignIn />} />
@@ -128,6 +129,7 @@ const App = () => {
         <Route path="/duplicate-list" element={<DuplicateList />} />
         <Route path="/duplicate-edit/:id" element={<DuplicateEdit />} />
         <Route path="/donor-create/:id" element={<CreateReceipt />} />
+        <Route path="/change-promoter" element={<ChangePromoter />} />
 
         {/* receipt  */}
         <Route path="/receipt-list" element={<ReceiptList />} />

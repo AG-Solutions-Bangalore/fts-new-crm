@@ -81,6 +81,7 @@ const AppProvider = ({ children }) => {
           "/create-receipts",
           "/duplicate-edit",
           "/donor-create",
+          "/change-promoter",
           //master
           "/master/chapters",
           "/edit-chapter",

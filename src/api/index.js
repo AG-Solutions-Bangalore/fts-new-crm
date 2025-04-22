@@ -63,6 +63,12 @@ export const MEMBERSHIP_DETAILS_LIST = `${BASE_URL}/api/fetch-donor-receipt-by-i
 export const FAMILY_DETAILS_LIST = `${BASE_URL}/api/fetch-donor-by-id`;
 export const COMPANY_DETAILS_LIST = `${BASE_URL}/api/fetch-donor-by-id`;
 export const DONOR_INDIVISUAL_CREATE_SUMBIT = `${BASE_URL}/api/create-donor`;
+
+
+export const DONOR_CHANGE_PROMOTER_UPDATE_SUMBIT = `${BASE_URL}/api/update-promoter`;
+
+
+
 export const DONOR_COMPANY_CREATE_SUMBIT = `${BASE_URL}/api/create-donor`;
 export const DONOR_COMPANY_UPDATE_SUMBIT = `${BASE_URL}/api/update-donor/`;
 export const DONOR_INDIVISUAL_UPDATE_SUMBIT = `${BASE_URL}/api/update-donor/`;

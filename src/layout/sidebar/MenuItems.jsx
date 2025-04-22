@@ -60,6 +60,12 @@ const Menuitems = (userTypeId) => [
           icon: IconReceipt,
           href: "/recepit-sup",
         },
+        {
+          id: uniqueId(),
+          title: "Change Promoter",
+          icon: IconCash,
+          href: "/change-promoter",
+        },
       ]
     : ""),
 
@@ -169,6 +175,7 @@ const Menuitems = (userTypeId) => [
               icon: IconCash,
               href: "/duplicate-list",
             },
+           
           ],
         },
         {
