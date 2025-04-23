@@ -402,7 +402,7 @@ const ReceiptOne = () => {
                          </div>
        
                          <div className="text-center border-x border-b border-black p-1   h-14">
-                           <p className="text-sm font-semibold mx-auto max-w-[80%] print:max-w-[70%]">
+                           <p className="text-sm font-semibold mx-auto max-w-[90%] ">
                              {`${chapter?.chapter_address || ""}, ${
                                chapter?.chapter_city || ""
                              } - ${chapter?.chapter_pin || ""}, ${
@@ -441,9 +441,9 @@ const ReceiptOne = () => {
                              </tr>
        
                              <tr>
-                               <td className="border-l border-black p-1" rowSpan="2">
+                               <td className="border-l border-black " rowSpan="2">
                                  {Object.keys(receipts).length !== 0 && (
-                                   <div className="-mt-6 ml-6  font-bold">
+                                   <div className=" ml-6  font-bold">
                                      <p className="text-sm leading-tight">
                                        {receipts.individual_company.indicomp_type !==
                                          "Individual" && "M/s"}
