@@ -24,7 +24,7 @@ const DonationSummary = () => {
     console.log(e.target.value);
     const { name, value } = e.target;
     setDonorDownload({
-      ...receiptsdwn,
+      ...downloadDonor,
       [name]: value,
     });
   };
