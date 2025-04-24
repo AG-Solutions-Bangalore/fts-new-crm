@@ -30,7 +30,7 @@ const DonorSummary = () => {
     console.log(e.target.value);
     const { name, value } = e.target;
     setDonorSummary({
-      ...receiptsdwn,
+      ...donorSummary,
       [name]: value,
     });
   };
