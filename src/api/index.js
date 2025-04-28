@@ -125,7 +125,10 @@ export const RECEIPT_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
 export const RECEIPT_OLD_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-by-old-id`;
 
 export const RECEIPT_VIEW_THREE_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
-export const RECEIPT_VIEW_SEND_EMAIL = `${BASE_URL}/api/send-receipt?id=`;
+export const RECEIPT_VIEW_SEND_EMAIL = `${BASE_URL}/api/send-receipt`;
+export const RECEIPT_VIEW_SEND_EMAIL_OLD = `${BASE_URL}/api/send-receipt-old`;
+
+// export const RECEIPT_VIEW_SEND_EMAIL = `${BASE_URL}/api/send-receipt?id=`;
 export const RECEIPT_VIEW_SUMBIT = `${BASE_URL}/api/update-donor-email`;
 
 
@@ -816,3 +819,53 @@ export const navigateToDonorEdit = (navigate, viewId) => {
       );
     }
   };
+
+
+
+  // send mail
+  
+  
+  export const fetchReceiptOldOneSendMail = async (encryptedId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+    
+      const id = decryptId(encryptedId);
+      const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL_OLD}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+     
+      return response.data;
+     
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch purchase details"
+      );
+    }
+  };
+
+
+  export const fetchReceiptOneSendMail = async (encryptedId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+    
+      const id = decryptId(encryptedId);
+      const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+     
+      return response.data;
+     
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch purchase details"
+      );
+    }
+  };
+
+

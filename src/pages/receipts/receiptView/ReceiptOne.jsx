@@ -21,7 +21,7 @@ import html2canvas from "html2canvas";
 import { IconArrowBack } from "@tabler/icons-react";
 
 import { CgTally } from "react-icons/cg";
-import { fetchReceiptViewById, RECEIPT_VIEW_SEND_EMAIL, RECEIPT_VIEW_SUMBIT } from "../../../api";
+import { fetchReceiptOneSendMail, fetchReceiptViewById, RECEIPT_VIEW_SEND_EMAIL, RECEIPT_VIEW_SUMBIT } from "../../../api";
 
 const ReceiptOne = () => {
   const tableRef = useRef(null);
@@ -233,20 +233,34 @@ const ReceiptOne = () => {
     FetchRecepitYear();
   }, []);
 
-  const sendEmail = (e) => {
-    e.preventDefault();
-    axios({
-      url: `${RECEIPT_VIEW_SEND_EMAIL}${theId}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then(() => {
-      // Assuming you have a notification system
-      alert("Email Sent Successfully");
-    });
-  };
-
+  // const sendEmail = (e) => {
+  //   e.preventDefault();
+  //   axios({
+  //     url: `${RECEIPT_VIEW_SEND_EMAIL}${theId}`,
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     },
+  //   }).then(() => {
+  //     // Assuming you have a notification system
+  //     alert("Email Sent Successfully");
+  //   });
+  // };
+  
+  const sendEmail = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await fetchReceiptOneSendMail(theId);
+  
+        if (response.data.code === 200) {
+          toast.success(response.data.msg);
+        } else {
+          toast.error(response.data.msg);
+        }
+      } catch (error) {
+        toast.error(error.response?.data?.msg || "Network error occurred.");
+      }
+    };
   const onSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
