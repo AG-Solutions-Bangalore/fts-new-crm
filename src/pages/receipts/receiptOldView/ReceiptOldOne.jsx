@@ -15,6 +15,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { IconArrowBack } from "@tabler/icons-react";
 import {
+  fetchReceiptOldOneSendMail,
   fetchReceiptOldViewById,
   RECEIPT_VIEW_SEND_EMAIL,
   RECEIPT_VIEW_SUMBIT,
@@ -38,27 +39,26 @@ const ReceiptOldOne = () => {
   const navigate = useNavigate();
   const handleSavePDF = () => {
     const input = tableRef.current;
-  
+
     if (input) {
       const originalStyle = input.style.cssText;
-  
-      
+
       input.style.width = "210mm";
       input.style.minWidth = "210mm";
       input.style.margin = "2mm";
-      input.style.padding = "2mm"; 
+      input.style.padding = "2mm";
       input.style.boxSizing = "border-box";
       input.style.position = "absolute";
       input.style.left = "0";
       input.style.top = "0";
-  
+
       const clone = input.cloneNode(true);
       clone.style.position = "absolute";
       clone.style.left = "-9999px";
       clone.style.top = "0";
       clone.style.visibility = "visible";
       document.body.appendChild(clone);
-  
+
       html2canvas(clone, {
         scale: 2,
         width: 210 * 3.78,
@@ -73,23 +73,22 @@ const ReceiptOldOne = () => {
         .then((canvas) => {
           document.body.removeChild(clone);
           input.style.cssText = originalStyle;
-  
+
           const imgData = canvas.toDataURL("image/png");
           const pdf = new jsPDF({
             orientation: "portrait",
             unit: "mm",
             format: "a4",
           });
-  
+
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = pdf.internal.pageSize.getHeight();
-  
-          
-          const margin = 2; 
-  
+
+          const margin = 2;
+
           const imgWidth = pdfWidth - 2 * margin;
           const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
+
           pdf.addImage(imgData, "PNG", margin, margin, imgWidth, imgHeight);
           pdf.save("Receipt.pdf");
         })
@@ -110,6 +109,7 @@ const ReceiptOldOne = () => {
     localStorage.setItem("ftsid", receipts.indicomp_fts_id + "");
   };
 
+  
   const handleClose = () => {
     setOpen(false);
   };
@@ -207,17 +207,34 @@ const ReceiptOldOne = () => {
     setTheId(id);
   }, []);
 
-  const sendEmail = (e) => {
+  console.log("settheid", theId);
+
+  // const sendEmail = (e) => {
+  //   e.preventDefault();
+  //   axios({
+  //     url: `${RECEIPT_VIEW_SEND_EMAIL}${theId}`,
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     },
+  //   }).then(() => {
+  //     alert("Email Sent Successfully");
+  //   });
+  // };
+
+  const sendEmail = async (e) => {
     e.preventDefault();
-    axios({
-      url: `${RECEIPT_VIEW_SEND_EMAIL}${theId}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then(() => {
-      alert("Email Sent Successfully");
-    });
+    try {
+      const response = await fetchReceiptOldOneSendMail(theId);
+
+      if (response.data.code === 200) {
+        toast.success(response.data.msg);
+      } else {
+        toast.error(response.data.msg);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.msg || "Network error occurred.");
+    }
   };
 
   const onSubmit = async (e) => {
@@ -231,7 +248,7 @@ const ReceiptOldOne = () => {
     const formData = {
       indicomp_email: donor1.indicomp_email,
     };
-    console.log("formdata", formData);
+
     try {
       const response = await axios.put(
         `${RECEIPT_VIEW_SUMBIT}/${localStorage.getItem("ftsid")}`,
@@ -264,7 +281,7 @@ const ReceiptOldOne = () => {
       {required && <span className="text-red-500 ml-1">*</span>}
     </label>
   );
-  console.log("moment", moment(receipts.receipt_date));
+
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
 
