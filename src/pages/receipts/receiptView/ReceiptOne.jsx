@@ -431,7 +431,7 @@ const ReceiptOne = () => {
        
                          <div className="text-center border-x h-7 border-black p-1">
                            <p className="text-[11px] font-medium mx-auto ">
-                             Head Office: Harish Mukherjee Road, Kolkata-26. Web:
+                             Head Office: Ekal Bhawan, 123/A, Harish Mukherjee Road, Kolkata-26. Web:
                              www.ftsindia.com Ph: 033 - 2454 4510/11/12/13 PAN:
                              AAAAF0290L
                            </p>
@@ -982,7 +982,7 @@ const ReceiptOne = () => {
                                Yours faithfully,{" "}
                              </p>
                              <p className="my-3 font-serif text-[18px] ">
-                               For Friends of Tribal Society
+                               For Friends of Tribals Society
                              </p>
                              <p className=" font-serif text-[18px] mt-10">
                                {authsign.length > 0 &&
