@@ -8,10 +8,19 @@ import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
 import { DUPLICATE_DELETE, DUPLICATE_LIST, navigateToDuplicateEdit } from "../../../api";
+import {
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Button,
+} from "@material-tailwind/react";
 
 const DuplicateList = () => {
   const [duplicateData, setDuplicateData] = useState(null);
   const [loading, setLoading] = useState(false);
+   const [deleteId, setDeleteId] = useState(null);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const navigate = useNavigate();
   const userType = localStorage.getItem("user_type_id");
   const [columnVisibility, setColumnVisibility] = useState({
@@ -42,29 +51,41 @@ const DuplicateList = () => {
   useEffect(() => {
     fetchDuplicateData();
   }, []);
+  const handleOpenDeleteDialog = (id) => {
+    setDeleteId(id);
+    setOpenDeleteDialog(true);
+  };
 
-  const handleDuplicateDelete = async (e, id) => {
-    e.preventDefault();
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setDeleteId(null);
+  };
+
+
+  const handleDuplicateDelete = async () => {
+    if (!deleteId) return;
+    
     try {
       const response = await axios({
-        url: DUPLICATE_DELETE  + id,
+        url: DUPLICATE_DELETE + deleteId,
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      if (response.status === 200) {
-        toast.success(res.data.msg);
+      if (response.data.code === 200) {
+        toast.success(response.data.msg);
         fetchDuplicateData();
-      } else if (res.data.code === 400) {
-        toast.error(res.data.msg);
-        setIsButtonDisabled(false);
+      } else if (response.data.code === 400) {
+        toast.error(response.data.msg);
       } else {
-        toast.error("Unexcepted Error");
+        toast.error("Unexpected Error");
       }
     } catch (error) {
       toast.error("An error occurred: " + error.message);
+    } finally {
+      handleCloseDeleteDialog();
     }
   };
 
@@ -121,7 +142,7 @@ const DuplicateList = () => {
         size: 50,
       },
       {
-        accessorKey: "receipt_count",
+        accessorKey: "total_receipt_count",
         header: "Receipt Count",
         size: 50,
       },
@@ -134,7 +155,7 @@ const DuplicateList = () => {
         size: 50,
         Cell: ({ row }) => {
           const id = row.original.id;
-          const receiptCount = row.original.receipt_count;
+          const receiptCount = row.original.total_receipt_count;
 
           return (
             <div className="flex flex-row">
@@ -159,7 +180,10 @@ const DuplicateList = () => {
               ) : (
                 <div
                   title="Delete"
-                  onClick={(e) => handleDuplicateDelete(e, id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleOpenDeleteDialog(id);
+                  }}
                   className="flex items-center space-x-2"
                 >
                   <IconTrash className="h-5 w-5 text-blue-500 hover:text-red-500 cursor-pointer" />
@@ -172,8 +196,17 @@ const DuplicateList = () => {
     }
 
     return baseColumns;
-  }, [userType, navigate, handleDuplicateDelete, columnVisibility]);
+  }, [userType, navigate, columnVisibility]);
 
+  // const table = useMantineReactTable({
+  //   columns,
+  //   data: duplicateData || [],
+  //   enableFullScreenToggle: false,
+  //   enableDensityToggle: false,
+  //   enableColumnActions: false,
+  //   enableHiding: false,
+  //   state: { columnVisibility },
+  // });
   const table = useMantineReactTable({
     columns,
     data: duplicateData || [],
@@ -181,7 +214,21 @@ const DuplicateList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableHiding: false,
-    state: { columnVisibility },
+    state: { 
+      columnVisibility,
+      isLoading: loading ,
+      showProgressBars: loading,
+    },
+    mantineTableContainerProps: {
+      sx: {
+        minHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   return (
     <Layout>
@@ -205,6 +252,29 @@ const DuplicateList = () => {
           <MantineReactTable table={table} />
         </div>
       </div>
+         <Dialog open={openDeleteDialog} handler={handleCloseDeleteDialog}>
+              <DialogHeader>Confirm Delete</DialogHeader>
+              <DialogBody>
+                Are you sure you want to delete this record? This action cannot be undone.
+              </DialogBody>
+              <DialogFooter>
+                <Button
+                  variant="text"
+                  color="red"
+                  onClick={handleCloseDeleteDialog}
+                  className="mr-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="gradient"
+                  color="green"
+                  onClick={handleDuplicateDelete}
+                >
+                  Confirm
+                </Button>
+              </DialogFooter>
+            </Dialog>
     </Layout>
   );
 };

@@ -16,6 +16,7 @@ import DonorSelect from "./DonorSelect";
 import { toast } from "react-toastify";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
 import { fetchDuplicateEditById, fetchDuplicateEditByIdUpdate } from "../../../api";
+import { FaSpinner } from "react-icons/fa";
 
 const DuplicateEdit = () => {
   const { id } = useParams();
@@ -100,13 +101,7 @@ const DuplicateEdit = () => {
     setIsButtonDisabled(true);
 
     try {
-      // const response = await axios.put(
-      //   `${BASE_URL}/api/update-donors-duplicate/${decryptedId}`,
-      //   data,
-      //   {
-      //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      //   }
-      // );
+   
 const response = await fetchDuplicateEditByIdUpdate(id,data);
 
 
@@ -121,6 +116,8 @@ const response = await fetchDuplicateEditByIdUpdate(id,data);
     } catch (error) {
       toast.error(error.response?.data?.msg || "Network error occurred.");
       setIsButtonDisabled(false);
+    }finally {
+      setIsButtonDisabled(false); 
     }
   };
 
@@ -218,15 +215,29 @@ const response = await fetchDuplicateEditByIdUpdate(id,data);
                   Note: Please select the donor carefully. This action cannot be
                   undone.
                 </p>
-                <button
+                {/* <button
                   type="submit"
                   className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2"
                   disabled={isButtonDisabled}
                 >
                   Submit
-                </button>
+                </button> */}
                 <button
-                  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md"
+  type="submit"
+  className="text-center text-sm font-[400] cursor-pointer  w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2 flex justify-center items-center"
+  disabled={isButtonDisabled}
+>
+  {isButtonDisabled ? (
+    <>
+      <FaSpinner className="h-4 w-4 mr-2" />
+      Submitting...
+    </>
+  ) : (
+    "Submit"
+  )}
+</button>
+                <button
+                  className="text-center text-sm font-[400] cursor-pointer w-36 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md"
                   onClick={() => {
                     navigate("/duplicate-list");
                   }}
