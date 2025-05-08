@@ -245,12 +245,20 @@ const DonorList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableHiding: false,
-    state: { columnVisibility },
+    state: { 
+      columnVisibility,
+      isLoading: loading ,
+      showProgressBars: loading,
+    },
     enableStickyHeader: true,
     enableStickyFooter: true,
     mantineTableContainerProps: { sx: { maxHeight: "400px" } },
     onColumnVisibilityChange: setColumnVisibility,
     initialState: { columnVisibility: { address: false } },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
 
   return (

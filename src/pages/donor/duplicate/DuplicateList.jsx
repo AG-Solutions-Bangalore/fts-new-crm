@@ -142,7 +142,7 @@ const DuplicateList = () => {
         size: 50,
       },
       {
-        accessorKey: "receipt_count",
+        accessorKey: "total_receipt_count",
         header: "Receipt Count",
         size: 50,
       },
@@ -155,7 +155,7 @@ const DuplicateList = () => {
         size: 50,
         Cell: ({ row }) => {
           const id = row.original.id;
-          const receiptCount = row.original.receipt_count;
+          const receiptCount = row.original.total_receipt_count;
 
           return (
             <div className="flex flex-row">
@@ -198,6 +198,15 @@ const DuplicateList = () => {
     return baseColumns;
   }, [userType, navigate, columnVisibility]);
 
+  // const table = useMantineReactTable({
+  //   columns,
+  //   data: duplicateData || [],
+  //   enableFullScreenToggle: false,
+  //   enableDensityToggle: false,
+  //   enableColumnActions: false,
+  //   enableHiding: false,
+  //   state: { columnVisibility },
+  // });
   const table = useMantineReactTable({
     columns,
     data: duplicateData || [],
@@ -205,7 +214,21 @@ const DuplicateList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableHiding: false,
-    state: { columnVisibility },
+    state: { 
+      columnVisibility,
+      isLoading: loading ,
+      showProgressBars: loading,
+    },
+    mantineTableContainerProps: {
+      sx: {
+        minHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   return (
     <Layout>
