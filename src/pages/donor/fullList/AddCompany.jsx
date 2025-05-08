@@ -147,8 +147,13 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
     }
   };
 
+  // const onChangePanNumber = (e) => {
+  //   setDonor({ ...donor, indicomp_pan_no: e.target.value });
+  // };
+
   const onChangePanNumber = (e) => {
-    setDonor({ ...donor, indicomp_pan_no: e.target.value });
+    const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
+    setDonor({ ...donor, indicomp_pan_no: panValue });
   };
 
   const [states, setStates] = useState([]);

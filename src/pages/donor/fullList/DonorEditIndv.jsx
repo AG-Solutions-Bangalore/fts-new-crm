@@ -137,8 +137,13 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
     }
   };
 
+  // const onChangePanNumber = (e) => {
+  //   setDonor({ ...donor, indicomp_pan_no: e.target.value });
+  // };
+
   const onChangePanNumber = (e) => {
-    setDonor({ ...donor, indicomp_pan_no: e.target.value });
+    const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
+    setDonor({ ...donor, indicomp_pan_no: panValue });
   };
 
   //   for modal

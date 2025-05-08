@@ -124,8 +124,13 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     }
   };
 
+  // const onChangePanNumber = (e) => {
+  //   setDonor({ ...donor, indicomp_pan_no: e.target.value });
+  // };
+
   const onChangePanNumber = (e) => {
-    setDonor({ ...donor, indicomp_pan_no: e.target.value });
+    const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
+    setDonor({ ...donor, indicomp_pan_no: panValue });
   };
 
   const [states, setStates] = useState([]);
@@ -270,8 +275,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     }).then((res) => {
       if (res.data.code === 200) {
         toast.success(res.data.msg);
-        fetchDonorData();
-        onClose();
+       
         setDonor({
           indicomp_full_name: "",
           title: "",
@@ -308,6 +312,8 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
           indicomp_off_branch_pin_code: "",
           indicomp_corr_preffer: "Residence",
         });
+        fetchDonorData();
+        onClose();
       } else if (res.data.code === 400) {
         toast.error(res.data.msg);
         setIsButtonDisabled(false);
