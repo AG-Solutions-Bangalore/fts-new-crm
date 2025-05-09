@@ -217,8 +217,17 @@ const SuspenseList = () => {
     enableColumnActions: false,
     enableStickyHeader: true,
     enableStickyFooter: true,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
     mantineTableContainerProps: { sx: { maxHeight: "400px" } },
     initialState: { columnVisibility: { address: false } },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
 
   return (

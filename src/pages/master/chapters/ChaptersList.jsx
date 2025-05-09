@@ -9,13 +9,18 @@ import Layout from "../../../layout/Layout";
 import BASE_URL from "../../../base/BaseUrl";
 import AddChapter from "./AddChapter";
 import { encryptId } from "../../../utils/encyrption/Encyrption";
-import { CHAPTER_LIST, navigateToChapterDatasource, navigateToChapterEdit, navigateToChapterView } from "../../../api";
+import {
+  CHAPTER_LIST,
+  navigateToChapterDatasource,
+  navigateToChapterEdit,
+  navigateToChapterView,
+} from "../../../api";
 
 const ChaptersList = () => {
   const [chapterList, setChapterList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [chapterDrawer, setChapterDrawer] = useState(false);
-const navigate =useNavigate()
+  const navigate = useNavigate();
   const toggleIndividualDrawer = (open) => (event) => {
     if (
       event &&
@@ -76,7 +81,7 @@ const navigate =useNavigate()
               //   navigate(`/view-chapter/${encodeURIComponent(encryptedId)}`);
               // }}
               onClick={() => {
-                navigateToChapterView(navigate,row.original.id)
+                navigateToChapterView(navigate, row.original.id);
               }}
             >
               <IconEye className="h-5 w-5 cursor-pointer text-blue-500" />
@@ -91,7 +96,7 @@ const navigate =useNavigate()
               //   navigate(`/edit-chapter/${encodeURIComponent(encryptedId)}`);
               // }}
               onClick={() => {
-                navigateToChapterEdit(navigate,row.original.id)
+                navigateToChapterEdit(navigate, row.original.id);
               }}
             >
               <IconEdit className="h-5 w-5 cursor-pointer text-blue-500" />
@@ -106,7 +111,7 @@ const navigate =useNavigate()
               //   navigate(`/edit-datasource/${encodeURIComponent(encryptedId)}`);
               // }}
               onClick={() => {
-                navigateToChapterDatasource(navigate,row.original.id)
+                navigateToChapterDatasource(navigate, row.original.id);
               }}
             >
               <IconReceipt className="h-5 w-5 cursor-pointer text-blue-500" />
@@ -124,6 +129,7 @@ const navigate =useNavigate()
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    
   });
 
   return (

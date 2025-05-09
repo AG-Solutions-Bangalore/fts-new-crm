@@ -13,7 +13,7 @@ const StatesList = () => {
   const navigate = useNavigate();
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+ const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     state_name: "",
@@ -51,6 +51,7 @@ const StatesList = () => {
 
   const fetchStates = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${STATES_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -59,6 +60,8 @@ const StatesList = () => {
       setUsers(response.data.states);
     } catch (error) {
       console.error("Error fetching states:", error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -218,6 +221,22 @@ const StatesList = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+   
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";

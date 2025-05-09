@@ -17,7 +17,7 @@ const EditDataSource = () => {
   const decryptedId = decryptId(id);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     data_source_type: "",
@@ -74,10 +74,13 @@ const EditDataSource = () => {
    
       const fetchDataSources = async () => {
         try {
+          setLoading(true);
           const data = await fetchChapterDatasourceById(id);
           setUsers(data.datasource);
         } catch (error) {
           toast.error("Failed to fetch datasource details");
+        }finally {
+          setLoading(false);
         }
       };
       useEffect(() => {
@@ -240,6 +243,22 @@ const EditDataSource = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+   
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
 
   const inputClass =

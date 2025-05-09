@@ -221,7 +221,7 @@ const DuplicateList = () => {
     },
     mantineTableContainerProps: {
       sx: {
-        minHeight: '400px', 
+        maxHeight: '400px', 
         position: 'relative',
       },
     },

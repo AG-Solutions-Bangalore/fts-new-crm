@@ -12,7 +12,8 @@ import { navigateToRepeatDonorEdit, REAPEAT_DONOR_LIST } from "../../../api";
 const RepeatDonors = () => {
   const [repeatDonor, setRepeatDonor] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {  currentYear } = useContext(ContextPanel);
+
+  const currentYear = localStorage.getItem("currentYear")
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("id");
@@ -127,7 +128,16 @@ const RepeatDonors = () => {
     enableHiding: false,
     enableStickyHeader: true,
     enableStickyFooter: true,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
     mantineTableContainerProps: { sx: { maxHeight: "400px" } },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
 
   return (

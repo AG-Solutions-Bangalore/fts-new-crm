@@ -14,7 +14,7 @@ import { fetchRepeatDonorEditList, REAPEAT_DONOR_Edit_UPDATE_NEXT } from "../../
 const AllotedList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { currentYear } = useContext(ContextPanel);
+  const currentYear = localStorage.getItem("currentYear")
   const navigate = useNavigate();
   const { id } = useParams();
   // const decryptedId = decryptId(id);

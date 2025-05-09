@@ -82,6 +82,16 @@ const DonoationDetailsList = ({viewerId}) => {
         enableDensityToggle: false,
         enableColumnActions: false,
         enableHiding:false,
+        state: { 
+      
+          isLoading: loader ,
+         
+        },
+        
+        mantineProgressProps: {
+          color: 'blue',
+          variant: 'bars', 
+        },
      
       });
   return (

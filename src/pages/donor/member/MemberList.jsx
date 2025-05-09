@@ -34,7 +34,7 @@ const MemberList = () => {
       }
     };
     fetchDonorData();
-    setLoading(false);
+    
   }, []);
 
   const sendEmail = (value) => {
@@ -140,8 +140,22 @@ const MemberList = () => {
     enableDensityToggle: false,
     enableHiding: false,
     enableColumnActions: false,
-    state: { columnVisibility },
+    state: { 
+      columnVisibility,
+      isLoading: loading ,
+     
+    },
     onColumnVisibilityChange: setColumnVisibility,
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   return (
     <Layout>
