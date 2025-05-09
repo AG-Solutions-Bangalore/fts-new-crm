@@ -15,7 +15,7 @@ const DataSource = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+ const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     data_source_type: "",
@@ -51,6 +51,7 @@ const DataSource = () => {
 
   const fetchDataSources = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${ADMIN_DATASOURCE_LIST}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -59,6 +60,8 @@ const DataSource = () => {
       setUsers(response.data.datasource);
     } catch (error) {
       console.error("Error fetching data sources:", error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -239,6 +242,22 @@ const DataSource = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+   
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
 
   const inputClass =

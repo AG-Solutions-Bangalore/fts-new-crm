@@ -7,7 +7,7 @@ import InputMask from "react-input-mask";
 import donor_type from "../../../utils/DonorType";
 import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
-import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import { IconAirConditioningDisabled, IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { DONOR_INDIVISUAL_CREATE_SUMBIT } from "../../../api";
 import { ContextPanel } from "../../../utils/ContextPanel";
 const gender = [
@@ -37,6 +37,7 @@ const corrpreffer = [
 ];
 const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
   const { id } = useParams();
+  const [isDuplicate, setIsDuplicate] = useState(false);
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -214,6 +215,49 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
       if (intervalId) clearInterval(intervalId);
     };
   }, [isOpen, isPanelUp, navigate]);
+
+
+  const checkDuplicateDonor = async () => {
+    if (donor.indicomp_full_name && donor.indicomp_mobile_phone?.length === 10) {
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/api/check-donor-duplicate`,
+          {
+            indicomp_full_name: donor.indicomp_full_name,
+            indicomp_mobile_phone: donor.indicomp_mobile_phone,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+  
+        if (response.data.code === 400) {
+          toast.error(response.data.msg);
+          return false;
+        }
+        return true;
+      } catch (error) {
+        console.error("Error checking duplicate donor", error);
+        return true; 
+      }
+    }
+    return true; 
+  };
+  useEffect(() => {
+    if (donor.indicomp_full_name && donor.indicomp_mobile_phone?.length === 10) {
+      const timer = setTimeout(async () => {
+        const isNotDuplicate = await checkDuplicateDonor();
+        setIsDuplicate(!isNotDuplicate);
+      }, 500); 
+      
+      return () => clearTimeout(timer);
+    } else {
+      setIsDuplicate(false);
+    }
+  }, [donor.indicomp_full_name, donor.indicomp_mobile_phone]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = document.getElementById("addIndiv");
@@ -221,6 +265,13 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
       toast.error("Fill all required");
       setIsButtonDisabled(false);
 
+      return;
+    }
+    try {
+
+    const isNotDuplicate = await checkDuplicateDonor();
+    if (!isNotDuplicate) {
+      setIsButtonDisabled(false);
       return;
     }
     const data = {
@@ -265,63 +316,69 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     }
 
     setIsButtonDisabled(true);
-    axios({
+
+    const response = await axios({
       url: DONOR_INDIVISUAL_CREATE_SUMBIT,
       method: "POST",
       data,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }).then((res) => {
-      if (res.data.code === 200) {
-        toast.success(res.data.msg);
-       
-        setDonor({
-          indicomp_full_name: "",
-          title: "",
-          indicomp_father_name: "",
-          indicomp_mother_name: "",
-          indicomp_gender: "",
-          indicomp_spouse_name: "",
-          indicomp_dob_annualday: "",
-          indicomp_doa: "",
-          indicomp_pan_no: "",
-          indicomp_image_logo: "",
-          indicomp_remarks: "",
-          indicomp_promoter: "",
-          indicomp_newpromoter: "",
-          indicomp_belongs_to: "",
-          indicomp_source: "",
-          indicomp_donor_type: "",
-          indicomp_type: "Individual",
-          indicomp_mobile_phone: "",
-          indicomp_mobile_whatsapp: "",
-          indicomp_email: "",
-          indicomp_website: "",
-          indicomp_res_reg_address: "",
-          indicomp_res_reg_area: "",
-          indicomp_res_reg_ladmark: "",
-          indicomp_res_reg_city: "",
-          indicomp_res_reg_state: "",
-          indicomp_res_reg_pin_code: "",
-          indicomp_off_branch_address: "",
-          indicomp_off_branch_area: "",
-          indicomp_off_branch_ladmark: "",
-          indicomp_off_branch_city: "",
-          indicomp_off_branch_state: "",
-          indicomp_off_branch_pin_code: "",
-          indicomp_corr_preffer: "Residence",
-        });
-        fetchDonorData();
-        onClose();
-      } else if (res.data.code === 400) {
-        toast.error(res.data.msg);
-        setIsButtonDisabled(false);
-      } else {
-        toast.error("Unexcepted Error");
-        setIsButtonDisabled(false);
-      }
     });
+
+    if (response.data.code === 200) {
+      toast.success(response.data.msg);
+     
+      setDonor({
+        indicomp_full_name: "",
+        title: "",
+        indicomp_father_name: "",
+        indicomp_mother_name: "",
+        indicomp_gender: "",
+        indicomp_spouse_name: "",
+        indicomp_dob_annualday: "",
+        indicomp_doa: "",
+        indicomp_pan_no: "",
+        indicomp_image_logo: "",
+        indicomp_remarks: "",
+        indicomp_promoter: "",
+        indicomp_newpromoter: "",
+        indicomp_belongs_to: "",
+        indicomp_source: "",
+        indicomp_donor_type: "",
+        indicomp_type: "Individual",
+        indicomp_mobile_phone: "",
+        indicomp_mobile_whatsapp: "",
+        indicomp_email: "",
+        indicomp_website: "",
+        indicomp_res_reg_address: "",
+        indicomp_res_reg_area: "",
+        indicomp_res_reg_ladmark: "",
+        indicomp_res_reg_city: "",
+        indicomp_res_reg_state: "",
+        indicomp_res_reg_pin_code: "",
+        indicomp_off_branch_address: "",
+        indicomp_off_branch_area: "",
+        indicomp_off_branch_ladmark: "",
+        indicomp_off_branch_city: "",
+        indicomp_off_branch_state: "",
+        indicomp_off_branch_pin_code: "",
+        indicomp_corr_preffer: "Residence",
+      });
+      fetchDonorData();
+      onClose();
+    } else if (response.data.code === 400) {
+      toast.error(response.data.msg);
+    } else {
+      toast.error("Unexpected Error");
+    }
+  } catch (error) {
+    console.error("Submission error:", error);
+    toast.error("An error occurred during submission");
+  } finally {
+    setIsButtonDisabled(false);
+  }
+   
   };
 
   const FormLabel = ({ children, required }) => (
@@ -391,9 +448,15 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                 name="indicomp_full_name"
                 value={donor.indicomp_full_name}
                 onChange={(e) => onInputChange(e)}
-                className={inputClass}
+                className={`${inputClass} ${isDuplicate ? 'border-red-500' : ''}`}
                 required
               />
+                 {isDuplicate && (
+                <p className="text-red-500 text-xs mt-1 flex items-center">
+                  <IconAirConditioningDisabled className="w-4 h-4 mr-1" />
+                  Duplicate donor: Name  already exist
+                </p>
+              )}
             </div>
 
             <div>
@@ -626,9 +689,16 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                 value={donor.indicomp_mobile_phone}
                 onChange={(e) => onInputChange(e)}
                 maxLength={10}
-                className={inputClass}
+                minLength={10}
+                className={`${inputClass} ${isDuplicate ? 'border-red-500' : ''}`}
                 required
               />
+              {isDuplicate && (
+  <p className="text-red-500 text-xs mt-1 flex items-center">
+    <IconAirConditioningDisabled className="w-4 h-4 mr-1" />
+    Duplicate donor:  Mobile already exist
+  </p>
+)}
             </div>
 
             <div>

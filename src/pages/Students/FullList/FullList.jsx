@@ -13,12 +13,13 @@ const FullList = () => {
   const [schoolAllot, setSchoolAllot] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { currentYear } = useContext(ContextPanel);
+  const currentYear = localStorage.getItem("currentYear")
   const [chapter, setChapter] = useState([]);
 
   // Fetch Approved List Data
   useEffect(() => {
     const fetchApprovedRData = async () => {
+      if (!currentYear) return;
       setLoading(true);
       if (currentYear) {
         try {
@@ -41,6 +42,9 @@ const FullList = () => {
     };
     fetchApprovedRData();
   }, [currentYear]);
+
+  
+  
 
   // Fetch Chapterwise Data
   useEffect(() => {
@@ -108,6 +112,22 @@ const FullList = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+    
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   return (
     <Layout>

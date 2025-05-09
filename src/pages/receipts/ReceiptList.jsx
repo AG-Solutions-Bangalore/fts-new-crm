@@ -35,7 +35,7 @@ const ReceiptList = () => {
       }
     };
     fetchReciptList();
-    setLoading(false);
+    
   }, []);
 
   const columns = useMemo(
@@ -157,8 +157,23 @@ const ReceiptList = () => {
     enableColumnActions: false,
     enableStickyHeader: true,
     enableStickyFooter: true,
-    mantineTableContainerProps: { sx: { maxHeight: "400px" } },
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
     initialState: { columnVisibility: { address: false } },
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
+    
   });
   return (
     <Layout>

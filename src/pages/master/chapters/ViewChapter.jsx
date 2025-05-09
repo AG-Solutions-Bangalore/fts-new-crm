@@ -43,6 +43,7 @@ const ViewChapter = () => {
   };
   const [chapter, setChapter] = useState([]);
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -85,11 +86,14 @@ const ViewChapter = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
+          setLoading(true);
           const data = await fetchChapterViewById(id);
           setChapter(data.chapter);
         setUsers(data.users);
         } catch (error) {
           toast.error("Failed to fetch chapter viewer details");
+        }finally {
+          setLoading(false);
         }
       };
       
@@ -306,6 +310,23 @@ const ViewChapter = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+   
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
+    
   });
 
   const inputClass =

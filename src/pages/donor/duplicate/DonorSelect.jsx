@@ -70,7 +70,15 @@ const DonorSelect = ({ populateDonorName, setShowModal }) => {
     enableStickyHeader: true,
     enableStickyFooter: true,
     mantineTableContainerProps: { sx: { maxHeight: "400px" } },
+    initialState: {
+      showGlobalFilter: true, 
+    },
+    mantineSearchTextInputProps: {
+      autoFocus: true, 
+    },
   });
+
+ 
   if (loader) {
     return (
       <div className="flex justify-center items-center h-56">

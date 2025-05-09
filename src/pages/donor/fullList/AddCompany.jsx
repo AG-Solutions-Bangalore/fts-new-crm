@@ -17,7 +17,11 @@ import honorific from "../../../utils/Honorific";
 import belongs_to from "../../../utils/BelongTo";
 import donor_type from "../../../utils/DonorType";
 import company_type from "../../../utils/CompanyType";
-import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
+import {
+  IconAirConditioningDisabled,
+  IconArrowBack,
+  IconInfoCircle,
+} from "@tabler/icons-react";
 import { DONOR_COMPANY_CREATE_SUMBIT } from "../../../api";
 
 const gender = [
@@ -57,9 +61,11 @@ const corrpreffer = [
   },
 ];
 
-const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
+const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
   const { id } = useParams();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isDuplicate, setIsDuplicate] = useState(false);
+  const [errors, setErrors] = useState({});
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -97,7 +103,6 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
   });
 
   const navigate = useNavigate();
-
 
   const [loading, setLoading] = useState(false);
 
@@ -152,7 +157,7 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
   // };
 
   const onChangePanNumber = (e) => {
-    const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
+    const panValue = e.target.value.toUpperCase().replace(/\s/g, "");
     setDonor({ ...donor, indicomp_pan_no: panValue });
   };
 
@@ -218,87 +223,221 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
       fetchPromoter();
     }
   }, [isOpen]);
-   useEffect(() => {
-     let intervalId;
+  useEffect(() => {
+    let intervalId;
+
+    if (isOpen) {
+      intervalId = setInterval(() => {
+        if (isPanelUp?.error === "Maintenance") {
+          localStorage.clear();
+          navigate("/maintenance");
+        }
+      }, 10000);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isOpen, isPanelUp, navigate]);
+  const checkDuplicateDonor = async () => {
+    if (
+      donor.indicomp_full_name &&
+      donor.indicomp_mobile_phone?.length === 10
+    ) {
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/api/check-donor-duplicate`,
+          {
+            indicomp_full_name: donor.indicomp_full_name,
+            indicomp_mobile_phone: donor.indicomp_mobile_phone,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        if (response.data.code === 400) {
+          toast.error(response.data.msg);
+          return false;
+        }
+        return true;
+      } catch (error) {
+        console.error("Error checking duplicate donor", error);
+        return true;
+      }
+    }
+    return true;
+  };
+  useEffect(() => {
+    if (
+      donor.indicomp_full_name &&
+      donor.indicomp_mobile_phone?.length === 10
+    ) {
+      const timer = setTimeout(async () => {
+        const isNotDuplicate = await checkDuplicateDonor();
+        setIsDuplicate(!isNotDuplicate);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    } else {
+      setIsDuplicate(false);
+    }
+  }, [donor.indicomp_full_name, donor.indicomp_mobile_phone]);
+
+
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
   
-   
-     if (isOpen) {
-       intervalId = setInterval(() => {
-         
-         if (isPanelUp?.error === "Maintenance") {
-           localStorage.clear();
-           navigate("/maintenance");
-         }
-       }, 10000); 
-     }
-   
-     return () => {
-       if (intervalId) clearInterval(intervalId);
-     };
-   }, [isOpen, isPanelUp, navigate]);
+    
+    if (!donor.indicomp_full_name?.trim()) {
+      errors.indicomp_full_name = 'Company Name is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_type) {
+      errors.indicomp_type = 'Company Type is required';
+      isValid = false;
+    }
+  
+    if (!donor.title) {
+      errors.title = 'Title is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_com_contact_name?.trim()) {
+      errors.indicomp_com_contact_name = 'Contact Name is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_gender) {
+      errors.indicomp_gender = 'Gender is required';
+      isValid = false;
+    }
+  
+    
+    if (!donor.indicomp_pan_no || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(donor.indicomp_pan_no)) {
+      errors.indicomp_pan_no = 'Valid PAN Number is required (format: AAAAA9999A)';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_promoter) {
+      errors.indicomp_promoter = 'Promoter is required';
+      isValid = false;
+    }
+  
+    if (donor.indicomp_promoter === 'Other' && !donor.indicomp_newpromoter?.trim()) {
+      errors.indicomp_newpromoter = 'Please specify promoter';
+      isValid = false;
+    }
+  
+    
+    if (!donor.indicomp_mobile_phone || !/^\d{10}$/.test(donor.indicomp_mobile_phone)) {
+      errors.indicomp_mobile_phone = 'Valid 10-digit Mobile Number is required';
+      isValid = false;
+    }
+  
+
+    if (!donor.indicomp_res_reg_city?.trim()) {
+      errors.indicomp_res_reg_city = 'City is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_res_reg_state) {
+      errors.indicomp_res_reg_state = 'State is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_res_reg_pin_code || !/^\d{6}$/.test(donor.indicomp_res_reg_pin_code)) {
+      errors.indicomp_res_reg_pin_code = 'Valid 6-digit Pincode is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_corr_preffer) {
+      errors.indicomp_corr_preffer = 'Correspondence Preference is required';
+      isValid = false;
+    }
+  
+    setErrors(newErrors);
+  return { isValid, errors: newErrors };
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const form = document.getElementById("addIndiv");
-    const form = e.target;
-    if (!form.checkValidity()) {
-      toast.error("Fill all required");
+    const { isValid, errors } = validateForm();
+    
+    if (!isValid) {
+    
+      const firstError = Object.values(errors)[0];
+      toast.error(firstError);
       setIsButtonDisabled(false);
       return;
     }
-    const data = {
-      indicomp_full_name: donor.indicomp_full_name,
-      title: donor.title,
-      indicomp_type: donor.indicomp_type,
-      indicomp_com_contact_name: donor.indicomp_com_contact_name,
-      indicomp_com_contact_designation: donor.indicomp_com_contact_designation,
-      indicomp_gender: donor.indicomp_gender,
-      indicomp_dob_annualday: donor.indicomp_dob_annualday,
-      indicomp_pan_no: donor.indicomp_pan_no,
-      indicomp_image_logo: donor.indicomp_image_logo,
-      indicomp_remarks: donor.indicomp_remarks,
-      indicomp_promoter: donor.indicomp_promoter,
-      indicomp_newpromoter: donor.indicomp_newpromoter,
-      indicomp_source: donor.indicomp_source,
-      indicomp_mobile_phone: donor.indicomp_mobile_phone,
-      indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
-      indicomp_email: donor.indicomp_email,
-      indicomp_website: donor.indicomp_website,
-      indicomp_res_reg_address: donor.indicomp_res_reg_address,
-      indicomp_res_reg_area: donor.indicomp_res_reg_area,
-      indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
-      indicomp_res_reg_city: donor.indicomp_res_reg_city,
-      indicomp_res_reg_state: donor.indicomp_res_reg_state,
-      indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
-      indicomp_off_branch_address: donor.indicomp_off_branch_address,
-      indicomp_off_branch_area: donor.indicomp_off_branch_area,
-      indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
-      indicomp_off_branch_city: donor.indicomp_off_branch_city,
-      indicomp_off_branch_state: donor.indicomp_off_branch_state,
-      indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
-      indicomp_corr_preffer: donor.indicomp_corr_preffer,
-      indicomp_belongs_to: donor.indicomp_belongs_to,
-      indicomp_donor_type: donor.indicomp_donor_type,
-      indicomp_csr: donor.indicomp_csr,
-    };
+   
+    try {
+      const isNotDuplicate = await checkDuplicateDonor();
+      if (!isNotDuplicate) {
+        setIsButtonDisabled(false);
+        return;
+      }
 
-    if (id) {
-      data.donor_related_id = id;
-    }
+      const data = {
+        indicomp_full_name: donor.indicomp_full_name,
+        title: donor.title,
+        indicomp_type: donor.indicomp_type,
+        indicomp_com_contact_name: donor.indicomp_com_contact_name,
+        indicomp_com_contact_designation:
+          donor.indicomp_com_contact_designation,
+        indicomp_gender: donor.indicomp_gender,
+        indicomp_dob_annualday: donor.indicomp_dob_annualday,
+        indicomp_pan_no: donor.indicomp_pan_no,
+        indicomp_image_logo: donor.indicomp_image_logo,
+        indicomp_remarks: donor.indicomp_remarks,
+        indicomp_promoter: donor.indicomp_promoter,
+        indicomp_newpromoter: donor.indicomp_newpromoter,
+        indicomp_source: donor.indicomp_source,
+        indicomp_mobile_phone: donor.indicomp_mobile_phone,
+        indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
+        indicomp_email: donor.indicomp_email,
+        indicomp_website: donor.indicomp_website,
+        indicomp_res_reg_address: donor.indicomp_res_reg_address,
+        indicomp_res_reg_area: donor.indicomp_res_reg_area,
+        indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
+        indicomp_res_reg_city: donor.indicomp_res_reg_city,
+        indicomp_res_reg_state: donor.indicomp_res_reg_state,
+        indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
+        indicomp_off_branch_address: donor.indicomp_off_branch_address,
+        indicomp_off_branch_area: donor.indicomp_off_branch_area,
+        indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
+        indicomp_off_branch_city: donor.indicomp_off_branch_city,
+        indicomp_off_branch_state: donor.indicomp_off_branch_state,
+        indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
+        indicomp_corr_preffer: donor.indicomp_corr_preffer,
+        indicomp_belongs_to: donor.indicomp_belongs_to,
+        indicomp_donor_type: donor.indicomp_donor_type,
+        indicomp_csr: donor.indicomp_csr,
+      };
 
-    setIsButtonDisabled(true);
+      if (id) {
+        data.donor_related_id = id;
+      }
 
-    axios({
-      url: DONOR_COMPANY_CREATE_SUMBIT,
-      method: "POST",
-      data,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      if (res.data.code === 200) {
-        toast.success(res.data.msg);
-        fetchDonorData();
-        onClose();
+      setIsButtonDisabled(true);
+      const response = await axios({
+        url: DONOR_COMPANY_CREATE_SUMBIT,
+        method: "POST",
+        data,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.data.code === 200) {
+        toast.success(response.data.msg);
+
         setDonor({
           indicomp_full_name: "",
           title: "",
@@ -334,14 +473,19 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
           indicomp_corr_preffer: "Registered",
           indicomp_csr: "",
         });
-      } else if (res.data.code === 400) {
-        toast.error(res.data.msg);
-        setIsButtonDisabled(false);
+        fetchDonorData();
+        onClose();
+      } else if (response.data.code === 400) {
+        toast.error(response.data.msg);
       } else {
-        toast.error("Unexcepted Error");
-        setIsButtonDisabled(false);
+        toast.error("Unexpected Error");
       }
-    });
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error("An error occurred during submission");
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
 
   const FormLabel = ({ children, required }) => (
@@ -390,12 +534,23 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                 name="indicomp_full_name"
                 value={donor.indicomp_full_name}
                 onChange={(e) => onInputChange(e)}
-                className={inputClass}
+                className={`${inputClass} ${
+                  isDuplicate ? "border-red-500" : ""
+                }`}
                 required
               />
               <p className="text-xs text-gray-500 mt-1">
                 Please don't add M/s before name
               </p>
+              {errors?.indicomp_full_name && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_full_name}</p>
+  )}
+              {isDuplicate && (
+                <p className="text-red-500 text-xs mt-1 flex items-center">
+                  <IconAirConditioningDisabled className="w-4 h-4 mr-1" />
+                  Duplicate donor: Name already exist
+                </p>
+              )}
             </div>
 
             <div>
@@ -414,6 +569,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_type && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_type}</p>
+  )}
             </div>
 
             <div>
@@ -432,6 +590,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.title && (
+    <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+  )}
             </div>
 
             <div>
@@ -473,6 +634,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_gender && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_gender}</p>
+  )}
             </div>
 
             <div>
@@ -502,10 +666,13 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                     <input
                       type="text"
                       label="PAN Number"
-                      name="panNumber"
-                      required
+                      name="indicomp_pan_no"
+                      required   // indicomp_pan_no
                       className={inputClass}
                     />
+                     {errors?.indicomp_pan_no && (
+        <p className="text-red-500 text-xs mt-1">{errors.indicomp_pan_no}</p>
+      )}
                   </div>
                 )}
               </InputMask>
@@ -554,6 +721,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_promoter && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_promoter}</p>
+  )}
             </div>
 
             {donor.indicomp_promoter === "Other" && (
@@ -656,9 +826,21 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                 value={donor.indicomp_mobile_phone}
                 onChange={(e) => onInputChange(e)}
                 maxLength={10}
-                className={inputClass}
+                minLength={10}
+                className={`${inputClass} ${
+                  isDuplicate ? "border-red-500" : ""
+                }`}
                 required
               />
+              {isDuplicate && (
+                <p className="text-red-500 text-xs mt-1 flex items-center">
+                  <IconAirConditioningDisabled className="w-4 h-4 mr-1" />
+                  Duplicate donor: Mobile already exist
+                </p>
+              )}
+              {errors?.indicomp_mobile_phone && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_mobile_phone}</p>
+  )}
             </div>
 
             <div>
@@ -747,6 +929,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                 required
                 className={inputClass}
               />
+                     {errors?.indicomp_res_reg_city && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_city}</p>
+  )}
             </div>
 
             <div>
@@ -765,6 +950,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_res_reg_state && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_state}</p>
+  )}
             </div>
 
             <div>
@@ -778,6 +966,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                 required
                 className={inputClass}
               />
+               {errors?.indicomp_res_reg_pin_code && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_pin_code}</p>
+  )}
             </div>
           </div>
         </div>
@@ -877,6 +1068,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_corr_preffer && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_corr_preffer}</p>
+  )}
             </div>
           </div>
         </div>

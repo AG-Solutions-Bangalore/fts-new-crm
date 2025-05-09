@@ -13,7 +13,7 @@ const FAQList = () => {
   const navigate = useNavigate();
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     header: "",
@@ -48,20 +48,27 @@ const FAQList = () => {
     setOpen1(false);
     setUser1({ header1: "", text1: "" });
   };
-  const fetchData = () => {
-    axios
-      .get(`${FAQ_LIST}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setUsers(res.data.faqs);
-      });
-  };
+ 
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${FAQ_LIST}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(response.data.faqs);
+      } catch (error) {
+        console.error("error while fetching  faq list ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
+    
   }, []);
 
   const onUserInputChange = (e) => {
@@ -198,6 +205,22 @@ const FAQList = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+   
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   const autoResize = (e) => {
     e.target.style.height = "100px";

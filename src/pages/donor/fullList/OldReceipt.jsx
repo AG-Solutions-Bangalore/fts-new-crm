@@ -134,6 +134,16 @@ const OldReceipt = ({ viewerId, onClose }) => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+    
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
 
   return (

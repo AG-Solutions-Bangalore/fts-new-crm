@@ -328,7 +328,7 @@ const Chapter = () => {
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
             onClick={() => {
               setUser({
                 ...user,
@@ -356,7 +356,7 @@ const Chapter = () => {
       Cell: ({ row }) => (
         <div className="flex items-center space-x-2">
           <button
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-20 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse  text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
             // onClick={() => navigate(`/chapter/view-shool/${row.original.id}`)}
             // onClick={() => {
             //   const encryptedId = encryptId(row.original.id);
@@ -446,7 +446,7 @@ const Chapter = () => {
   );
   return (
     <Layout>
-      <div className=" bg-[#FFFFFF] p-2  rounded-lg  ">
+      <div className="    bg-[#FFFFFF] p-2  rounded-lg  ">
         <div className="sticky top-0 p-2 border-b-2 border-green-500 bg-[#E1F5FA] mt-2 rounded-t-lg shadow-md">
           <h2 className="flex flex-col gap-4 md:flex-row justify-between items-center px-4 py-3">
             <div className="flex items-center gap-2 text-center md:text-left">
@@ -575,8 +575,8 @@ const Chapter = () => {
           </form>
         </div>
 
-        <div className="max-w-screen">
-          <div className="relative">
+       
+          <div className="relative max-w-5xl">
             <h2
               className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
            text-black"
@@ -585,7 +585,7 @@ const Chapter = () => {
             </h2>
             <MantineReactTable table={table} />
           </div>
-        </div>
+     
 
         <SwipeableDrawer
           anchor="right"

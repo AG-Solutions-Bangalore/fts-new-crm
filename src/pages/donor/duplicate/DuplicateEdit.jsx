@@ -15,7 +15,10 @@ import {
 import DonorSelect from "./DonorSelect";
 import { toast } from "react-toastify";
 import { decryptId } from "../../../utils/encyrption/Encyrption";
-import { fetchDuplicateEditById, fetchDuplicateEditByIdUpdate } from "../../../api";
+import {
+  fetchDuplicateEditById,
+  fetchDuplicateEditByIdUpdate,
+} from "../../../api";
 import { FaSpinner } from "react-icons/fa";
 
 const DuplicateEdit = () => {
@@ -51,20 +54,20 @@ const DuplicateEdit = () => {
   //       setLoader(false);
   //     });
   // }, [decryptedId]);
- 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const data = await fetchDuplicateEditById(id);
-            setDonor(data.individualCompanies);
-            setLoader(false);
-          } catch (error) {
-            toast.error("Failed to fetch edit duplicate details");
-          }
-        };
-        
-        fetchData();
-      }, [id]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchDuplicateEditById(id);
+        setDonor(data.individualCompanies);
+        setLoader(false);
+      } catch (error) {
+        toast.error("Failed to fetch edit duplicate details");
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const onInputChange = (e) => {
     setDonor({
@@ -98,13 +101,11 @@ const DuplicateEdit = () => {
       indicomp_status: "0",
     };
 
-    setIsButtonDisabled(true);
+
 
     try {
-   
-const response = await fetchDuplicateEditByIdUpdate(id,data);
-
-
+      setIsButtonDisabled(true);
+      const response = await fetchDuplicateEditByIdUpdate(id, data);
 
       if (response.data.code === 200) {
         toast.success(response.data.msg);
@@ -116,8 +117,8 @@ const response = await fetchDuplicateEditByIdUpdate(id,data);
     } catch (error) {
       toast.error(error.response?.data?.msg || "Network error occurred.");
       setIsButtonDisabled(false);
-    }finally {
-      setIsButtonDisabled(false); 
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
@@ -223,19 +224,19 @@ const response = await fetchDuplicateEditByIdUpdate(id,data);
                   Submit
                 </button> */}
                 <button
-  type="submit"
-  className="text-center text-sm font-[400] cursor-pointer  w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2 flex justify-center items-center"
-  disabled={isButtonDisabled}
->
-  {isButtonDisabled ? (
-    <>
-      <FaSpinner className="h-4 w-4 mr-2" />
-      Submitting...
-    </>
-  ) : (
-    "Submit"
-  )}
-</button>
+                  type="submit"
+                  className="text-center text-sm font-[400] cursor-pointer w-40  text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2 "
+                  disabled={isButtonDisabled}
+                >
+                  {isButtonDisabled ? (
+                    <>
+                     <p className=" flex flex-row items-center"> <FaSpinner className="h-4 w-4 mr-2 animate-spin" />
+                     <span>    Submitting...</span></p>
+                    </>
+                  ) : (
+                    "Submit"
+                  )}
+                </button>
                 <button
                   className="text-center text-sm font-[400] cursor-pointer w-36 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md"
                   onClick={() => {

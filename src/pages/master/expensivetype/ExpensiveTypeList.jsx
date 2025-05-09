@@ -10,7 +10,7 @@ import { CREATE_EXPENSIVE_TYPE, EXPENSIVE_TYPE_LIST, UPDATES_EXPENSIVE_TYPE } fr
 
 const ExpensiveTypeList = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     ots_exp_type: "",
@@ -42,19 +42,27 @@ const ExpensiveTypeList = () => {
     setOpen1(false);
     setUser1({ ots_exp_type1: "" });
   };
-  const fetchData = () => {
-    axios
-      .get(`${EXPENSIVE_TYPE_LIST}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setUsers(res.data.otsexptype);
-      });
-  };
+  
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${EXPENSIVE_TYPE_LIST}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(response.data.otsexptype);
+      } catch (error) {
+        console.error("error while fetching  ots expensive type list ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
+    
   }, []);
 
   const onUserInputChange = (e) => {
@@ -192,6 +200,22 @@ const ExpensiveTypeList = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+  
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";

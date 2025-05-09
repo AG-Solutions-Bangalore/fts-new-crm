@@ -12,10 +12,12 @@ import { OTHER_TEAM_COMMITTEE_DELETE, OTHER_TEAM_COMMITTEE_LIST } from "../../..
 const CommitteeList = () => {
   const [committeeData, setCommitteelist] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+   const [loading, setLoading] = useState(false);
   const [selectDonorId, setSelectDonorId] = useState(null);
   const userType = localStorage.getItem("user_type_id");
   const fetchCommitteeData = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(`${OTHER_TEAM_COMMITTEE_LIST}`, {
         headers: {
@@ -27,6 +29,7 @@ const CommitteeList = () => {
     } catch (error) {
       console.error("Error fetching Factory data", error);
     } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -168,6 +171,22 @@ const CommitteeList = () => {
     enableDensityToggle: false,
     enableColumnActions: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+   
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   return (
     <>

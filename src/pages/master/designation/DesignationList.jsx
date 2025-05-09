@@ -15,7 +15,7 @@ const DesignationList = () => {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [student, setStudent] = useState({});
-
+const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     designation_type: "",
@@ -48,20 +48,27 @@ const DesignationList = () => {
     setUser1({ designation_type1: "" });
   };
 
-  const fetchData = () => {
-    axios
-      .get(`${DESIGNATION_LIST}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setUsers(res.data.designation);
-      });
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const token = localStorage.getItem("token");
+          const response = await axios.get(`${DESIGNATION_LIST}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUsers(response.data.designation);
+        } catch (error) {
+          console.error("error while fetching  designataion list ", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+      
+    }, []);
 
   const onUserInputChange = (e) => {
     setUser({
@@ -196,6 +203,22 @@ const DesignationList = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    state: { 
+      
+      isLoading: loading ,
+     
+    },
+   
+    mantineTableContainerProps: {
+      sx: {
+        maxHeight: '400px', 
+        position: 'relative',
+      },
+    },
+    mantineProgressProps: {
+      color: 'blue',
+      variant: 'bars', 
+    },
   });
   const FormLabel = ({ children, required }) => (
     <label className="block text-sm font-semibold text-black mb-1 ">
