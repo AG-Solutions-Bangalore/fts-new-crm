@@ -71,14 +71,16 @@ const SuspenseList = () => {
       toast.warning("Please select a donor first");
       return;
     }
-
+    const currentSuspense = suspenseList.find(item => item.id === currentSuspenseId);
+  
     try {
       setIsUpdating(true);
       const token = localStorage.getItem("token");
       const res = await axios.put(
         `${RECEIPT_SUSPENSE_UPDATE}/${currentSuspenseId}`,
         {
-          indicomp_fts_id: selectedDonor.indicomp_fts_id
+          indicomp_fts_id: selectedDonor.indicomp_fts_id,
+          receipt_ref_no: currentSuspense?.receipt_ref_no || null,
         },
         {
           headers: {
@@ -140,6 +142,7 @@ const SuspenseList = () => {
         size: 50,
         Cell: ({ row }) => {
           const id = row.original.id;
+          const receiptRef = row.original.receipt_ref_no;
           return (
             <div className="flex gap-2">
               <div
