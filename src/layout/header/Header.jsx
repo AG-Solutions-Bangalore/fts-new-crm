@@ -97,6 +97,36 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
       }
     });
   };
+
+  const handleSelectChapter = async (id) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/update-profile-chapter`,
+        {
+          viewer_chapter_ids: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+  
+      if (response.data.code === 200) {
+        toast.success(response.data.msg);
+        setIndividualDrawer(false);
+      } else if (response.data.code === 400) {
+        toast.error(response.data.msg);
+      } else {
+        toast.error(response.data.msg);
+      }
+     
+    } catch (error) {
+      console.error("Error selecting chapter:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+  
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
@@ -193,7 +223,8 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
                       chapter.map((item, index) => (
                         <h4
                           key={index}
-                          className="text-blue-gray-900 p-4 text-start"
+                          onClick={() => handleSelectChapter(item.id)}
+                          className="text-blue-gray-900 p-4 text-start cursor-pointer hover:bg-blue-gray-50"
                         >
                           {item.chapter_name}
                         </h4>
