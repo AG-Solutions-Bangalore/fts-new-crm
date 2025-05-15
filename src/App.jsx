@@ -107,7 +107,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-   {/* <DisableRightClick/>     */}
+   <DisableRightClick/>    
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<SignIn />} />
