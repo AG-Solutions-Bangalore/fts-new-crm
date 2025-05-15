@@ -81,6 +81,7 @@ import SuspenseSummary from "./pages/Reports/SuspenseSummary/SuspenseSummary";
 // import PaymentView from "./pages/Reports/PayementSummary/PaymentView";
 import SuspenseList from "./pages/receipts/suspense/SuspenseList";
 import ChangePromoter from "./pages/donor/changePromoter/ChangePromoter";
+import SuperReceiptDonor from "./pages/superReceiptDonor/SuperReceiptDonor";
 const App = () => {
   const navigate = useNavigate();
   const time = localStorage.getItem("token-expire-time");
@@ -106,7 +107,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      <DisableRightClick/>    
+   {/* <DisableRightClick/>     */}
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<SignIn />} />
@@ -117,6 +118,7 @@ const App = () => {
 
         {/* //superRecepit */}
         <Route path="/recepit-sup" element={<RecepitSuper />} />
+        <Route path="/change-receipt-donor" element={<SuperReceiptDonor />} />
 
         {/* donor  */}
         <Route path="/donor-list" element={<DonorList />} />

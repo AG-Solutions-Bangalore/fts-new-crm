@@ -88,6 +88,7 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
     }).then((res) => {
       if (res.data.code === 200) {
         toast.success(res.data.msg);
+        localStorage.removeItem("selected_chapter_name");
       } else if (res.data.code === 400) {
         toast.error(res.data.msg);
         setIsButtonDisabled(false);
@@ -100,6 +101,7 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
 
   const handleSelectChapter = async (id) => {
     try {
+      const selectedChapter = chapter.find((item) => item.id === id);
       const response = await axios.post(
         `${BASE_URL}/api/update-profile-chapter`,
         {
@@ -111,8 +113,14 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
           },
         }
       );
-  
+
       if (response.data.code === 200) {
+        if (selectedChapter) {
+          localStorage.setItem(
+            "selected_chapter_name",
+            selectedChapter.chapter_name
+          );
+        }
         toast.success(response.data.msg);
         setIndividualDrawer(false);
       } else if (response.data.code === 400) {
@@ -120,13 +128,14 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
       } else {
         toast.error(response.data.msg);
       }
-     
     } catch (error) {
       console.error("Error selecting chapter:", error);
       toast.error("Something went wrong. Please try again.");
     }
   };
-  
+  const selectedChapterName =
+    localStorage.getItem("selected_chapter_name") || "All Chapter";
+
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
@@ -158,7 +167,18 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
         </IconButton>
 
         <Box flexGrow={1} />
-
+        {userType === "4" && (
+          <Stack
+            spacing={1}
+            direction="row"
+            alignItems="center"
+            className="mr-2"
+          >
+            <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm flex items-center">
+              {selectedChapterName}
+            </span>
+          </Stack>
+        )}
         <Stack spacing={1} direction="row" alignItems="center">
           <Tooltip title="Help" arrow>
             {" "}

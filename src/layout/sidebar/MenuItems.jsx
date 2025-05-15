@@ -66,6 +66,12 @@ const Menuitems = (userTypeId) => [
           icon: IconCash,
           href: "/change-promoter",
         },
+        {
+          id: uniqueId(),
+          title: "C-receipt Donor",
+          icon: IconCash,
+          href: "/change-receipt-donor",
+        },
       ]
     : ""),
 
