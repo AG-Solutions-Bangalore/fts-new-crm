@@ -54,7 +54,7 @@ function DowloadRecpit() {
 
   // Input change handler for native inputs
   const onInputChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     const { name, value } = e.target;
     setReceiptDownload({
       ...receiptsdwn,
@@ -65,7 +65,7 @@ function DowloadRecpit() {
   const onInputChange1 = (e) => {
     const { name, value } = e.target;
 
-    console.log(value);
+    // console.log(value);
     setReceiptDownload((prev) => ({
       ...prev,
       [name]: value,

@@ -18,7 +18,7 @@ const DonorDetails = () => {
   const id = localStorage.getItem("idstl");
   const year = localStorage.getItem("yearstl");
   const fyear = localStorage.getItem("fyearstl");
-  console.log(year);
+  // console.log(year);
   // Get the first and last date
   const [dateschool, setDateschool] = useState({});
 
@@ -30,7 +30,7 @@ const DonorDetails = () => {
     schoolalot_school_id: "",
     rept_fin_year: fyear,
   });
-  console.log("date", schoolalot);
+  // console.log("date", schoolalot);
   const [userdata, setUserdata] = useState("");
 
   const FetchSchool = () => {
@@ -41,7 +41,7 @@ const DonorDetails = () => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }).then((res) => {
-      console.log("editdon", res.data);
+      // console.log("editdon", res.data);
       setUserdata(res.data.SchoolAlotDonor);
     });
   };
@@ -55,7 +55,7 @@ const DonorDetails = () => {
       },
     })
       .then((res) => {
-        console.log("editdon", res.data.schoolallotyear);
+        // console.log("editdon", res.data.schoolallotyear);
         setDateschool(res.data.schoolallotyear);
       })
       .catch((error) => {
@@ -179,7 +179,7 @@ const DonorDetails = () => {
       setSelectedSchoolIds(selectedIds);
       localStorage.setItem("selectedSchoolIds", selectedIds);
 
-      console.log("Selected School IDs (string):", selectedIds);
+      // console.log("Selected School IDs (string):", selectedIds);
     },
     customToolbarSelect: () => null,
   };

@@ -77,8 +77,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
- 
-
+  const [states, setStates] = useState([]);
+  const [datasource, setDatasource] = useState([]);
+  const [promoter, setPromoters] = useState([]);
   const validateOnlyDigits = (inputtxt) => {
     var phoneno = /^\d+$/;
     if (inputtxt.match(phoneno) || inputtxt.length == 0) {
@@ -134,66 +135,84 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     setDonor({ ...donor, indicomp_pan_no: panValue });
   };
 
-  const [states, setStates] = useState([]);
-  const fetchStateData = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/fetch-states`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+ 
+  // const fetchStateData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get(`${BASE_URL}/api/fetch-states`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
 
-      setStates(response.data?.states);
-    } catch (error) {
-      console.error("Error fetching Life Time data", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const [datasource, setDatasource] = useState([]);
-  const fetchDataSource = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/fetch-datasource`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  //     setStates(response.data?.states);
+  //   } catch (error) {
+  //     console.error("Error fetching Life Time data", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-      setDatasource(response.data?.datasource);
-    } catch (error) {
-      console.error("Error fetching Life Time data", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const [promoter, setPromoters] = useState([]);
-  const fetchPromoter = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/fetch-promoter`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  // const fetchDataSource = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get(`${BASE_URL}/api/fetch-datasource`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
 
-      setPromoters(response.data?.promoter);
-    } catch (error) {
-      console.error("Error fetching Life Time data", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setDatasource(response.data?.datasource);
+  //   } catch (error) {
+  //     console.error("Error fetching Life Time data", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const fetchPromoter = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get(`${BASE_URL}/api/fetch-promoter`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     setPromoters(response.data?.promoter);
+  //   } catch (error) {
+  //     console.error("Error fetching Life Time data", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (isOpen) {
-      fetchStateData();
-      fetchDataSource();
-      fetchPromoter();
+      // fetchStateData();
+      // fetchDataSource();
+      // fetchPromoter();
+       const fetchData = async () => {
+              try {
+                const token = localStorage.getItem("token");
+                const [statesRes, datasourceRes, promoterRes] = await Promise.all([
+                  axios.get(`${BASE_URL}/api/fetch-states`, { headers: { Authorization: `Bearer ${token}` } }),
+                  axios.get(`${BASE_URL}/api/fetch-datasource`, { headers: { Authorization: `Bearer ${token}` } }),
+                  axios.get(`${BASE_URL}/api/fetch-promoter`, { headers: { Authorization: `Bearer ${token}` } })
+                ]);
+                
+                setStates(statesRes.data?.states || []);
+                setDatasource(datasourceRes.data?.datasource || []);
+                setPromoters(promoterRes.data?.promoter || []);
+              } catch (error) {
+                console.error("Error fetching data", error);
+              }
+            };
+            
+            fetchData();
     }
   }, [isOpen]);
 

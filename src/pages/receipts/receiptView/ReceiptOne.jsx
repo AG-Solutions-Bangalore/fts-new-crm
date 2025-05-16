@@ -225,7 +225,7 @@ const ReceiptOne = () => {
       })
       .then((res) => {
         setRecepitControl(res.data.receipt_control);
-        console.log("data", res.data.receipt_control);
+        // console.log("data", res.data.receipt_control);
       });
   };
   useEffect(() => {
@@ -272,7 +272,7 @@ const ReceiptOne = () => {
     const formData = {
       indicomp_email: donor1.indicomp_email,
     };
-    console.log("formdata", formData);
+    // console.log("formdata", formData);
     try {
       const response = await axios.put(
         `${RECEIPT_VIEW_SUMBIT}/${localStorage.getItem("ftsid")}`,

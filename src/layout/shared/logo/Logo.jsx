@@ -1,34 +1,21 @@
-import { styled } from "@mui/material";
-
 import { Link } from "react-router-dom";
-import logosmall from "../../../assets/logos/fts_logo1.jpeg"
+import logosmall from "../../../assets/logos/fts_logo1.jpeg";
 import logstrucn from "../../../assets/logos/fts_logo_small.jpeg";
-const LinkStyled = styled(Link)(() => ({
-  height: "63px",
-  width: "180px",
-  overflow: "hidden",
-  display: "block",
-}));
-const LargeLinkStyled = styled(Link)(() => ({
-  height: "63px",
-  width: "63px",
-  overflow: "hidden",
-  display: "block",
-}));
 
 const Logo = ({ isCollapsed }) => {
   return (
-    <>
-      {!isCollapsed ? (
-        <LinkStyled to="/home">
-          <img src={logosmall} alt="logo" className="h-16" />
-        </LinkStyled>
-      ) : (
-        <LargeLinkStyled to="/home">
-          <img src={logstrucn} alt="logo" className="h-16" />
-        </LargeLinkStyled>
-      )}
-    </>
+    <div className="flex items-center justify-center">
+      <Link 
+        to="/home" 
+        className={`block overflow-hidden ${isCollapsed ? "w-16" : "w-48"}`}
+      >
+        <img 
+          src={isCollapsed ? logstrucn : logosmall} 
+          alt="logo" 
+          className="h-16 object-contain" 
+        />
+      </Link>
+    </div>
   );
 };
 

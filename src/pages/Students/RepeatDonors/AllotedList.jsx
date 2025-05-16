@@ -53,7 +53,7 @@ const AllotedList = () => {
     }, [id]);
   const updateNext = async (e, allotId) => {
     e.preventDefault();
-    console.log("current year", currentYear);
+    // console.log("current year", currentYear);
     if (!currentYear) {
       toast.error("Current year is required for updating.");
       return;

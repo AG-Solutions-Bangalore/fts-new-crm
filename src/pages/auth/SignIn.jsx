@@ -41,6 +41,7 @@ const SignIn = () => {
         localStorage.setItem("name", res.data.UserInfo.user.first_name);
         localStorage.setItem("username", res.data.UserInfo.user.name);
         localStorage.setItem("chapter_id", res.data.UserInfo.user.chapter_id);
+        localStorage.setItem("viewer_chapter_ids", res.data.UserInfo.user.viewer_chapter_ids);
         localStorage.setItem(
           "user_type_id",
           res.data.UserInfo.user.user_type_id

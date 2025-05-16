@@ -38,7 +38,7 @@ const corrpreffer = [
 ];
 
 const DonorEditIndv = ({ id ,isPanelUp}) => {
-  console.log("khds",id)
+  // console.log("khds",id)
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",

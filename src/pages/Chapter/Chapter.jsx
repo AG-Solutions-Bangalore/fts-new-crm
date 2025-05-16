@@ -220,7 +220,7 @@ const Chapter = () => {
       user_type: user.user_type_id,
       chapter_id: id,
     };
-    console.log(formData, "formdata");
+    // console.log(formData, "formdata");
     try {
       const response = await axios.post(
         `${ADMIN_CHAPTER_CREATE}`,
@@ -382,6 +382,11 @@ const Chapter = () => {
     enableColumnActions: false,
     enableFullScreenToggle: false,
     enableHiding: false,
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+        Chapter List
+      </h2>
+    ),
   });
 
   const inputClass =
@@ -576,13 +581,8 @@ const Chapter = () => {
         </div>
 
        
-          <div className="relative max-w-5xl">
-            <h2
-              className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-            >
-              Chapter List
-            </h2>
+          <div className=" max-w-5xl">
+         
             <MantineReactTable table={table} />
           </div>
      

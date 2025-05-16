@@ -60,10 +60,12 @@ const ReceiptList = () => {
       {
         accessorKey: "individual_company.indicomp_full_name",
         header: "Name",
-
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_full_name || null;
+        },
         Cell: ({ row }) => {
           const fullName = row.original.individual_company.indicomp_full_name;
-          return <span>{fullName}</span>;
+          return <span>{fullName ? fullName : ""}</span>;
         },
       },
       {
@@ -99,7 +101,7 @@ const ReceiptList = () => {
               size: 50,
               Cell: ({ row }) => {
                 const fullName = row.original.chapter.chapter_name;
-                return <span>{fullName}</span>;
+                return <span>{fullName.split(" ")[0]}</span>;
               },
             },
           ]
@@ -115,14 +117,11 @@ const ReceiptList = () => {
           return (
             <div className="flex gap-2">
               <div
-                // onClick={() => {
-                //   const encryptedId = encryptId(id);
-                //   navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
-                // }}
+             
                      onClick={() => {
                       navigateToReceiptView(navigate,id)
                               }}
-                // onClick={() => navigate(`/view-receipts/${id}`)}
+              
                 title="Receipt View"
                 className="flex items-center space-x-2"
               >
@@ -173,21 +172,25 @@ const ReceiptList = () => {
       color: 'blue',
       variant: 'bars', 
     },
-    
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+        Current Receipt List
+      </h2>
+    ),
   });
   return (
     <Layout>
       <div className="max-w-screen">
-        <div className="relative">
+        {/* <div className="relative">
           <h2
             className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
            text-black"
           >
             Current Receipt List
-          </h2>
+          </h2> */}
           <MantineReactTable table={table} />
         </div>
-      </div>
+      {/* </div> */}
     </Layout>
   );
 };

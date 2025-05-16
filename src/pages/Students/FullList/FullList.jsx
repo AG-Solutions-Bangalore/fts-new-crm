@@ -128,30 +128,28 @@ const FullList = () => {
       color: 'blue',
       variant: 'bars', 
     },
+    renderTopToolbarCustomActions: () => (
+      <div className="flex flex-row items-start">
+      <h2 className="text-lg font-bold text-black px-4">
+      Schools List -
+      </h2>
+       <div className=" mt-1">
+       {chapter.map((item, index) => (
+         <div key={index} className="flex items-center  space-x-1">
+           <h1 className="font-semibold text-blue-500 sm:text-xs md:text-sm">
+             {item.chapter_name} - {item.school_count}
+           </h1>
+         </div>
+       ))}
+     </div>
+     </div>
+    ),
   });
   return (
     <Layout>
-      <div className="relative">
-        <h2
-          className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-        >
-          <div className="flex justify-between">
-            <h1>Schools List -</h1>
-
-            <div className="ml-2 mt-1">
-              {chapter.map((item, index) => (
-                <div key={index} className="flex items-center  space-x-1">
-                  <h1 className="font-semibold text-blue-500 sm:text-xs md:text-sm">
-                    {item.chapter_name} - {item.school_count}
-                  </h1>
-                </div>
-              ))}
-            </div>
-          </div>
-        </h2>
+ <div className="max-w-screen">
         <MantineReactTable table={table} />
-      </div>{" "}
+      </div>
     </Layout>
   );
 };

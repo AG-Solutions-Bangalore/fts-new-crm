@@ -97,7 +97,7 @@ const DonorGroupView = (props) => {
       },
     })
       .then((res) => {
-        console.log("data : ", res.data);
+        // console.log("data : ", res.data);
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
         link.href = url;

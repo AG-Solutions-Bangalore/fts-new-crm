@@ -217,7 +217,6 @@ const DuplicateList = () => {
     state: { 
       columnVisibility,
       isLoading: loading ,
-      showProgressBars: loading,
     },
     mantineTableContainerProps: {
       sx: {
@@ -229,6 +228,11 @@ const DuplicateList = () => {
       color: 'blue',
       variant: 'bars', 
     },
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+        Duplicate List
+      </h2>
+    ),
   });
   return (
     <Layout>
@@ -242,15 +246,10 @@ const DuplicateList = () => {
             very carefully. We advise you to make a note before removing.)
           </p>
         </div>
-        <div className="relative">
-          <h2
-            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-          >
-            Duplicate List
-          </h2>
+     
+         
           <MantineReactTable table={table} />
-        </div>
+       
       </div>
          <Dialog open={openDeleteDialog} handler={handleCloseDeleteDialog}>
               <DialogHeader>Confirm Delete</DialogHeader>

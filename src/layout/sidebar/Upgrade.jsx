@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { ContextPanel } from "../../utils/ContextPanel";
 import BASE_URL from "../../base/BaseUrl";
 
+
 export const Upgrade = ({ isCollapsed }) => {
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export const Upgrade = ({ isCollapsed }) => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-indigo-500 to-blue-500 rounded-b-lg p-3  shadow-md  flex items-center justify-between"
+        className="bg-gradient-to-r from-indigo-500 to-blue-500 rounded-lg p-3  shadow-md  flex items-center justify-between"
   
         layout
       >
@@ -76,7 +77,7 @@ export const Upgrade = ({ isCollapsed }) => {
           )}
         </div>
         <div className="text-[12px] font-medium text-white/90 mt-0">
-       Updated: 15-05-2025
+       Updated: 16-05-2025
         </div>
       </motion.div>
          
@@ -85,7 +86,7 @@ export const Upgrade = ({ isCollapsed }) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-b-lg p-2 shadow-md cursor-pointer"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-2 shadow-md cursor-pointer"
           onClick={() => setOpenDialog(true)}
           layout
         >

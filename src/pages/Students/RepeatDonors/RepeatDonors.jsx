@@ -49,15 +49,21 @@ const RepeatDonors = () => {
         accessorKey: "individual_company.indicomp_full_name",
         header: "Full Name",
         size: 50,
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_full_name || null;
+        },
         Cell: ({ row }) => {
           const fullName = row.original.individual_company.indicomp_full_name;
-          return fullName;
+          return <span>{fullName ? fullName : ""}</span>;
         },
       },
       {
         accessorKey: "individual_company.indicomp_type",
         header: "Type",
         size: 50,
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_type || null;
+        },
         Cell: ({ row }) => {
           const type = row.original.individual_company.indicomp_type;
           return type;
@@ -67,6 +73,9 @@ const RepeatDonors = () => {
         accessorKey: "individual_company.indicomp_mobile_phone",
         header: "Mobile",
         size: 50,
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_mobile_phone || null;
+        },
         Cell: ({ row }) => {
           const mobile = row.original.individual_company.indicomp_mobile_phone;
           return !mobile || mobile === "null" ? "N/A" : mobile;
@@ -76,6 +85,9 @@ const RepeatDonors = () => {
         accessorKey: "individual_company.indicomp_email",
         header: "Email",
         size: 50,
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_email || null;
+        },
         Cell: ({ row }) => {
           const email = row.original.individual_company.indicomp_email;
           return email;
@@ -138,21 +150,18 @@ const RepeatDonors = () => {
       color: 'blue',
       variant: 'bars', 
     },
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+         Repeat Donor List
+      </h2>
+    ),
   });
 
   return (
     <Layout>
-      <div className="max-w-screen">
-        <div className="relative">
-          <h2
-            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-          >
-            Repeat Donor List
-          </h2>
-          <MantineReactTable table={table} />
-        </div>
-      </div>
+       <div className="max-w-screen">
+             <MantineReactTable table={table} />
+           </div>
     </Layout>
   );
 };

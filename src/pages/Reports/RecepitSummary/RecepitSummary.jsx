@@ -18,7 +18,7 @@ const RecepitSummary = () => {
     receipt_to_date: todayback,
   });
   const onInputChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     const { name, value } = e.target;
     setDonorDownload({
       ...downloadDonor,
@@ -34,10 +34,10 @@ const RecepitSummary = () => {
       localStorage.setItem("receipt_from_date_recp", receipt_from_date);
       localStorage.setItem("receipt_to_date_recp", receipt_to_date);
       navigate("/recepit-summary-view");
-      console.log(
-        `/recepit-summary-view?from=${receipt_from_date}&to=${receipt_to_date}`,
-        "console"
-      );
+      // console.log(
+      //   `/recepit-summary-view?from=${receipt_from_date}&to=${receipt_to_date}`,
+      //   "console"
+      // );
     }
   };
 
@@ -61,7 +61,7 @@ const RecepitSummary = () => {
         },
       })
         .then((res) => {
-          console.log("data : ", res.data);
+          // console.log("data : ", res.data);
           const url = window.URL.createObjectURL(new Blob([res.data]));
           const link = document.createElement("a");
           link.href = url;
