@@ -103,7 +103,7 @@ const EditViewer = () => {
   };
   const onStatusChange = (e) => {
     setStatus(e.target.value);
-    console.log("debug", e.target.value);
+    // console.log("debug", e.target.value);
   };
 
   const onuser_positionChange = (e) => {
@@ -179,15 +179,15 @@ const EditViewer = () => {
     setStartDate(users.viewer_start_date);
     setEndDate(users.viewer_end_date);
     setStatus(users.user_status);
-    console.log("test", users.user_status);
+    // console.log("test", users.user_status);
     setChapterIds(users.viewer_chapter_ids);
     setchapter_id(users.chapter_id);
 
     var res = users.viewer_chapter_ids.split(",");
-    console.log("res check", res);
+    // console.log("res check", res);
 
     setCurrentViewerChapterIds(res);
-    console.log("setchaptercurrent", res);
+    // console.log("setchaptercurrent", res);
   };
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const handleSubmit = async (e) => {

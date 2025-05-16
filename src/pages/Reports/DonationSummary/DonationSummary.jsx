@@ -21,7 +21,7 @@ const DonationSummary = () => {
   });
 
   const onInputChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     const { name, value } = e.target;
     setDonorDownload({
       ...downloadDonor,
@@ -64,7 +64,7 @@ const DonationSummary = () => {
         },
       })
         .then((res) => {
-          console.log("data : ", res.data);
+          // console.log("data : ", res.data);
           const url = window.URL.createObjectURL(new Blob([res.data]));
           const link = document.createElement("a");
           link.href = url;

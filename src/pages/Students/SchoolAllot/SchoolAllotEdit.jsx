@@ -181,7 +181,7 @@ const SchoolAllotEdit = () => {
       setSelectedSchoolIds(tempValue);
       localStorage.setItem("selectedSchoolIds", selectedIdsString);
 
-      console.log("Selected School IDs (string):", selectedIdsString);
+      // console.log("Selected School IDs (string):", selectedIdsString);
     },
     customToolbarSelect: () => null,
   };

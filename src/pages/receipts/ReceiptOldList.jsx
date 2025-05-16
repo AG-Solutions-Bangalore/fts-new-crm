@@ -47,10 +47,12 @@ const ReceiptOldList = () => {
       {
         accessorKey: "individual_company.indicomp_full_name",
         header: "Name",
-
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_full_name || null;
+        },
         Cell: ({ row }) => {
           const fullName = row.original.individual_company.indicomp_full_name;
-          return <span>{fullName}</span>;
+          return <span>{fullName ? fullName : ""}</span>;
         },
       },
       {
@@ -86,7 +88,7 @@ const ReceiptOldList = () => {
               size: 50,
               Cell: ({ row }) => {
                 const fullName = row.original.chapter.chapter_name;
-                return <span>{fullName}</span>;
+                return <span>{fullName.split(" ")[0]}</span>;
               },
             },
           ]
@@ -152,19 +154,18 @@ const ReceiptOldList = () => {
       color: 'blue',
       variant: 'bars', 
     },
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+         Old Receipt List
+      </h2>
+    ),
   });
   return (
     <Layout>
       <div className="max-w-screen">
-        <div className="relative">
-          <h2
-            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-          >
-            Old Receipt List
-          </h2>
+       
           <MantineReactTable table={table} />
-        </div>
+    
       </div>
     </Layout>
   );

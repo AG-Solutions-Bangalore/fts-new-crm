@@ -1,83 +1,47 @@
-import { styled, Container, Box } from "@mui/material";
-import Sidebar from "./sidebar/Sidebar";
-import Header from "./header/Header";
 import React from "react";
-import Footer from "../components/Footer";
-
-const MainWrapper = styled("div")(() => ({
-  display: "flex",
-  minHeight: "100vh",
-  width: "100%",
-  padding: "20px",
-}));
-
-const PageWrapper = styled("div")(() => ({
-  display: "flex",
-  flexGrow: 1,
-  // paddingBottom: "60px",
-  flexDirection: "column",
-  // zIndex: 1,     i remove this because it occur problem for mantine drawer
-  backgroundColor: "transparent",
-}));
+import Sidebar from "./Sidebar";
+import Header from "./Header";
 
 const Layout = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = React.useState(true);
-  const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
   const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed); // Toggle sidebar collapsed state
+    setIsSidebarCollapsed(!isSidebarCollapsed);
   };
+
+  const toggleMobileSidebar = () => {
+    setIsMobileSidebarOpen(!isMobileSidebarOpen);
+  };
+
   return (
-    <MainWrapper className="mainwrapper  bg-[#F0F5F9] ">
-      {/* ------------------------------------------- */}
-      {/* Sidebar */}
-      {/* ------------------------------------------- */}
+    <div className="min-h-screen bg-gray-50">
       <Sidebar
-        isSidebarOpen={isSidebarOpen}
-        isMobileSidebarOpen={isMobileSidebarOpen}
-        onSidebarClose={() => setMobileSidebarOpen(false)}
-        isCollapsed={isCollapsed}
+        isCollapsed={isSidebarCollapsed}
+        isMobileOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
       />
-      {/* ------------------------------------------- */}
-      {/* Main Wrapper */}
-      {/* ------------------------------------------- */}
-      <PageWrapper className="page-wrapper   max-w-full">
-        {/* ------------------------------------------- */}
-        {/* PageContent */}
-        {/* ------------------------------------------- */}
-        <Container
-          // sx={{
-          //   maxWidth: "max-w-screen !important",
-          // }}
-          sx={{
-            maxWidth: "100% !important",
-            px: "10px !important",
-            mx: "10px !important",
-          }}
-        >
-          {/* ------------------------------------------- */}
-          {/* Header */}
-          {/* ------------------------------------------- */}
-          <Header
-            toggleSidebar={toggleSidebar}
-            toggleMobileSidebar={() => setMobileSidebarOpen(true)}
-          />
-          {/* ------------------------------------------- */}
-          {/* Page Route */}
-          {/* ------------------------------------------- */}
-          <Box sx={{ minHeight: "calc(100vh - 170px)", py: 3 }}>{children}</Box>
-          {/* ------------------------------------------- */}
-          {/* End Page */}
-          {/* ------------------------------------------- */}
-        </Container>
-        <div className="px-4 pt-4 md:px-7 md:pt-7  lg:px-7 lg:pt-7 ">
-          {" "}
-          <Footer />
-        </div>
-      </PageWrapper>
-    </MainWrapper>
+
+      <div
+        className={`flex flex-col transition-all duration-200 ${
+          isSidebarCollapsed ? "lg:ml-20" : "lg:ml-64"
+        }`}
+      >
+        <Header
+          toggleSidebar={toggleSidebar}
+          toggleMobileSidebar={toggleMobileSidebar}
+        />
+
+        <main className="flex-1 p-0">
+          <div className="bg-blue-50/20 h-screen  p-6">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
   );
 };
 
 export default Layout;
+
+// /sajid 

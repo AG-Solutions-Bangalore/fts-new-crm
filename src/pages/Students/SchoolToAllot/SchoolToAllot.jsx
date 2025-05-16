@@ -41,7 +41,7 @@ const SchoolToAllot = () => {
               "$" +
               item["receipt_financial_year"],
           }));
-          console.log(tempRows);
+          // console.log(tempRows);
           setSchoolToAllot(tempRows);
         }
       } catch (error) {

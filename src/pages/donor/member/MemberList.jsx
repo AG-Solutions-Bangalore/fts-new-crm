@@ -101,10 +101,13 @@ const MemberList = () => {
       {
         accessorKey: "receipt.m_ship_vailidity",
         header: "Validity",
+        accessorFn: (row) => {
+          return row?.receipt?.m_ship_vailidity || null;
+        },
         size: 50,
         Cell: ({ row }) => {
-          const Validity = row.original.receipt.m_ship_vailidity;
-          return <span>31-3-{Validity}</span>;
+          const Validity = row.original?.receipt?.m_ship_vailidity;
+          return Validity ? <span>31-3-{Validity}</span> : <span className="text-gray-400">-</span>;
         },
       },
 
@@ -156,19 +159,18 @@ const MemberList = () => {
       color: 'blue',
       variant: 'bars', 
     },
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+        Membership List
+      </h2>
+    ),
   });
   return (
     <Layout>
       <div className="max-w-screen">
-        <div className="relative">
-          <h2
-            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-          >
-            Membership List
-          </h2>
+       
           <MantineReactTable table={table} />
-        </div>
+     
       </div>
     </Layout>
   );

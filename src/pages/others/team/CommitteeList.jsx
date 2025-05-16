@@ -76,6 +76,9 @@ const CommitteeList = () => {
       {
         accessorKey: "individual_company.indicomp_image_logo",
         header: "Photo",
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_image_logo || null;
+        },
         enableColumnFilter: false,
         Cell: ({ value, row }) => {
           const imageData =
@@ -105,6 +108,9 @@ const CommitteeList = () => {
       {
         accessorKey: "individual_company.indicomp_full_name",
         header: "Donor",
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_full_name || null;
+        },
         Cell: ({ value, row }) => {
           const valueData = row.original?.individual_company.indicomp_full_name;
           return <div>{valueData}</div>;
@@ -113,6 +119,7 @@ const CommitteeList = () => {
       {
         accessorKey: "committee_type",
         header: "Committee type",
+        
       },
       {
         accessorKey: "designation",
@@ -121,6 +128,9 @@ const CommitteeList = () => {
       {
         accessorKey: "individual_company.indicomp_mobile_phone",
         header: "Mobile",
+        accessorFn: (row) => {
+          return row?.individual_company?.indicomp_mobile_phone || null;
+        },
         Cell: ({ value, row }) => {
           const valueData =
             row.original?.individual_company.indicomp_mobile_phone;
@@ -187,18 +197,17 @@ const CommitteeList = () => {
       color: 'blue',
       variant: 'bars', 
     },
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+       Employee List
+      </h2>
+    ),
   });
   return (
     <>
-      <div className="relative">
-        <h2
-          className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-        >
-          Employee List
-        </h2>
-        <MantineReactTable table={table} />
-      </div>
+     <div className="max-w-screen">
+            <MantineReactTable table={table} />
+          </div>
 
       <Dialog open={openDialog} handler={handleCloseDialog}>
         <DialogBody>

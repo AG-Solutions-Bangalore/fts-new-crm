@@ -22,7 +22,7 @@ function Downloadots() {
 
   // Input change handler for native inputs
   const onInputChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     const { name, value } = e.target;
     setReceiptDownload({
       ...receiptsdwn,

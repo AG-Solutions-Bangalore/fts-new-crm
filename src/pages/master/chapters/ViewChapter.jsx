@@ -155,7 +155,7 @@ const ViewChapter = () => {
       user_type: user.user_type_id,
       chapter_id: chapter.chapter_code,
     };
-    console.log("data", formData);
+    // console.log("data", formData);
     try {
       const res = await axios.post(`${CHAPTER_VIEW_CREATE_USER}`, formData, {
         headers: {

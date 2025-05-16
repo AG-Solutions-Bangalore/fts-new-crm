@@ -45,7 +45,7 @@ const DonationSummaryView = (props) => {
     const from_date = localStorage.getItem("receipt_from_date");
     const to_date = localStorage.getItem("receipt_to_date");
 
-    console.log(from_date, to_date);
+    // console.log(from_date, to_date);
 
     const fetchData = async () => {
       if (!from_date || !to_date) {

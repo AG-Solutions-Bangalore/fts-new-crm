@@ -73,7 +73,7 @@ const RecepitSummaryView = (props) => {
         setReceiptTotalOTS(response.data.receiptTotalOTS);
         setReceiptTotalMembership(response.data.receiptTotalMembership);
         setGrandtotal(response.data.receipt_grand_total_count);
-        console.log(response.data.receipt_grand_total_count);
+        // console.log(response.data.receipt_grand_total_count);
       } catch (error) {
         setError("Error fetching promoter summary. Please try again.");
         console.error("Error fetching promoter summary:", error);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   AppBar,
@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import Profile from "./Profile";
 import {
   IconArrowBack,
+  IconBuilding,
   IconInfoOctagon,
   IconMenu,
   IconMenuDeep,
@@ -28,7 +29,10 @@ import { toast } from "react-toastify";
 const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
   const userType = localStorage.getItem("user_type_id");
   const navigate = useNavigate();
-  const [chapter, setChapter] = useState({});
+  const [chapter, setChapter] = useState([]);
+  const [selectedChapterName, setSelectedChapterName] = useState("All Chapter");
+  const [individualDrawer, setIndividualDrawer] = useState(false);
+
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
     background: theme.palette.background.paper,
@@ -39,24 +43,48 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
       minHeight: "70px",
     },
   }));
+
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: "100%",
     color: theme.palette.text.secondary,
   }));
 
-  //selct chapters
-  const [individualDrawer, setIndividualDrawer] = useState(false);
+  // Fetch chapters and determine initial chapter name
+  useEffect(() => {
+    const storedChapterName = localStorage.getItem("selected_chapter_name");
+    const viewerChapterIds = localStorage.getItem("viewer_chapter_ids");
 
-  const toggleIndividualDrawer = (open) => (event) => {
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
+    if (storedChapterName) {
+      setSelectedChapterName(storedChapterName);
+    } else if (viewerChapterIds) {
+      const ids = viewerChapterIds.split(",");
+      if (ids.length === 1 && ids[0] !== "") {
+        fetchChaptersAndSetName(ids[0]);
+      }
     }
-    setIndividualDrawer(open);
+  }, []);
+
+  const fetchChaptersAndSetName = (chapterId) => {
+    axios
+      .get(`${BASE_URL}/api/fetch-profile-chapter`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setChapter(res.data.chapter);
+        const foundChapter = res.data.chapter.find(
+          (chap) => chap.id.toString() === chapterId
+        );
+        if (foundChapter) {
+          setSelectedChapterName(foundChapter.chapter_name);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching chapters:", error);
+      });
   };
+
   const fetchData = () => {
     axios
       .get(`${BASE_URL}/api/fetch-profile-chapter`, {
@@ -67,6 +95,17 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
       .then((res) => {
         setChapter(res.data.chapter);
       });
+  };
+
+  const toggleIndividualDrawer = (open) => (event) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setIndividualDrawer(open);
   };
 
   const handleBoth = () => {
@@ -89,12 +128,11 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
       if (res.data.code === 200) {
         toast.success(res.data.msg);
         localStorage.removeItem("selected_chapter_name");
+        setSelectedChapterName("All Chapter");
       } else if (res.data.code === 400) {
         toast.error(res.data.msg);
-        setIsButtonDisabled(false);
       } else {
-        toast.error("Unexcepted Error");
-        setIsButtonDisabled(false);
+        toast.error("Unexpected Error");
       }
     });
   };
@@ -120,6 +158,7 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
             "selected_chapter_name",
             selectedChapter.chapter_name
           );
+          setSelectedChapterName(selectedChapter.chapter_name);
         }
         toast.success(response.data.msg);
         setIndividualDrawer(false);
@@ -133,8 +172,6 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
       toast.error("Something went wrong. Please try again.");
     }
   };
-  const selectedChapterName =
-    localStorage.getItem("selected_chapter_name") || "All Chapter";
 
   return (
     <AppBarStyled position="sticky" color="default">
@@ -179,86 +216,75 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
             </span>
           </Stack>
         )}
-        <Stack spacing={1} direction="row" alignItems="center">
-          <Tooltip title="Help" arrow>
-            {" "}
-            <IconInfoOctagon
-              width={20}
-              className="cursor-pointer"
-              onClick={() => {
-                navigate("/manualguide-book");
-              }}
-            />
-          </Tooltip>
-        </Stack>
-        {userType === "4" ? (
+
+        {userType === "4" && (
           <>
-            <Stack spacing={1} direction="row" alignItems="center">
-              <Tooltip title="CLear" arrow>
-                {" "}
-                <button
-                  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-14 mx-5 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-                  onClick={clearChapter}
-                >
-                  Clear
-                </button>
-              </Tooltip>
-            </Stack>
-
-            <Stack
-              spacing={1}
-              direction="row"
-              alignItems="center"
-              className="mx-5 cursor-pointer"
-            >
-              <Tooltip title="Select Chapter" arrow>
-                <IconMessages onClick={handleBoth} />
-              </Tooltip>
-
-              <SwipeableDrawer
-                anchor="right"
-                open={individualDrawer}
-                onClose={toggleIndividualDrawer(false)}
-                onOpen={toggleIndividualDrawer(true)}
-                sx={{
-                  backdropFilter: "blur(5px) sepia(5%)",
-                }}
+            {selectedChapterName !== "All Chapter" && (
+              <Stack spacing={1} direction="row" alignItems="center">
+                <Tooltip title="Clear" arrow>
+                  <button
+                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-14 mx-5 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
+                    onClick={clearChapter}
+                  >
+                    Clear
+                  </button>
+                </Tooltip>
+              </Stack>
+            )}
+            {selectedChapterName == "All Chapter" && (
+              <Stack
+                spacing={1}
+                direction="row"
+                alignItems="center"
+                className="mx-5 cursor-pointer"
               >
-                <Box
+                <Tooltip title="Select Chapter" arrow>
+                  <IconBuilding onClick={handleBoth} />
+                </Tooltip>
+
+                <SwipeableDrawer
+                  anchor="right"
+                  open={individualDrawer}
+                  onClose={toggleIndividualDrawer(false)}
+                  onOpen={toggleIndividualDrawer(true)}
                   sx={{
-                    width: 250,
+                    backdropFilter: "blur(5px) sepia(5%)",
                   }}
-                  role="presentation"
-                  onKeyDown={toggleIndividualDrawer(false)}
                 >
-                  <div>
-                    <h2 className="bg-blue-gray-800 p-4 text-center text-white text-lg font-sans flex">
-                      <IconArrowBack
-                        onClick={toggleIndividualDrawer(false)}
-                        className="cursor-pointer hover:text-red-600 mr-3"
-                      />
-                      Select Chapters
-                    </h2>
-                    {chapter && chapter.length > 0 ? (
-                      chapter.map((item, index) => (
-                        <h4
-                          key={index}
-                          onClick={() => handleSelectChapter(item.id)}
-                          className="text-blue-gray-900 p-4 text-start cursor-pointer hover:bg-blue-gray-50"
-                        >
-                          {item.chapter_name}
-                        </h4>
-                      ))
-                    ) : (
-                      <p className="text-gray-500">No chapters available</p>
-                    )}{" "}
-                  </div>
-                </Box>
-              </SwipeableDrawer>
-            </Stack>
+                  <Box
+                    sx={{
+                      width: 250,
+                    }}
+                    role="presentation"
+                    onKeyDown={toggleIndividualDrawer(false)}
+                  >
+                    <div>
+                      <h2 className="bg-blue-gray-800 p-4 text-center text-white text-lg font-sans flex">
+                        <IconArrowBack
+                          onClick={toggleIndividualDrawer(false)}
+                          className="cursor-pointer hover:text-red-600 mr-3"
+                        />
+                        Select Chapters
+                      </h2>
+                      {chapter && chapter.length > 0 ? (
+                        chapter.map((item, index) => (
+                          <h4
+                            key={index}
+                            onClick={() => handleSelectChapter(item.id)}
+                            className="text-blue-gray-900 p-4 text-start cursor-pointer hover:bg-blue-gray-50"
+                          >
+                            {item.chapter_name}
+                          </h4>
+                        ))
+                      ) : (
+                        <p className="text-gray-500">No chapters available</p>
+                      )}
+                    </div>
+                  </Box>
+                </SwipeableDrawer>
+              </Stack>
+            )}
           </>
-        ) : (
-          ""
         )}
         <Stack spacing={1} direction="row" alignItems="center">
           <Tooltip title="Profile" arrow>

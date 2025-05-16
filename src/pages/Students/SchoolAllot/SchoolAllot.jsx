@@ -187,20 +187,17 @@ const SchoolAllot = () => {
       color: 'blue',
       variant: 'bars', 
     },
+    renderTopToolbarCustomActions: () => (
+      <h2 className="text-lg font-bold text-black px-4">
+    Schools Allotments List
+      </h2>
+    ),
   });
   return (
     <Layout>
-      <div className="max-w-screen">
-        <div className="relative">
-          <h2
-            className="absolute top-3 left-2 z-50 text-lg px-4 font-bold
-           text-black"
-          >
-            Schools Allotments List
-          </h2>
-          <MantineReactTable table={table} />
-        </div>
-      </div>
+       <div className="max-w-screen">
+             <MantineReactTable table={table} />
+           </div>
     </Layout>
   );
 };

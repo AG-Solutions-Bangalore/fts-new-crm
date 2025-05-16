@@ -207,7 +207,7 @@ const ReceiptOldOne = () => {
     setTheId(id);
   }, []);
 
-  console.log("settheid", theId);
+  // console.log("settheid", theId);
 
   // const sendEmail = (e) => {
   //   e.preventDefault();

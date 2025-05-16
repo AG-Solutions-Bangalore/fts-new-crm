@@ -64,7 +64,7 @@ const AppProvider = ({ children }) => {
           "/recepit-sup",
           //guidebook
           "/manualguide-book",
-          // donor
+
           "/donor-list",
           "/add-indivisual",
           "/add-company",
@@ -159,7 +159,7 @@ const AppProvider = ({ children }) => {
         );
         if (isAllowedPath) {
           navigate(currentPath + location.search);
-          // console.log(currentPath);
+      
         } else {
           navigate("/home");
         }
@@ -172,7 +172,7 @@ const AppProvider = ({ children }) => {
         ) {
           navigate(currentPath);
         } else {
-          navigate("/"); // Redirect to login if no token
+          navigate("/"); 
         }
       }
     }
