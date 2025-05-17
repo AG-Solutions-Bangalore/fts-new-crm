@@ -25,7 +25,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, onClose }) => {
     Menuitems(userTypeId).forEach((item) => {
       if (item.subItems) {
         const hasActiveChild = item.subItems.some(
-          (subItem) => subItem.href === location.pathname
+          (subItem) => location.pathname === subItem.href
         );
         if (hasActiveChild) {
           initialExpanded[item.id] = true;
@@ -33,7 +33,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, onClose }) => {
       }
     });
     setExpandedMenus(initialExpanded);
-  }, [userTypeId, location.pathname]); // Added location.pathname to dependencies
+  }, [userTypeId, location.pathname]);
 
   const toggleMenu = (id) => {
     setExpandedMenus((prev) => ({
@@ -104,8 +104,9 @@ const Sidebar = ({ isCollapsed, isMobileOpen, onClose }) => {
 
                   if (item.subItems) {
                     const isParentActive = item.subItems.some(
-                      (subItem) => subItem.href === location.pathname
+                      (subItem) => location.pathname === subItem.href
                     );
+                    const isOpen = expandedMenus[item.id] || isParentActive;
 
                     return (
                       <li key={item.id}>
@@ -125,7 +126,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, onClose }) => {
                               </span>
                               <ChevronRight
                                 className={`ml-auto h-4 w-4 transition-transform duration-200 ${
-                                  expandedMenus[item.id] ? "rotate-90" : ""
+                                  isOpen ? "rotate-90" : ""
                                 }`}
                               />
                             </>
@@ -133,12 +134,12 @@ const Sidebar = ({ isCollapsed, isMobileOpen, onClose }) => {
                         </button>
 
                         <motion.div
-                          initial={expandedMenus[item.id] ? "open" : "closed"}
-                          animate={expandedMenus[item.id] ? "open" : "closed"}
+                          initial={isOpen ? "open" : "closed"}
+                          animate={isOpen ? "open" : "closed"}
                           variants={itemVariants}
                           className="overflow-hidden"
                         >
-                          {expandedMenus[item.id] && (
+                          {isOpen && (
                             <ul className="mt-1 space-y-1 pl-4 border-l-2 border-blue-200">
                               {item.subItems.map((subItem) => {
                                 const isSubItemActive =
@@ -207,7 +208,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, onClose }) => {
             </nav>
           </div>
 
-          {/* Upgrade section */}
+          {/* Upgrade  */}
           {!isCollapsed && (
             <div className="p-1 border-t border-gray-200">
               <Upgrade />
@@ -220,5 +221,3 @@ const Sidebar = ({ isCollapsed, isMobileOpen, onClose }) => {
 };
 
 export default Sidebar;
-
-//sajid

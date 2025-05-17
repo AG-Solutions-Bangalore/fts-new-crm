@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import Footer from "../components/Footer";
 
 const Layout = ({ children }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
@@ -15,7 +16,7 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen  ">
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         isMobileOpen={isMobileSidebarOpen}
@@ -33,10 +34,11 @@ const Layout = ({ children }) => {
         />
 
         <main className="flex-1 p-0">
-          <div className="bg-blue-50/20 h-screen  p-6">
+          <div className="bg-blue-50/20 min-h-screen  p-6">
             {children}
           </div>
         </main>
+             <Footer />
       </div>
     </div>
   );

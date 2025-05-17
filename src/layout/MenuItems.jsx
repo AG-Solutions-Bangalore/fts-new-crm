@@ -154,7 +154,7 @@ import {
             {
               id: "duplicate-list",
               title: "Duplicate",
-              icon: DollarSign,
+              icon: Copy,
               href: "/duplicate-list",
             },
           ],

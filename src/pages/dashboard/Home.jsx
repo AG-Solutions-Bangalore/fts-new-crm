@@ -225,7 +225,7 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-100 ">
+      <div className="min-h-screen  ">
         {/* Header Section */}
         {/* <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="flex items-center gap-3">
