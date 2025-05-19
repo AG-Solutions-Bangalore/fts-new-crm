@@ -139,11 +139,12 @@ const DonorList = () => {
     state: { isLoading: loading },
     enableStickyHeader: true,
     enableStickyFooter: true,
-    mantineTableContainerProps: { sx: { maxHeight: "400px" } },
+    // mantineTableContainerProps: { sx: { maxHeight: "400px" } },
     mantineProgressProps: {
       color: 'blue',
       variant: 'bars',
     },
+   
   });
 
   return (
@@ -224,4 +225,4 @@ const DonorList = () => {
 
 export default DonorList;
 
-//sajid
+//sajidss
