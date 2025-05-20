@@ -55,6 +55,12 @@ import {
           title: "C-receipt Donor",
           icon: DollarSign,
           href: "/change-receipt-donor",
+        },
+        {
+          id: "multi-receipt-download",
+          title: "M-receipt",
+          icon: DollarSign,
+          href: "/multi-receipt-download",
         }
       );
     } else {

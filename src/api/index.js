@@ -303,6 +303,7 @@ export const OTHER_NOTIFICATION_SUMBIT_NOTICE = `${BASE_URL}/api/superadmin-add-
 /*--------------------------Receipt-Super-start----------------------------------- */
 
 export const RECEIPT_SUPER_LIST = `${BASE_URL}/api/fetch-receipts-zero-list`;
+export const RECEIPT_SUPER_MULTI_RECEIPT_LIST = `${BASE_URL}/api/fetch-receipts-all-list`;
 export const RECEIPT_SUPER_DIALOG_LIST = `${BASE_URL}/api/fetch-receipts-zero`;
 export const RECEIPT_SUPER_SUMBIT = `${BASE_URL}/api/update-receipts-zero-by-id`;
 

@@ -64,6 +64,7 @@ const AppProvider = ({ children }) => {
           "/recepit-sup",
           //guidebook
           "/manualguide-book",
+          "/multi-receipt-download",
 
           "/donor-list",
           "/add-indivisual",

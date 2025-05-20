@@ -247,7 +247,7 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
                      )}
                    </div>
                  )} */}
-       {userType === "4" && (
+       {userType === "4" || userType === "5" && (
   <div className="relative" ref={dropdownRef}>
     <button
       onClick={() => {
