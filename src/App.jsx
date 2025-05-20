@@ -165,29 +165,15 @@ const ChangePassword = lazy(() => import("./pages/profile/ChangePassword"));
 const App = () => {
   const navigate = useNavigate();
   const time = localStorage.getItem("token-expire-time");
-  const token = localStorage.getItem("token")
-  const handleLogout = async () => {
-    try {
-      const res = await axios.post(`${BASE_URL}/api/panel-logout`,{}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.data.code === 200) {
-        toast.success(res.data.msg);
-        localStorage.clear();
-        navigate("/");
-      } else {
-        toast.error(res.data.msg);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+ 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
   };
   return (
     <>
       <ToastContainer />
-      {/* <DisableRightClick/>     */}
+      <DisableRightClick/>    
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Suspense fallback={<LoadingBar />}>
       <Routes>
