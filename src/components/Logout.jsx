@@ -15,22 +15,22 @@ const Logout = ({ open, handleOpen }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try {
-      const res = await axios.post(`${BASE_URL}/api/panel-logout`,{}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      if (res.data.code === 200) {
-        toast.success(res.data.msg);
+    // try {
+    //   const res = await axios.post(`${BASE_URL}/api/panel-logout`,{}, {
+    //     headers: {
+    //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //     },
+    //   });
+    //   if (res.data.code === 200) {
+        toast.success("User Logout");
         localStorage.clear();
         navigate("/");
-      } else {
-        toast.error(res.data.msg);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+    //   } else {
+    //     toast.error(res.data.msg);
+    //   }
+    // } catch (error) {
+    //   console.error("Logout failed:", error);
+    // }
   };
 
   return (
