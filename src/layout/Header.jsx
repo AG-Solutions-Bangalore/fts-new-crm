@@ -6,7 +6,7 @@ import Profile from "./header/Profile";
 import { Menu, ChevronDown, Building } from "lucide-react";
 
 const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
-  const dropdownRef = useRef(null)
+  const dropdownRef = useRef(null);
   const userType = localStorage.getItem("user_type_id");
   const [chapter, setChapter] = useState([]);
   const [selectedChapterName, setSelectedChapterName] = useState("All Chapter");
@@ -27,7 +27,7 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
       }
     }
   }, []);
- useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsChapterDropdownOpen(false);
@@ -73,7 +73,7 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
       })
       .then((res) => {
         setChapter(res.data.chapter);
-          setFilteredChapters(res.data.chapter); 
+        setFilteredChapters(res.data.chapter);
       });
   };
 
@@ -91,27 +91,27 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
     }).then((res) => {
       if (res.data.code === 200) {
         toast.success(res.data.msg, {
-      position: "bottom-right",
-      autoClose: 3000, 
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         localStorage.removeItem("selected_chapter_name");
         setSelectedChapterName("All Chapter");
         setIsChapterDropdownOpen(false);
       } else if (res.data.code === 400) {
         toast.error(res.data.msg, {
-      position: "bottom-right",
-      autoClose: 3000, 
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         toast.error("Unexpected Error");
       }
@@ -142,25 +142,25 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
           setSelectedChapterName(selectedChapter.chapter_name);
         }
         toast.success(response.data.msg, {
-      position: "bottom-right",
-      autoClose: 3000, 
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         setIsChapterDropdownOpen(false);
       } else if (response.data.code === 400) {
         toast.error(response.data.msg, {
-      position: "bottom-right",
-      autoClose: 3000, 
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         toast.error(response.data.msg);
       }
@@ -181,7 +181,7 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
           >
             <Menu className="h-6 w-6" />
           </button>
-          
+
           {/* Desktop menu button */}
           <button
             onClick={toggleSidebar}
@@ -191,8 +191,8 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
           </button>
         </div>
 
-         <div className="flex items-center space-x-6">
-                 {/* {userType === "4" && (
+        <div className="flex items-center space-x-6">
+          {/* {userType === "4" && (
                    <div className="relative" ref={dropdownRef}>
                      <button
                        onClick={() => {
@@ -247,97 +247,107 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
                      )}
                    </div>
                  )} */}
-       {userType === "4" || userType === "5" && (
-  <div className="relative" ref={dropdownRef}>
-    <button
-      onClick={() => {
-        fetchData();
-        setIsChapterDropdownOpen(!isChapterDropdownOpen);
-      }}
-      className="flex items-center space-x-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg transition-colors duration-200 border border-blue-200 text-sm"
-    >
-      <Building className="h-4 w-4 text-blue-600" />
-      <span className="font-medium truncate max-w-[120px]">
-        {selectedChapterName}
-      </span>
-      <ChevronDown className={`h-4 w-4 text-blue-600 transition-transform duration-200 ${isChapterDropdownOpen ? 'transform rotate-180' : ''}`} />
-    </button>
-
-    {isChapterDropdownOpen && (
-      <div className="absolute right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-blue-100 z-50 overflow-hidden">
-        <div className="p-2 space-y-2">
-          {selectedChapterName !== "All Chapter" && (
-            <button
-              onClick={clearChapter}
-              className="w-full px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors duration-200"
-            >
-              Clear Selection
-            </button>
-          )}
-          
-          {selectedChapterName === "All Chapter" && chapter && chapter.length > 0 &&  (
-          
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search chapters..."
-                className="w-full pl-8 pr-2 py-1.5 text-sm border border-blue-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => {
-                  const searchTerm = e.target.value.toLowerCase();
-                  const filtered = chapter.filter(item => 
-                    item.chapter_name.toLowerCase().includes(searchTerm)
-                  );
-                  setFilteredChapters(filtered);
+          {(userType === "4" || userType === "5") && (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => {
+                  fetchData();
+                  setIsChapterDropdownOpen(!isChapterDropdownOpen);
                 }}
-              />
-              <svg
-                className="absolute left-2 top-2 h-4 w-4 text-blue-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+                className="flex items-center space-x-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg transition-colors duration-200 border border-blue-200 text-sm"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                <Building className="h-4 w-4 text-blue-600" />
+                <span className="font-medium truncate max-w-[120px]">
+                  {selectedChapterName}
+                </span>
+                <ChevronDown
+                  className={`h-4 w-4 text-blue-600 transition-transform duration-200 ${
+                    isChapterDropdownOpen ? "transform rotate-180" : ""
+                  }`}
                 />
-              </svg>
+              </button>
+
+              {isChapterDropdownOpen && (
+                <div className="absolute right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-blue-100 z-50 overflow-hidden">
+                  <div className="p-2 space-y-2">
+                    {selectedChapterName !== "All Chapter" && (
+                      <button
+                        onClick={clearChapter}
+                        className="w-full px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded transition-colors duration-200"
+                      >
+                        Clear Selection
+                      </button>
+                    )}
+
+                    {selectedChapterName === "All Chapter" &&
+                      chapter &&
+                      chapter.length > 0 && (
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="Search chapters..."
+                            className="w-full pl-8 pr-2 py-1.5 text-sm border border-blue-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                            onChange={(e) => {
+                              const searchTerm = e.target.value.toLowerCase();
+                              const filtered = chapter.filter((item) =>
+                                item.chapter_name
+                                  .toLowerCase()
+                                  .includes(searchTerm)
+                              );
+                              setFilteredChapters(filtered);
+                            }}
+                          />
+                          <svg
+                            className="absolute left-2 top-2 h-4 w-4 text-blue-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            />
+                          </svg>
+                        </div>
+                      )}
+
+                    <div className="max-h-60 overflow-y-auto">
+                      {filteredChapters && filteredChapters.length > 0 ? (
+                        <ul className="space-y-1">
+                          {filteredChapters.map((item) => (
+                            <li key={item.id}>
+                              <button
+                                onClick={() => handleSelectChapter(item.id)}
+                                className={`w-full text-left px-3 py-1.5 text-sm rounded transition-colors duration-200 ${
+                                  selectedChapterName === item.chapter_name
+                                    ? "bg-blue-100 text-blue-700 font-medium"
+                                    : "text-gray-700 hover:bg-gray-100"
+                                }`}
+                              >
+                                {item.chapter_name}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : chapter && chapter.length > 0 ? (
+                        <p className="px-3 py-2 text-sm text-gray-500 text-center">
+                          No matching chapters
+                        </p>
+                      ) : (
+                        <p className="px-3 py-2 text-sm text-gray-500 text-center">
+                          No chapters available
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-              
           )}
-          
-          <div className="max-h-60 overflow-y-auto">
-            {filteredChapters && filteredChapters.length > 0 ? (
-              <ul className="space-y-1">
-                {filteredChapters.map((item) => (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => handleSelectChapter(item.id)}
-                      className={`w-full text-left px-3 py-1.5 text-sm rounded transition-colors duration-200 ${
-                        selectedChapterName === item.chapter_name
-                          ? 'bg-blue-100 text-blue-700 font-medium'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      {item.chapter_name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : chapter && chapter.length > 0 ? (
-              <p className="px-3 py-2 text-sm text-gray-500 text-center">No matching chapters</p>
-            ) : (
-              <p className="px-3 py-2 text-sm text-gray-500 text-center">No chapters available</p>
-            )}
-          </div>
+          <Profile />
         </div>
-      </div>
-    )}
-  </div>
-)}
-                 <Profile />
-               </div>
       </div>
     </header>
   );
@@ -345,4 +355,4 @@ const Header = ({ toggleSidebar, toggleMobileSidebar }) => {
 
 export default Header;
 
-//sajid 
+//sajid
