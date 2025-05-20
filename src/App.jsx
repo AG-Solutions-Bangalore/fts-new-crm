@@ -18,6 +18,7 @@ import ReceiptSuperView from './pages/RecepitSuper/ReceiptSuperView';
 
 
 
+
 // import Profile from "./pages/profile/Profile";
 // import ChangePassword from "./pages/profile/ChangePassword";
 // import DonorList from "./pages/donor/fullList/DonorList";
@@ -159,6 +160,8 @@ const SuspenseSummary = lazy(() => import("./pages/Reports/SuspenseSummary/Suspe
 const SuspenseList = lazy(() => import("./pages/receipts/suspense/SuspenseList"));
 const ChangePromoter = lazy(() => import("./pages/donor/changePromoter/ChangePromoter"));
 const SuperReceiptDonor = lazy(() => import("./pages/superReceiptDonor/SuperReceiptDonor"));
+
+const MultiReceiptDownload = lazy(() => import("./pages/RecepitSuper/MultiReceiptDownload"));
 const Profile = lazy(() => import("./pages/profile/Profile"));
 const ChangePassword = lazy(() => import("./pages/profile/ChangePassword"));
 
@@ -173,7 +176,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      <DisableRightClick/>    
+      {/* <DisableRightClick/>     */}
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Suspense fallback={<LoadingBar />}>
       <Routes>
@@ -190,6 +193,7 @@ const App = () => {
         {/* //superRecepit */}
         <Route path="/recepit-sup" element={<RecepitSuper />} />
         <Route path="/change-receipt-donor" element={<SuperReceiptDonor />} />
+        <Route path="/multi-receipt-download" element={<MultiReceiptDownload />} />
 
         {/* donor  */}
         <Route path="/donor-list" element={<DonorList />} />
