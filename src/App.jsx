@@ -13,6 +13,7 @@ import SIgnUp from "./pages/auth/SIgnUp";
 import Maintenance from "./pages/maintenance/Maintenance";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import LoadingBar from './components/loadingBar/LoadingBar';
+import ReceiptSuperView from './pages/RecepitSuper/ReceiptSuperView';
 
 
 
@@ -186,7 +187,7 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-   <DisableRightClick/>    
+      {/* <DisableRightClick/>     */}
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Suspense fallback={<LoadingBar />}>
       <Routes>
@@ -230,9 +231,12 @@ const App = () => {
 
         <Route path="/view-old-receipts/:id" element={<ReceiptOldViewIndex />} />
 
+        {/* /supper receipt view  */}
+
+        <Route path="/view-receipts-super/:id" element={<ReceiptSuperView />} />
 
 
-
+        {/* // end  */}
         {/* school  */}
         <Route path="/profile" element={<Profile />} />
         {/* //Master */}

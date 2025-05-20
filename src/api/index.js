@@ -353,6 +353,10 @@ export const ROUTES = {
     CHAPTER_DATASOURCE: (id) => `/edit-datasource/${encryptId(id)}`,
     CHAPTER_VIEW_SCHOOL: (id) => `/view-school/${encryptId(id)}`,
     RECEIPT_VIEW: (id) => `/view-receipts/${encryptId(id)}`,
+
+    // temp 
+    RECEIPT_VIEW_SUPER: (id) => `/view-receipts-super/${encryptId(id)}`,
+    // temp end
     RECEIPT_OLD_VIEW: (id) => `/view-old-receipts/${encryptId(id)}`,
 
     RECEIPT_EDIT: (id) => `/receipt-edit/${encryptId(id)}`,
@@ -390,7 +394,12 @@ export const navigateToChapterViewSchool = (navigate, viewId) => {
 export const navigateToReceiptView = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_VIEW(viewId));
   };
-  
+
+  // strat 
+export const navigateToReceiptViewSuper = (navigate, viewId) => {
+    navigate(ROUTES.RECEIPT_VIEW_SUPER(viewId));
+  };
+  // end 
 export const navigateToOldReceiptView = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_OLD_VIEW(viewId));
   };
