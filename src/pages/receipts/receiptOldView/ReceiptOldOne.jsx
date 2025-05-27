@@ -670,19 +670,21 @@ const ReceiptOldOne = () => {
                                     <span className="font-semibold">
                                       {sig.indicomp_full_name}
                                     </span>
-                                    {sig.designation && (
-                                      <div className="text-sm text-gray-600">
-                                        {sig.designation}
-                                      </div>
-                                    )}
+                                    {chapter.auth_sign ? (
+                                             <div className="text-sm text-gray-600">
+                                             {chapter.auth_sign}
+                                             </div>
+                                            ):(
+                                              <div className="text-sm text-gray-500"> Authorized Signatory</div>
+                                            )}
                                   </div>
                                 ))}
                               </div>
 
                               {/* Optional: Add authorized signatory text */}
-                              <div className="text-sm text-gray-500 mt-0">
+                              {/* <div className="text-sm text-gray-500 mt-0">
                                 Authorized Signatory
-                              </div>
+                              </div> */}
                             </div>
                           )}
                         </td>
