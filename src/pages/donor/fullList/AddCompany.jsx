@@ -157,7 +157,8 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
   // };
 
   const onChangePanNumber = (e) => {
-    const panValue = e.target.value.toUpperCase().replace(/\s/g, "");
+    const panValue = e.target.value;
+    // const panValue = e.target.value.toUpperCase().replace(/\s/g, "");
     setDonor({ ...donor, indicomp_pan_no: panValue });
   };
 
@@ -291,87 +292,85 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
     const newErrors = {};
     let isValid = true;
   
-    
     if (!donor.indicomp_full_name?.trim()) {
-      errors.indicomp_full_name = 'Company Name is required';
+      newErrors.indicomp_full_name = 'Company Name is required';
       isValid = false;
     }
   
     if (!donor.indicomp_type) {
-      errors.indicomp_type = 'Company Type is required';
+      newErrors.indicomp_type = 'Company Type is required';
+      isValid = false;
+    }
+    if (!donor.indicomp_com_contact_name) {
+      newErrors.indicomp_com_contact_name = 'Contact Name is required';
       isValid = false;
     }
   
     if (!donor.title) {
-      errors.title = 'Title is required';
+      newErrors.title = 'Title is required';
       isValid = false;
     }
   
-    if (!donor.indicomp_com_contact_name?.trim()) {
-      errors.indicomp_com_contact_name = 'Contact Name is required';
-      isValid = false;
-    }
   
     if (!donor.indicomp_gender) {
-      errors.indicomp_gender = 'Gender is required';
+      newErrors.indicomp_gender = 'Gender is required';
       isValid = false;
     }
   
-    
     if (!donor.indicomp_pan_no || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(donor.indicomp_pan_no)) {
-      errors.indicomp_pan_no = 'Valid PAN Number is required (format: AAAAA9999A)';
+      newErrors.indicomp_pan_no = 'Valid PAN Number is required (format: AAAAA9999A)';
       isValid = false;
     }
   
     if (!donor.indicomp_promoter) {
-      errors.indicomp_promoter = 'Promoter is required';
+      newErrors.indicomp_promoter = 'Promoter is required';
       isValid = false;
     }
   
     if (donor.indicomp_promoter === 'Other' && !donor.indicomp_newpromoter?.trim()) {
-      errors.indicomp_newpromoter = 'Please specify promoter';
+      newErrors.indicomp_newpromoter = 'Please specify promoter';
       isValid = false;
     }
   
-    
     if (!donor.indicomp_mobile_phone || !/^\d{10}$/.test(donor.indicomp_mobile_phone)) {
-      errors.indicomp_mobile_phone = 'Valid 10-digit Mobile Number is required';
+      newErrors.indicomp_mobile_phone = 'Valid 10-digit Mobile Number is required';
       isValid = false;
     }
   
-
     if (!donor.indicomp_res_reg_city?.trim()) {
-      errors.indicomp_res_reg_city = 'City is required';
+      newErrors.indicomp_res_reg_city = 'City is required';
       isValid = false;
     }
   
     if (!donor.indicomp_res_reg_state) {
-      errors.indicomp_res_reg_state = 'State is required';
+      newErrors.indicomp_res_reg_state = 'State is required';
       isValid = false;
     }
   
     if (!donor.indicomp_res_reg_pin_code || !/^\d{6}$/.test(donor.indicomp_res_reg_pin_code)) {
-      errors.indicomp_res_reg_pin_code = 'Valid 6-digit Pincode is required';
+      newErrors.indicomp_res_reg_pin_code = 'Valid 6-digit Pincode is required';
       isValid = false;
     }
   
     if (!donor.indicomp_corr_preffer) {
-      errors.indicomp_corr_preffer = 'Correspondence Preference is required';
+      newErrors.indicomp_corr_preffer = 'Correspondence Preference is required';
       isValid = false;
     }
   
     setErrors(newErrors);
-  return { isValid, errors: newErrors };
+    return { isValid, errors: newErrors };
   };
 
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+     e.preventDefault();
+
+   
+    
     const { isValid, errors } = validateForm();
     
     if (!isValid) {
-    
       const firstError = Object.values(errors)[0];
       toast.error(firstError);
       setIsButtonDisabled(false);
@@ -436,6 +435,8 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
         },
       });
       if (response.data.code === 200) {
+        fetchDonorData();
+
         toast.success(response.data.msg);
 
         setDonor({
@@ -473,7 +474,7 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
           indicomp_corr_preffer: "Registered",
           indicomp_csr: "",
         });
-        fetchDonorData();
+    
         onClose();
       } else if (response.data.code === 400) {
         toast.error(response.data.msg);
@@ -515,8 +516,8 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
       </div>
       <hr />
       <form
-        id="addIndiv"
-        onSubmit={handleSubmit}
+    
+      
         className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
       >
         {/* Personal Details Section */}
@@ -605,6 +606,9 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
                 className={inputClass}
                 required
               />
+                  {errors?.indicomp_com_contact_name && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_com_contact_name}</p>
+  )}
             </div>
 
             <div>
@@ -652,7 +656,7 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
 
             <div>
               <InputMask
-                mask="aaaaa 9999 a"
+                mask="aaaaa9999a"
                 formatChars={{
                   9: "[0-9]",
                   a: "[A-Z]",
@@ -670,12 +674,13 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
                       required   // indicomp_pan_no
                       className={inputClass}
                     />
-                     {errors?.indicomp_pan_no && (
-        <p className="text-red-500 text-xs mt-1">{errors.indicomp_pan_no}</p>
-      )}
+                
                   </div>
                 )}
               </InputMask>
+              {errors?.indicomp_pan_no && (
+        <p className="text-red-500 text-xs mt-1">{errors.indicomp_pan_no}</p>
+      )}
             </div>
 
             <div>
@@ -1078,6 +1083,7 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
         <div className="flex gap-4 justify-start">
           <button
             type="submit"
+            onClick={(e)=>handleSubmit(e)}
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >

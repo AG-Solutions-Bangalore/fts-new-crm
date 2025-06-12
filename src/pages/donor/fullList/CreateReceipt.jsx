@@ -5,11 +5,17 @@ import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import moment from "moment";
 import { toast } from "react-toastify";
-import { Button, ButtonGroup } from "@material-tailwind/react";
+import { Button, ButtonGroup, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { ContextPanel } from "../../../utils/ContextPanel";
 import { decryptId, encryptId } from "../../../utils/encyrption/Encyrption";
-import { DONOR_LIST_CREATE_RECEIPT, fetchDonorDataInCreateReceiptById, navigateToViewReceiptFromCreateReceipt } from "../../../api";
+import {
+  DONOR_LIST_CREATE_RECEIPT,
+  fetchDonorDataInCreateReceiptById,
+  navigateToDonorEdit,
+  navigateToViewReceiptFromCreateReceipt,
+} from "../../../api";
+
 const exemption = [
   {
     value: "80G",
@@ -58,6 +64,7 @@ const pay_mode_2 = [
     label: "Others",
   },
 ];
+
 const donation_type = [
   {
     value: "One Teacher School",
@@ -72,6 +79,7 @@ const donation_type = [
     label: "Membership",
   },
 ];
+
 const donation_type_2 = [
   {
     value: "One Teacher School",
@@ -92,7 +100,7 @@ const CreateReceipt = () => {
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0");
   const yyyy = today.getFullYear();
-  const currentYear = localStorage.getItem("currentYear")
+  const currentYear = localStorage.getItem("currentYear");
   //   today = mm + "/" + dd + "/" + yyyy;
   const todayback = yyyy + "-" + mm + "-" + dd;
 
@@ -101,11 +109,15 @@ const CreateReceipt = () => {
   const preyear = todayyear;
   const finyear = +twoDigitYear + 1;
   const finalyear = preyear + "-" + finyear;
-  const {isPanelUp } = useContext(ContextPanel);
-
+  const { isPanelUp } = useContext(ContextPanel);
+  const [errors, setErrors] = useState({});
   const [userdata, setUserdata] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loader, setLoader] = useState(true);
+  
+
+  const [showPanDialog, setShowPanDialog] = useState(false);
+  
   const [donor, setDonor] = useState({
     receipt_date: "",
     receipt_old_no: "",
@@ -128,15 +140,57 @@ const CreateReceipt = () => {
     receipt_no_of_ots: "",
     donor_promoter: "",
     donor_source: "",
+    with_out_panno: "",
   });
 
   const [states, setStates] = useState([]);
 
   const handleButtonGroupChange = (stateName, value) => {
+  
+    if (stateName === "receipt_exemption_type" && value === "80G") {
+      const pan = userdata.indicomp_pan_no;
+      if (!pan || pan === "" || pan === null) {
+        setShowPanDialog(true);
+        return;
+      }
+    }
+
+    setDonor((prevDonor) => {
+      const updatedDonor = {
+        ...prevDonor,
+        [stateName]: value,
+      };
+
+   
+      if (stateName === "receipt_exemption_type" || stateName === "receipt_total_amount") {
+        // If 80G is selected and amount > 2000, reset transaction type if it was Cash
+        if (
+          (stateName === "receipt_exemption_type" && value === "80G" && prevDonor.receipt_total_amount > 2000) ||
+          (stateName === "receipt_total_amount" && prevDonor.receipt_exemption_type === "80G" && value > 2000)
+        ) {
+          if (prevDonor.receipt_tran_pay_mode === "Cash") {
+            updatedDonor.receipt_tran_pay_mode = "";
+          }
+        }
+      }
+
+      return updatedDonor;
+    });
+  };
+
+
+  const handlePanDialogConfirm = () => {
     setDonor((prevDonor) => ({
       ...prevDonor,
-      [stateName]: value,
+      receipt_exemption_type: "80G",
+      with_out_panno: "Yes",
     }));
+    setShowPanDialog(false);
+  };
+
+ 
+  const handlePanDialogCancel = () => {
+    setShowPanDialog(false);
   };
 
   useEffect(() => {
@@ -155,10 +209,21 @@ const CreateReceipt = () => {
 
     if (digitFields.includes(name)) {
       if (validateOnlyDigits(value)) {
-        setDonor((prevChapter) => ({
-          ...prevChapter,
-          [name]: value,
-        }));
+        setDonor((prevChapter) => {
+          const updatedDonor = {
+            ...prevChapter,
+            [name]: value,
+          };
+
+          
+          if (name === "receipt_total_amount" && prevChapter.receipt_exemption_type === "80G" && value > 2000) {
+            if (prevChapter.receipt_tran_pay_mode === "Cash") {
+              updatedDonor.receipt_tran_pay_mode = "";
+            }
+          }
+
+          return updatedDonor;
+        });
       }
     } else {
       setDonor((prevChapter) => ({
@@ -168,20 +233,21 @@ const CreateReceipt = () => {
     }
   };
 
- 
-   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const data = await fetchDonorDataInCreateReceiptById(id);
-          setUserdata(data.individualCompany);
-                setLoader(false);
-        } catch (error) {
-          toast.error("Failed to fetch donor data  details");
-        }
-      };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchDonorDataInCreateReceiptById(id);
+        setUserdata(data.individualCompany);
+        localStorage.setItem("donType",data?.individualCompany?.indicomp_type)
       
-      fetchData();
-    }, [id]);
+        setLoader(false);
+      } catch (error) {
+        toast.error("Failed to fetch donor data  details");
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const [datasource, setDatasource] = useState([]);
   useEffect(() => {
@@ -195,6 +261,7 @@ const CreateReceipt = () => {
         setDatasource(res.data.datasource);
       });
   }, []);
+  
   const [membershipyear, setMembershipYear] = useState([]);
   const FetchMemeberShipYear = () => {
     axios
@@ -207,6 +274,7 @@ const CreateReceipt = () => {
         setMembershipYear(res.data.membershipyear);
       });
   };
+  
   const [schoolallotyear, setSchoolAllotYear] = useState([]);
   const FetchSchoolAllotYear = () => {
     axios
@@ -219,6 +287,7 @@ const CreateReceipt = () => {
         setSchoolAllotYear(res.data.schoolallotyear);
       });
   };
+  
   const [recepitcontrol, setRecepitControl] = useState({});
   const FetchRecepitYear = () => {
     axios
@@ -231,42 +300,97 @@ const CreateReceipt = () => {
         setRecepitControl(res.data.receipt_control);
       });
   };
+  
   useEffect(() => {
     FetchSchoolAllotYear();
     FetchMemeberShipYear();
     FetchRecepitYear();
   }, []);
-useEffect(() => {
+  
+  useEffect(() => {
     let timeoutId;
-      timeoutId = setTimeout(() => {
-        if (isPanelUp.error == "Maintenance") {
-          localStorage.clear();
-          navigate("/maintenance");
-        }
-      }, 5000); 
-
-
+    timeoutId = setTimeout(() => {
+      if (isPanelUp.error == "Maintenance") {
+        localStorage.clear();
+        navigate("/maintenance");
+      }
+    }, 5000);
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [ isPanelUp, navigate]);
+  }, [isPanelUp, navigate]);
 
   const pan = userdata.indicomp_pan_no == "" ? "NA" : userdata.indicomp_pan_no;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-    if(!currentYear){
-      toast.error("current year is not defined")
-      return
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    // Only validate receipt_date if it's visible/required
+    if (recepitcontrol.date_open === "Yes" && !donor.receipt_date?.trim()) {
+      newErrors.receipt_date = "Receipt Date is required";
+      isValid = false;
     }
 
-    setIsButtonDisabled(true);
+    if (!donor.receipt_exemption_type) {
+      newErrors.receipt_exemption_type = "Please Select a category";
+      isValid = false;
+    }
+
+    if (!donor.receipt_donation_type) {
+      newErrors.receipt_donation_type = "Purpose is required";
+      isValid = false;
+    }
+
+    if (!donor.receipt_total_amount) {
+      newErrors.receipt_total_amount = "Total amount is required";
+      isValid = false;
+    }
+
+    if (!donor.receipt_tran_pay_mode) {
+      newErrors.receipt_tran_pay_mode = "Tansaction type is required";
+      isValid = false;
+    }
+
+    if (
+      donor.receipt_donation_type === "Membership" &&
+      !donor.m_ship_vailidity
+    ) {
+      newErrors.m_ship_vailidity = "Membership End Date is required";
+      isValid = false;
+    }
+
+    if (donor.receipt_donation_type === "One Teacher School") {
+      if (!donor.receipt_no_of_ots) {
+        newErrors.receipt_no_of_ots = "No of school is required";
+        isValid = false;
+      }
+      if (!donor.schoolalot_year) {
+        newErrors.schoolalot_year = "School Allottment Year is required";
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return { isValid, errors: newErrors };
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { isValid, errors } = validateForm();
+    if (!isValid) {
+      const firstError = Object.values(errors)[0];
+      toast.error(firstError);
+      setIsButtonDisabled(false);
+      return;
+    }
+    if (!currentYear) {
+      toast.error("current year is not defined");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("indicomp_fts_id", userdata.indicomp_fts_id);
     if (
@@ -300,7 +424,10 @@ useEffect(() => {
     formData.append("receipt_no_of_ots", donor.receipt_no_of_ots);
     formData.append("donor_promoter", userdata.indicomp_promoter);
     formData.append("donor_source", donor.donor_source);
+    formData.append("with_out_panno", donor.with_out_panno);
+    
     try {
+      setIsButtonDisabled(true);
       const res = await axios.post(`${DONOR_LIST_CREATE_RECEIPT}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -309,18 +436,11 @@ useEffect(() => {
 
       if (res.data.code === 200) {
         toast.success(res.data.msg);
-        // navigate(`/view-receipts/${res.data.r_id}`);
-        // const encryptedId = encryptId(res?.data?.r_id);
-        // navigate(`/view-receipts/${encodeURIComponent(encryptedId)}`);
-      
-        navigateToViewReceiptFromCreateReceipt(navigate,res.data.r_id)
-                                 
+        navigateToViewReceiptFromCreateReceipt(navigate, res.data.r_id);
       } else if (res.data.code === 400) {
         toast.error(res.data.msg);
-        setIsButtonDisabled(false);
       } else {
         toast.error("Unexcepted Error");
-        setIsButtonDisabled(false);
       }
     } catch (error) {
       console.error("Error updating Receipt:", error);
@@ -360,6 +480,7 @@ useEffect(() => {
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+  
   return (
     <Layout>
       <div className="bg-[#F8FAFC] p-4   overflow-y-auto custom-scroll-add">
@@ -376,7 +497,6 @@ useEffect(() => {
                 onClick={() => {
                   navigate("/donor-list");
                 }}
-                // onClick={onClose}
                 className="cursor-pointer hover:text-red-600 transition-colors"
               />
             </div>
@@ -407,7 +527,6 @@ useEffect(() => {
                       {moment(recepitcontrol.date_open_one_date).format(
                         "DD-MM-YYYY"
                       )}
-                      {/* {recepitcontrol.date_open_one} */}
                     </h3>
                   ) : (
                     ""
@@ -432,18 +551,10 @@ useEffect(() => {
           </div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          id="addIndiv"
-          className="w-full max-w-7xl bg-white rounded-lg mx-auto p-6 space-y-8 "
-        >
+        <form className="w-full max-w-7xl bg-white rounded-lg mx-auto p-6 space-y-8 ">
           <div>
-            {/* <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
-              <IconInfoCircle className="w-4 h-4" />
-              <span>Receipt Details</span>
-            </h2> */}
             <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 md:gap-8">
-              {recepitcontrol.date_open === "Yes" ? (
+              {recepitcontrol.date_open === "Yes" && (
                 <div>
                   <FormLabel required>Receipt Date</FormLabel>
                   <input
@@ -460,83 +571,30 @@ useEffect(() => {
                       "YYYY-MM-DD"
                     )}
                   />
+                  {errors?.receipt_date && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.receipt_date}
+                    </p>
+                  )}
                 </div>
-              ) : (
-                ""
               )}
 
               <div className=" col-span-0 lg:col-span-2">
-                {/* <FormLabel required>Category</FormLabel>
-                <select
-                  name="receipt_exemption_type"
-                  value={donor.receipt_exemption_type}
-                  onChange={(e) => onInputChange(e)}
-                  required
-                  className={inputClassSelect}
-                >
-                  <option value="">Select Category</option>
-                  {exemption.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select> */}
-
                 <FormLabel required>Category</FormLabel>
                 {renderButtonGroup(
                   exemption,
                   "receipt_exemption_type",
                   donor.receipt_exemption_type
                 )}
-                {/* {!donor.receipt_exemption_type && (
+                {errors?.receipt_exemption_type && (
                   <p className="text-red-500 text-xs mt-1">
-                    Please select a category
+                    {errors.receipt_exemption_type}
                   </p>
-                )} */}
+                )}
               </div>
-
-              {/* 
-              <div>
-                <FormLabel required>Transaction Type</FormLabel>
-                
-                {renderButtonGroup(
-                  donor.receipt_exemption_type == "80G" &&
-                    donor.receipt_total_amount > 2000
-                    ? pay_mode_2
-                    : pay_mode,
-                  "receipt_tran_pay_mode",
-                  donor.receipt_tran_pay_mode
-                )}
-                {!donor.receipt_tran_pay_mode && (
-                  <p className="text-red-500 text-xs mt-1">
-                    Please select a transaction type
-                  </p>
-                )}
-               
-              </div> */}
 
               <div className=" col-span-0 lg:col-span-2">
                 <FormLabel required>Purpose</FormLabel>
-                {/* <select
-                  name="receipt_donation_type"
-                  value={donor.receipt_donation_type}
-                  onChange={(e) => onInputChange(e)}
-                  required
-                  className={inputClassSelect}
-                >
-                  <option value="">Select Transaction Type</option>
-                  {donor.receipt_exemption_type == "80G"
-                    ? donation_type_2.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))
-                    : donation_type.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                </select> */}
 
                 {renderButtonGroup(
                   donor.receipt_exemption_type == "80G"
@@ -545,14 +603,11 @@ useEffect(() => {
                   "receipt_donation_type",
                   donor.receipt_donation_type
                 )}
-                {/* {!donor.receipt_donation_type && (
+                {errors?.receipt_donation_type && (
                   <p className="text-red-500 text-xs mt-1">
-                    Please select a purpose
+                    {errors.receipt_donation_type}
                   </p>
-                )} */}
-                {/* <p className="text-gray-600 text-xs px-2 pt-1">
-                  Please select your Donation Type
-                </p> */}
+                )}
               </div>
               <div>
                 <FormLabel required>Total Amount</FormLabel>
@@ -565,6 +620,11 @@ useEffect(() => {
                   className={inputClass}
                   required
                 />
+                {errors?.receipt_total_amount && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.receipt_total_amount}
+                  </p>
+                )}
               </div>
               <div>
                 <FormLabel>Realization Date</FormLabel>
@@ -588,11 +648,11 @@ useEffect(() => {
                   "receipt_tran_pay_mode",
                   donor.receipt_tran_pay_mode
                 )}
-                {/* {!donor.receipt_tran_pay_mode && (
+                {errors?.receipt_tran_pay_mode && (
                   <p className="text-red-500 text-xs mt-1">
-                    Please select a transaction type
+                    {errors.receipt_tran_pay_mode}
                   </p>
-                )} */}
+                )}
               </div>
 
               {donor.receipt_donation_type == "Membership" ? (
@@ -614,9 +674,15 @@ useEffect(() => {
                       </option>
                     ))}
                   </select>
+
                   <p className="text-gray-600 text-xs px-2 pt-1">
                     Membership End Date
                   </p>
+                  {errors?.m_ship_vailidity && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.m_ship_vailidity}
+                    </p>
+                  )}
                 </div>
               ) : (
                 ""
@@ -656,6 +722,11 @@ useEffect(() => {
                     className={inputClass}
                     required
                   />
+                  {errors?.receipt_no_of_ots && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.receipt_no_of_ots}
+                    </p>
+                  )}
                 </div>
               ) : (
                 ""
@@ -686,6 +757,11 @@ useEffect(() => {
                   <p className="text-gray-600 text-xs px-2 pt-1">
                     School Allottment Year
                   </p>
+                  {errors?.schoolalot_year && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.schoolalot_year}
+                    </p>
+                  )}
                 </div>
               ) : (
                 ""
@@ -715,25 +791,6 @@ useEffect(() => {
                   className={inputClass}
                 />
               </div>
-
-              {/* <div className=" col-span-0  lg:col-span-2">
-                <FormLabel required>Transaction Type</FormLabel>
-                
-                {renderButtonGroup(
-                  donor.receipt_exemption_type == "80G" &&
-                    donor.receipt_total_amount > 2000
-                    ? pay_mode_2
-                    : pay_mode,
-                  "receipt_tran_pay_mode",
-                  donor.receipt_tran_pay_mode
-                )}
-                {!donor.receipt_tran_pay_mode && (
-                  <p className="text-red-500 text-xs mt-1">
-                    Please select a transaction type
-                  </p>
-                )}
-               
-              </div> */}
             </div>
           </div>
 
@@ -741,18 +798,70 @@ useEffect(() => {
           <div className="flex gap-4 justify-start">
             <button
               type="submit"
-              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-              disabled={
-                isButtonDisabled ||
-                !donor.receipt_exemption_type ||
-                !donor.receipt_tran_pay_mode ||
-                !donor.receipt_donation_type
-              }
+              onClick={(e) => handleSubmit(e)}
+              className="text-center text-sm font-[400] cursor-pointer  w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+              disabled={isButtonDisabled}
             >
               {isButtonDisabled ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>
+
+        {/* PAN Dialog */}
+        <Dialog open={showPanDialog} handler={setShowPanDialog} className="bg-white rounded-lg shadow-xl">
+          <DialogHeader className="bg-red-50 text-red-700 border-b border-red-200 rounded-t-lg">
+            <div className="flex items-center gap-2">
+              <IconInfoCircle className="w-5 h-5" />
+              <span className="text-lg font-semibold">No PAN Card Available</span>
+            </div>
+          </DialogHeader>
+          <DialogBody className="p-6">
+          <p className="text-gray-700 text-sm leading-relaxed">
+  The donor's PAN is missing. To issue an 80G receipt, a valid PAN is required. Please choose an option below.
+</p>
+
+          </DialogBody>
+      
+
+
+
+
+
+
+
+          <DialogFooter className="bg-gray-50 border-t border-gray-200 rounded-b-lg p-4">
+            <div className="flex justify-end gap-3">
+            
+              {userdata && (
+     <Button
+     variant="text"
+     className="text-green-700 hover:bg-green-100 px-4 py-2 rounded-md border border-green-300"
+       onClick={() => {
+         const donorId = userdata?.id;
+         navigateToDonorEdit(navigate, donorId);
+       }}
+     >
+       Update Pan No
+     </Button>
+   )}
+   
+              <Button
+                variant="text"
+                onClick={handlePanDialogCancel}
+                className="text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md border border-gray-300"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="filled"
+                onClick={handlePanDialogConfirm}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+              >
+                Continue without PAN
+              </Button>
+            </div>
+          </DialogFooter>
+        </Dialog>
       </div>
     </Layout>
   );

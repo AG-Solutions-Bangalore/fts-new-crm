@@ -55,33 +55,61 @@ const DonorView = ({ viewerId, onClose }) => {
 
   const navigate = useNavigate();
 
-  // Fetch data useEffect would go here
-  useEffect(() => {
-    // Add your data fetching logic here
-    const fetchViewerData = async () => {
-      try {
-        axios
-          .get(`${DONOR_VIEW_DATA}/${viewerId}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          })
-          .then((res) => {
-            setDonor(res.data.individualCompany);
-            setDonorFam(res.data.family_details);
-            setCompany(res.data.company_details);
-            setFamGroup(res.data.related_group);
-            setLoader(false);
-          });
-      } catch (error) {
-        console.error("Error fetching donor data:", error);
-      }
-    };
+  const fetchViewerData = async () => {
+    try {
+      setLoader(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${DONOR_VIEW_DATA}/${viewerId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDonor(response.data.individualCompany);
+      setDonorFam(response.data.family_details);
+      setCompany(response.data.company_details);
+      setFamGroup(response.data.related_group);
+    } catch (error) {
+      console.error("Error fetching viewer data", error);
+    } finally {
+      setLoader(false);
+    }
+  };
 
+  useEffect(() => {
     if (viewerId) {
       fetchViewerData();
     }
   }, [viewerId]);
+
+
+  // // Fetch data useEffect would go here
+  // useEffect(() => {
+  //   // Add your data fetching logic here
+  //   const fetchViewerData = async () => {
+  //     try {
+  //       setLoader(true)
+  //       axios
+  //         .get(`${DONOR_VIEW_DATA}/${viewerId}`, {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //           },
+  //         })
+  //         .then((res) => {
+  //           setDonor(res.data.individualCompany);
+  //           setDonorFam(res.data.family_details);
+  //           setCompany(res.data.company_details);
+  //           setFamGroup(res.data.related_group);
+  //           setLoader(false);
+  //         });
+  //     } catch (error) {
+  //       console.error("Error fetching donor data:", error);
+  //     }finally {
+  //       setLoader(false)
+  //     }
+  //   };
+
+  //   if (viewerId) {
+  //     fetchViewerData();
+  //   }
+  // }, [viewerId]);
 
   const relId = donor?.indicomp_related_id;
   const indid = donor?.id;
@@ -95,146 +123,45 @@ const DonorView = ({ viewerId, onClose }) => {
 
   if (loader) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spinner className="h-12 w-12" color="blue" />
+      <div className="h-screen bg-[#F8FAFC] p-4 sm:w-[300px] md:w-[57rem]  flex items-center justify-center ">
+        <div className="flex flex-col items-center space-y-2">
+          <svg
+            className="w-6 h-6 text-gray-700 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-20"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            />
+          </svg>
+          <span className="text-xs text-gray-600">Loading...</span>
+        </div>
       </div>
     );
   }
+  
+  
 
   return (
     <div className="bg-[#F8FAFC] p-4 sm:w-[300px] md:w-[57rem] overflow-y-auto custom-scroll-add">
-      {/* Header Section */}
-      {/* <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
-        <div className="bg-[#E1F5FA] p-4 rounded-t-xl border-b-2 border-green-500">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <IconInfoCircle className="w-5 h-5 text-green-600" />
-              <h2 className="text-sm font-semibold text-black">Donor View </h2>
-            </div>
-            <IconArrowBack
-              onClick={onClose}
-              className="cursor-pointer hover:text-red-600 transition-colors"
-            />
-          </div>
-        </div>
-
-        {donor && (
-          <div className="p-4 bg-white rounded-b-xl">
-            <div className="flex justify-between items-start">
-              <div className="space-y-1">
-                <h3 className="text-lg font-semibold text-black">
-                  {donor.indicomp_type === "Individual"
-                    ? `${donor.title} ${donor.indicomp_full_name}`
-                    : `M/s ${donor.indicomp_full_name}`}
-                </h3>
-                <p className="text-xs font-semibold text-black">
-                  FTS Id: {donor.indicomp_fts_id}
-                </p>
-                {famgroup.map((fam, key) => (
-                  <p key={key} className="text-xs font-semibold text-black">
-                    Family Group: {fam.indicomp_full_name}
-                  </p>
-                ))}
-              </div>
-
-              {localStorage.getItem("user_type_id") != 4 && (
-                <div className="flex gap-2">
-                  <button
-                    onClick={toggleOldReceiptDetailsDrawer(true)}
-                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                  >
-                    Old Receipts
-                  </button>
-                  <SwipeableDrawer
-                    anchor="right"
-                    open={oldreceiptDetailsDrawer}
-                    onClose={toggleOldReceiptDetailsDrawer(false)}
-                    onOpen={toggleOldReceiptDetailsDrawer(true)}
-                  >
-                    <OldReceipt
-                      onClose={toggleOldReceiptDetailsDrawer(false)}
-                      viewerId={viewerId}
-                    />
-                  </SwipeableDrawer>
-                  <button
-                    onClick={toggleReceiptDetailsDrawer(true)}
-                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-56 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                  >
-                    Receipts & Family Details
-                  </button>
-                  <SwipeableDrawer
-                    anchor="right"
-                    open={receiptDetailsDrawer}
-                    onClose={toggleReceiptDetailsDrawer(false)}
-                    onOpen={toggleReceiptDetailsDrawer(true)}
-                  >
-                    <ReceiptDetails
-                      onClose={toggleReceiptDetailsDrawer(false)}
-                      viewerId={viewerId}
-                    />
-                  </SwipeableDrawer>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div> */}
+  
 
       <div className="sticky top-0 z-10 bg-white shadow-md rounded-xl mb-6">
-        {/* <div className="bg-[#E1F5FA] p-4 sm:p-6 rounded-t-xl border-b-2 border-green-500">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <div className="flex items-center gap-3">
-              <IconInfoCircle className="w-5 h-5 text-green-600" />
-              <h2 className="text-sm sm:text-base font-semibold text-black">
-                Donor View
-              </h2>
-            </div>
-            <IconArrowBack
-              onClick={onClose}
-              className="cursor-pointer hover:text-red-600 transition-colors"
-            />
-          </div>
-
-
-
-
-        </div> */}
+       
 
         <div className="bg-[#E1F5FA] p-4 sm:p-6 rounded-t-xl border-b-2 border-green-500">
-          {/* Header Section */}
-          {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <div className="flex items-center gap-3">
-              <IconInfoCircle className="w-5 h-5 text-green-600" />
-
-              {donor && (
-                <div className="flex justify-between gap-3">
-                  <h3 className="text-base sm:text-lg font-semibold text-black">
-                    {donor.indicomp_type === "Individual"
-                      ? `${donor.title} ${donor.indicomp_full_name}`
-                      : `M/s ${donor.indicomp_full_name}`}
-                  </h3>
-
-                  <p className="text-xs sm:text-sm font-semibold text-black mt-2">
-                    FTS Id: {donor.indicomp_fts_id}
-                  </p>
-
-                  {famgroup.map((fam, key) => (
-                    <p
-                      key={key}
-                      className="text-xs sm:text-sm font-semibold text-black mt-2"
-                    >
-                      Family Group: {fam.indicomp_full_name}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <IconArrowBack
-              onClick={onClose}
-              className="cursor-pointer hover:text-red-600 transition-colors"
-            />
-          </div> */}
+       
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
             {/* Donor Information */}
@@ -312,69 +239,7 @@ const DonorView = ({ viewerId, onClose }) => {
           </div>
         </div>
 
-        {/* {donor && (
-          <div className="p-4 sm:p-6 bg-white rounded-b-xl">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-4"> */}
-        {/* <div className="space-y-1">
-                <h3 className="text-base sm:text-lg font-semibold text-black">
-                  {donor.indicomp_type === "Individual"
-                    ? `${donor.title} ${donor.indicomp_full_name}`
-                    : `M/s ${donor.indicomp_full_name}`}
-                </h3>
-                <p className="text-xs sm:text-sm font-semibold text-black">
-                  FTS Id: {donor.indicomp_fts_id}
-                </p>
-                {famgroup.map((fam, key) => (
-                  <p
-                    key={key}
-                    className="text-xs sm:text-sm font-semibold text-black"
-                  >
-                    Family Group: {fam.indicomp_full_name}
-                  </p>
-                ))}
-              </div> */}
-
-        {/* {localStorage.getItem("user_type_id") != 4 && (
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <button
-                    onClick={toggleOldReceiptDetailsDrawer(true)}
-                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-full sm:w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                  >
-                    Old Receipts
-                  </button>
-                  <SwipeableDrawer
-                    anchor="right"
-                    open={oldreceiptDetailsDrawer}
-                    onClose={toggleOldReceiptDetailsDrawer(false)}
-                    onOpen={toggleOldReceiptDetailsDrawer(true)}
-                  >
-                    <OldReceipt
-                      onClose={toggleOldReceiptDetailsDrawer(false)}
-                      viewerId={viewerId}
-                    />
-                  </SwipeableDrawer>
-                  <button
-                    onClick={toggleReceiptDetailsDrawer(true)}
-                    className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-full sm:w-56 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-                  >
-                    Receipts & Family Details
-                  </button>
-                  <SwipeableDrawer
-                    anchor="right"
-                    open={receiptDetailsDrawer}
-                    onClose={toggleReceiptDetailsDrawer(false)}
-                    onOpen={toggleReceiptDetailsDrawer(true)}
-                  >
-                    <ReceiptDetails
-                      onClose={toggleReceiptDetailsDrawer(false)}
-                      viewerId={viewerId}
-                    />
-                  </SwipeableDrawer>
-                </div>
-              )} */}
-        {/* </div>
-          </div>
-        )} */}
+      
       </div>
 
       {donor && (
