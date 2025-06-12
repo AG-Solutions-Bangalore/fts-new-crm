@@ -9,7 +9,7 @@ import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
 import { IconAirConditioningDisabled, IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
 import { DONOR_INDIVISUAL_CREATE_SUMBIT } from "../../../api";
-import { ContextPanel } from "../../../utils/ContextPanel";
+
 const gender = [
   {
     value: "Male",
@@ -38,6 +38,7 @@ const corrpreffer = [
 const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
   const { id } = useParams();
   const [isDuplicate, setIsDuplicate] = useState(false);
+    const [errors, setErrors] = useState({});
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -126,75 +127,18 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     }
   };
 
-  // const onChangePanNumber = (e) => {
-  //   setDonor({ ...donor, indicomp_pan_no: e.target.value });
-  // };
+  
 
   const onChangePanNumber = (e) => {
-    const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
+    const panValue = e.target.value;
+    // const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
     setDonor({ ...donor, indicomp_pan_no: panValue });
   };
 
  
-  // const fetchStateData = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const token = localStorage.getItem("token");
-  //     const response = await axios.get(`${BASE_URL}/api/fetch-states`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     setStates(response.data?.states);
-  //   } catch (error) {
-  //     console.error("Error fetching Life Time data", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const fetchDataSource = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const token = localStorage.getItem("token");
-  //     const response = await axios.get(`${BASE_URL}/api/fetch-datasource`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     setDatasource(response.data?.datasource);
-  //   } catch (error) {
-  //     console.error("Error fetching Life Time data", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const fetchPromoter = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const token = localStorage.getItem("token");
-  //     const response = await axios.get(`${BASE_URL}/api/fetch-promoter`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     setPromoters(response.data?.promoter);
-  //   } catch (error) {
-  //     console.error("Error fetching Life Time data", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
     if (isOpen) {
-      // fetchStateData();
-      // fetchDataSource();
-      // fetchPromoter();
+    
        const fetchData = async () => {
               try {
                 const token = localStorage.getItem("token");
@@ -277,15 +221,84 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     }
   }, [donor.indicomp_full_name, donor.indicomp_mobile_phone]);
 
+
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+  
+    if (!donor.indicomp_full_name?.trim()) {
+      newErrors.indicomp_full_name = 'Full Name is required';
+      isValid = false;
+    }
+  
+
+  
+    if (!donor.title) {
+      newErrors.title = 'Title is required';
+      isValid = false;
+    }
+  
+ 
+  
+    if (!donor.indicomp_gender) {
+      newErrors.indicomp_gender = 'Gender is required';
+      isValid = false;
+    }
+  
+ 
+  
+    if (!donor.indicomp_promoter) {
+      newErrors.indicomp_promoter = 'Promoter is required';
+      isValid = false;
+    }
+  
+    if (donor.indicomp_promoter === 'Other' && !donor.indicomp_newpromoter?.trim()) {
+      newErrors.indicomp_newpromoter = 'Please specify promoter';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_mobile_phone || !/^\d{10}$/.test(donor.indicomp_mobile_phone)) {
+      newErrors.indicomp_mobile_phone = 'Valid 10-digit Mobile Number is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_res_reg_city?.trim()) {
+      newErrors.indicomp_res_reg_city = 'City is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_res_reg_state) {
+      newErrors.indicomp_res_reg_state = 'State is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_res_reg_pin_code || !/^\d{6}$/.test(donor.indicomp_res_reg_pin_code)) {
+      newErrors.indicomp_res_reg_pin_code = 'Valid 6-digit Pincode is required';
+      isValid = false;
+    }
+  
+    if (!donor.indicomp_corr_preffer) {
+      newErrors.indicomp_corr_preffer = 'Correspondence Preference is required';
+      isValid = false;
+    }
+  
+    setErrors(newErrors);
+    return { isValid, errors: newErrors };
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = document.getElementById("addIndiv");
-    if (!form.checkValidity()) {
-      toast.error("Fill all required");
-      setIsButtonDisabled(false);
-
-      return;
-    }
+   
+    const { isValid, errors } = validateForm();
+        
+        if (!isValid) {
+          const firstError = Object.values(errors)[0];
+          toast.error(firstError);
+          setIsButtonDisabled(false);
+          return;
+        }
     try {
 
     const isNotDuplicate = await checkDuplicateDonor();
@@ -346,6 +359,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     });
 
     if (response.data.code === 200) {
+      fetchDonorData();
       toast.success(response.data.msg);
      
       setDonor({
@@ -384,7 +398,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
         indicomp_off_branch_pin_code: "",
         indicomp_corr_preffer: "Residence",
       });
-      fetchDonorData();
+     
       onClose();
     } else if (response.data.code === 400) {
       toast.error(response.data.msg);
@@ -431,8 +445,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
       </div>
       <hr />
       <form
-        onSubmit={handleSubmit}
-        id="addIndiv"
+       
         className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
       >
         {/* Personal Details Section */}
@@ -458,6 +471,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                   </option>
                 ))}
               </select>
+              {errors?.title && (
+    <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+  )}
             </div>
 
             <div>
@@ -470,6 +486,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                 className={`${inputClass} ${isDuplicate ? 'border-red-500' : ''}`}
                 required
               />
+                 {errors?.indicomp_full_name && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_full_name}</p>
+  )}
                  {isDuplicate && (
                 <p className="text-red-500 text-xs mt-1 flex items-center">
                   <IconAirConditioningDisabled className="w-4 h-4 mr-1" />
@@ -516,6 +535,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_gender && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_gender}</p>
+  )}
             </div>
 
             <div>
@@ -551,7 +573,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
 
             <div>
               <InputMask
-                mask="aaaaa 9999 a"
+                mask="aaaaa9999a"
                 value={donor.indicomp_pan_no}
                 onChange={(e) => onChangePanNumber(e)}
                 formatChars={{
@@ -614,6 +636,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_promoter && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_promoter}</p>
+  )}
             </div>
             {donor.indicomp_promoter === "Other" && (
               <div>
@@ -718,6 +743,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
     Duplicate donor:  Mobile already exist
   </p>
 )}
+   {errors?.indicomp_mobile_phone && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_mobile_phone}</p>
+  )}
             </div>
 
             <div>
@@ -806,6 +834,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                 required
                 className={inputClass}
               />
+                     {errors?.indicomp_res_reg_city && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_city}</p>
+  )}
             </div>
 
             <div>
@@ -824,6 +855,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_res_reg_state && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_state}</p>
+  )}
             </div>
 
             <div>
@@ -837,6 +871,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                 required
                 className={inputClass}
               />
+                    {errors?.indicomp_res_reg_pin_code && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_pin_code}</p>
+  )}
             </div>
           </div>
         </div>
@@ -937,6 +974,9 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_corr_preffer && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_corr_preffer}</p>
+  )}
             </div>
           </div>
         </div>
@@ -945,6 +985,7 @@ const AddIndivisual = ({ onClose, fetchDonorData, isOpen ,isPanelUp}) => {
         <div className="flex gap-4 justify-start">
           <button
             type="submit"
+            onClick={(e)=>handleSubmit(e)}
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >

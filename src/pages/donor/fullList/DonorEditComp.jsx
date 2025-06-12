@@ -27,7 +27,11 @@ import belongs_to from "../../../utils/BelongTo";
 import company_type from "../../../utils/CompanyType";
 import { IconArrowBack } from "@tabler/icons-react";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { DONOR_COMPANY_EDIT_FETCH, DONOR_COMPANY_FAMILY_GROUP_UPDATE, DONOR_COMPANY_UPDATE_SUMBIT } from "../../../api";
+import {
+  DONOR_COMPANY_EDIT_FETCH,
+  DONOR_COMPANY_FAMILY_GROUP_UPDATE,
+  DONOR_COMPANY_UPDATE_SUMBIT,
+} from "../../../api";
 const gender = [
   {
     value: "Male",
@@ -65,8 +69,9 @@ const corrpreffer = [
   },
 ];
 
-const DonorEditComp = ({ id ,isPanelUp }) => {
+const DonorEditComp = ({ id, isPanelUp }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+ const [errors, setErrors] = useState({});
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -158,7 +163,8 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
   //   setDonor({ ...donor, indicomp_pan_no: e.target.value });
   // };
   const onChangePanNumber = (e) => {
-    const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
+    // const panValue = e.target.value.toUpperCase().replace(/\s/g, '');
+    const panValue = e.target.value;
     setDonor({ ...donor, indicomp_pan_no: panValue });
   };
   //   for modal
@@ -212,14 +218,11 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${DONOR_COMPANY_EDIT_FETCH}/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${DONOR_COMPANY_EDIT_FETCH}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setDonor(response.data?.individualCompany);
     } catch (error) {
@@ -292,75 +295,180 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
   }, []);
   useEffect(() => {
     let timeoutId;
-      timeoutId = setTimeout(() => {
-        if (isPanelUp.error == "Maintenance") {
-          localStorage.clear();
-          navigate("/maintenance");
-        }
-      }, 5000); 
-
-
+    timeoutId = setTimeout(() => {
+      if (isPanelUp.error == "Maintenance") {
+        localStorage.clear();
+        navigate("/maintenance");
+      }
+    }, 5000);
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [ isPanelUp, navigate]);
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    setIsButtonDisabled(true);
-    const data = {
-      indicomp_full_name: donor.indicomp_full_name,
-      title: donor.title,
-      indicomp_type: donor.indicomp_type,
-      indicomp_com_contact_name: donor.indicomp_com_contact_name,
-      indicomp_com_contact_designation: donor.indicomp_com_contact_designation,
-      indicomp_gender: donor.indicomp_gender,
-      indicomp_dob_annualday: donor.indicomp_dob_annualday,
-      indicomp_pan_no: donor.indicomp_pan_no,
-      indicomp_image_logo: donor.indicomp_image_logo,
-      indicomp_remarks: donor.indicomp_remarks,
-      indicomp_promoter: donor.indicomp_promoter,
-      indicomp_newpromoter: donor.indicomp_newpromoter,
-      indicomp_source: donor.indicomp_source,
-      indicomp_csr: donor.indicomp_csr,
-      indicomp_mobile_phone: donor.indicomp_mobile_phone,
-      indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
-      indicomp_email: donor.indicomp_email,
-      indicomp_website: donor.indicomp_website,
-      indicomp_res_reg_address: donor.indicomp_res_reg_address,
-      indicomp_res_reg_area: donor.indicomp_res_reg_area,
-      indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
-      indicomp_res_reg_city: donor.indicomp_res_reg_city,
-      indicomp_res_reg_state: donor.indicomp_res_reg_state,
-      indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
-      indicomp_off_branch_address: donor.indicomp_off_branch_address,
-      indicomp_off_branch_area: donor.indicomp_off_branch_area,
-      indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
-      indicomp_off_branch_city: donor.indicomp_off_branch_city,
-      indicomp_off_branch_state: donor.indicomp_off_branch_state,
-      indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
-      indicomp_corr_preffer: donor.indicomp_corr_preffer,
-      indicomp_belongs_to: donor.indicomp_belongs_to,
-      indicomp_donor_type: donor.indicomp_donor_type,
-    };
+  }, [isPanelUp, navigate]);
 
-    const form = document.getElementById("addIndiv");
-    if (!form.checkValidity()) {
-      toast.error("Fill all required");
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    if (!donor.indicomp_full_name?.trim()) {
+      newErrors.indicomp_full_name = "Company Name is required";
+      isValid = false;
+    }
+
+    if (!donor.indicomp_type) {
+      newErrors.indicomp_type = "Company Type is required";
+      isValid = false;
+    }
+    if (!donor.indicomp_com_contact_name) {
+      newErrors.indicomp_com_contact_name = "Contact Name is required";
+      isValid = false;
+    }
+
+    if (!donor.title) {
+      newErrors.title = "Title is required";
+      isValid = false;
+    }
+
+   
+
+    if (!donor.indicomp_gender) {
+      newErrors.indicomp_gender = "Gender is required";
+      isValid = false;
+    }
+
+    if (
+      !donor.indicomp_pan_no ||
+      !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(donor.indicomp_pan_no)
+    ) {
+      newErrors.indicomp_pan_no =
+        "Valid PAN Number is required (format: AAAAA9999A)";
+      isValid = false;
+    }
+
+    if (!donor.indicomp_promoter) {
+      newErrors.indicomp_promoter = "Promoter is required";
+      isValid = false;
+    }
+
+    if (
+      donor.indicomp_promoter === "Other" &&
+      !donor.indicomp_newpromoter?.trim()
+    ) {
+      newErrors.indicomp_newpromoter = "Please specify promoter";
+      isValid = false;
+    }
+
+    if (
+      !donor.indicomp_mobile_phone ||
+      !/^\d{10}$/.test(donor.indicomp_mobile_phone)
+    ) {
+      newErrors.indicomp_mobile_phone =
+        "Valid 10-digit Mobile Number is required";
+      isValid = false;
+    }
+
+    if (!donor.indicomp_res_reg_city?.trim()) {
+      newErrors.indicomp_res_reg_city = "City is required";
+      isValid = false;
+    }
+
+    if (!donor.indicomp_res_reg_state) {
+      newErrors.indicomp_res_reg_state = "State is required";
+      isValid = false;
+    }
+
+    if (
+      !donor.indicomp_res_reg_pin_code ||
+      !/^\d{6}$/.test(donor.indicomp_res_reg_pin_code)
+    ) {
+      newErrors.indicomp_res_reg_pin_code = "Valid 6-digit Pincode is required";
+      isValid = false;
+    }
+
+    if (!donor.indicomp_corr_preffer) {
+      newErrors.indicomp_corr_preffer = "Correspondence Preference is required";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return { isValid, errors: newErrors };
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const { isValid, errors } = validateForm();
+
+    if (!isValid) {
+      const firstError = Object.values(errors)[0];
+      toast.error(firstError);
+      setIsButtonDisabled(false);
       return;
     }
 
-    axios({
-      url: DONOR_COMPANY_UPDATE_SUMBIT + `${id}`,
-      method: "PUT",
-      data,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      toast.success("Company Data Updated Sucessfully");
-      navigate("/donor-list");
-    });
+    try {
+      const data = {
+        indicomp_full_name: donor.indicomp_full_name,
+        title: donor.title,
+        indicomp_type: donor.indicomp_type,
+        indicomp_com_contact_name: donor.indicomp_com_contact_name,
+        indicomp_com_contact_designation:
+          donor.indicomp_com_contact_designation,
+        indicomp_gender: donor.indicomp_gender,
+        indicomp_dob_annualday: donor.indicomp_dob_annualday,
+        indicomp_pan_no: donor.indicomp_pan_no,
+        indicomp_image_logo: donor.indicomp_image_logo,
+        indicomp_remarks: donor.indicomp_remarks,
+        indicomp_promoter: donor.indicomp_promoter,
+        indicomp_newpromoter: donor.indicomp_newpromoter,
+        indicomp_source: donor.indicomp_source,
+        indicomp_csr: donor.indicomp_csr,
+        indicomp_mobile_phone: donor.indicomp_mobile_phone,
+        indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
+        indicomp_email: donor.indicomp_email,
+        indicomp_website: donor.indicomp_website,
+        indicomp_res_reg_address: donor.indicomp_res_reg_address,
+        indicomp_res_reg_area: donor.indicomp_res_reg_area,
+        indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
+        indicomp_res_reg_city: donor.indicomp_res_reg_city,
+        indicomp_res_reg_state: donor.indicomp_res_reg_state,
+        indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
+        indicomp_off_branch_address: donor.indicomp_off_branch_address,
+        indicomp_off_branch_area: donor.indicomp_off_branch_area,
+        indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
+        indicomp_off_branch_city: donor.indicomp_off_branch_city,
+        indicomp_off_branch_state: donor.indicomp_off_branch_state,
+        indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
+        indicomp_corr_preffer: donor.indicomp_corr_preffer,
+        indicomp_belongs_to: donor.indicomp_belongs_to,
+        indicomp_donor_type: donor.indicomp_donor_type,
+      };
+
+      setIsButtonDisabled(true);
+      const response = await axios({
+        url: DONOR_COMPANY_UPDATE_SUMBIT + `${id}`,
+        method: "PUT",
+        data,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.data.code === 200) {
+        navigate("/donor-list");
+
+        toast.success(response.data.msg);
+      } else if (response.data.code === 400) {
+        toast.error(response.data.msg);
+      } else {
+        toast.error("Unexpected Error");
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error("An error occurred during updating");
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
 
   const FormLabel = ({ children, required }) => (
@@ -390,8 +498,7 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
       </div>
       <hr />
       <form
-        onSubmit={handleUpdate}
-        id="addIndiv"
+     
         className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
         autoComplete="off"
       >
@@ -416,6 +523,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
               <p className="text-xs text-gray-500 mt-1">
                 Please don't add M/s before name
               </p>
+              {errors?.indicomp_full_name && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_full_name}</p>
+  )}
             </div>
 
             <div>
@@ -434,6 +544,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_type && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_type}</p>
+  )}
             </div>
 
             <div>
@@ -452,6 +565,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.title && (
+    <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+  )}
             </div>
 
             <div>
@@ -464,6 +580,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                 className={inputClass}
                 required
               />
+                 {errors?.indicomp_com_contact_name && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_com_contact_name}</p>
+  )}
             </div>
 
             <div>
@@ -493,6 +612,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_gender && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_gender}</p>
+  )}
             </div>
 
             <div>
@@ -508,7 +630,7 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
 
             <div>
               <InputMask
-                mask="aaaaa 9999 a"
+                mask="aaaaa9999a"
                 formatChars={{
                   9: "[0-9]",
                   a: "[A-Z]",
@@ -529,6 +651,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                   </div>
                 )}
               </InputMask>
+              {errors?.indicomp_pan_no && (
+        <p className="text-red-500 text-xs mt-1">{errors.indicomp_pan_no}</p>
+      )}
             </div>
 
             <div>
@@ -574,6 +699,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_promoter && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_promoter}</p>
+  )}
             </div>
 
             {donor.indicomp_promoter === "Other" && (
@@ -679,6 +807,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                 className={inputClass}
                 required
               />
+                {errors?.indicomp_mobile_phone && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_mobile_phone}</p>
+  )}
             </div>
 
             <div>
@@ -766,6 +897,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                 required
                 className={inputClass}
               />
+                   {errors?.indicomp_res_reg_city && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_city}</p>
+  )}
             </div>
 
             <div>
@@ -784,6 +918,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_res_reg_state && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_state}</p>
+  )}
             </div>
 
             <div>
@@ -797,6 +934,9 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                 required
                 className={inputClass}
               />
+                {errors?.indicomp_res_reg_pin_code && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_pin_code}</p>
+  )}
             </div>
           </div>
         </div>
@@ -896,12 +1036,16 @@ const DonorEditComp = ({ id ,isPanelUp }) => {
                   </option>
                 ))}
               </select>
+              {errors?.indicomp_corr_preffer && (
+    <p className="text-red-500 text-xs mt-1">{errors.indicomp_corr_preffer}</p>
+  )}
             </div>
           </div>
         </div>
         <div className="flex flex-wrap gap-4 sm:justify-center md:justify-start items-center">
           <button
             type="submit"
+            onClick={(e)=>handleUpdate(e)}
             color="blue"
             disabled={isButtonDisabled}
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md px-6 py-2"
