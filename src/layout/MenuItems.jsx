@@ -51,6 +51,12 @@ import {
           href: "/change-promoter",
         },
         {
+          id: "superadmin-chapters",
+          title: "Chapter-S",
+          icon: Network,
+          href: "/chapter",
+        },
+        {
           id: "change-receipt-donor",
           title: "C-receipt Donor",
           icon: DollarSign,

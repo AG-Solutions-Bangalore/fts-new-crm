@@ -9,11 +9,13 @@ import {
   IconArrowBack,
   IconCircleX,
   IconInfoCircle,
+  IconMail,
 } from "@tabler/icons-react";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import SelectInput from "../../components/common/SelectInput";
 import { encryptId } from "../../utils/encyrption/Encyrption";
 import { ADMIN_CHAPTER_CREATE, ADMIN_CHAPTER_DATA_CHAPTER_LIST, ADMIN_CHAPTER_EDIT_UPDATE, ADMIN_CHAPTER_UPDATE, navigateToAdminSchoolView } from "../../api";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 const committee_type = [
   {
     value: "President",
@@ -48,6 +50,7 @@ const Chapter = () => {
   const navigate = useNavigate();
   const id = localStorage.getItem("chapter_id");
   const [error, setError] = useState("");
+  const userTypeId = localStorage.getItem("user_type_id");
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(false);
@@ -311,7 +314,31 @@ const Chapter = () => {
       setIsButtonDisabled1(false);
     }
   };
+  const handleClickWhatsApp = (phone, cpassword) => {
+    const message = `Hey, your ID is ${phone} and your password is ${cpassword}`;
+    const encodedMsg = encodeURIComponent(message);
+    const desktopURL = `whatsapp://send?phone=91${phone}&text=${encodedMsg}`;
+    const webURL = `https://wa.me/91${phone}?text=${encodedMsg}`;
+  
+   
+    const timeout = setTimeout(() => {
+    
+      window.open(webURL, "_blank");
+    }, 500);
+  
+ 
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = desktopURL;
+    document.body.appendChild(iframe);
+  
 
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+      clearTimeout(timeout);
+    }, 1000);
+  };
+  
   const columns = [
     {
       accessorKey: "first_name",
@@ -319,60 +346,89 @@ const Chapter = () => {
     },
 
     { accessorKey: "email", header: "Email" },
+    ...(userTypeId === "5"
+      ? [
+          {
+            accessorKey: "cpassword",
+            header: "Password",
+          },
+        ]
+      : []),
     { accessorKey: "phone", header: "Phone" },
     { accessorKey: "user_status", header: "Status" },
-    {
-      accessorKey: "edit",
-      header: "Edit",
-      enableColumnFilter: false,
-      Cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <button
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-            onClick={() => {
-              setUser({
-                ...user,
-                name: row.original.name,
-                email: row.original.email,
-                phone: row.original.phone,
-                first_name: row.original.first_name,
-                last_name: row.original.last_name,
-                user_type_id: row.original.user_type_id,
-                user_status: row.original.user_status,
-              });
-              setSelectedUserId(row.original.id);
-              handleClickOpen1();
-            }}
-          >
-            Edit
-          </button>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "school",
-      header: "School",
-      enableColumnFilter: false,
-      Cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <button
-            className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse  text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2"
-            // onClick={() => navigate(`/chapter/view-shool/${row.original.id}`)}
-            // onClick={() => {
-            //   const encryptedId = encryptId(row.original.id);
-            //   navigate(
-            //     `/chapter/view-shool/${encodeURIComponent(encryptedId)}`
-            //   );
-            // }}
-            onClick={() => {
-              navigateToAdminSchoolView(navigate,row.original.id)
-            }}
-          >
-            School
-          </button>
-        </div>
-      ),
-    },
+   {
+       accessorKey: "edit",
+       header: "Actions",
+       enableColumnFilter: false,
+       Cell: ({ row }) => (
+         <div className="flex items-center space-x-2">
+           {/* Edit Button */}
+           <button
+             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+             onClick={() => {
+               setUser({
+                 ...user,
+                 name: row.original.name,
+                 email: row.original.email,
+                 phone: row.original.phone,
+                 first_name: row.original.first_name,
+                 last_name: row.original.last_name,
+                 user_type_id: row.original.user_type_id,
+                 user_status: row.original.user_status,
+               });
+               setSelectedUserId(row.original.id);
+               handleClickOpen1();
+             }}
+           >
+             Edit
+           </button>
+   {userTypeId === "5" && (
+
+    <>
+    {/* Gmail Icon Button */}
+    <a
+             href={`mailto:${row.original.email}`}
+             title="Send Email"
+             className="text-blue-600 hover:text-red-600"
+           >
+             <IconMail className="w-5 h-5" />
+           </a>
+   
+           {/* WhatsApp Icon Button */}
+           <button
+  onClick={() =>
+    handleClickWhatsApp(row.original.phone, row.original.cpassword)
+  }
+  title="Send WhatsApp Message"
+  className="text-green-600 hover:text-green-800"
+>
+  <IconBrandWhatsapp className="w-5 h-5" />
+</button>
+    
+    </>
+   )}
+           
+
+         </div>
+       ),
+     },
+     {
+       accessorKey: "school",
+       header: "School",
+       enableColumnFilter: false,
+       Cell: ({ row }) => (
+         <div className="flex items-center space-x-2">
+           <button
+             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
+             onClick={() => {
+               navigateToAdminSchoolView(navigate, row.original.id);
+             }}
+           >
+             School
+           </button>
+         </div>
+       ),
+     },
   ];
 
   const table = useMantineReactTable({
