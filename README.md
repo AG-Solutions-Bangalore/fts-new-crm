@@ -147,3 +147,8 @@ We welcome contributions! If you'd like to contribute:
 ## **License**
 
 📜 This project is licensed under the **MIT License**.
+
+
+## **Pending**
+ membership dashboard 
+ same copy of new receipt in old receipt

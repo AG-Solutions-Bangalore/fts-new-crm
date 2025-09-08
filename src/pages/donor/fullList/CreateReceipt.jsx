@@ -91,6 +91,17 @@ const donation_type_2 = [
   },
 ];
 
+const csr_options = [
+  {
+    value: 'Yes',
+    label: "Yes",
+  },
+  {
+    value: 'No',
+    label: "No",
+  },
+];
+
 const CreateReceipt = () => {
   const { id } = useParams();
   // const decryptedId = decryptId(id);
@@ -141,6 +152,7 @@ const CreateReceipt = () => {
     donor_promoter: "",
     donor_source: "",
     with_out_panno: "",
+    receipt_csr: "No",
   });
 
   const [states, setStates] = useState([]);
@@ -161,7 +173,9 @@ const CreateReceipt = () => {
         [stateName]: value,
       };
 
-   
+      if (stateName === "receipt_donation_type" && value === "Membership") {
+        updatedDonor.receipt_total_amount = "1000";
+      }
       if (stateName === "receipt_exemption_type" || stateName === "receipt_total_amount") {
         // If 80G is selected and amount > 2000, reset transaction type if it was Cash
         if (
@@ -206,6 +220,9 @@ const CreateReceipt = () => {
   const onInputChange = (e) => {
     const { name, value } = e.target;
     const digitFields = ["receipt_total_amount", "receipt_no_of_ots"];
+    if (name === "receipt_total_amount" && donor.receipt_donation_type === "Membership") {
+      return;
+    }
 
     if (digitFields.includes(name)) {
       if (validateOnlyDigits(value)) {
@@ -371,7 +388,10 @@ const CreateReceipt = () => {
         isValid = false;
       }
     }
-
+    if (donor.receipt_csr === undefined || donor.receipt_csr === null) {
+      newErrors.receipt_csr = "CSR is required";
+      isValid = false;
+    }
     setErrors(newErrors);
     return { isValid, errors: newErrors };
   };
@@ -425,6 +445,7 @@ const CreateReceipt = () => {
     formData.append("donor_promoter", userdata.indicomp_promoter);
     formData.append("donor_source", donor.donor_source);
     formData.append("with_out_panno", donor.with_out_panno);
+    formData.append("receipt_csr", donor.receipt_csr);
     
     try {
       setIsButtonDisabled(true);
@@ -477,9 +498,9 @@ const CreateReceipt = () => {
   );
 
   const inputClassSelect =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-green-500";
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-blue-500";
   const inputClass =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
+    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500";
   
   return (
     <Layout>
@@ -609,6 +630,19 @@ const CreateReceipt = () => {
                   </p>
                 )}
               </div>
+              <div className="col-span-0 lg:col-span-2">
+                <FormLabel required>CSR</FormLabel>
+                {renderButtonGroup(
+                  csr_options,
+                  "receipt_csr",
+                  donor.receipt_csr
+                )}
+                {errors?.receipt_csr && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.receipt_csr}
+                  </p>
+                )}
+              </div>
               <div>
                 <FormLabel required>Total Amount</FormLabel>
                 <input
@@ -617,8 +651,10 @@ const CreateReceipt = () => {
                   name="receipt_total_amount"
                   value={donor.receipt_total_amount}
                   onChange={(e) => onInputChange(e)}
-                  className={inputClass}
+             
+                  className={`${inputClass} ${donor.receipt_donation_type === "Membership" ? "cursor-not-allowed":""}`}
                   required
+                  disabled={donor.receipt_donation_type === "Membership"}
                 />
                 {errors?.receipt_total_amount && (
                   <p className="text-red-500 text-xs mt-1">

@@ -22,6 +22,7 @@ import { IconArrowBack } from "@tabler/icons-react";
 
 import { CgTally } from "react-icons/cg";
 import { fetchReceiptOneSendMail, fetchReceiptViewById, RECEIPT_VIEW_SEND_EMAIL, RECEIPT_VIEW_SUMBIT } from "../../../api";
+import { Loader } from "lucide-react";
 
 const ReceiptOne = () => {
   const tableRef = useRef(null);
@@ -39,7 +40,11 @@ const ReceiptOne = () => {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const amountInWords = numWords(receipts.receipt_total_amount);
- 
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isSavingPDF, setIsSavingPDF] = useState(false);
+  const [isPrintingReceipt, setIsPrintingReceipt] = useState(false);
+  const [isPrintingLetter, setIsPrintingLetter] = useState(false);
+  
   const navigate = useNavigate();
 
 
@@ -47,6 +52,7 @@ const ReceiptOne = () => {
     const input = tableRef.current;
   
     if (input) {
+      setIsSavingPDF(true);
       const originalStyle = input.style.cssText;
   
       
@@ -104,6 +110,8 @@ const ReceiptOne = () => {
           console.error("Error generating PDF: ", error);
           document.body.removeChild(clone);
           input.style.cssText = originalStyle;
+        }).finally(() => {
+          setIsSavingPDF(false); // Hide loading animation
         });
     }
   };
@@ -164,6 +172,8 @@ const ReceiptOne = () => {
  
        }
        `,
+       onBeforeGetContent: () => setIsPrintingLetter(true), 
+       onAfterPrint: () => setIsPrintingLetter(false),
    });
    const handlReceiptPdf = useReactToPrint({
      content: () => tableRef.current,
@@ -197,8 +207,11 @@ const ReceiptOne = () => {
  
        }
        `,
+       onBeforeGetContent: () => setIsPrintingReceipt(true), 
+       onAfterPrint: () => setIsPrintingReceipt(false),
+      
    });
- useEffect(() => {
+ 
     const fetchData = async () => {
       try {
         const data = await fetchReceiptViewById(id);
@@ -212,7 +225,7 @@ const ReceiptOne = () => {
         toast.error("Failed to fetch viewer details");
       }
     };
-    
+    useEffect(() => {
     fetchData();
   }, [id]);
   const [recepitcontrol, setRecepitControl] = useState({});
@@ -246,58 +259,70 @@ const ReceiptOne = () => {
   //     alert("Email Sent Successfully");
   //   });
   // };
-  
-  const sendEmail = async (e) => {
+
+
+    const sendEmail = async (e) => {
+  e.preventDefault();
+  setIsSendingEmail(true); // Show loading animation
+  try {
+    const response = await fetchReceiptOneSendMail(theId);
+    if (response.code == 200) {
+       fetchData();
+      toast.success(response.msg);
+    } else {
+      toast.error(response.msg);
+    }
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Sent mail error");
+  } finally {
+    setIsSendingEmail(false); 
+  }
+};
+
+
+    const onSubmit = async (e) => {
       e.preventDefault();
+      const form = e.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      setIsButtonDisabled(true);
+      const formData = {
+        indicomp_email: donor1.indicomp_email,
+      };
+      
       try {
-        const response = await fetchReceiptOneSendMail(theId);
-  
-        if (response.data.code === 200) {
-          toast.success(response.data.msg);
+        const response = await axios.put(
+          `${RECEIPT_VIEW_SUMBIT}/${localStorage.getItem("ftsid")}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        
+        console.log("sumbitmail", response);
+        if (response?.data.code == 200) {
+          handleClose();
+          fetchData(); // This will refresh the receipt data
+          toast.success(response?.data.msg);
+          
+          // Reset the email form
+          setDonor1({
+            indicomp_email: "",
+          });
         } else {
-          toast.error(response.data.msg);
+          toast.error(response?.data.msg);
         }
       } catch (error) {
-        toast.error(error.response?.data?.msg || "Network error occurred.");
+        console.error("Error updating Data :", error);
+        toast.error(error.response?.data?.message || "Error on updating the mail");
+      } finally {
+        setIsButtonDisabled(false);
       }
     };
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-    setIsButtonDisabled(true);
-    const formData = {
-      indicomp_email: donor1.indicomp_email,
-    };
-    // console.log("formdata", formData);
-    try {
-      const response = await axios.put(
-        `${RECEIPT_VIEW_SUMBIT}/${localStorage.getItem("ftsid")}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.status == "200") {
-        handleClose();
-        fetchDataReceipt();
-        toast.success("Data Added Successfully");
-      } else {
-        toast.error("Data  Duplicate Entry");
-      }
-    } catch (error) {
-      console.error("Error updating Data :", error);
-      toast.error("Error updating Data ");
-    } finally {
-      setIsButtonDisabled(false);
-    }
-  };
   const tallyReceipt = receipts?.tally_status;
   const FormLabel = ({ children, required }) => (
     <label className="block text-sm font-semibold text-black mb-1 ">
@@ -310,7 +335,25 @@ const ReceiptOne = () => {
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
     <>
-    <div className="flex flex-col md:flex-row justify-between items-center bg-white p-4 mb-4 rounded-lg shadow-md gap-2">
+    <div className=" flex flex-col md:flex-row justify-between items-center bg-white p-4 mb-4 rounded-lg shadow-md gap-2">
+
+ 
+{isSendingEmail && (
+   <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-transparent z-[1000]">
+    <dotlottie-wc
+      src="https://lottie.host/679b7f3e-ee58-4a7e-b257-3702ec353e9b/GSmg0QDcmE.lottie"
+      style={{
+        width: "300px",
+        height: "300px",
+      }}
+      speed="1"
+      autoplay
+      loop
+    ></dotlottie-wc>
+  </div>
+)}
+
+
       <h1 className="border-b-2 font-normal border-dashed border-orange-800 flex items-center">
           <IconArrowBack
             onClick={() => navigate("/receipt-list")}
@@ -326,35 +369,77 @@ const ReceiptOne = () => {
               <button
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handleSavePDF}
+                disabled={isSavingPDF}
               >
-                <IconFileTypePdf className="h-5 w-5 text-black" />
-                <span>Pdf</span>
+             {isSavingPDF ? (
+    <Loader className="h-5 w-5 text-black animate-spin"/>
+  ) : (
+    <>
+    <IconFileTypePdf className="h-5 w-5 text-black" />
+
+    </>
+  )}
+      <span>Pdf</span>
+               
               </button>
 
               {receipts?.individual_company?.indicomp_email && (
                 <button
-                  className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
+                  className="flex flex-col  items-center text-blue-600 hover:text-blue-800 text-xs"
                   onClick={sendEmail}
+                  disabled={isSendingEmail}
                 >
-                  <IconMail className="h-5 w-5 text-black" />
-                  <span>Sent {receipts.receipt_email_count || 0} times</span>
+                 
+         
+
+               
+
+
+                    {isSendingEmail ? (
+<>
+                      <Loader className="h-5 w-5 text-black animate-spin"/>
+                      <span>Sending...</span>
+                      </>
+    ) : (
+    <>
+<IconMail className="h-5 w-5 text-black" /> 
+                   <span>Sent {receipts.receipt_email_count || 0} times</span> 
+                   </>
+    )}
                 </button>
               )}
 
               <button
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handlReceiptPdf}
+                disabled={isPrintingReceipt}
               >
-                <IconPrinter className="h-5 w-5 text-black" />
-                <span>Receipt</span>
+                     {isPrintingReceipt ? (
+   <Loader className="h-5 w-5 text-black animate-spin"/>
+  ) : (
+    <>
+    <IconPrinter className="h-5 w-5 text-black" />
+ 
+    </>
+  )}
+     <span> Receipt</span>
               </button>
 
               <button
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handlPrintPdf}
+                disabled={isPrintingLetter}
               >
-                <IconPrinter className="h-5 w-5 text-black" />
-                <span> Letter</span>
+                  {isPrintingLetter ? (
+    <Loader className="h-5 w-5 text-black animate-spin"/>
+  ) : (
+    <>
+    <IconPrinter className="h-5 w-5 text-black" />
+  
+    </>
+  )}
+    <span> Letter</span>
+               
               </button>
 
               {receipts?.individual_company?.indicomp_email === null && (
@@ -761,13 +846,13 @@ const ReceiptOne = () => {
                     </div>
                   </div>
                   <div className="mt-5 flex justify-center">
-                    <button
-                      disabled={isButtonDisabled}
-                      type="submit"
-                      className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2"
-                    >
-                      {isButtonDisabled ? "Submiting..." : "Submit"}
-                    </button>
+                  <button
+  disabled={isButtonDisabled}
+  type="submit"
+  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2"
+>
+  {isButtonDisabled ? "Submitting..." : "Submit"} 
+</button>
                   </div>
                 </div>
               </CardContent>
@@ -969,7 +1054,7 @@ const ReceiptOne = () => {
                            <div>
                              <p className=" font-serif text-[18px] text-justify my-5 leading-[1.2rem]">
                                We acknowledge with thanks receipt of your membership
-                               subscription for the Year. Our receipt for the same is
+                               subscription upto {receipts?.m_ship_vailidity}. Our receipt for the same is
                                enclosed herewith.
                              </p>
                            </div>
