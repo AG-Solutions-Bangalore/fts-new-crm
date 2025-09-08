@@ -182,12 +182,12 @@ import {
               icon: Receipt,
               href: "/receipt-list",
             },
-            {
-              id: "receipt-old-list",
-              title: "Old Receipts",
-              icon: Receipt,
-              href: "/receipt-old-list",
-            },
+            // {
+            //   id: "receipt-old-list",
+            //   title: "Old Receipts",
+            //   icon: Receipt,
+            //   href: "/receipt-old-list",
+            // },
             {
               id: "suspense-list",
               title: "Suspense Receipts",

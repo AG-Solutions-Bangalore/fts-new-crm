@@ -72,6 +72,16 @@ const donation_type_2 = [
     label: "General",
   },
 ];
+const csr_options = [
+  {
+    value: 'Yes',
+    label: "Yes",
+  },
+  {
+    value: 'No',
+    label: "No",
+  },
+];
 
 const ReceiptEdit = () => {
   const { id } = useParams();
@@ -101,6 +111,7 @@ const ReceiptEdit = () => {
     receipt_update_by: "",
     donor_promoter: "",
     donor_source: "",
+    receipt_csr: "No",
     individual_company: {
       indicomp_full_name: "",
       indicomp_pan_no: "",
@@ -228,6 +239,7 @@ const ReceiptEdit = () => {
       receipt_no_of_ots: donor.receipt_no_of_ots,
       donor_promoter: donor.donor_promoter,
       donor_source: donor.donor_source,
+      receipt_csr: donor.receipt_csr,
     };
     try {
       const res = await fetchReceiptEditByIdUpdate(id, formData);
@@ -388,6 +400,30 @@ const ReceiptEdit = () => {
                 </select>
                 <p className="text-gray-600 text-xs px-2 pt-1">
                   Please select your Donation Type
+                </p>
+              </div>
+              <div>
+                <FormLabel required>CSR</FormLabel>
+                <select
+                  name="receipt_csr"
+                  value={donor.receipt_csr}
+                  onChange={(e) => onInputChange(e)}
+                  required
+                  className={inputClassSelect}
+                >
+                  <option value="">Select CSR </option>
+                  {csr_options.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                      >
+                        {option.value}
+                      </option>
+                    ))}
+                  
+                </select>
+                <p className="text-gray-600 text-xs px-2 pt-1">
+                  Please select  CSR 
                 </p>
               </div>
 

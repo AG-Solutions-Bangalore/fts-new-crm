@@ -844,7 +844,7 @@ export const navigateToDonorEdit = (navigate, viewId) => {
       if (!token) throw new Error("No authentication token found");
     
       const id = decryptId(encryptedId);
-      const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL_OLD}/${id}`, {
+      const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL_OLD}/${id}?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -866,7 +866,7 @@ export const navigateToDonorEdit = (navigate, viewId) => {
       if (!token) throw new Error("No authentication token found");
     
       const id = decryptId(encryptedId);
-      const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL}/${id}`, {
+      const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL}/${id}?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
