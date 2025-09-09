@@ -22,7 +22,9 @@ import { IconArrowBack } from "@tabler/icons-react";
 
 import { CgTally } from "react-icons/cg";
 import { fetchReceiptOneSendMail, fetchReceiptViewById, RECEIPT_VIEW_SEND_EMAIL, RECEIPT_VIEW_SUMBIT } from "../../../api";
-import { Loader } from "lucide-react";
+import { FileText, Loader, MailPlus } from "lucide-react";
+import mailSentGif from "../../../assets/mail-sent.gif";
+import { IconClipboardText } from "@tabler/icons-react";
 
 const ReceiptOne = () => {
   const tableRef = useRef(null);
@@ -335,134 +337,143 @@ const ReceiptOne = () => {
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
   return (
     <>
-    <div className=" flex flex-col md:flex-row justify-between items-center bg-white p-4 mb-4 rounded-lg shadow-md gap-2">
-
- 
-{isSendingEmail && (
-   <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-transparent z-[1000]">
-    <dotlottie-wc
-      src="https://lottie.host/679b7f3e-ee58-4a7e-b257-3702ec353e9b/GSmg0QDcmE.lottie"
-      style={{
-        width: "300px",
-        height: "300px",
-      }}
-      speed="1"
-      autoplay
-      loop
-    ></dotlottie-wc>
-  </div>
-)}
+    <div className="  flex flex-col md:flex-row justify-between items-center bg-white px-4 py-2 mb-2 rounded-lg shadow-md gap-2">
 
 
-      <h1 className="border-b-2 font-normal border-dashed border-orange-800 flex items-center">
+      <div className="border-b-2 font-normal border-dashed border-orange-800 flex items-center">
           <IconArrowBack
             onClick={() => navigate("/receipt-list")}
             className="cursor-pointer hover:text-red-600 mr-2"
           />
         <p className="flex flex-row items-center gap-2"> <span>Receipt View </span>{tallyReceipt == 'True' ? <>  <CgTally className="w-4 h-4" /> </> : ""}</p>
-        </h1>
-        
+        </div>
+       <div className="">
         {recepitcontrol.download_open === "Yes" && (
           <>
             {localStorage.getItem("user_type_id") != 4 && (
-              <div className="flex flex-wrap justify-end gap-2 sm:gap-4">
+              <div className="flex flex-wrap justify-end gap-3 sm:gap-5">
               <button
+              title="Download PDF"
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handleSavePDF}
                 disabled={isSavingPDF}
               >
              {isSavingPDF ? (
-    <Loader className="h-5 w-5 text-black animate-spin"/>
+    <Loader strokeWidth={1.5} className="h-7 w-7  text-black animate-spin"/>
   ) : (
     <>
-    <IconFileTypePdf className="h-5 w-5 text-black" />
+    <IconFileTypePdf strokeWidth={1.5} className="h-7 w-7   text-black" />
 
     </>
   )}
-      <span>Pdf</span>
+      {/* <span>Pdf</span> */}
                
               </button>
 
               {receipts?.individual_company?.indicomp_email && (
                 <button
-                  className="flex flex-col  items-center text-blue-600 hover:text-blue-800 text-xs"
+                title="Send Mail"
+                  className="relative  flex flex-col  items-center text-blue-600 hover:text-blue-800 text-xs"
                   onClick={sendEmail}
                   disabled={isSendingEmail}
                 >
                  
          
+{!isSendingEmail && (
+  <span className=" absolute right-0 rounded-full border p-[2px] translate-x-3 -translate-y-1 bg-blue-500 text-white top-0"> {receipts.receipt_email_count || 0} </span> 
 
-               
+)}
+                 
 
 
                     {isSendingEmail ? (
 <>
-                      <Loader className="h-5 w-5 text-black animate-spin"/>
-                      <span>Sending...</span>
+                      {/* <Loader className="h-5 w-5 text-black animate-spin"/>
+                      <span>Sending...</span> */}
+                      <img
+          src={mailSentGif}
+          alt="Sending..."
+          className="h-7 w-7"
+        />
+        {/* <span>Sending...</span> */}
                       </>
     ) : (
     <>
-<IconMail className="h-5 w-5 text-black" /> 
-                   <span>Sent {receipts.receipt_email_count || 0} times</span> 
+   
+<IconMail strokeWidth={1.5} className="h-7  w-7 text-black" /> 
+       {/* <span>Mail</span>  */}
+
+                   {/* <span>Sent {receipts.receipt_email_count || 0} times</span>  */}
                    </>
     )}
                 </button>
               )}
-
+ {receipts?.individual_company?.indicomp_email === null && (
+                <div className="flex flex-row items-center ">
+                   <button
+                   title="Add Mail"
+                    onClick={handleClickOpen}
+                 className="hover:cursor-pointer"
+                  >
+                  <MailPlus     strokeWidth={1.5} className="h-7 w-7 text-red-500 " />
+                  </button>
+                   
+            
+                 
+                 
+                </div>
+              )}
               <button
+              title="Print Receipt"
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handlReceiptPdf}
                 disabled={isPrintingReceipt}
               >
                      {isPrintingReceipt ? (
-   <Loader className="h-5 w-5 text-black animate-spin"/>
+   <Loader strokeWidth={1.5} className="h-7 w-7 text-black animate-spin"/>
   ) : (
     <>
-    <IconPrinter className="h-5 w-5 text-black" />
+    <IconPrinter strokeWidth={1.5} className="h-7 w-7 text-black" />
  
     </>
   )}
-     <span> Receipt</span>
+     {/* <span> Receipt</span> */}
               </button>
 
               <button
+              title="Print Letter"
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handlPrintPdf}
                 disabled={isPrintingLetter}
               >
                   {isPrintingLetter ? (
-    <Loader className="h-5 w-5 text-black animate-spin"/>
+    <Loader strokeWidth={1.5} className="h-7 w-7 text-black animate-spin"/>
   ) : (
     <>
-    <IconPrinter className="h-5 w-5 text-black" />
+    <FileText strokeWidth={1.5} className="h-7 w-7 text-black" />
   
     </>
   )}
-    <span> Letter</span>
+    {/* <span> Letter</span> */}
                
               </button>
 
-              {receipts?.individual_company?.indicomp_email === null && (
-                <div className="flex flex-col items-center">
-                  <div className="flex items-center text-blue-600 hover:text-blue-800">
-                    <IconPrinter className="h-5 w-5 text-black" />
-                    <span className="text-red-500 text-xs ml-1">
-                      Email not found
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleClickOpen}
-                    className="text-xs font-normal cursor-pointer hover:animate-pulse text-white bg-blue-600 hover:bg-green-700 px-2 py-1 rounded shadow"
-                  >
-                    Add Email
-                  </button>
-                </div>
-              )}
+             
             </div>
             )}
           </>
         )}
+        </div> 
+
+
+
       </div>
+
+
+
+
+
+        {/* main receipt */}
       <div className="overflow-x-auto  grid md:grid-cols-1 1fr">
         {"2022-04-01" <= receipts.receipt_date && (
        <div className="flex justify-center">
@@ -807,58 +818,72 @@ const ReceiptOne = () => {
                    </div>
                  </div>
         )}
-        <Dialog
-          open={open}
-          keepMounted
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <form onSubmit={onSubmit} autoComplete="off">
-            <Card className="p-6 space-y-1 w-[300px]">
-              <CardContent>
-                <div className="flex justify-between items-center mb-2">
-                  <h1 className="text-slate-800 text-xl font-semibold">
-                    Donor Email
-                  </h1>
-                  <div className="flex">
-                    <Tooltip title="Close">
-                      <button
-                        className="ml-3 pl-2 hover:bg-gray-200 rounded-full"
-                        onClick={handleClose}
-                      >
-                        <MdHighlightOff />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </div>
-
-                <div className="mt-2">
-                  <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                    <div>
-                      <FormLabel required>Email</FormLabel>
-                      <input
-                        type="text"
-                        name="indicomp_email"
-                        value={donor1.indicomp_email}
-                        onChange={(e) => onInputChange(e)}
-                        className={inputClass}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-5 flex justify-center">
-                  <button
-  disabled={isButtonDisabled}
-  type="submit"
-  className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2"
+      <Dialog
+  open={open}
+  keepMounted
+  onClose={(event, reason) => {
+    if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') return;
+    handleClose();
+  }}
+  aria-describedby="alert-dialog-slide-description"
+  maxWidth="sm"
+  fullWidth
 >
-  {isButtonDisabled ? "Submitting..." : "Submit"} 
-</button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </form>
-        </Dialog>
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      onSubmit(e);
+    }}
+    autoComplete="off"
+  >
+    <Card className="p-6 space-y-4 w-full">
+      <CardContent>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-slate-800 text-xl font-semibold">
+            Donor Email
+          </h1>
+          <div className="flex">
+            <Tooltip title="Close">
+              <button
+                type="button"
+                className="ml-3 p-2 hover:bg-gray-200 rounded-full"
+                onClick={handleClose}
+              >
+                <MdHighlightOff className="text-lg" />
+              </button>
+            </Tooltip>
+          </div>
+        </div>
+        <div className="mt-2">
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <FormLabel required>Email</FormLabel>
+              <input
+                type="email"
+                name="indicomp_email"
+                value={donor1.indicomp_email}
+                onChange={onInputChange}
+                className={inputClass}
+                required
+                placeholder="Enter donor email"
+              />
+            </div>
+          </div>
+          <div className="mt-6 flex justify-center">
+            <button
+              disabled={isButtonDisabled}
+              type="submit"
+              className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-blue-700 p-2 rounded-lg shadow-md transition-colors"
+            >
+              {isButtonDisabled ? "Submitting..." : "Submit"}
+            </button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </form>
+</Dialog>
+
         {/* //////////////second */}
         <div className=" flex justify-center">
                  <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">

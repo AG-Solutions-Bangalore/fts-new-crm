@@ -43,6 +43,7 @@ const SchoolAllot = () => {
   }, []);
 
   const columns = [
+    
     { accessorKey: "indicomp_full_name", header: "Donor Name", size: 50 },
     {
       accessorKey: "schoolalot_financial_year",

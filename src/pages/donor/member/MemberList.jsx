@@ -6,10 +6,11 @@ import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
 import { MEMBERS_LIST, SEND_EMAIL } from "../../../api";
-
+import mailSentGif from "../../../assets/mail-sent-fast.gif";
 const MemberList = () => {
   const [memberData, setMemberData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [mailLoader, setMailLoader] = useState({});
   const [columnVisibility, setColumnVisibility] = useState({
     indicomp_spouse_name: false,
     indicomp_com_contact_name: false,
@@ -37,25 +38,32 @@ const MemberList = () => {
     
   }, []);
 
-  const sendEmail = (value) => {
-    axios({
-      url: SEND_EMAIL + value,
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }).then((res) => {
-      toast.success("Email Sent Sucessfully");
-    });
+ 
+
+  const sendEmail = async (value) => {
+    try {
+      setMailLoader((prev) => ({ ...prev, [value]: true }));
+      const response = await axios({
+        url: `${BASE_URL}/api/send-membership-renew/${value}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      toast.success(response.data.msg || "Email sent successfully.");
+    } catch (error) {
+      const message = error.response?.data?.message || "Failed to send email";
+      toast.error(message);
+    } finally {
+      setMailLoader((prev) => ({ ...prev, [value]: false }));
+    }
   };
+  
+  
 
   const columns = useMemo(
     () => [
-      {
-        accessorKey: "indicomp_fts_id",
-        header: "FTS Id",
-        size: 50,
-      },
+     
       {
         accessorKey: "indicomp_full_name",
         header: "Full Name",
@@ -122,24 +130,42 @@ const MemberList = () => {
         size: 50,
         Cell: ({ row }) => {
           const email = row.original.indicomp_email;
-
+          const rowId = row.original.id;
           return (
             <div className="flex gap-2">
-              {email && email.toLowerCase() !== "null" && (
-                <div
-                  onClick={() => sendEmail(email)}
+              {email && email.toLowerCase() !== "null" ? (
+                mailLoader[rowId] ? (
+                  <img
+                    src={mailSentGif}
+                    alt="Sending..."
+                    className="h-7 w-7"
+                  />
+                ) : (
+                  <button
+                    disabled={mailLoader[rowId]}
+                    // onClick={() => sendEmail(rowId)}
+                    title="Send Mail"
+                    className="flex items-center space-x-2"
+                  >
+                    <IconMail className="h-5 w-5 text-gray-500 cursor-not-allowed" />
+                  </button>
+                )
+              ) : (
+                <button
+                  disabled
                   title="Send Mail"
                   className="flex items-center space-x-2"
                 >
-                  <IconMail className="h-5 w-5 text-blue-500 cursor-not-allowed  " />
-                </div>
+                  <IconMail className="h-5 w-5 text-gray-500 cursor-not-allowed" />
+                </button>
               )}
             </div>
           );
         },
       },
+      
     ],
-    []
+    [mailLoader]
   );
   const table = useMantineReactTable({
     columns,
