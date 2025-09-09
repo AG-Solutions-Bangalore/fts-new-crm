@@ -173,10 +173,19 @@ const CreateReceipt = () => {
         [stateName]: value,
       };
 
-      if (stateName === "receipt_donation_type" && value === "Membership") {
+      if (stateName === "receipt_donation_type"  ) {
+        if(value === "Membership"){
+ 
         updatedDonor.receipt_total_amount = "1000";
+      }else{
+        updatedDonor.receipt_total_amount=""
       }
+      }
+
+
+
       if (stateName === "receipt_exemption_type" || stateName === "receipt_total_amount") {
+
         // If 80G is selected and amount > 2000, reset transaction type if it was Cash
         if (
           (stateName === "receipt_exemption_type" && value === "80G" && prevDonor.receipt_total_amount > 2000) ||
@@ -220,6 +229,7 @@ const CreateReceipt = () => {
   const onInputChange = (e) => {
     const { name, value } = e.target;
     const digitFields = ["receipt_total_amount", "receipt_no_of_ots"];
+
     if (name === "receipt_total_amount" && donor.receipt_donation_type === "Membership") {
       return;
     }
@@ -574,8 +584,24 @@ const CreateReceipt = () => {
 
         <form className="w-full max-w-7xl bg-white rounded-lg mx-auto p-6 space-y-8 ">
           <div>
+            <div className="px-4 flex items-center gap-4 justify-end">
+            <FormLabel required>Select if CSR</FormLabel>
+                
+                 <input
+  type="checkbox"
+  name="receipt_csr"
+  checked={donor.receipt_csr === "Yes"}
+  onChange={(e) => {
+    setDonor((prevDonor) => ({
+      ...prevDonor,
+      receipt_csr: e.target.checked ? "Yes" : "No",
+    }));
+  }}
+  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+/>
+            </div>
             <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 md:gap-8">
-              {recepitcontrol.date_open === "Yes" && (
+              {recepitcontrol.date_open == "Yes" && (
                 <div>
                   <FormLabel required>Receipt Date</FormLabel>
                   <input
@@ -630,7 +656,29 @@ const CreateReceipt = () => {
                   </p>
                 )}
               </div>
-              <div className="col-span-0 lg:col-span-2">
+              <div>
+                {/* changed to checkbox
+                 */}
+                   {/* <FormLabel required>Select if CSR</FormLabel> */}
+                 {/* <div className="flex items-center">
+                 <input
+  type="checkbox"
+  name="receipt_csr"
+  checked={donor.receipt_csr === "Yes"}
+  onChange={(e) => {
+    setDonor((prevDonor) => ({
+      ...prevDonor,
+      receipt_csr: e.target.checked ? "Yes" : "No",
+    }));
+  }}
+  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+/>
+
+     
+
+
+                 </div> */}
+              {/* <div className="">
                 <FormLabel required>CSR</FormLabel>
                 {renderButtonGroup(
                   csr_options,
@@ -642,7 +690,29 @@ const CreateReceipt = () => {
                     {errors.receipt_csr}
                   </p>
                 )}
+              </div> */}
+
+             
+              <div>
+                <FormLabel>Realization Date</FormLabel>
+                <input
+                  type="date"
+                  name="receipt_realization_date"
+                  value={donor.receipt_realization_date}
+                  onChange={(e) => onInputChange(e)}
+                  className={inputClass}
+                  max={new Date().toISOString().split("T")[0]}
+                />
               </div>
+
+
+
+
+
+              </div>
+
+
+
               <div>
                 <FormLabel required>Total Amount</FormLabel>
                 <input
@@ -662,17 +732,9 @@ const CreateReceipt = () => {
                   </p>
                 )}
               </div>
-              <div>
-                <FormLabel>Realization Date</FormLabel>
-                <input
-                  type="date"
-                  name="receipt_realization_date"
-                  value={donor.receipt_realization_date}
-                  onChange={(e) => onInputChange(e)}
-                  className={inputClass}
-                  max={new Date().toISOString().split("T")[0]}
-                />
-              </div>
+
+
+
               <div className=" col-span-0  md:col-span-2">
                 <FormLabel required>Transaction Type</FormLabel>
 

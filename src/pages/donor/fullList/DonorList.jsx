@@ -61,11 +61,7 @@ const DonorList = () => {
   };
 
   const columns = useMemo(() => [
-    {
-      accessorKey: "indicomp_fts_id",
-      header: "FTS Id",
-      size: 50,
-    },
+   
     {
       accessorKey: "indicomp_full_name",
       header: "Full Name",

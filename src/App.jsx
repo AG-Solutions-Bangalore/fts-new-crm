@@ -14,6 +14,7 @@ import Maintenance from "./pages/maintenance/Maintenance";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import LoadingBar from './components/loadingBar/LoadingBar';
 import ReceiptSuperView from './pages/RecepitSuper/ReceiptSuperView';
+import ScrollToTop from './components/ScrollToTop';
 
 
 
@@ -179,6 +180,7 @@ const App = () => {
       {/* <DisableRightClick/>     */}
       <SessionTimeoutTracker expiryTime={time} onLogout={handleLogout} />
       <Suspense fallback={<LoadingBar />}>
+      <ScrollToTop/>
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/register" element={<SIgnUp />} />

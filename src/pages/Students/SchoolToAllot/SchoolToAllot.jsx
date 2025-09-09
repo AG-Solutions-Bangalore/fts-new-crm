@@ -26,6 +26,7 @@ const SchoolToAllot = () => {
         const res = response.data?.schoolots;
         if (Array.isArray(res)) {
           const tempRows = res.map((item, index) => ({
+            ftsId: item["individual_company"]["indicomp_fts_id"],
             donorName: item["individual_company"]["indicomp_full_name"],
             type: item["individual_company"]["indicomp_type"],
             mobile: item["individual_company"]["indicomp_mobile_phone"],
@@ -55,6 +56,11 @@ const SchoolToAllot = () => {
   }, [ navigate]);
 
   const columns = [
+    {
+      accessorKey: "ftsId",
+      header: "FTS Id",
+      size: 50,
+    },
     { accessorKey: "donorName", header: "Donor Name", size: 50 },
     { accessorKey: "type", header: "Type", size: 50 },
     { accessorKey: "mobile", header: "Mobile", size: 50 },
