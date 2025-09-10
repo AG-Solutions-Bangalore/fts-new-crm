@@ -70,6 +70,7 @@ const AppProvider = ({ children }) => {
           "/add-indivisual",
           "/add-company",
           "/member-list",
+          "/member-dashbord",
           "/donor-view",
           "/receipt-details",
           "/receipt-list",

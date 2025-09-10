@@ -81,7 +81,9 @@ export const DONOR_INDIVISUAL_EDIT_FETCH = `${BASE_URL}/api/fetch-donor-for-edit
 
 //MEMBERS
 export const MEMBERS_LIST = `${BASE_URL}/api/fetch-members`;
+export const MEMBER_DASHBOARD = `${BASE_URL}/api/fetch-members-new`;
 export const SEND_EMAIL = `${BASE_URL}/api/send-membership-renew?id=`;
+export const SEND_BULK_EMAIL = `${BASE_URL}/api/create-membership-email`;
 
 
 //VIEWVER

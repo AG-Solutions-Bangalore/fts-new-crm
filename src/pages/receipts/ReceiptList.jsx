@@ -6,10 +6,10 @@ import BASE_URL from "../../base/BaseUrl";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import { IconEdit, IconEye } from "@tabler/icons-react";
 import moment from "moment";
-import CryptoJS from "crypto-js";
-import { CgTally } from "react-icons/cg";
+
 import { encryptId } from "../../utils/encyrption/Encyrption";
 import { navigateToReceiptEdit, navigateToReceiptView, RECEIPT_LIST } from "../../api";
+import tallyImg from "../../assets/tally.svg"
 
 const ReceiptList = () => {
   const [receiptList, setReceiptList] = useState([]);
@@ -53,7 +53,7 @@ const ReceiptList = () => {
         size: 20,
         Cell:({row})=>{
           const tally = row.original.tally_status
-          return tally == 'True' ? <> <CgTally className="w-4 h-4" />
+          return tally == 'True' ? <> <img src={tallyImg} alt="tallyImg" />
  </> : ""
         }
       },

@@ -20,6 +20,7 @@ import ScrollToTop from './components/ScrollToTop';
 
 
 
+
 // import Profile from "./pages/profile/Profile";
 // import ChangePassword from "./pages/profile/ChangePassword";
 // import DonorList from "./pages/donor/fullList/DonorList";
@@ -89,7 +90,7 @@ import ScrollToTop from './components/ScrollToTop';
 // import SuspenseList from "./pages/receipts/suspense/SuspenseList";
 // import ChangePromoter from "./pages/donor/changePromoter/ChangePromoter";
 // import SuperReceiptDonor from "./pages/superReceiptDonor/SuperReceiptDonor";
-
+// import MemberDashboard from './pages/donor/member/MemberDashboard';
 
 
 
@@ -126,6 +127,7 @@ const CreateReceipt = lazy(() => import("./pages/donor/fullList/CreateReceipt"))
 const ViewerList = lazy(() => import("./pages/donor/viewer/ViewerList"));
 const EditViewer = lazy(() => import("./pages/donor/viewer/EditViewer"));
 const MemberList = lazy(() => import("./pages/donor/member/MemberList"));
+const MemberDashboard = lazy(() => import("./pages/donor/member/MemberDashboard"));
 const DuplicateList = lazy(() => import("./pages/donor/duplicate/DuplicateList"));
 const ChaptersList = lazy(() => import("./pages/master/chapters/ChaptersList"));
 const EditChapter = lazy(() => import("./pages/master/chapters/EditChapter"));
@@ -204,6 +206,7 @@ const App = () => {
         <Route path="/create-receipts/:id" element={<CreateReceipt />} />
         <Route path="/viewer-list" element={<ViewerList />} />
         <Route path="/edit-viewer/:id" element={<EditViewer />} />
+        <Route path="/member-dashbord" element={<MemberDashboard />} />
         <Route path="/member-list" element={<MemberList />} />
         <Route path="/duplicate-list" element={<DuplicateList />} />
         <Route path="/duplicate-edit/:id" element={<DuplicateEdit />} />

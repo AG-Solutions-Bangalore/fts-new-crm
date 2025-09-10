@@ -148,10 +148,10 @@ import {
               href: "/donor-list",
             },
             {
-              id: "member-list",
+              id: "member-dashbord",
               title: "Members",
               icon: Users,
-              href: "/member-list",
+              href: "/member-dashbord",
             },
             ...(userTypeId === "3"
               ? [

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Avatar,
   Box,
@@ -45,7 +45,8 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+ const [profileImage, setProfileImage] = useState(profile);
+  const fileInputRef = useRef(null);
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
 
@@ -80,7 +81,16 @@ const Profile = () => {
     setOpenDialog(true);
     closeMenus();
   };
-
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setProfileImage(event.target.result); 
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     if (!firstName) return toast.error("Enter Full Name");
@@ -194,10 +204,10 @@ const Profile = () => {
 
       <Logout open={openModal} handleOpen={handleOpenLogout} />
 
-      {/* Profile Dialog */}
+    
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <form onSubmit={handleUpdateProfile}>
-          <div className="p-6 space-y-1 sm:w-[280px] md:w-[500px] bg-white rounded-2xl shadow-md">
+          <div className="p-6 space-y-1 sm:w-[280px] md:w-[600px] bg-white rounded-2xl shadow-md">
             <div className="flex justify-between items-center mb-2">
               <h1 className="text-xl font-semibold text-slate-800">
                 Personal Details
@@ -208,53 +218,80 @@ const Profile = () => {
                 </button>
               </Tooltip>
             </div>
-            <div className="p-4 space-y-4">
-              <div>
-                <FormLabel required>Full Name</FormLabel>
-                <input
-                  value={firstName}
-                  required
-                  onChange={(e) =>
-                    validateOnlyText(e.target.value) &&
-                    setFirstName(e.target.value)
-                  }
-                  className={inputClass}
+            <div className="flex flex-col md:flex-row gap-4">
+             
+              <div className="flex flex-col items-center justify-center gap-4">
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                 className="border-2 w-36 h-36 rounded-md shadow-2xl hover:transition-shadow shadow-lime-300"
                 />
-              </div>
-              <div>
-                <FormLabel required>Phone</FormLabel>
-                <input
-                  value={phone}
-                  required
-                  maxLength={10}
-                  onChange={(e) =>
-                    validateOnlyDigits(e.target.value) &&
-                    setPhone(e.target.value)
-                  }
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <FormLabel required>Email</FormLabel>
-                <input
-                  value={email}
-                  disabled
-                  className={`${inputClass} cursor-not-allowed`}
-                />
-              </div>
-              <div className="mt-5 flex justify-center">
+              
                 <button
-                  type="submit"
-                  disabled={isButtonDisabled}
-                  className="w-36 p-2 text-sm font-medium text-white bg-blue-600 hover:bg-green-700 rounded-lg shadow-md"
-                >
-                  {isButtonDisabled ? "Updating..." : "Update Profile"}
-                </button>
+                type="button"
+         className=" px-2 py-1 text-sm font-medium text-white bg-blue-600 hover:bg-green-700 rounded-md shadow-md"
+                onClick={() => fileInputRef.current.click()}
+              >
+               Upload Picture
+              </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  name="_profile_image"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  hidden
+                />
               </div>
+
+          
+              <div className="flex-1 p-4 space-y-4">
+                <div>
+                  <FormLabel required>Full Name</FormLabel>
+                  <input
+                    value={firstName}
+                    required
+                    onChange={(e) =>
+                      validateOnlyText(e.target.value) && setFirstName(e.target.value)
+                    }
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <FormLabel required>Phone</FormLabel>
+                  <input
+                    value={phone}
+                    required
+                    maxLength={10}
+                    onChange={(e) =>
+                      validateOnlyDigits(e.target.value) && setPhone(e.target.value)
+                    }
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <FormLabel required>Email</FormLabel>
+                  <input
+                    value={email}
+                    disabled
+                    className={`${inputClass} cursor-not-allowed`}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 flex justify-center">
+              <button
+                type="submit"
+                disabled={isButtonDisabled}
+                className="w-36 p-2 text-sm font-medium text-white bg-blue-600 hover:bg-green-700 rounded-lg shadow-md"
+              >
+                {isButtonDisabled ? "Updating..." : "Update Profile"}
+              </button>
             </div>
           </div>
         </form>
       </Dialog>
+
 
       {/* Change Password Dialog */}
       <Dialog open={openDialog1} onClose={() => setOpenDialog1(false)}>
