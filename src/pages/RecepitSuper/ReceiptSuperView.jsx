@@ -13,7 +13,7 @@ import {
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { IconArrowBack } from "@tabler/icons-react";
-import { CgTally } from "react-icons/cg";
+import tallyImg from "../../assets/tally.svg"
 import BASE_URL from "../../base/BaseUrl";
 import { IconX } from "@tabler/icons-react";
 
@@ -189,7 +189,7 @@ const ReceiptSuperView = ({id, isDialog = false, onClose}) => {
                           className="cursor-pointer hover:text-red-600 mr-2"
                         />
                       )}
-           <p className="flex flex-row items-center gap-2"> <span>Receipt View </span>{tallyReceipt == 'True' ? <>  <CgTally className="w-4 h-4" /> </> : ""}</p>
+           <p className="flex flex-row items-center gap-2"> <span>Receipt View </span>{tallyReceipt == 'True' ? <>  <img src={tallyImg} alt="tallyImg" /> </> : ""}</p>
            </h1>
            
            {recepitcontrol.download_open === "Yes" && !isDialog && (

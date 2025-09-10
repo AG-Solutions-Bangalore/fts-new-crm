@@ -5,9 +5,14 @@ import { IconMail } from "@tabler/icons-react";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
-import { MEMBERS_LIST, SEND_EMAIL } from "../../../api";
+
 import mailSentGif from "../../../assets/mail-sent-fast.gif";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import moment from "moment";
 const MemberList = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate()
   const [memberData, setMemberData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mailLoader, setMailLoader] = useState({});
@@ -15,30 +20,27 @@ const MemberList = () => {
     indicomp_spouse_name: false,
     indicomp_com_contact_name: false,
   });
-
-  useEffect(() => {
-    const fetchDonorData = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${MEMBERS_LIST}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setMemberData(response.data?.individualCompanies);
-      } catch (error) {
-        console.error("Error fetching Factory data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDonorData();
-    
-  }, []);
+  const [year, setYear] = useState("");
 
  
+  useEffect(() => {
+    const year = searchParams.get('year');
+    const serializedMembers = searchParams.get('members');
+
+    if (year && serializedMembers) {
+      try {
+   
+        const decodedMembers = JSON.parse(atob(decodeURIComponent(serializedMembers)));
+        setMemberData(decodedMembers);
+        setYear(year);
+      } catch (error) {
+        toast.error("Failed to decode member data");
+      }
+    } else {
+      toast.error("No data found in URL");
+    }
+  }, [searchParams]);
+  
 
   const sendEmail = async (value) => {
     try {
@@ -58,12 +60,9 @@ const MemberList = () => {
       setMailLoader((prev) => ({ ...prev, [value]: false }));
     }
   };
-  
-  
-
+ 
   const columns = useMemo(
     () => [
-     
       {
         accessorKey: "indicomp_full_name",
         header: "Full Name",
@@ -112,15 +111,31 @@ const MemberList = () => {
         size: 50,
       },
       {
-        accessorKey: "receipt.m_ship_vailidity",
-        header: "Validity",
-        accessorFn: (row) => {
-          return row?.receipt?.m_ship_vailidity || null;
-        },
+        accessorKey: "joining_date",
+        header: "Joining",
+        
         size: 50,
         Cell: ({ row }) => {
-          const Validity = row.original?.receipt?.m_ship_vailidity;
-          return Validity ? <span>31-3-{Validity}</span> : <span className="text-gray-400">-</span>;
+          const Validity = row.original?.joining_date;
+          return Validity ? (
+            <span>{moment(Validity).format("DD-MM-YYYY")}</span>
+          ) : (
+            <span className="text-gray-400">-</span>
+          );
+        },
+      },
+      {
+        accessorKey: "last_payment_vailidity",
+        header: "Validity",
+        
+        size: 50,
+        Cell: ({ row }) => {
+          const Validity = row.original?.last_payment_vailidity;
+          return Validity ? (
+            <span>31-3-{Validity}</span>
+          ) : (
+            <span className="text-gray-400">-</span>
+          );
         },
       },
 
@@ -135,19 +150,15 @@ const MemberList = () => {
             <div className="flex gap-2">
               {email && email.toLowerCase() !== "null" ? (
                 mailLoader[rowId] ? (
-                  <img
-                    src={mailSentGif}
-                    alt="Sending..."
-                    className="h-7 w-7"
-                  />
+                  <img src={mailSentGif} alt="Sending..." className="h-7 w-7" />
                 ) : (
                   <button
                     disabled={mailLoader[rowId]}
-                    // onClick={() => sendEmail(rowId)}
+                    onClick={() => sendEmail(rowId)}
                     title="Send Mail"
                     className="flex items-center space-x-2"
                   >
-                    <IconMail className="h-5 w-5 text-gray-500 cursor-not-allowed" />
+                    <IconMail className="h-5 w-5 text-blue-500 " />
                   </button>
                 )
               ) : (
@@ -163,7 +174,6 @@ const MemberList = () => {
           );
         },
       },
-      
     ],
     [mailLoader]
   );
@@ -174,34 +184,40 @@ const MemberList = () => {
     enableDensityToggle: false,
     enableHiding: false,
     enableColumnActions: false,
-    state: { 
+    state: {
       columnVisibility,
-      isLoading: loading ,
-     
+      isLoading: loading,
     },
     onColumnVisibilityChange: setColumnVisibility,
     mantineTableContainerProps: {
       sx: {
-        maxHeight: '400px', 
-        position: 'relative',
+        maxHeight: "400px",
+        position: "relative",
       },
     },
     mantineProgressProps: {
-      color: 'blue',
-      variant: 'bars', 
+      color: "blue",
+      variant: "bars",
     },
     renderTopToolbarCustomActions: () => (
-      <h2 className="text-lg font-bold text-black px-4">
-        Membership List
+      <div className="flex items-center gap-4 px-4">
+      <button
+        onClick={() => navigate('/member-dashbord')}
+        className="flex items-center gap-1 px-3 py-1 bg-gray-200 text-gray-800 text-sm rounded-md hover:bg-gray-300"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </button>
+      <h2 className="text-lg font-bold text-black">
+        {year ? `Membership List for ${year}` : "Membership List"}
       </h2>
+    </div>
     ),
   });
   return (
     <Layout>
       <div className="max-w-screen">
-       
-          <MantineReactTable table={table} />
-     
+        <MantineReactTable table={table} />
       </div>
     </Layout>
   );
