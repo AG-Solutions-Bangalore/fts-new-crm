@@ -72,6 +72,8 @@ const corrpreffer = [
 const DonorEditComp = ({ id, isPanelUp }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
  const [errors, setErrors] = useState({});
+   const [userImageBase, setUserImageBase] = useState("");
+   const [noImageUrl, setNoImageUrl] = useState("");
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -224,7 +226,22 @@ const DonorEditComp = ({ id, isPanelUp }) => {
         },
       });
 
-      setDonor(response.data?.individualCompany);
+      const donorData = response.data?.individualCompany;
+      const cleanedDonorData = {};
+
+      Object.keys(donorData).forEach((key) => {
+        cleanedDonorData[key] = donorData[key] === null ? "" : donorData[key];
+      });
+      setDonor(cleanedDonorData);
+      const userImageBase = response.data.image_url.find(
+        (img) => img.image_for === "Donor"
+      )?.image_url;
+      const noImageUrl = response.data.image_url.find(
+        (img) => img.image_for === "No Image"
+      )?.image_url;
+
+      setUserImageBase(userImageBase);
+      setNoImageUrl(noImageUrl);
     } catch (error) {
       console.error("Error fetching Life Time data", error);
     } finally {
@@ -407,49 +424,93 @@ const DonorEditComp = ({ id, isPanelUp }) => {
     }
 
     try {
-      const data = {
-        indicomp_full_name: donor.indicomp_full_name,
-        title: donor.title,
-        indicomp_type: donor.indicomp_type,
-        indicomp_com_contact_name: donor.indicomp_com_contact_name,
-        indicomp_com_contact_designation:
-          donor.indicomp_com_contact_designation,
-        indicomp_gender: donor.indicomp_gender,
-        indicomp_dob_annualday: donor.indicomp_dob_annualday,
-        indicomp_pan_no: donor.indicomp_pan_no,
-        indicomp_image_logo: donor.indicomp_image_logo,
-        indicomp_remarks: donor.indicomp_remarks,
-        indicomp_promoter: donor.indicomp_promoter,
-        indicomp_newpromoter: donor.indicomp_newpromoter,
-        indicomp_source: donor.indicomp_source,
-        indicomp_csr: donor.indicomp_csr,
-        indicomp_mobile_phone: donor.indicomp_mobile_phone,
-        indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
-        indicomp_email: donor.indicomp_email,
-        indicomp_website: donor.indicomp_website,
-        indicomp_res_reg_address: donor.indicomp_res_reg_address,
-        indicomp_res_reg_area: donor.indicomp_res_reg_area,
-        indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
-        indicomp_res_reg_city: donor.indicomp_res_reg_city,
-        indicomp_res_reg_state: donor.indicomp_res_reg_state,
-        indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
-        indicomp_off_branch_address: donor.indicomp_off_branch_address,
-        indicomp_off_branch_area: donor.indicomp_off_branch_area,
-        indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
-        indicomp_off_branch_city: donor.indicomp_off_branch_city,
-        indicomp_off_branch_state: donor.indicomp_off_branch_state,
-        indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
-        indicomp_corr_preffer: donor.indicomp_corr_preffer,
-        indicomp_belongs_to: donor.indicomp_belongs_to,
-        indicomp_donor_type: donor.indicomp_donor_type,
+      // const data = {
+      //   indicomp_full_name: donor.indicomp_full_name,
+      //   title: donor.title,
+      //   indicomp_type: donor.indicomp_type,
+      //   indicomp_com_contact_name: donor.indicomp_com_contact_name,
+      //   indicomp_com_contact_designation:
+      //     donor.indicomp_com_contact_designation,
+      //   indicomp_gender: donor.indicomp_gender,
+      //   indicomp_dob_annualday: donor.indicomp_dob_annualday,
+      //   indicomp_pan_no: donor.indicomp_pan_no,
+      //   indicomp_image_logo: donor.indicomp_image_logo,
+      //   indicomp_remarks: donor.indicomp_remarks,
+      //   indicomp_promoter: donor.indicomp_promoter,
+      //   indicomp_newpromoter: donor.indicomp_newpromoter,
+      //   indicomp_source: donor.indicomp_source,
+      //   indicomp_csr: donor.indicomp_csr,
+      //   indicomp_mobile_phone: donor.indicomp_mobile_phone,
+      //   indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
+      //   indicomp_email: donor.indicomp_email,
+      //   indicomp_website: donor.indicomp_website,
+      //   indicomp_res_reg_address: donor.indicomp_res_reg_address,
+      //   indicomp_res_reg_area: donor.indicomp_res_reg_area,
+      //   indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
+      //   indicomp_res_reg_city: donor.indicomp_res_reg_city,
+      //   indicomp_res_reg_state: donor.indicomp_res_reg_state,
+      //   indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
+      //   indicomp_off_branch_address: donor.indicomp_off_branch_address,
+      //   indicomp_off_branch_area: donor.indicomp_off_branch_area,
+      //   indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
+      //   indicomp_off_branch_city: donor.indicomp_off_branch_city,
+      //   indicomp_off_branch_state: donor.indicomp_off_branch_state,
+      //   indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
+      //   indicomp_corr_preffer: donor.indicomp_corr_preffer,
+      //   indicomp_belongs_to: donor.indicomp_belongs_to,
+      //   indicomp_donor_type: donor.indicomp_donor_type,
+      // };
+      const processValue = (value) => {
+        if (value === "" || value === null || value === undefined) {
+          return "";
+        }
+        return value;
       };
+      
+      const formData = new FormData();
+      
+      formData.append("indicomp_full_name", processValue(donor.indicomp_full_name));
+      formData.append("title", processValue(donor.title));
+      formData.append("indicomp_type", processValue(donor.indicomp_type));
+      formData.append("indicomp_com_contact_name", processValue(donor.indicomp_com_contact_name));
+      formData.append("indicomp_com_contact_designation", processValue(donor.indicomp_com_contact_designation));
+      formData.append("indicomp_gender", processValue(donor.indicomp_gender));
+      formData.append("indicomp_dob_annualday", processValue(donor.indicomp_dob_annualday));
+      formData.append("indicomp_pan_no", processValue(donor.indicomp_pan_no));
+      formData.append("indicomp_image_logo", processValue(donor.indicomp_image_logo));
+      formData.append("indicomp_remarks", processValue(donor.indicomp_remarks));
+      formData.append("indicomp_promoter", processValue(donor.indicomp_promoter));
+      formData.append("indicomp_newpromoter", processValue(donor.indicomp_newpromoter));
+      formData.append("indicomp_source", processValue(donor.indicomp_source));
+      formData.append("indicomp_csr", processValue(donor.indicomp_csr));
+      formData.append("indicomp_mobile_phone", processValue(donor.indicomp_mobile_phone));
+      formData.append("indicomp_mobile_whatsapp", processValue(donor.indicomp_mobile_whatsapp));
+      formData.append("indicomp_email", processValue(donor.indicomp_email));
+      formData.append("indicomp_website", processValue(donor.indicomp_website));
+      formData.append("indicomp_res_reg_address", processValue(donor.indicomp_res_reg_address));
+      formData.append("indicomp_res_reg_area", processValue(donor.indicomp_res_reg_area));
+      formData.append("indicomp_res_reg_ladmark", processValue(donor.indicomp_res_reg_ladmark));
+      formData.append("indicomp_res_reg_city", processValue(donor.indicomp_res_reg_city));
+      formData.append("indicomp_res_reg_state", processValue(donor.indicomp_res_reg_state));
+      formData.append("indicomp_res_reg_pin_code", processValue(donor.indicomp_res_reg_pin_code));
+      formData.append("indicomp_off_branch_address", processValue(donor.indicomp_off_branch_address));
+      formData.append("indicomp_off_branch_area", processValue(donor.indicomp_off_branch_area));
+      formData.append("indicomp_off_branch_ladmark", processValue(donor.indicomp_off_branch_ladmark));
+      formData.append("indicomp_off_branch_city", processValue(donor.indicomp_off_branch_city));
+      formData.append("indicomp_off_branch_state", processValue(donor.indicomp_off_branch_state));
+      formData.append("indicomp_off_branch_pin_code", processValue(donor.indicomp_off_branch_pin_code));
+      formData.append("indicomp_corr_preffer", processValue(donor.indicomp_corr_preffer));
+      formData.append("indicomp_belongs_to", processValue(donor.indicomp_belongs_to));
+      formData.append("indicomp_donor_type", processValue(donor.indicomp_donor_type));
+      
 
       setIsButtonDisabled(true);
       const response = await axios({
-        url: DONOR_COMPANY_UPDATE_SUMBIT + `${id}`,
-        method: "PUT",
-        data,
+        url: DONOR_COMPANY_UPDATE_SUMBIT + `${id}` + `?_method=PUT`,
+        method: "POST",
+        data:formData,
         headers: {
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
@@ -658,14 +719,36 @@ const DonorEditComp = ({ id, isPanelUp }) => {
 
             <div>
               <FormLabel>Upload Logo</FormLabel>
+
+              <div className="flex flex-row items-center gap-2">
+                <div>
+                  {donor.indicomp_image_logo && (
+                    <img
+                      src={
+                        typeof donor.indicomp_image_logo === "string"
+                          ? `${userImageBase}${donor.indicomp_image_logo}`
+                          : URL.createObjectURL(donor.indicomp_image_logo)
+                      }
+                      alt="User"
+                      className="w-8 h-5 object-cover  rounded-md "
+                    />
+                  )}
+                </div>
+                <div>
               <input
                 type="file"
+                accept="image/*"
                 name="indicomp_image_logo"
-             
-                value={donor.indicomp_image_logo}
-                onChange={(e) => onInputChange(e)}
+                onChange={(e) =>
+                  setDonor({
+                    ...donor,
+                    indicomp_image_logo: e.target.files[0],
+                  })
+                }
                 className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-[#E1F5FA] file:text-black cursor-pointer"
               />
+              </div>
+              </div>
               <p className="text-xs text-gray-500 mt-1">Upload Company Logo</p>
             </div>
 

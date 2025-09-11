@@ -55,7 +55,8 @@ const Chapter = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(false);
   const [isButtonDisabled2, setIsButtonDisabled2] = useState(false);
-
+  const [userImageBase, setUserImageBase] = useState("");
+  const [noImageUrl, setNoImageUrl] = useState("");
   const [individualDrawer, setIndividualDrawer] = useState(false);
   const toggleIndividualDrawer = (open) => () => {
     setIndividualDrawer(open);
@@ -81,6 +82,7 @@ const Chapter = () => {
     name: "",
     email: "",
     first_name: "",
+    image: "",
     last_name: "",
     phone: "",
     password: "",
@@ -136,6 +138,7 @@ const Chapter = () => {
       name: "",
       email: "",
       first_name: "",
+      image: "",
       last_name: "",
       phone: "",
       password: "",
@@ -157,7 +160,9 @@ const Chapter = () => {
       name: "",
       email: "",
       first_name: "",
+      image: "",
       last_name: "",
+      image: "",
       phone: "",
       password: "",
       confirm_password: "",
@@ -175,8 +180,19 @@ const Chapter = () => {
       .then((res) => {
         setChapter(res.data.chapter);
         setUsers(res.data.users);
+  
+        const userImageBase = res.data.image_url.find(
+          (img) => img.image_for === "User"
+        )?.image_url;
+        const noImageUrl = res.data.image_url.find(
+          (img) => img.image_for === "No Image"
+        )?.image_url;
+  
+        setUserImageBase(userImageBase);
+        setNoImageUrl(noImageUrl);
       });
   };
+  
   useEffect(() => {
     fetchData();
   }, [id]);
@@ -213,28 +229,25 @@ const Chapter = () => {
       return;
     }
     setIsButtonDisabled2(true);
-    const formData = {
-      name: user.name,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      phone: user.phone,
-      password: user.password,
-      user_type: user.user_type_id,
-      chapter_id: id,
-    };
-    // console.log(formData, "formdata");
+  
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("first_name", user.first_name);
+    formData.append("last_name", user.last_name);
+    formData.append("email", user.email);
+    formData.append("phone", user.phone);
+    formData.append("password", user.password);
+    formData.append("user_type", user.user_type_id);
+    formData.append("chapter_id", id);
+    formData.append("image", user.image); 
+  
     try {
-      const response = await axios.post(
-        `${ADMIN_CHAPTER_CREATE}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
+      const response = await axios.post(`${ADMIN_CHAPTER_CREATE}`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.status === 200) {
         fetchData();
         handleClose();
@@ -248,72 +261,77 @@ const Chapter = () => {
           password: "",
           confirm_password: "",
           user_type_id: "",
+          user_status: "",
+          image: null,
         });
       } else if (response.data.code === 400) {
         toast.error(response.data.msg);
         setIsButtonDisabled(false);
       } else {
-        toast.error("Unexcepted Error");
+        toast.error("Unexpected Error");
         setIsButtonDisabled(false);
       }
     } catch (error) {
-      console.error("Error updating User:", error);
-      toast.error("Error updating User");
+      console.error("Error creating user:", error);
+      toast.error("Error creating user");
     } finally {
       setIsButtonDisabled2(false);
     }
   };
-
+  
   const updateUser = async (e) => {
     e.preventDefault();
     const form = e.target;
-
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
     setIsButtonDisabled1(true);
-
-    const formData = {
-      name: user.name,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      phone: user.phone,
-      user_type: user.user_type_id,
-      chapter_id: user.chapter_code,
-      user_status: user.user_status,
-    };
-
+  
     try {
-      const response = await axios.put(
-        `${ADMIN_CHAPTER_EDIT_UPDATE}/${selected_user_id}`,
+      const formData = new FormData();
+      formData.append("name", user.name);
+      formData.append("first_name", user.first_name);
+      formData.append("last_name", user.last_name || "");
+      formData.append("email", user.email);
+      formData.append("phone", user.phone);
+      formData.append("user_type", parseInt(user.user_type_id, 10));
+      formData.append("user_status", user.user_status);
+  
+      
+      if (user.image instanceof File) {
+        formData.append("image", user.image); 
+      }
+
+      const response = await axios.post(
+        `${ADMIN_CHAPTER_EDIT_UPDATE}/${selected_user_id}?_method=PUT`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-
+  
       if (response.status === 200) {
         toast.success(response.data.msg);
         handleClose1(e);
         fetchData();
       } else if (response.data.code === 400) {
         toast.error(response.data.msg);
-        setIsButtonDisabled(false);
       } else {
-        toast.error("Unexcepted Error");
-        setIsButtonDisabled(false);
+        toast.error("Unexpected Error");
       }
     } catch (error) {
-      console.error("Error updating User:", error);
-      toast.error("Error updating User");
+      console.error("Error updating user:", error);
+      toast.error("Error updating user");
     } finally {
       setIsButtonDisabled1(false);
     }
   };
+  
+  
   const handleClickWhatsApp = (phone, cpassword) => {
     const message = `Hey, your ID is ${phone} and your password is ${cpassword}`;
     const encodedMsg = encodeURIComponent(message);
@@ -340,6 +358,22 @@ const Chapter = () => {
   };
   
   const columns = [
+    {
+      accessorKey: "image",
+      header: "Image",
+      Cell: ({ row }) => (
+        <img
+          src={
+            row.original.image
+              ? `${userImageBase}${row.original.image}?t=${Date.now()}`
+              : noImageUrl
+          }
+          alt={row.original.first_name}
+          className="w-10 h-10 object-cover rounded-full"
+        />
+      ),
+    },
+    
     {
       accessorKey: "first_name",
       header: "Name",
@@ -371,6 +405,7 @@ const Chapter = () => {
                  name: row.original.name,
                  email: row.original.email,
                  phone: row.original.phone,
+                 image: row.original.image,
                  first_name: row.original.first_name,
                  last_name: row.original.last_name,
                  user_type_id: row.original.user_type_id,
@@ -464,6 +499,7 @@ const Chapter = () => {
       chapter_date_of_incorporation: chapter.chapter_date_of_incorporation,
       chapter_region_code: chapter.chapter_region_code,
       auth_sign: chapter.auth_sign,
+      
     };
 
     e.preventDefault();
@@ -720,6 +756,20 @@ const Chapter = () => {
                         required
                       />
                     </div>
+                    <div>
+  <FormLabel>Upload Image</FormLabel>
+  <input
+    type="file"
+    name="image"
+    onChange={(e) => {
+      setUser({
+        ...user,
+        image: e.target.files[0],
+      });
+    }}
+    className={inputClass}
+  />
+</div>
 
                     <div className="form-group ">
                       <SelectInput
@@ -853,6 +903,33 @@ const Chapter = () => {
                           required
                         />
                       </div>
+                      <div>
+  <FormLabel>Upload Image</FormLabel>
+  <input
+    type="file"
+    name="image"
+    onChange={(e) => {
+      setUser({
+        ...user,
+        image: e.target.files[0],
+      });
+    }}
+    className={inputClass}
+  />
+  {user.image && (
+    <img
+      src={
+        typeof user.image === "string"
+          ? `${userImageBase}${user.image}`
+          : URL.createObjectURL(user.image)
+      }
+      alt="User"
+      className="w-16 h-16 object-cover rounded-full mt-2"
+    />
+  )}
+</div>
+
+
                       <div className="form-group ">
                         <SelectInput
                           label="Select User Type"

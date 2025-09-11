@@ -384,53 +384,93 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
         return;
       }
 
-      const data = {
-        indicomp_full_name: donor.indicomp_full_name,
-        title: donor.title,
-        indicomp_type: donor.indicomp_type,
-        indicomp_com_contact_name: donor.indicomp_com_contact_name,
-        indicomp_com_contact_designation:
-          donor.indicomp_com_contact_designation,
-        indicomp_gender: donor.indicomp_gender,
-        indicomp_dob_annualday: donor.indicomp_dob_annualday,
-        indicomp_pan_no: donor.indicomp_pan_no,
-        indicomp_image_logo: donor.indicomp_image_logo,
-        indicomp_remarks: donor.indicomp_remarks,
-        indicomp_promoter: donor.indicomp_promoter,
-        indicomp_newpromoter: donor.indicomp_newpromoter,
-        indicomp_source: donor.indicomp_source,
-        indicomp_mobile_phone: donor.indicomp_mobile_phone,
-        indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
-        indicomp_email: donor.indicomp_email,
-        indicomp_website: donor.indicomp_website,
-        indicomp_res_reg_address: donor.indicomp_res_reg_address,
-        indicomp_res_reg_area: donor.indicomp_res_reg_area,
-        indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
-        indicomp_res_reg_city: donor.indicomp_res_reg_city,
-        indicomp_res_reg_state: donor.indicomp_res_reg_state,
-        indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
-        indicomp_off_branch_address: donor.indicomp_off_branch_address,
-        indicomp_off_branch_area: donor.indicomp_off_branch_area,
-        indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
-        indicomp_off_branch_city: donor.indicomp_off_branch_city,
-        indicomp_off_branch_state: donor.indicomp_off_branch_state,
-        indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
-        indicomp_corr_preffer: donor.indicomp_corr_preffer,
-        indicomp_belongs_to: donor.indicomp_belongs_to,
-        indicomp_donor_type: donor.indicomp_donor_type,
-        indicomp_csr: donor.indicomp_csr,
-      };
+      // const data = {
+      //   indicomp_full_name: donor.indicomp_full_name,
+      //   title: donor.title,
+      //   indicomp_type: donor.indicomp_type,
+      //   indicomp_com_contact_name: donor.indicomp_com_contact_name,
+      //   indicomp_com_contact_designation:
+      //     donor.indicomp_com_contact_designation,
+      //   indicomp_gender: donor.indicomp_gender,
+      //   indicomp_dob_annualday: donor.indicomp_dob_annualday,
+      //   indicomp_pan_no: donor.indicomp_pan_no,
+      //   indicomp_image_logo: donor.indicomp_image_logo,
+      //   indicomp_remarks: donor.indicomp_remarks,
+      //   indicomp_promoter: donor.indicomp_promoter,
+      //   indicomp_newpromoter: donor.indicomp_newpromoter,
+      //   indicomp_source: donor.indicomp_source,
+      //   indicomp_mobile_phone: donor.indicomp_mobile_phone,
+      //   indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
+      //   indicomp_email: donor.indicomp_email,
+      //   indicomp_website: donor.indicomp_website,
+      //   indicomp_res_reg_address: donor.indicomp_res_reg_address,
+      //   indicomp_res_reg_area: donor.indicomp_res_reg_area,
+      //   indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
+      //   indicomp_res_reg_city: donor.indicomp_res_reg_city,
+      //   indicomp_res_reg_state: donor.indicomp_res_reg_state,
+      //   indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
+      //   indicomp_off_branch_address: donor.indicomp_off_branch_address,
+      //   indicomp_off_branch_area: donor.indicomp_off_branch_area,
+      //   indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
+      //   indicomp_off_branch_city: donor.indicomp_off_branch_city,
+      //   indicomp_off_branch_state: donor.indicomp_off_branch_state,
+      //   indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
+      //   indicomp_corr_preffer: donor.indicomp_corr_preffer,
+      //   indicomp_belongs_to: donor.indicomp_belongs_to,
+      //   indicomp_donor_type: donor.indicomp_donor_type,
+      //   indicomp_csr: donor.indicomp_csr,
+      // };
 
+      // if (id) {
+      //   data.donor_related_id = id;
+      // }
+      const formData = new FormData();
+
+      formData.append("indicomp_full_name", donor.indicomp_full_name || "");
+      formData.append("title", donor.title || "");
+      formData.append("indicomp_type", donor.indicomp_type || "");
+      formData.append("indicomp_com_contact_name", donor.indicomp_com_contact_name || "");
+      formData.append("indicomp_com_contact_designation", donor.indicomp_com_contact_designation || "");
+      formData.append("indicomp_gender", donor.indicomp_gender || "");
+      formData.append("indicomp_dob_annualday", donor.indicomp_dob_annualday || "");
+      formData.append("indicomp_pan_no", donor.indicomp_pan_no || "");
+      formData.append("indicomp_image_logo", donor.indicomp_image_logo || null); // file
+      formData.append("indicomp_remarks", donor.indicomp_remarks || "");
+      formData.append("indicomp_promoter", donor.indicomp_promoter || "");
+      formData.append("indicomp_newpromoter", donor.indicomp_newpromoter || "");
+      formData.append("indicomp_source", donor.indicomp_source || "");
+      formData.append("indicomp_mobile_phone", donor.indicomp_mobile_phone || "");
+      formData.append("indicomp_mobile_whatsapp", donor.indicomp_mobile_whatsapp || "");
+      formData.append("indicomp_email", donor.indicomp_email || "");
+      formData.append("indicomp_website", donor.indicomp_website || "");
+      formData.append("indicomp_res_reg_address", donor.indicomp_res_reg_address || "");
+      formData.append("indicomp_res_reg_area", donor.indicomp_res_reg_area || "");
+      formData.append("indicomp_res_reg_ladmark", donor.indicomp_res_reg_ladmark || "");
+      formData.append("indicomp_res_reg_city", donor.indicomp_res_reg_city || "");
+      formData.append("indicomp_res_reg_state", donor.indicomp_res_reg_state || "");
+      formData.append("indicomp_res_reg_pin_code", donor.indicomp_res_reg_pin_code || "");
+      formData.append("indicomp_off_branch_address", donor.indicomp_off_branch_address || "");
+      formData.append("indicomp_off_branch_area", donor.indicomp_off_branch_area || "");
+      formData.append("indicomp_off_branch_ladmark", donor.indicomp_off_branch_ladmark || "");
+      formData.append("indicomp_off_branch_city", donor.indicomp_off_branch_city || "");
+      formData.append("indicomp_off_branch_state", donor.indicomp_off_branch_state || "");
+      formData.append("indicomp_off_branch_pin_code", donor.indicomp_off_branch_pin_code || "");
+      formData.append("indicomp_corr_preffer", donor.indicomp_corr_preffer || "");
+      formData.append("indicomp_belongs_to", donor.indicomp_belongs_to || "");
+      formData.append("indicomp_donor_type", donor.indicomp_donor_type || "");
+      formData.append("indicomp_csr", donor.indicomp_csr || "");
+      
       if (id) {
-        data.donor_related_id = id;
+        formData.append("donor_related_id", id);
       }
-
+      
       setIsButtonDisabled(true);
       const response = await axios({
         url: DONOR_COMPANY_CREATE_SUMBIT,
         method: "POST",
-        data,
+        data:formData,
         headers: {
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
@@ -687,11 +727,16 @@ const AddCompany = ({ onClose, fetchDonorData, isOpen, isPanelUp }) => {
               <FormLabel>Upload Logo</FormLabel>
               <input
                 type="file"
+                      accept="image/*"
                 name="indicomp_image_logo"
-                disabled
-                value={donor.indicomp_image_logo}
-                onChange={(e) => onInputChange(e)}
-                className="w-full px-3 py-1 cursor-not-allowed text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-[#E1F5FA] file:text-black "
+            
+                onChange={(e) =>
+                  setDonor({
+                    ...donor,
+                    indicomp_image_logo: e.target.files[0], 
+                  })
+                }
+                className="w-full px-3 py-1 cursor-pointer text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-[#E1F5FA] file:text-black "
               />
               <p className="text-xs text-gray-500 mt-1">Upload Company Logo</p>
             </div>

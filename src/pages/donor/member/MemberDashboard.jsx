@@ -8,6 +8,7 @@ import { MEMBER_DASHBOARD, SEND_BULK_EMAIL } from '../../../api';
 
 const MemberDashboard = () => {
   const [members, setMembers] = useState([]);
+  const [sentMail, setSentMail] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sendingEmail, setSendingEmail] = useState(false);
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const MemberDashboard = () => {
         },
       });
       setMembers(response.data.individualCompanies || []);
+      setSentMail(response.data.memberEmail || []);
     } catch (error) {
       console.error('Error fetching members:', error);
       toast.error('Failed to fetch members data');
@@ -155,20 +157,23 @@ const handleYearCardClick = (year) => {
             
             {years.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {years.map(year => (
-                  <div 
+                {years.map(year => {
+                  const mailInfo = sentMail.find(item => item.member_vailidity === year);
+                  return (
+                    <div 
                     key={year} 
                     className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
                     onClick={() => handleYearCardClick(year)}
                   >
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="text-lg font-semibold text-gray-900">Year {year}</h3>
+                      
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                         {membersByYear[year].length} members
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-4">
-                      <button
+                    {/* <button
                         onClick={(e) => {
                           e.stopPropagation();
                           sendMembershipEmail(year);
@@ -178,14 +183,58 @@ const handleYearCardClick = (year) => {
                       >
                         <Mail className="w-4 h-4" />
                         {sendingEmail ? 'Sending...' : 'Send Mail'}
-                      </button>
+                      </button> */}
+
+{mailInfo ? (
+         <div className=" flex flex-row gap-1 text-xs">
+        
+         <div className="flex items-center gap-2">
+           <span className="relative flex h-3 w-3">
+             <span className={` ${mailInfo.sent == membersByYear[year].length ? " ":"animate-ping"} absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75`}></span>
+             <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+           </span>
+           <span className="text-gray-700">Sent: {mailInfo.sent}</span>
+         </div>
+       
+       {mailInfo.notsent !== 0  && (
+        <div className="flex items-center gap-2">
+           <span className="relative flex h-3 w-3">
+             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+             <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+           </span>
+           <span className="text-gray-700">Not Sent: {mailInfo.notsent}</span>
+         </div>
+       )}
+         
+       </div>
+       
+        ) : (
+          // else → show send mail button
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              sendMembershipEmail(year);
+            }}
+            disabled={sendingEmail}
+            className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:opacity-50"
+          >
+            <Mail className="w-4 h-4" />
+            {sendingEmail ? 'Sending...' : 'Send Mail'}
+          </button>
+        )}
+                   
+                     
                       <div className="flex items-center text-sm text-gray-500 hover:text-blue-600">
                         View details
                         <ArrowRight className="w-4 h-4 ml-1" />
                       </div>
                     </div>
                   </div>
-                ))}
+                  )
+
+                }
+                 
+                )}
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500">

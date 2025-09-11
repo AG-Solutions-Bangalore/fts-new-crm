@@ -10,7 +10,11 @@ import belongs_to from "../../../utils/BelongTo";
 import honorific from "../../../utils/Honorific";
 import donor_type from "../../../utils/DonorType";
 import { IconArrowBack, IconInfoCircle } from "@tabler/icons-react";
-import { DONOR_INDIVISUAL_EDIT_FETCH, DONOR_INDIVISUAL_FAMILY_GROUP_UPDATE, DONOR_INDIVISUAL_UPDATE_SUMBIT } from "../../../api";
+import {
+  DONOR_INDIVISUAL_EDIT_FETCH,
+  DONOR_INDIVISUAL_FAMILY_GROUP_UPDATE,
+  DONOR_INDIVISUAL_UPDATE_SUMBIT,
+} from "../../../api";
 const gender = [
   {
     value: "Male",
@@ -37,9 +41,11 @@ const corrpreffer = [
   },
 ];
 
-const DonorEditIndv = ({ id ,isPanelUp}) => {
+const DonorEditIndv = ({ id, isPanelUp }) => {
   // console.log("khds",id)
-      const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
+  const [userImageBase, setUserImageBase] = useState("");
+  const [noImageUrl, setNoImageUrl] = useState("");
   const [donor, setDonor] = useState({
     indicomp_full_name: "",
     title: "",
@@ -121,13 +127,12 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
           [e.target.name]: e.target.value,
         });
       }
-    } else  if (e.target.name === "indicomp_image_logo") {
+    } else if (e.target.name === "indicomp_image_logo") {
       const file = e.target.files[0];
       if (file) {
-       
         setDonor({
           ...donor,
-          indicomp_image_logo: file.name 
+          indicomp_image_logo: file.name,
         });
       }
     } else {
@@ -162,16 +167,27 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${DONOR_INDIVISUAL_EDIT_FETCH}/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${DONOR_INDIVISUAL_EDIT_FETCH}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const donorData = response.data?.individualCompany;
+      const cleanedDonorData = {};
 
-      setDonor(response.data?.individualCompany);
+      Object.keys(donorData).forEach((key) => {
+        cleanedDonorData[key] = donorData[key] === null ? "" : donorData[key];
+      });
+      setDonor(cleanedDonorData);
+      const userImageBase = response.data.image_url.find(
+        (img) => img.image_for === "Donor"
+      )?.image_url;
+      const noImageUrl = response.data.image_url.find(
+        (img) => img.image_for === "No Image"
+      )?.image_url;
+
+      setUserImageBase(userImageBase);
+      setNoImageUrl(noImageUrl);
     } catch (error) {
       console.error("Error fetching Life Time data", error);
     } finally {
@@ -248,7 +264,7 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
     }
 
     axios({
-      url: DONOR_INDIVISUAL_FAMILY_GROUP_UPDATE  + id,
+      url: DONOR_INDIVISUAL_FAMILY_GROUP_UPDATE + id,
       method: "PUT",
       data,
       headers: {
@@ -271,165 +287,285 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
   }, []);
   useEffect(() => {
     let timeoutId;
-      timeoutId = setTimeout(() => {
-        if (isPanelUp.error == "Maintenance") {
-          localStorage.clear();
-          navigate("/maintenance");
-        }
-      }, 5000); 
+    timeoutId = setTimeout(() => {
+      if (isPanelUp.error == "Maintenance") {
+        localStorage.clear();
+        navigate("/maintenance");
+      }
+    }, 5000);
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [ isPanelUp, navigate]);
-
+  }, [isPanelUp, navigate]);
 
   const validateForm = () => {
     const newErrors = {};
     let isValid = true;
-  
-    if (!donor.indicomp_full_name?.trim()) {
-      newErrors.indicomp_full_name = 'Full Name is required';
-      isValid = false;
-    }
-  
 
-  
+    if (!donor.indicomp_full_name?.trim()) {
+      newErrors.indicomp_full_name = "Full Name is required";
+      isValid = false;
+    }
+
     if (!donor.title) {
-      newErrors.title = 'Title is required';
+      newErrors.title = "Title is required";
       isValid = false;
     }
-  
- 
-  
+
     if (!donor.indicomp_gender) {
-      newErrors.indicomp_gender = 'Gender is required';
+      newErrors.indicomp_gender = "Gender is required";
       isValid = false;
     }
-  
- 
-  
+
     if (!donor.indicomp_promoter) {
-      newErrors.indicomp_promoter = 'Promoter is required';
+      newErrors.indicomp_promoter = "Promoter is required";
       isValid = false;
     }
-  
-    if (donor.indicomp_promoter === 'Other' && !donor.indicomp_newpromoter?.trim()) {
-      newErrors.indicomp_newpromoter = 'Please specify promoter';
+
+    if (
+      donor.indicomp_promoter === "Other" &&
+      !donor.indicomp_newpromoter?.trim()
+    ) {
+      newErrors.indicomp_newpromoter = "Please specify promoter";
       isValid = false;
     }
-  
-    if (!donor.indicomp_mobile_phone || !/^\d{10}$/.test(donor.indicomp_mobile_phone)) {
-      newErrors.indicomp_mobile_phone = 'Valid 10-digit Mobile Number is required';
+
+    if (
+      !donor.indicomp_mobile_phone ||
+      !/^\d{10}$/.test(donor.indicomp_mobile_phone)
+    ) {
+      newErrors.indicomp_mobile_phone =
+        "Valid 10-digit Mobile Number is required";
       isValid = false;
     }
-  
+
     if (!donor.indicomp_res_reg_city?.trim()) {
-      newErrors.indicomp_res_reg_city = 'City is required';
+      newErrors.indicomp_res_reg_city = "City is required";
       isValid = false;
     }
-  
+
     if (!donor.indicomp_res_reg_state) {
-      newErrors.indicomp_res_reg_state = 'State is required';
+      newErrors.indicomp_res_reg_state = "State is required";
       isValid = false;
     }
-  
-    if (!donor.indicomp_res_reg_pin_code || !/^\d{6}$/.test(donor.indicomp_res_reg_pin_code)) {
-      newErrors.indicomp_res_reg_pin_code = 'Valid 6-digit Pincode is required';
+
+    if (
+      !donor.indicomp_res_reg_pin_code ||
+      !/^\d{6}$/.test(donor.indicomp_res_reg_pin_code)
+    ) {
+      newErrors.indicomp_res_reg_pin_code = "Valid 6-digit Pincode is required";
       isValid = false;
     }
-  
+
     if (!donor.indicomp_corr_preffer) {
-      newErrors.indicomp_corr_preffer = 'Correspondence Preference is required';
+      newErrors.indicomp_corr_preffer = "Correspondence Preference is required";
       isValid = false;
     }
-  
+
     setErrors(newErrors);
     return { isValid, errors: newErrors };
   };
 
-
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-     const { isValid, errors } = validateForm();
-            
-            if (!isValid) {
-              const firstError = Object.values(errors)[0];
-              toast.error(firstError);
-              setIsButtonDisabled(false);
-              return;
-            }
-            try {
+    const { isValid, errors } = validateForm();
 
-    const data = {
-      indicomp_full_name: donor.indicomp_full_name,
-      title: donor.title,
-      indicomp_type: donor.indicomp_type,
-      indicomp_father_name: donor.indicomp_father_name,
-      indicomp_mother_name: donor.indicomp_mother_name,
-      indicomp_gender: donor.indicomp_gender,
-      indicomp_spouse_name: donor.indicomp_spouse_name,
-      indicomp_dob_annualday: donor.indicomp_dob_annualday,
-      indicomp_doa: donor.indicomp_doa,
-      indicomp_pan_no: donor.indicomp_pan_no,
-      indicomp_image_logo: donor.indicomp_image_logo,
-      indicomp_remarks: donor.indicomp_remarks,
-      indicomp_promoter: donor.indicomp_promoter,
-      indicomp_newpromoter: donor.indicomp_newpromoter,
-      indicomp_source: donor.indicomp_source,
-      indicomp_mobile_phone: donor.indicomp_mobile_phone,
-      indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
-      indicomp_email: donor.indicomp_email,
-      indicomp_website: donor.indicomp_website,
-      indicomp_res_reg_address: donor.indicomp_res_reg_address,
-      indicomp_res_reg_area: donor.indicomp_res_reg_area,
-      indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
-      indicomp_res_reg_city: donor.indicomp_res_reg_city,
-      indicomp_res_reg_state: donor.indicomp_res_reg_state,
-      indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
-      indicomp_off_branch_address: donor.indicomp_off_branch_address,
-      indicomp_off_branch_area: donor.indicomp_off_branch_area,
-      indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
-      indicomp_off_branch_city: donor.indicomp_off_branch_city,
-      indicomp_off_branch_state: donor.indicomp_off_branch_state,
-      indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
-      indicomp_corr_preffer: donor.indicomp_corr_preffer,
-      indicomp_belongs_to: donor.indicomp_belongs_to,
-      indicomp_donor_type: donor.indicomp_donor_type,
-    };
+    if (!isValid) {
+      const firstError = Object.values(errors)[0];
+      toast.error(firstError);
+      setIsButtonDisabled(false);
+      return;
+    }
+    try {
+      // const data = {
+      //   indicomp_full_name: donor.indicomp_full_name,
+      //   title: donor.title,
+      //   indicomp_type: donor.indicomp_type,
+      //   indicomp_father_name: donor.indicomp_father_name,
+      //   indicomp_mother_name: donor.indicomp_mother_name,
+      //   indicomp_gender: donor.indicomp_gender,
+      //   indicomp_spouse_name: donor.indicomp_spouse_name,
+      //   indicomp_dob_annualday: donor.indicomp_dob_annualday,
+      //   indicomp_doa: donor.indicomp_doa,
+      //   indicomp_pan_no: donor.indicomp_pan_no,
+      //   indicomp_image_logo: donor.indicomp_image_logo,
+      //   indicomp_remarks: donor.indicomp_remarks,
+      //   indicomp_promoter: donor.indicomp_promoter,
+      //   indicomp_newpromoter: donor.indicomp_newpromoter,
+      //   indicomp_source: donor.indicomp_source,
+      //   indicomp_mobile_phone: donor.indicomp_mobile_phone,
+      //   indicomp_mobile_whatsapp: donor.indicomp_mobile_whatsapp,
+      //   indicomp_email: donor.indicomp_email,
+      //   indicomp_website: donor.indicomp_website,
+      //   indicomp_res_reg_address: donor.indicomp_res_reg_address,
+      //   indicomp_res_reg_area: donor.indicomp_res_reg_area,
+      //   indicomp_res_reg_ladmark: donor.indicomp_res_reg_ladmark,
+      //   indicomp_res_reg_city: donor.indicomp_res_reg_city,
+      //   indicomp_res_reg_state: donor.indicomp_res_reg_state,
+      //   indicomp_res_reg_pin_code: donor.indicomp_res_reg_pin_code,
+      //   indicomp_off_branch_address: donor.indicomp_off_branch_address,
+      //   indicomp_off_branch_area: donor.indicomp_off_branch_area,
+      //   indicomp_off_branch_ladmark: donor.indicomp_off_branch_ladmark,
+      //   indicomp_off_branch_city: donor.indicomp_off_branch_city,
+      //   indicomp_off_branch_state: donor.indicomp_off_branch_state,
+      //   indicomp_off_branch_pin_code: donor.indicomp_off_branch_pin_code,
+      //   indicomp_corr_preffer: donor.indicomp_corr_preffer,
+      //   indicomp_belongs_to: donor.indicomp_belongs_to,
+      //   indicomp_donor_type: donor.indicomp_donor_type,
+      // };
 
-   
+      const formData = new FormData();
 
-    setIsButtonDisabled(true);
-     const response = await axios({
-      url: DONOR_INDIVISUAL_UPDATE_SUMBIT + `${id}`,
-      method: "PUT",
-          data,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-    if (response.data.code === 200) {
-   
-    
-      navigate("/donor-list");
-      toast.success(response.data.msg);
-        } else if (response.data.code === 400) {
-          toast.error(response.data.msg);
-        } else {
-          toast.error("Unexpected Error");
+      const processValue = (value) => {
+        if (value === "" || value === null || value === undefined) {
+          return "";
         }
-      } catch (error) {
-        console.error("Update error:", error);
-        toast.error("An error occurred during updating");
-      } finally {
-        setIsButtonDisabled(false);
+        return value;
+      };
+
+      formData.append(
+        "indicomp_full_name",
+        processValue(donor.indicomp_full_name)
+      );
+      formData.append("title", processValue(donor.title));
+      formData.append("indicomp_type", processValue(donor.indicomp_type));
+      formData.append(
+        "indicomp_father_name",
+        processValue(donor.indicomp_father_name)
+      );
+      formData.append(
+        "indicomp_mother_name",
+        processValue(donor.indicomp_mother_name)
+      );
+      formData.append("indicomp_gender", processValue(donor.indicomp_gender));
+      formData.append(
+        "indicomp_spouse_name",
+        processValue(donor.indicomp_spouse_name)
+      );
+      formData.append(
+        "indicomp_dob_annualday",
+        processValue(donor.indicomp_dob_annualday)
+      );
+      formData.append("indicomp_doa", processValue(donor.indicomp_doa));
+      formData.append("indicomp_pan_no", processValue(donor.indicomp_pan_no));
+
+      // Handle file upload
+      if (donor.indicomp_image_logo instanceof File) {
+        formData.append("indicomp_image_logo", donor.indicomp_image_logo);
+      } else if (donor.indicomp_image_logo) {
+        formData.append(
+          "indicomp_image_logo",
+          processValue(donor.indicomp_image_logo)
+        );
       }
-   
- 
+
+      formData.append("indicomp_remarks", processValue(donor.indicomp_remarks));
+      formData.append(
+        "indicomp_promoter",
+        processValue(donor.indicomp_promoter)
+      );
+      formData.append(
+        "indicomp_newpromoter",
+        processValue(donor.indicomp_newpromoter)
+      );
+      formData.append("indicomp_source", processValue(donor.indicomp_source));
+      formData.append(
+        "indicomp_mobile_phone",
+        processValue(donor.indicomp_mobile_phone)
+      );
+      formData.append(
+        "indicomp_mobile_whatsapp",
+        processValue(donor.indicomp_mobile_whatsapp)
+      );
+      formData.append("indicomp_email", processValue(donor.indicomp_email));
+      formData.append("indicomp_website", processValue(donor.indicomp_website));
+      formData.append(
+        "indicomp_res_reg_address",
+        processValue(donor.indicomp_res_reg_address)
+      );
+      formData.append(
+        "indicomp_res_reg_area",
+        processValue(donor.indicomp_res_reg_area)
+      );
+      formData.append(
+        "indicomp_res_reg_ladmark",
+        processValue(donor.indicomp_res_reg_ladmark)
+      );
+      formData.append(
+        "indicomp_res_reg_city",
+        processValue(donor.indicomp_res_reg_city)
+      );
+      formData.append(
+        "indicomp_res_reg_state",
+        processValue(donor.indicomp_res_reg_state)
+      );
+      formData.append(
+        "indicomp_res_reg_pin_code",
+        processValue(donor.indicomp_res_reg_pin_code)
+      );
+      formData.append(
+        "indicomp_off_branch_address",
+        processValue(donor.indicomp_off_branch_address)
+      );
+      formData.append(
+        "indicomp_off_branch_area",
+        processValue(donor.indicomp_off_branch_area)
+      );
+      formData.append(
+        "indicomp_off_branch_ladmark",
+        processValue(donor.indicomp_off_branch_ladmark)
+      );
+      formData.append(
+        "indicomp_off_branch_city",
+        processValue(donor.indicomp_off_branch_city)
+      );
+      formData.append(
+        "indicomp_off_branch_state",
+        processValue(donor.indicomp_off_branch_state)
+      );
+      formData.append(
+        "indicomp_off_branch_pin_code",
+        processValue(donor.indicomp_off_branch_pin_code)
+      );
+      formData.append(
+        "indicomp_corr_preffer",
+        processValue(donor.indicomp_corr_preffer)
+      );
+      formData.append(
+        "indicomp_belongs_to",
+        processValue(donor.indicomp_belongs_to)
+      );
+      formData.append(
+        "indicomp_donor_type",
+        processValue(donor.indicomp_donor_type)
+      );
+
+      setIsButtonDisabled(true);
+      const response = await axios({
+        url: DONOR_INDIVISUAL_UPDATE_SUMBIT + `${id}` + `?_method=PUT`,
+        method: "POST",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.data.code === 200) {
+        navigate("/donor-list");
+        toast.success(response.data.msg);
+      } else if (response.data.code === 400) {
+        toast.error(response.data.msg);
+      } else {
+        toast.error("Unexpected Error");
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error("An error occurred during updating");
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
 
   const FormLabel = ({ children, required }) => (
@@ -449,7 +585,7 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
         <h2 className=" px-5 text-[black] text-lg   flex flex-row  justify-between items-center  rounded-xl p-2 ">
           <div className="flex  items-center gap-2">
             <IconInfoCircle className="w-4 h-4" />
-            <span>Edit Individual </span>
+            <span>Edit Individual</span>
           </div>
           <IconArrowBack
             onClick={() => navigate("/donor-list")}
@@ -458,11 +594,7 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
         </h2>
       </div>
       <hr />
-      <form
-     
-    
-        className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 "
-      >
+      <form className="w-full max-w-7xl  rounded-lg mx-auto p-6 space-y-8 ">
         {/* Personal Details Section */}
         <div>
           <h2 className=" px-5 text-[black] text-sm mb-2 flex flex-row gap-2 items-center  rounded-xl p-4 bg-[#E1F5FA]">
@@ -487,8 +619,8 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 ))}
               </select>
               {errors?.title && (
-    <p className="text-red-500 text-xs mt-1">{errors.title}</p>
-  )}
+                <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+              )}
             </div>
             <div>
               <FormLabel required>Full Name</FormLabel>
@@ -501,8 +633,10 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 required
               />
               {errors?.indicomp_full_name && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_full_name}</p>
-  )}
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_full_name}
+                </p>
+              )}
             </div>
             <div>
               <FormLabel>Father Name</FormLabel>
@@ -543,8 +677,10 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 ))}
               </select>
               {errors?.indicomp_gender && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_gender}</p>
-  )}
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_gender}
+                </p>
+              )}
             </div>
 
             <div>
@@ -602,24 +738,41 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
               </InputMask>
             </div>
             <div>
-              <FormLabel>Upload Image</FormLabel>
-              {/* <input
-                type="file"
-                name="indicomp_image_logo"
-                value={donor.indicomp_image_logo}
-                disabled
-                onChange={(e) => onInputChange(e)}
-                className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs  file:bg-[#E1F5FA] file:text-black cursor-not-allowed  "
-              /> */}
-              <input
-  type="file"
-  name="indicomp_image_logo"
-  
-  onChange={(e) => onInputChange(e)}
-  className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs  file:bg-[#E1F5FA] file:text-black cursor-pointer"
-/>
+              <FormLabel>
+                <p className="flex flex-row items-center justify-between">
+                  Upload Image
+                </p>
+              </FormLabel>
+              <div className="flex flex-row items-center gap-2">
+                <div>
+                  {donor.indicomp_image_logo && (
+                    <img
+                      src={
+                        typeof donor.indicomp_image_logo === "string"
+                          ? `${userImageBase}${donor.indicomp_image_logo}`
+                          : URL.createObjectURL(donor.indicomp_image_logo)
+                      }
+                      alt="User"
+                      className="w-8 h-5 object-cover  rounded-md "
+                    />
+                  )}
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="indicomp_image_logo"
+                    onChange={(e) =>
+                      setDonor({
+                        ...donor,
+                        indicomp_image_logo: e.target.files[0],
+                      })
+                    }
+                    className="w-full px-3 py-1 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500 file:mr-4 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs  file:bg-[#E1F5FA] file:text-black cursor-pointer"
+                  />
+                </div>
+              </div>
             </div>
-
             <div>
               <FormLabel>Remarks</FormLabel>
               <input
@@ -651,8 +804,10 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 ))}
               </select>
               {errors?.indicomp_promoter && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_promoter}</p>
-  )}
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_promoter}
+                </p>
+              )}
             </div>
             {donor.indicomp_promoter === "Other" && (
               <>
@@ -750,9 +905,11 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 className={inputClass}
                 required
               />
-               {errors?.indicomp_mobile_phone && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_mobile_phone}</p>
-  )}
+              {errors?.indicomp_mobile_phone && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_mobile_phone}
+                </p>
+              )}
             </div>
 
             <div>
@@ -841,9 +998,11 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 required
                 className={inputClass}
               />
-                   {errors?.indicomp_res_reg_city && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_city}</p>
-  )}
+              {errors?.indicomp_res_reg_city && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_res_reg_city}
+                </p>
+              )}
             </div>
 
             <div>
@@ -863,8 +1022,10 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 ))}
               </select>
               {errors?.indicomp_res_reg_state && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_state}</p>
-  )}
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_res_reg_state}
+                </p>
+              )}
             </div>
 
             <div>
@@ -878,10 +1039,12 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 required
                 className={inputClass}
               />
-              
+
               {errors?.indicomp_res_reg_pin_code && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_res_reg_pin_code}</p>
-  )}
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_res_reg_pin_code}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -983,8 +1146,10 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
                 ))}
               </select>
               {errors?.indicomp_corr_preffer && (
-    <p className="text-red-500 text-xs mt-1">{errors.indicomp_corr_preffer}</p>
-  )}
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.indicomp_corr_preffer}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -993,7 +1158,7 @@ const DonorEditIndv = ({ id ,isPanelUp}) => {
         <div className="flex flex-wrap gap-4 justify-start">
           <button
             type="submit"
-            onClick={(e)=>handleSubmit(e)}
+            onClick={(e) => handleSubmit(e)}
             className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
             disabled={isButtonDisabled}
           >

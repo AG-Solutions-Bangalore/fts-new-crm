@@ -207,7 +207,16 @@ function DowloadAllRecepit() {
       [name]: value,
     });
   };
-
+  const onNumberInputChange = (e) => {
+    const { name, value } = e.target;
+   
+    if (value === '' || /^[0-9\b]+$/.test(value)) {
+      setAllReceiptDownload({
+        ...receiptsdwn,
+        [name]: value,
+      });
+    }
+  };
   const onSubmit = (e) => {
     e.preventDefault();
     let data = {
@@ -336,12 +345,12 @@ function DowloadAllRecepit() {
          <div className="flex flex-col  md:flex-row items-center justify-between mb-5"> <h3 className="text-red-500 ">
             Leave blank if you want all records.
           </h3>
-          <h3 className="inline-flex items-center justify-center px-3 py-1 text-sm font-medium rounded-full bg-red-50 text-red-800 shadow-sm ">
+          {/* <h3 className="inline-flex items-center justify-center px-3 py-1 text-sm font-medium rounded-full bg-red-50 text-red-800 shadow-sm ">
           <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"></path>
   </svg>
           Only last 2 years data available
-          </h3>
+          </h3> */}
           
          
           </div>
@@ -406,7 +415,7 @@ function DowloadAllRecepit() {
                 onChange={onInputChange}
                 placeholder="Select Promoter"
               />
-              <SelectInput
+              {/* <SelectInput
                 label="OTS Range From"
                 name="receipt_ots_range_from"
                 value={receiptsdwn.receipt_ots_range_from}
@@ -414,6 +423,7 @@ function DowloadAllRecepit() {
                 onChange={onInputChange}
                 placeholder="Select OTS Range"
               />
+              
               <SelectInput
                 label="OTS Range TO"
                 name="receipt_ots_range_to"
@@ -421,8 +431,32 @@ function DowloadAllRecepit() {
                 options={ots_range_to}
                 onChange={onInputChange}
                 placeholder="Select OTS Range"
-              />
-
+              /> */}
+<div>
+    <FormLabel>OTS Range From</FormLabel>
+    <input
+      type="number"
+      name="receipt_ots_range_from"
+      value={receiptsdwn.receipt_ots_range_from}
+      onChange={onNumberInputChange}
+      className={inputClass}
+      placeholder="Enter OTS Range From"
+      min="0"
+    />
+  </div>
+  
+  <div>
+    <FormLabel>OTS Range To</FormLabel>
+    <input
+      type="number"
+      name="receipt_ots_range_to"
+      value={receiptsdwn.receipt_ots_range_to}
+      onChange={onNumberInputChange}
+      className={inputClass}
+      placeholder="Enter OTS Range To"
+      min="0"
+    />
+  </div>
               <SelectInput
                 label="Amount Range"
                 name="receipt_amount_range"
