@@ -41,6 +41,8 @@ const ViewChapter = () => {
   const toggleIndividualDrawer = (open) => () => {
     setIndividualDrawer(open);
   };
+    const [userImageBase, setUserImageBase] = useState("");
+    const [noImageUrl, setNoImageUrl] = useState("");
   const [chapter, setChapter] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -48,6 +50,7 @@ const ViewChapter = () => {
     name: "",
     email: "",
     first_name: "",
+    image: "",
     last_name: "",
     phone: "",
     password: "",
@@ -76,6 +79,7 @@ const ViewChapter = () => {
       name: "",
       email: "",
       first_name: "",
+      image: "",
       last_name: "",
       phone: "",
       password: "",
@@ -83,37 +87,32 @@ const ViewChapter = () => {
       user_type_id: "",
     });
   };
-    useEffect(() => {
+  
       const fetchData = async () => {
         try {
           setLoading(true);
           const data = await fetchChapterViewById(id);
           setChapter(data.chapter);
         setUsers(data.users);
+        const userImageBase = data.image_url.find(
+          (img) => img.image_for === "User"
+        )?.image_url;
+        const noImageUrl = data.image_url.find(
+          (img) => img.image_for === "No Image"
+        )?.image_url;
+  
+        setUserImageBase(userImageBase);
+        setNoImageUrl(noImageUrl);
         } catch (error) {
           toast.error("Failed to fetch chapter viewer details");
         }finally {
           setLoading(false);
         }
       };
-      
+      useEffect(() => {
       fetchData();
     }, [id]);
-  // const fetchData = () => {
-  //   axios
-  //     .get(`${BASE_URL}/api/fetch-chapter-by-id/${decryptedId}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       setChapter(res.data.chapter);
-  //       setUsers(res.data.users);
-  //     });
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, [id]);
+
 
   const onUserInputChange = (e) => {
     const { name, value } = e.target;
@@ -145,21 +144,32 @@ const ViewChapter = () => {
       return;
     }
     setIsButtonDisabled(true);
-    const formData = {
-      name: user.name,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      phone: user.phone,
-      password: user.password,
-      user_type: user.user_type_id,
-      chapter_id: chapter.chapter_code,
-    };
-    // console.log("data", formData);
+    // const formData = {
+    //   name: user.name,
+    //   first_name: user.first_name,
+    //   last_name: user.last_name,
+    //   email: user.email,
+    //   phone: user.phone,
+    //   password: user.password,
+    //   user_type: user.user_type_id,
+    //   chapter_id: chapter.chapter_code,
+    // };
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("first_name", user.first_name);
+    formData.append("last_name", user.last_name);
+    formData.append("email", user.email);
+    formData.append("phone", user.phone);
+    formData.append("password", user.password);
+    formData.append("user_type", user.user_type_id);
+    formData.append("chapter_id", chapter.chapter_code);
+    formData.append("image", user.image); 
+   
     try {
       const res = await axios.post(`${CHAPTER_VIEW_CREATE_USER}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -177,6 +187,7 @@ const ViewChapter = () => {
           password: "",
           confirm_password: "",
           user_type_id: "",
+          image: null,
         });
       } else if (res.data.code === 400) {
         toast.error(res.data.msg);
@@ -204,20 +215,33 @@ const ViewChapter = () => {
     }
     setIsButtonDisabled(true);
 
-    const formData = {
-      name: user.name,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      phone: user.phone,
-      user_type: user.user_type_id,
-      chapter_id: user.chapter_code,
-    };
+    // const formData = {
+    //   name: user.name,
+    //   first_name: user.first_name,
+    //   last_name: user.last_name,
+    //   email: user.email,
+    //   phone: user.phone,
+    //   user_type: user.user_type_id,
+    //   chapter_id: user.chapter_id,
+    // };
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("first_name", user.first_name);
+    formData.append("last_name", user.last_name || "");
+    formData.append("email", user.email);
+    formData.append("phone", user.phone);
+    formData.append("user_type", parseInt(user.user_type_id, 10));
+    formData.append("chapter_id", user.chapter_id);
+
+    
+    if (user.image instanceof File) {
+      formData.append("image", user.image); 
+    }
 
     try {
       // Send PUT request
-      const res = await axios.put(
-        `${CHAPTER_VIEW_UPDATE_USER}/${selected_user_id}`,
+      const res = await axios.post(
+        `${CHAPTER_VIEW_UPDATE_USER}/${selected_user_id}?_method=PUT`,
         formData,
         {
           headers: {
@@ -228,6 +252,7 @@ const ViewChapter = () => {
 
       if (res.data.code === 200) {
         toast.success(res.data.msg);
+        fetchData();
         handleClose1(e);
       } else if (res.data.code === 400) {
         toast.error(res.data.msg);
@@ -245,6 +270,21 @@ const ViewChapter = () => {
   };
 
   const columns = [
+    {
+      accessorKey: "image",
+      header: "Image",
+      Cell: ({ row }) => (
+        <img
+          src={
+            row.original.image
+              ? `${userImageBase}${row.original.image}?t=${Date.now()}`
+              : noImageUrl
+          }
+          alt={row.original.first_name}
+          className="w-10 h-10 object-cover rounded-full"
+        />
+      ),
+    },
     {
       accessorKey: "first_name",
       header: "Name",
@@ -266,6 +306,7 @@ const ViewChapter = () => {
                 email: row.original.email,
                 phone: row.original.phone,
                 first_name: row.original.first_name,
+                image: row.original.image,
                 last_name: row.original.last_name,
                 user_type_id: row.original.user_type_id,
               });
@@ -499,7 +540,20 @@ const ViewChapter = () => {
                         required
                       />
                     </div>
-
+        <div>
+  <FormLabel>Upload Image</FormLabel>
+  <input
+    type="file"
+    name="image"
+    onChange={(e) => {
+      setUser({
+        ...user,
+        image: e.target.files[0],
+      });
+    }}
+    className={inputClass}
+  />
+</div>
                     <div className="form-group ">
                       <SelectInput
                         label="Select User Type"
@@ -628,6 +682,31 @@ const ViewChapter = () => {
                         required
                       />
                     </div>
+                    <div>
+  <FormLabel>Upload Image</FormLabel>
+  <input
+    type="file"
+    name="image"
+    onChange={(e) => {
+      setUser({
+        ...user,
+        image: e.target.files[0],
+      });
+    }}
+    className={inputClass}
+  />
+  {user.image && (
+    <img
+      src={
+        typeof user.image === "string"
+          ? `${userImageBase}${user.image}`
+          : URL.createObjectURL(user.image)
+      }
+      alt="User"
+      className="w-16 h-16 object-cover rounded-full mt-2"
+    />
+  )}
+</div>
                     <div className="form-group ">
                       <SelectInput
                         label="Select User Type"

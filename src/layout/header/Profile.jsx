@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Box,
@@ -12,7 +12,7 @@ import {
   Dialog,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import profile from "../../../public/user-1.jpg";
+
 import {
   IconMail,
   IconUser,
@@ -45,8 +45,9 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
- const [profileImage, setProfileImage] = useState(profile);
+ const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
+  
   const inputClass =
     "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-green-500";
 
@@ -67,14 +68,35 @@ const Profile = () => {
       const res = await axios.get(`${BASE_URL}/api/fetch-profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const { first_name, phone, email } = res.data.user;
+  
+      const { first_name, phone, email, image } = res.data.user;
+  
       setFirstName(first_name || "");
       setPhone(phone || "");
       setEmail(email || "");
+  
+
+      const userImageBase = res.data.image_url.find(
+        (img) => img.image_for === "User"
+      )?.image_url;
+  
+      const noImageUrl = res.data.image_url.find(
+        (img) => img.image_for === "No Image"
+      )?.image_url;
+  
+      if (image) {
+        setProfileImage(`${userImageBase}${image}`);
+      } else {
+        setProfileImage(noImageUrl);
+      }
     } catch (error) {
       toast.error("Failed to load profile data");
     }
   };
+   useEffect(()=>{
+    fetchProfile();
+   },[1])
+
 
   const handleOpenProfile = () => {
     fetchProfile();
@@ -100,11 +122,20 @@ const Profile = () => {
 
     setIsButtonDisabled(true);
     try {
-      const res = await axios.post(
-        `${BASE_URL}/api/update-profile`,
-        { first_name: firstName, phone },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const formData = new FormData();
+      formData.append("first_name", firstName);
+      formData.append("phone", phone);
+      formData.append("email", email);
+  
+      if (fileInputRef.current && fileInputRef.current.files[0]) {
+        formData.append("image", fileInputRef.current.files[0]); 
+      }
+      const res = await axios.post(`${BASE_URL}/api/update-profile`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (res.data.code === 200) {
         toast.success(res.data.msg);
         setOpenDialog(false);
@@ -152,11 +183,13 @@ const Profile = () => {
       setIsButtonDisabled(false);
     }
   };
-
+console.log("profileImage",profileImage)
   return (
     <Box>
       <IconButton onClick={handleProfileMenu} color="inherit">
-        <Avatar src={profile} alt="Profile" sx={{ width: 35, height: 35 }} />
+        <Avatar src={profileImage} alt="Profile" sx={{ width: 35, height: 35 }} />
+     
+
       </IconButton>
 
       <Menu
@@ -221,11 +254,15 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row gap-4">
              
               <div className="flex flex-col items-center justify-center gap-4">
-                <img
-                  src={profileImage}
-                  alt="Profile"
-                 className="border-2 w-36 h-36 rounded-md shadow-2xl hover:transition-shadow shadow-lime-300"
-                />
+              <img
+  src={
+    profileImage
+
+  }
+  alt="Profile"
+  className="border-2 w-36 h-36 rounded-md shadow-2xl hover:transition-shadow shadow-lime-300"
+/>
+
               
                 <button
                 type="button"
@@ -237,7 +274,7 @@ const Profile = () => {
                 <input
                   type="file"
                   ref={fileInputRef}
-                  name="_profile_image"
+                  name="image"
                   accept="image/*"
                   onChange={handleImageUpload}
                   hidden

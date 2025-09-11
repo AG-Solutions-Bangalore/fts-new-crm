@@ -13,6 +13,8 @@ const CommitteeList = () => {
   const [committeeData, setCommitteelist] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
    const [loading, setLoading] = useState(false);
+     const [userImageBase, setUserImageBase] = useState("");
+        const [noImageUrl, setNoImageUrl] = useState("");
   const [selectDonorId, setSelectDonorId] = useState(null);
   const userType = localStorage.getItem("user_type_id");
   const fetchCommitteeData = async () => {
@@ -26,6 +28,15 @@ const CommitteeList = () => {
       });
 
       setCommitteelist(response.data?.committeeData);
+      const userImageBase = response.data.image_url.find(
+        (img) => img.image_for === "Donor"
+      )?.image_url;
+      const noImageUrl = response.data.image_url.find(
+        (img) => img.image_for === "No Image"
+      )?.image_url;
+
+      setUserImageBase(userImageBase);
+      setNoImageUrl(noImageUrl);
     } catch (error) {
       console.error("Error fetching Factory data", error);
     } finally {
@@ -73,6 +84,7 @@ const CommitteeList = () => {
 
   const columns = useMemo(() => {
     const baseColumns = [
+    
       {
         accessorKey: "individual_company.indicomp_image_logo",
         header: "Photo",
@@ -80,28 +92,23 @@ const CommitteeList = () => {
           return row?.individual_company?.indicomp_image_logo || null;
         },
         enableColumnFilter: false,
-        Cell: ({ value, row }) => {
-          const imageData =
-            row.original?.individual_company.indicomp_image_logo;
+        Cell: ({ row }) => {
+          const imageLogo = row.original?.individual_company?.indicomp_image_logo;
+          const fullName = row.original?.individual_company?.indicomp_full_name || "No Name";
+          
           return (
-            <div>
-              {imageData ? (
-                <img
-                  src={
-                    "https://ftschamp.com/api/storage/app/public/donor/" +
-                    imageData
-                  }
-                  className="media-object rounded-full w-10 h-10 object-cover"
-                />
-              ) : (
-                <img
-                  src={
-                    "https://ftschamp.com/api/storage/app/public/donor/no_image.png"
-                  }
-                  className="media-object rounded-full w-10 h-10 object-cover"
-                />
-              )}
-            </div>
+            <img
+              src={
+                imageLogo
+                  ? `${userImageBase}${imageLogo}`
+                  : noImageUrl
+              }
+              alt={fullName}
+              className="w-10 h-10 object-cover rounded-full"
+              onError={(e) => {
+                e.target.src = noImageUrl;
+              }}
+            />
           );
         },
       },
@@ -172,7 +179,7 @@ const CommitteeList = () => {
     }
 
     return baseColumns;
-  }, [userType]);
+  }, [userType , userImageBase,noImageUrl]);
 
   const table = useMantineReactTable({
     columns,
