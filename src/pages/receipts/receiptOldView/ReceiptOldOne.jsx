@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, Tooltip, Dialog } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import numWords from "num-words";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -15,13 +15,21 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { IconArrowBack } from "@tabler/icons-react";
 import {
+  fetchReceiptOld20to22ViewById,
+  fetchReceiptOldOne20TO22SendMail,
   fetchReceiptOldOneSendMail,
   fetchReceiptOldViewById,
   RECEIPT_VIEW_SEND_EMAIL,
   RECEIPT_VIEW_SUMBIT,
 } from "../../../api";
+import mailSentGif from "../../../assets/mail-sent.gif";
+import { FileText, Loader, MailPlus } from "lucide-react";
 
 const ReceiptOldOne = () => {
+  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const financialYear = searchParams.get("financialYear");
+  
   const tableRef = useRef(null);
   const containerRef = useRef();
   const [receipts, setReceipts] = useState({});
@@ -31,16 +39,20 @@ const ReceiptOldOne = () => {
   const [theId, setTheId] = useState(0);
   const [loader, setLoader] = useState(true);
   const [country, setCountry] = useState({});
-  const { id } = useParams();
-  // const decryptedId = decryptId(id);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const amountInWords = numWords(receipts.receipt_total_amount);
+
+    const [isSendingEmail, setIsSendingEmail] = useState(false);
+    const [isSavingPDF, setIsSavingPDF] = useState(false);
+    const [isPrintingReceipt, setIsPrintingReceipt] = useState(false);
+    const [isPrintingLetter, setIsPrintingLetter] = useState(false);
   const navigate = useNavigate();
   const handleSavePDF = () => {
     const input = tableRef.current;
 
     if (input) {
+      setIsSavingPDF(true);
       const originalStyle = input.style.cssText;
 
       input.style.width = "210mm";
@@ -96,6 +108,9 @@ const ReceiptOldOne = () => {
           console.error("Error generating PDF: ", error);
           document.body.removeChild(clone);
           input.style.cssText = originalStyle;
+        })
+        .finally(() => {
+          setIsSavingPDF(false); // Hide loading animation
         });
     }
   };
@@ -151,6 +166,8 @@ const ReceiptOldOne = () => {
 
       }
       `,
+      onBeforeGetContent: () => setIsPrintingLetter(true), 
+      onAfterPrint: () => setIsPrintingLetter(false),
   });
   const handlReceiptPdf = useReactToPrint({
     content: () => tableRef.current,
@@ -184,11 +201,28 @@ const ReceiptOldOne = () => {
 
       }
       `,
+      onBeforeGetContent: () => setIsPrintingReceipt(true), 
+      onAfterPrint: () => setIsPrintingReceipt(false),
   });
-  useEffect(() => {
+ 
+  
     const fetchData = async () => {
       try {
-        const data = await fetchReceiptOldViewById(id);
+      let data;
+      switch (financialYear) {
+        case "2023-24":
+        case "2024-25":
+          data = await fetchReceiptOldViewById(id);
+          break;
+        case "2020-21":
+        case "2021-22":
+        case "2022-23":
+          data = await fetchReceiptOld20to22ViewById(id);
+          break;
+        default:
+          data = await fetchReceiptOldViewById(id);
+          break;
+      }
         setReceipts(data.receipt);
         setChapter(data.chapter);
         setSign(data.auth_sign);
@@ -196,10 +230,10 @@ const ReceiptOldOne = () => {
         setCountry(data.country);
         setLoader(false);
       } catch (error) {
-        toast.error("Failed to fetch viewer details");
+        toast.error(error.response.data.message || "Failed to fetch details");
       }
     };
-
+    useEffect(() => {
     fetchData();
   }, [id]);
 
@@ -222,20 +256,57 @@ const ReceiptOldOne = () => {
   //   });
   // };
 
-  const sendEmail = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetchReceiptOldOneSendMail(theId);
 
-      if (response.data.code === 200) {
-        toast.success(response.data.msg);
+   const sendEmail = async (e) => {
+    e.preventDefault();
+    setIsSendingEmail(true); 
+    try {
+
+      let response;
+      switch(financialYear){
+        case "2023-24":
+          case "2024-25":
+        response= await fetchReceiptOldOneSendMail(theId);
+        break
+        case "2020-21":
+          case "2021-22":
+          case "2022-23":
+        response= await fetchReceiptOldOne20TO22SendMail(theId);
+        break
+        default:
+        response = await fetchReceiptOldOneSendMail(theId);
+        break
+
+      }
+      // const response = await fetchReceiptOldOneSendMail(theId);
+      if (response.code == 200) {
+         fetchData();
+        toast.success(response.msg);
       } else {
-        toast.error(response.data.msg);
+        toast.error(response.msg);
       }
     } catch (error) {
-      toast.error(error.response?.data?.msg || "Network error occurred.");
+      toast.error(error.response?.data?.message || "Sent mail error");
+    } finally {
+      setIsSendingEmail(false); 
     }
   };
+
+
+  // const sendEmail = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await fetchReceiptOldOneSendMail(theId);
+
+  //     if (response.data.code === 200) {
+  //       toast.success(response.data.msg);
+  //     } else {
+  //       toast.error(response.data.msg);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.response?.data?.msg || "Network error occurred.");
+  //   }
+  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -260,13 +331,18 @@ const ReceiptOldOne = () => {
         }
       );
 
-      if (response.status == "200") {
-        handleClose();
-        fetchDataReceipt();
-        toast.success("Data Added Successfully");
-      } else {
-        toast.error("Data  Duplicate Entry");
-      }
+      if (response?.data.code == 200) {
+               handleClose();
+               fetchData(); 
+               toast.success(response?.data.msg);
+               
+               // Reset the email form
+               setDonor1({
+                 indicomp_email: "",
+               });
+             } else {
+               toast.error(response?.data.msg);
+             }
     } catch (error) {
       console.error("Error updating Data :", error);
       toast.error("Error updating Data ");
@@ -293,47 +369,120 @@ const ReceiptOldOne = () => {
             onClick={() => navigate("/receipt-old-list")}
             className="cursor-pointer hover:text-red-600 mr-2"
           />
-          <span className="flex items-center gap-2">Receipt View</span>
+          <span className="flex items-center gap-2">Receipt View </span>
         </h1>
 
         {moment(receipts.receipt_date).isSameOrBefore(moment("2025-03-31")) &&
           localStorage.getItem("user_type_id") != 4 && (
             <div className="flex flex-wrap justify-end gap-2 sm:gap-4">
-              <button
+                <button
+              title="Download PDF"
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handleSavePDF}
+                disabled={isSavingPDF}
               >
-                <IconFileTypePdf className="h-5 w-5 text-black" />
-                <span>Pdf</span>
+             {isSavingPDF ? (
+    <Loader strokeWidth={1.5} className="h-7 w-7  text-black animate-spin"/>
+  ) : (
+    <>
+    <IconFileTypePdf strokeWidth={1.5} className="h-7 w-7   text-black" />
+
+    </>
+  )}
+      {/* <span>Pdf</span> */}
+               
               </button>
 
               {receipts?.individual_company?.indicomp_email && (
                 <button
-                  className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
-                  onClick={sendEmail}
-                >
-                  <IconMail className="h-5 w-5 text-black" />
-                  <span>Sent {receipts.receipt_email_count || 0} times</span>
-                </button>
+                               title="Send Mail"
+                                 className="relative  flex flex-col  items-center text-blue-600 hover:text-blue-800 text-xs"
+                                 onClick={sendEmail}
+                                 disabled={isSendingEmail}
+                               >
+                                
+                        
+               {!isSendingEmail && (
+                 <span className=" absolute right-0 rounded-full border p-[2px] translate-x-3 -translate-y-1 bg-blue-500 text-white top-0"> {receipts.receipt_email_count || 0} </span> 
+               
+               )}
+                                
+               
+               
+                                   {isSendingEmail ? (
+               <>
+                                     {/* <Loader className="h-5 w-5 text-black animate-spin"/>
+                                     <span>Sending...</span> */}
+                                     <img
+                         src={mailSentGif}
+                         alt="Sending..."
+                         className="h-7 w-7"
+                       />
+                       {/* <span>Sending...</span> */}
+                                     </>
+                   ) : (
+                   <>
+                  
+               <IconMail strokeWidth={1.5} className="h-7  w-7 text-black" /> 
+                      {/* <span>Mail</span>  */}
+               
+                                  {/* <span>Sent {receipts.receipt_email_count || 0} times</span>  */}
+                                  </>
+                   )}
+                               </button>
               )}
+              {receipts?.individual_company?.indicomp_email === null && (
+                              <div className="flex flex-row items-center ">
+                                 <button
+                                 title="Add Mail"
+                                  onClick={handleClickOpen}
+                               className="hover:cursor-pointer"
+                                >
+                                <MailPlus     strokeWidth={1.5} className="h-7 w-7 text-red-500 " />
+                                </button>
+                                 
+                          
+                               
+                               
+                              </div>
+                            )}
 
-              <button
+<button
+              title="Print Receipt"
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handlReceiptPdf}
+                disabled={isPrintingReceipt}
               >
-                <IconPrinter className="h-5 w-5 text-black" />
-                <span>Receipt</span>
+                     {isPrintingReceipt ? (
+   <Loader strokeWidth={1.5} className="h-7 w-7 text-black animate-spin"/>
+  ) : (
+    <>
+    <IconPrinter strokeWidth={1.5} className="h-7 w-7 text-black" />
+ 
+    </>
+  )}
+     {/* <span> Receipt</span> */}
               </button>
 
               <button
+              title="Print Letter"
                 className="flex flex-col items-center text-blue-600 hover:text-blue-800 text-xs"
                 onClick={handlPrintPdf}
+                disabled={isPrintingLetter}
               >
-                <IconPrinter className="h-5 w-5 text-black" />
-                <span> Letter</span>
+                  {isPrintingLetter ? (
+    <Loader strokeWidth={1.5} className="h-7 w-7 text-black animate-spin"/>
+  ) : (
+    <>
+    <FileText strokeWidth={1.5} className="h-7 w-7 text-black" />
+  
+    </>
+  )}
+    {/* <span> Letter</span> */}
+               
               </button>
 
-              {receipts?.individual_company?.indicomp_email === null && (
+              {/* {receipts?.individual_company?.indicomp_email === null && (
                 <div className="flex flex-col items-center">
                   <div className="flex items-center text-blue-600 hover:text-blue-800">
                     <IconPrinter className="h-5 w-5 text-black" />
@@ -348,12 +497,12 @@ const ReceiptOldOne = () => {
                     Add Email
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           )}
       </div>
       <div className="overflow-x-auto  grid md:grid-cols-1 1fr">
-        {"2022-04-01" <= receipts.receipt_date && (
+        {"2020-04-01" <= receipts.receipt_date && (
           <div className="flex justify-center">
             <div className="p-6 mt-5 bg-white shadow-md rounded-lg">
               <div ref={tableRef}>
@@ -696,58 +845,71 @@ const ReceiptOldOne = () => {
             </div>
           </div>
         )}
-        <Dialog
-          open={open}
-          keepMounted
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <form onSubmit={onSubmit} autoComplete="off">
-            <Card className="p-6 space-y-1 w-[300px]">
-              <CardContent>
-                <div className="flex justify-between items-center mb-2">
-                  <h1 className="text-slate-800 text-xl font-semibold">
-                    Donor Email
-                  </h1>
-                  <div className="flex">
-                    <Tooltip title="Close">
-                      <button
-                        className="ml-3 pl-2 hover:bg-gray-200 rounded-full"
-                        onClick={handleClose}
-                      >
-                        <MdHighlightOff />
-                      </button>
-                    </Tooltip>
-                  </div>
-                </div>
-
-                <div className="mt-2">
-                  <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-2">
-                    <div>
-                      <FormLabel required>Email</FormLabel>
-                      <input
-                        type="text"
-                        name="indicomp_email"
-                        value={donor1.indicomp_email}
-                        onChange={(e) => onInputChange(e)}
-                        className={inputClass}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-5 flex justify-center">
-                    <button
-                      disabled={isButtonDisabled}
-                      type="submit"
-                      className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md mr-2 mb-2"
-                    >
-                      {isButtonDisabled ? "Submiting..." : "Submit"}
-                    </button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </form>
-        </Dialog>
+     <Dialog
+     open={open}
+     keepMounted
+     onClose={(event, reason) => {
+       if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') return;
+       handleClose();
+     }}
+     aria-describedby="alert-dialog-slide-description"
+     maxWidth="sm"
+     fullWidth
+   >
+     <form
+       onSubmit={(e) => {
+         e.preventDefault();
+         onSubmit(e);
+       }}
+       autoComplete="off"
+     >
+       <Card className="p-6 space-y-4 w-full">
+         <CardContent>
+           <div className="flex justify-between items-center mb-4">
+             <h1 className="text-slate-800 text-xl font-semibold">
+               Donor Email
+             </h1>
+             <div className="flex">
+               <Tooltip title="Close">
+                 <button
+                   type="button"
+                   className="ml-3 p-2 hover:bg-gray-200 rounded-full"
+                   onClick={handleClose}
+                 >
+                   <MdHighlightOff className="text-lg" />
+                 </button>
+               </Tooltip>
+             </div>
+           </div>
+           <div className="mt-2">
+             <div className="grid grid-cols-1 gap-4">
+               <div>
+                 <FormLabel required>Email</FormLabel>
+                 <input
+                   type="email"
+                   name="indicomp_email"
+                   value={donor1.indicomp_email}
+                   onChange={onInputChange}
+                   className={inputClass}
+                   required
+                   placeholder="Enter donor email"
+                 />
+               </div>
+             </div>
+             <div className="mt-6 flex justify-center">
+               <button
+                 disabled={isButtonDisabled}
+                 type="submit"
+                 className="text-center text-sm font-[400] cursor-pointer hover:animate-pulse w-36 text-white bg-blue-600 hover:bg-blue-700 p-2 rounded-lg shadow-md transition-colors"
+               >
+                 {isButtonDisabled ? "Submitting..." : "Submit"}
+               </button>
+             </div>
+           </div>
+         </CardContent>
+       </Card>
+     </form>
+   </Dialog>
         {/* second-letter without lh */}
         <div className=" flex justify-center">
           <div className="p-6 mt-5 bg-white shadow-md rounded-lg md:w-[86%]">
@@ -943,7 +1105,7 @@ const ReceiptOldOne = () => {
                     <div>
                       <p className=" font-serif text-[18px] text-justify my-5 leading-[1.2rem]">
                         We acknowledge with thanks receipt of your membership
-                        subscription for the Year. Our receipt for the same is
+                        subscription  upto {receipts?.m_ship_vailidity}.. Our receipt for the same is
                         enclosed herewith.
                       </p>
                     </div>

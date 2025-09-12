@@ -81,9 +81,7 @@ export const DONOR_INDIVISUAL_EDIT_FETCH = `${BASE_URL}/api/fetch-donor-for-edit
 
 //MEMBERS
 export const MEMBERS_LIST = `${BASE_URL}/api/fetch-members`;
-export const MEMBER_DASHBOARD = `${BASE_URL}/api/fetch-members-new`;
 export const SEND_EMAIL = `${BASE_URL}/api/send-membership-renew?id=`;
-export const SEND_BULK_EMAIL = `${BASE_URL}/api/create-membership-email`;
 
 
 //VIEWVER
@@ -128,10 +126,12 @@ export const RECEIPT_EDIT_BY_ID_OLD_UPDATE = `${BASE_URL}/api/update-receipt-old
 export const RECEIPT_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
 
 export const RECEIPT_OLD_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-by-old-id`;
+export const RECEIPT_OLD_20_TO_22_VIEW_BY_ID = `${BASE_URL}/api/fetch-receipt-2020to2022-by-old-id`;
 
 export const RECEIPT_VIEW_THREE_BY_ID = `${BASE_URL}/api/fetch-receipt-by-id`;
 export const RECEIPT_VIEW_SEND_EMAIL = `${BASE_URL}/api/send-receipt`;
 export const RECEIPT_VIEW_SEND_EMAIL_OLD = `${BASE_URL}/api/send-receipt-old`;
+export const RECEIPT_VIEW_SEND_EMAIL_OLD_20_TO_22 = `${BASE_URL}/api/send-receipt-2020to2022-old`;
 
 // export const RECEIPT_VIEW_SEND_EMAIL = `${BASE_URL}/api/send-receipt?id=`;
 export const RECEIPT_VIEW_SUMBIT = `${BASE_URL}/api/update-donor-email`;
@@ -402,12 +402,17 @@ export const navigateToReceiptView = (navigate, viewId) => {
 export const navigateToReceiptViewSuper = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_VIEW_SUPER(viewId));
   };
+  
   // end 
-export const navigateToOldReceiptView = (navigate, viewId) => {
-    navigate(ROUTES.RECEIPT_OLD_VIEW(viewId));
-  };
+// export const navigateToOldReceiptView = (navigate, viewId) => {
+//     navigate(ROUTES.RECEIPT_OLD_VIEW(viewId));
+//   };
 
+export const navigateToOldReceiptView = (navigate, viewId, financialYear) => {
+  navigate(`${ROUTES.RECEIPT_OLD_VIEW(viewId)}?financialYear=${financialYear}`);
+};
 
+  
   
 export const navigateToReceiptEdit = (navigate, viewId) => {
     navigate(ROUTES.RECEIPT_EDIT(viewId));
@@ -710,6 +715,26 @@ export const navigateToDonorEdit = (navigate, viewId) => {
       );
     }
   };
+  export const fetchReceiptOld20to22ViewById = async (encryptedId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+    
+      const id = decryptId(encryptedId);
+      const response = await axios.get(`${RECEIPT_OLD_20_TO_22_VIEW_BY_ID}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+     
+      return response.data;
+     
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch purchase details"
+      );
+    }
+  };
   export const fetchSchoolFullListViewById = async (encryptedId) => {
     try {
       const token = localStorage.getItem("token");
@@ -847,6 +872,26 @@ export const navigateToDonorEdit = (navigate, viewId) => {
     
       const id = decryptId(encryptedId);
       const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL_OLD}/${id}?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+     
+      return response.data;
+     
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch purchase details"
+      );
+    }
+  };
+  export const fetchReceiptOldOne20TO22SendMail = async (encryptedId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No authentication token found");
+    
+      const id = decryptId(encryptedId);
+      const response = await axios.get(`${RECEIPT_VIEW_SEND_EMAIL_OLD_20_TO_22}/${id}?id=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

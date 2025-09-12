@@ -100,21 +100,24 @@ const ReceiptOldList = () => {
         size: 50,
         Cell: ({ row }) => {
           const id = row.original.id;
-
+          const finacialYear =row?.original?.receipt_financial_year
           return (
             <div className="flex gap-2">
               <div
                
-                     onClick={() => {
-                      navigateToOldReceiptView(navigate,id)
-                              }}
+                    //  onClick={() => {
+                    //   navigateToOldReceiptView(navigate,id)
+                    //           }}
+                                 onClick={() => {
+                                  navigateToOldReceiptView(navigate,id,finacialYear)
+                                                                          }}
                
                 title="Receipt Old View"
                 className="flex items-center space-x-2"
               >
                 <IconEye className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div>
-               {userType === "2" && (
+               {/* {userType === "2" && (
                               <div
                                 title="Receipt Old Edit"
                                
@@ -125,7 +128,7 @@ const ReceiptOldList = () => {
                               >
                                 <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
                               </div>
-                            )}
+                            )} */}
             </div>
           );
         },
